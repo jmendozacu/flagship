@@ -1,0 +1,3 @@
+# ------------------ ALL CRAWLERS [DISABLED] ------------------
+User-agent: *
+Disallow: /

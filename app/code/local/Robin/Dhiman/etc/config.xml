@@ -1,0 +1,20 @@
+<config>    
+    <modules>
+        <Robin_Dhiman>
+            <version>0.1.0</version>
+        </Robin_Dhiman>
+    </modules>
+    <global>
+        <events>
+            <controller_front_init_routers>
+                <observers>
+                    <Robin_Dhiman_model_observer>
+                        <type>singleton</type>                          
+                        <class>Robin_Dhiman_Model_Observer</class>
+                        <method>checkForConfigRequest</method>
+                    </Robin_Dhiman_model_observer>
+                </observers>
+            </controller_front_init_routers>
+        </events>
+    </global>
+</config>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Themes3000_Themes3000>
+      <version>0.1.0</version>
+    </Themes3000_Themes3000>
+  </modules>
+  <global>
+    <helpers>
+      <themes3000>
+        <class>Themes3000_Themes3000_Helper</class>
+      </themes3000>
+    </helpers>
+  </global>
+</config> 

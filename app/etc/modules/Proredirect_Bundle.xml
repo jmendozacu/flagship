@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+	 <modules>
+		  <Proredirect_Bundle>
+			   <active>true</active>
+			   <codePool>local</codePool>
+		  </Proredirect_Bundle>
+	 </modules>
+</config>

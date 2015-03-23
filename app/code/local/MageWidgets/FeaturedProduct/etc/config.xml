@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mage Widgets
+ * Featured Products Widget 
+ *
+ * @category   Mage
+ * @package    Mage_Widgets
+ * @copyright  Copyright (c) 2009-2010 Mage Widgets.
+ */
+-->
+<config>
+    <modules>
+        <MageWidgets_FeaturedProduct>
+            <version>0.1.1</version>
+        </MageWidgets_FeaturedProduct>
+    </modules>
+    <global>
+        <models>
+            <featuredproduct>
+                <class>MageWidgets_FeaturedProduct_Model</class>
+            </featuredproduct>
+        </models>
+        <helpers>
+            <featuredproduct>
+                <class>MageWidgets_FeaturedProduct_Helper</class>
+            </featuredproduct>
+        </helpers>
+        <blocks>
+             <featuredproduct>
+                <class>MageWidgets_FeaturedProduct_Block</class>
+             </featuredproduct>
+        </blocks>
+    </global>
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <featuredproduct>
+                                            <title>Featured Products</title>
+                                        </featuredproduct>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <default>
+        <featuredproduct>
+            <featuredproduct>
+                <num_displayed_products>9</num_displayed_products>
+            </featuredproduct>
+        </featuredproduct>
+    </default>
+</config>

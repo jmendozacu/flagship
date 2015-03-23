@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <Orders_Deleteorders>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Orders_Deleteorders>
+    </modules>
+</config>

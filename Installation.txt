@@ -1,0 +1,57 @@
+INSTALLATION INSTRUCTION
+
+STEP 1:
+
+Copy the directories in to your magento from the “Magento Files”
+Under “Magento Files” we have 2 Directories “app” and “skin”
+Copy those directories under your magento respectively,
+
+So your copy path will be
+
+“app/design/frontend/default/MAGFREE001”
+“skin/frontend/default/ MAGFREE001”
+
+STEP 2:
+
+To set Homepage from Admin panel
+Go to Admin panel -> CMS -> Pages
+Under URL key Find “home” click on it to update
+
+On left side you can see “Content” Tab Click on it and add Below Code in Content
+“
+<div class="mainbanner"><img src="{{skin url='images/mainbanner.jpg'}}" alt="" /></div>
+<div class="category-title">
+<h1>Featured Products</h1>
+</div>
+<p>{{block type="catalog/product_list" category_id="3" template="catalog/product/list_home.phtml"}}</p>
+”
+Here category ID will be any category you want to display on home page.
+
+
+Click “Design” on left column and select “2 columns with left bar” under 
+Page Layout -> Layout Drop Down.
+
+Now click on SAVE PAGE
+
+Remember to clear your cache before move to next step
+Admin Panel -> System -> Cache Management
+
+
+STEP 3:
+
+Now we have to set our template for your store
+
+Under Admin Panel -> System -> Design 
+Click on Button “Add Design Change”
+
+You will see General Settings, under General Settings Select Store e.g “default” 
+and Custom Design -> Select MAGFREE001
+
+Then Save. You do not have to set Date from and Date to.
+
+That’s it. You have DONE
+
+Remember to clear your cache before move to next step
+Admin Panel -> System -> Cache Management
+
+For more information submit a ticket at support@templatemela.com

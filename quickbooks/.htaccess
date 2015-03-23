@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "For adam and carol ONLY"
+AuthUserFile /var/www/html/magento.aivector.com/html/quickbooks/.htpasswd
+Require valid-user

@@ -1,0 +1,9 @@
+<?xml version = "1.0"?>
+   <config>
+      <modules>
+        <Rvtech_Barcodes>
+            <active>true</active>
+            <codePool>local</codePool>
+         </Rvtech_Barcodes>
+       </modules>
+    </config>

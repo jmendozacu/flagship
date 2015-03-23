@@ -1,0 +1,33 @@
+<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"  />
+<form action="<?php echo Mage::getUrl('barcodes/barcodes/save') ?>" method="post">
+  <fieldset>
+    <ul>
+     <li>
+       <label for="order">Purchase Order</label>
+       <input type="text" id="purchase_order" name="purchase_order" />
+     </li>
+     <li>
+         <label for="date">Date</label>
+         <input type="text" id="date" name="date" />
+     </li>
+     <li>
+        <label for="factory">Factory</label>
+        <input type="text" id="factory" name="factory" />
+    </li>
+    <li>
+        <label for="product">Product</label>
+        <input type="text" id="product" name="product" />
+    </li>
+    <li>
+        <label for="barcode">Barcode</label>
+        <input type="text" id="barcode" name="barcode" />
+    </li>
+     <li>
+        <input type="submit" value="Save" />
+    </li>
+  </ul>
+ </fieldset>
+</form>
+<?php 
+echo $this->methodblock();
+?>

@@ -1,0 +1,8 @@
+/var
+/media
+/app/etc/local.xml
+/.git_proline
+/nbproject
+.htaccess.sample
+.modgit/
+.modman/

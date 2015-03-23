@@ -1,0 +1,4 @@
+operation=print
+file=picking_list.pdf
+param=
+name=Order preparation : Print picking list

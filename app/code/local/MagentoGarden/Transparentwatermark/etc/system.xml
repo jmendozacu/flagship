@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<config>
+	<tabs>
+		<magentogarden translate="label" module="transparentwatermark">
+			<label>Magento Garden</label>
+			<sort_order>99</sort_order>
+		</magentogarden>
+	</tabs>
+	<sections>
+		<magentogarden_transparentwatermark translate="label" module="transparentwatermark">
+			<label>Transparent Watermark</label>
+			<tab>magentogarden</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>10</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<general translate="label">
+					<label>General</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>10</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<enabled_transparentwatermark>
+							<label>Enable Transparent Watermark</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</enabled_transparentwatermark>
+						<transparentwatermark_sample_product>
+							<label>Sample Product Image</label>
+							<frontend_type>image</frontend_type>
+							<backend_model>adminhtml/system_config_backend_image</backend_model>
+							<upload_dir config="system/filesystem/media" scope_info="1">MagentoGarden/transparentwatermark</upload_dir>
+							<base_url type="media" scope_info="1">MagentoGarden/transparentwatermark</base_url>
+							<sort_order>200</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<comment>Allowed file types: jpeg, gif, png.</comment>
+						</transparentwatermark_sample_product>
+						<transparentwatermark_sample_image_width>
+							<label>Sample Product Image Width</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</transparentwatermark_sample_image_width>
+						<transparentwatermark_sample_image_height>
+							<label>Sample Product Image Height</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</transparentwatermark_sample_image_height>
+						<enabled_custom_position>
+							<label>Use Custom Position</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>60</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<comment>If choose "No", please set the "Position" in the "GENERAL" -> "DESIGN", the default watermark settings.</comment>
+						</enabled_custom_position>
+						<transparentwatermark_custom_position_x>
+							<label>Custom Position X</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</transparentwatermark_custom_position_x>
+						<transparentwatermark_custom_position_y>
+							<label>Custom Position Y</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</transparentwatermark_custom_position_y>
+					</fields>
+				</general>
+			</groups>
+		</magentogarden_transparentwatermark>
+	</sections>
+</config>

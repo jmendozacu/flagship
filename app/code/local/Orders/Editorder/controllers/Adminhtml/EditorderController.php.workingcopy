@@ -1,0 +1,626 @@
+<?php
+class Orders_Editorder_Adminhtml_EditorderController extends Mage_Adminhtml_Controller_Action
+{
+    public function indexAction()
+    {
+        $this->loadLayout()->_setActiveMenu('editordertab')->_title($this->__('Edit Orders'));
+
+        $this->_addLeft($this->getLayout()->createBlock('core/text')->setText('<h1>Left Block</h1>'));
+
+        $block = $this->getLayout()->createBlock('core/text')->setText('<h1>This is a Text Block</h1>');
+        $this->_addContent($block);
+
+        //foreach($orders as $test)
+        //{
+            //var_dump($test);
+            //echo "<br>CREATION DATE: " . $test['created_at'] . "<br>";
+            //$timestamp = strtotime($test['created_at']);
+            //echo 'TIMESTAMP OF CREATION DATE IS' . $timestamp . "<br>";
+        //}
+
+        $orderInfo = $this->startTable(); 
+
+        if (isset($_GET['order_entity_id']))
+        {
+            //echo 'GET ORDER ENTITY ID IS SET';
+            $order = $this->getOrder($_GET['order_entity_id']);   
+        }
+        else
+        {
+            $collection = Mage::getModel('editorder/order')->getCollection();
+            $orders = $collection->getData();
+            $order = array_shift($orders);
+        }
+        $billingAddress = Mage::getModel('sales/order_address')->load($order['billing_address_id']);
+        $shippingAddress = Mage::getModel('sales/order_address')->load($order['shipping_address_id']);
+
+        if ( isset($_GET['increment_id']) && $_GET['increment_id'] == $order['increment_id'] ) 
+        {
+            if (!isset($_GET['order_entity_id']) || $_GET['order_entity_id'] == $order['entity_id'])
+            {
+                $salesAddressModel = Mage::getModel('sales/order_address');
+                $editOrderModel = Mage::getModel('editorder/order');
+
+                if (isset($_GET['billing_name']) && (isset($_GET['billing_street'])) && (isset($_GET['billing_city'])) && (isset($_GET['billing_region_dropdown'])) && (isset($_GET['billing_postal_code'])) && (isset($_GET['billing_country'])) && (isset($_GET['billing_telephone'])));
+                {
+                    $explodedBillingName = explode(' ', $_GET['billing_name']);
+                    $this->editBillingAddress($order['billing_address_id'], $salesAddressModel, $explodedBillingName[0], $explodedBillingName[1], $_GET['billing_street'], $_GET['billing_city'], $_GET['billing_region_dropdown'], $_GET['billing_postal_code'], $_GET['billing_country'], $_GET['billing_telephone']);
+                    $billingAddress['firstname'] = $explodedBillingName[0];
+                    $billingAddress['lastname'] = $explodedBillingName[1]; 
+                    $billingAddress['street'] = $_GET['billing_street'];
+                    $billingAddress['city'] = $_GET['billing_city'];
+                    $billingAddress['postcode'] = $_GET['billing_postal_code'];
+                    $billingAddress['telephone'] = $_GET['billing_telephone'];
+                    $billingAddress['region_id'] = $_GET['billing_region_dropdown'];
+                    $billingAddress['country_id'] = $_GET['billing_country'];
+                }
+
+                if (isset($_GET['shipping_name']) && (isset($_GET['shipping_street'])) && (isset($_GET['shipping_city'])) && (isset($_GET['shipping_region_dropdown'])) && (isset($_GET['shipping_postal_code'])) && (isset($_GET['shipping_country'])) && (isset($_GET['shipping_telephone'])));
+                {
+                    $explodedShippingName = explode(' ', $_GET['shipping_name']);
+                    $this->editShippingAddress($order['shipping_address_id'], $salesAddressModel, $explodedShippingName[0], $explodedShippingName[1], $_GET['shipping_street'], $_GET['shipping_city'], $_GET['shipping_region_dropdown'], $_GET['shipping_postal_code'], $_GET['shipping_country'], $_GET['shipping_telephone']);
+                    $shippingAddress['firstname'] = $explodedShippingName[0];
+                    $shippingAddress['lastname'] = $explodedShippingName[1];
+                    $shippingAddress['street'] = $_GET['shipping_street'];
+                    $shippingAddress['city'] = $_GET['shipping_city'];
+                    $shippingAddress['postcode'] = $_GET['shipping_postal_code'];
+                    $shippingAddress['telephone'] = $_GET['shipping_telephone'];
+                    $shippingAddress['region_id'] = $_GET['shipping_region_dropdown'];
+                    $shippingAddress['country_id'] = $_GET['shipping_country'];
+                }
+
+                if (isset($_GET['firstname']) && (isset($_GET['lastname'])) && (isset($_GET['customer_email'])))
+                {
+                    $this->editAccountInfo($order['entity_id'], $editOrderModel, $_GET['customer_prefix'], $_GET['firstname'], $_GET['lastname'], $_GET['customer_email']);
+                    $order['customer_firstname'] = $_GET['firstname'];
+                    $order['customer_lastname'] = $_GET['lastname'];
+                    $order['customer_prefix'] = $_GET['customer_prefix'];
+                    $order['customer_email'] = $_GET['customer_email'];
+                }
+            }
+        }
+        $this->createOrderSidebar();
+        $orderInfo .= "<form name =" . $order['entity_id'] . ' ' . "action=\"#\"" . ' ' . "method=\"get\">";
+        if (isset($_GET['order_entity_id']))
+        {
+            $orderInfo .= "<input type=\"hidden\" name=\"order_entity_id\" value=" . $_GET['order_entity_id'] . ">";
+        }
+        $orderInfo .= "<input type=\"hidden\" name=\"increment_id\" value=" . $order['increment_id'] . ">";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("customer_prefix", $order['customer_prefix']);
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("firstname", $order['customer_firstname']);
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("lastname", $order['customer_lastname']);
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("customer_email", $order['customer_email']);
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr><td>&nbsp</td></tr>";    
+        $orderInfo .= "<tr><td>&nbsp</td></tr>";    
+    
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+        $orderInfo .= "</tr>";
+      
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "<b>Billing Address</b>";
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Billing Name";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $fullBillingName = $billingAddress['firstname'] . ' ' . $billingAddress['lastname'];
+        $orderInfo .= $this->createTextField("billing_name", "$fullBillingName");
+        $orderInfo .= "</td>";
+    
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Billing Street";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $billingStreet = $billingAddress->getStreet();
+        $orderInfo .= $this->createTextField("billing_street", $billingStreet[0]);
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Billing City";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("billing_city", $billingAddress->getCity());
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Billing State";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $billingInfo = Mage::getResourceModel('directory/region_collection')->load()->toOptionArray();
+        $orderInfo .= "<select name=\"billing_region_dropdown\" style=\"width: 175px\">";
+        $orderInfo .= "<option value=\"" . $billingAddress['region_id'] . "\">" . $billingAddress['region'] . "</option>";
+        foreach($billingInfo as $billingRegion)
+        {
+            if ( $billingRegion['value'] != "")
+            {
+                if ( $billingRegion['value'] == $_GET['billing_region_dropdown'] ) 
+                {
+                    $orderInfo .= "<option value=\"" . $billingRegion['value'] . "\" selected>" . $billingRegion['label'] . "</option>";
+                } 
+                else 
+                {
+                    $orderInfo .= "<option value=\"" . $billingRegion['value'] . "\">" . $billingRegion['label'] . "</option>";
+                }
+            }
+        }
+        $orderInfo .= "</select>";
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Billing Postal Code";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("billing_postal_code", $billingAddress->getPostcode());
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Billing Country";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $billingCountries = Mage::getResourceModel('directory/country_collection')->load()->toOptionArray();
+        $originalBillingCountryName = Mage::getModel('directory/country')->loadByCode($billingAddress['country_id'])->getName();
+        $orderInfo .= "<select name=\"billing_country\" style=\"width: 175px\">";
+        $orderInfo .= "<option value=\"" . $billingAddress['country_id'] . "\">" . $originalBillingCountryName . "</option>";
+        foreach ($billingCountries as $billingCountry)
+        {
+            if ($billingCountry['value'] != "")
+            {
+                if ( $billingCountry['value'] == $_GET['billing_country'] )
+                {
+                    $orderInfo .= "<option value=\"" . $billingCountry['value'] . "\" selected>" . $billingCountry['label'] . "</option>";
+                }
+                else
+                {
+                    $orderInfo .= "<option value=\"" . $billingCountry['value'] . "\">" . $billingCountry['label'] . "</option>";
+                }
+            }
+        }
+        $orderInfo .= "</select>";
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Billing Telephone";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("billing_telephone", $billingAddress->getTelephone());
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr><td>&nbsp</td></tr>";    
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "<b>Shipping Address</b>";
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Shipping Name";
+        $orderInfo .= "</td>"; 
+
+        $orderInfo .= "<td>";
+        $fullShippingName = $shippingAddress['firstname'] . ' ' . $shippingAddress['lastname'];
+        $orderInfo .= $this->createTextField("shipping_name", "$fullShippingName");
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Shipping Street";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $shippingStreet = $shippingAddress->getStreet();
+        $orderInfo .= $this->createTextField("shipping_street", $shippingStreet[0]);
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Shipping City";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("shipping_city", $shippingAddress->getCity());
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Shipping State";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $shippingInfo = Mage::getResourceModel('directory/region_collection')->load()->toOptionArray();
+        $orderInfo .= "<select name=\"shipping_region_dropdown\" style=\"width: 175px\">";
+        $orderInfo .= "<option value=\"" . $shippingAddress['region_id'] . "\">" . $shippingAddress['region'] . "</option>";
+        foreach ($shippingInfo as $shippingRegion)
+        {
+            if ( $shippingRegion['value'] != "")
+            {
+                if ( $shippingRegion['value'] == $_GET['shipping_region_dropdown'] )
+                {
+                    $orderInfo .= "<option value=\"" . $shippingRegion['value'] . "\" selected>" . $shippingRegion['label'] . "</option>";
+                }
+                else
+                {
+                    $orderInfo .= "<option value=\"" . $shippingRegion['value'] . "\">" . $shippingRegion['label'] . "</option>";
+                }
+            }
+        }
+        $orderInfo .= "</select>";
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Shipping Postal Code";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("shipping_postal_code", $shippingAddress->getPostcode());
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Shipping Country";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $shippingCountries = Mage::getResourceModel('directory/country_collection')->load()->toOptionArray();
+        $originalShippingCountryName = Mage::getModel('directory/country')->loadByCode($shippingAddress['country_id'])->getName();
+        $orderInfo .= "<select name=\"shipping_country\" style=\"width: 175px\">";
+        $orderInfo .= "<option value=\"" . $shippingAddress['country_id'] . "\">" . $originalShippingCountryName . "</option>";
+        foreach ($shippingCountries as $shippingCountry)
+        {
+            if ( $shippingCountry['value'] != "")
+            {
+                if ( $shippingCountry['value'] == $_GET['shipping_country'] )
+                {
+                    $orderInfo .= "<option value=\"" . $shippingCountry['value'] . "\" selected>" . $shippingCountry['label'] . "</option>";
+                }
+                else
+                {
+                    $orderInfo .= "<option value=\"" . $shippingCountry['value'] . "\">" . $shippingCountry['label'] . "</option>";
+                }
+            }
+        }
+        $orderInfo .= "</select>";
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr>"; 
+        $orderInfo .= "<td></td>";
+
+        $orderInfo .= "<td style=\"font-size: 13px\">";
+        $orderInfo .= "Shipping Telephone";
+        $orderInfo .= "</td>";
+
+        $orderInfo .= "<td>";
+        $orderInfo .= $this->createTextField("shipping_telephone", $shippingAddress->getTelephone());
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr><td>&nbsp</td></tr>";    
+        $orderInfo .= "<tr>";
+        $orderInfo .= "<td colspan=\"4\" align=\"center\">";
+        $orderInfo .= "<input type=\"submit\" value=\"Submit Changes\" />";
+        $orderInfo .= "</td>";
+        $orderInfo .= "</tr>";
+
+        $orderInfo .= "<tr><td>&nbsp</td></tr>";    
+        $orderInfo .= "</form>";
+
+        $orderInfo .= "</table>";
+        $this->getTextBlock($orderInfo);
+        
+        //$this->getTextBlock($this->getMainColDiv("I'm in main col"));
+        //$this->getTextBlock($this->getSideColDiv("I should be in side col"));
+     
+        $this->renderLayout();
+    }
+    
+    public function getMainColDiv($text)
+    {
+        $mainColDiv = "<div class=\"main-col\">" . $text . "</div>";
+        return $mainColDiv;
+    }
+ 
+    public function getSideColDiv($text)
+    {
+        $sideColDiv = "<div class=\"side-col\">" . $text . "</div>";
+        return $sideColDiv;
+    }
+
+    public function createOrderSidebar()
+    {
+        $orderCollection = Mage::getModel('editorder/order')->getCollection();
+        $orderData = $orderCollection->getData();
+        foreach($orderData as $order)
+        {
+            $form = "<form name=" . $order['increment_id'] . ' ' . "action=\"?increment_id=" . $order['increment_id'] . "\"" . ' ' . "method=\"get\">";
+            $value = "Order # " . $order['increment_id'] . ': ' . $order['customer_firstname'] . ' ' . $order['customer_lastname'] . '  ';
+            $form .= "<input type=\"submit\" value=\"$value\" style=\"width: 210px\">";
+            $form .= "<input type=\"hidden\" name=\"order_entity_id\" value=" . $order['entity_id'] . ">";
+            $form .= "</form>";
+            $this->_addLeft($this->getLayout()->createBlock('core/text')->setText($form));
+        }
+    }
+    
+    public function startTable()
+    {
+        $table = "<table>";
+        $table .= "<tr>";
+        $table .= "<th>Prefix</th>";
+        $table .= "<th>First Name</th>";
+        $table .= "<th>Last Name</th>";
+        $table .= "<th>Email</th>";
+        $table .= "</tr>";
+        return $table;
+    }
+
+    public function getOrder($entityId)
+    {
+        $specificOrder = Mage::getModel('editorder/order');
+        $specificOrderData = $specificOrder->load($entityId)->getData();
+        return $specificOrderData;
+    }
+
+    public function getTextBlock($text)
+    {
+        $block = $this->getLayout()->createBlock('core/text')->setText($text);
+        $this->_addContent($block);
+    }
+
+    public function createTextField($inputName, $info)
+    {
+        if ($inputName == "customer_prefix")
+        {
+            $form = "<input type=\"text\" name=\"$inputName\" size=\"5\" value=\"$info\">";
+            $form .= "<br>";
+            return $form;
+        }
+        else
+        {
+            $form = "<input type=\"text\" name=\"$inputName\" size=\"30\" value=\"$info\">";
+            $form .= "<br>";
+            return $form;
+        }
+    }
+
+    public function editEmail($entityID, $newCustomerEmail, $model)
+    {
+        $model->load($entityID);
+        $model->setCustomerEmail($newCustomerEmail);
+        $model->save();
+    }
+
+    public function editPrefix($entityID, $newPrefix, $model)
+    {
+        $model->load($entityID);
+        $model->setCustomerPrefix($newPrefix);
+        $model->save();
+    }
+
+    public function editLastName($entityID, $newLastName, $model)
+    {
+        $model->load($entityID);
+        $model->setCustomerLastname($newLastName);
+        $model->save();
+    }
+
+    public function editFirstName($entityID, $newFirstName, $model)
+    {
+        $model->load($entityID);
+        $model->setCustomerFirstname($newFirstName);
+        $model->save();
+    }
+ 
+    public function editBillingName($id, $firstName, $lastName, $model)
+    {
+        $model->load($id);
+        $model->setFirstname($firstName);
+        $model->setLastname($lastName);
+        $model->save();
+    }
+    
+    public function editShippingName($id, $firstName, $lastName, $model)
+    {
+        $model->load($id);
+        $model->setFirstname($firstName);
+        $model->setLastname($lastName);
+        $model->save();
+    }
+
+    public function editBillingStreet($id, $street, $model)
+    {
+        $model->load($id);
+        $model->setStreet($street);
+        $model->save();
+    }
+
+    public function editShippingStreet($id, $street, $model)
+    {
+        $model->load($id);
+        $model->setStreet($street);
+        $model->save();
+    }
+
+    public function editBillingCity($id, $city, $model)
+    {
+        $model->load($id);
+        $model->setCity($city);
+        $model->save();
+    }
+
+    public function editShippingCity($id, $city, $model)
+    {
+        $model->load($id);
+        $model->setCity($city);
+        $model->save();
+    }
+   
+    public function editBillingPostcode($id, $code, $model)
+    {
+        $model->load($id);
+        $model->setPostcode($code);
+        $model->save();
+    }
+
+    public function editShippingPostcode($id, $code, $model)
+    {
+        $model->load($id);
+        $model->setPostcode($code);
+        $model->save();
+    }
+
+    public function editBillingTelephone($id, $phone, $model)
+    {
+        $model->load($id);
+        $model->setTelephone($phone);
+        $model->save();
+    }
+  
+    public function editShippingTelephone($id, $phone, $model)
+    {
+        $model->load($id);
+        $model->setTelephone($phone);
+        $model->save();
+    }
+
+    public function editBillingRegion($id, $regionId, $model)
+    {
+        $model->load($id);
+        $model->setRegionId($regionId);
+        $model->save();
+    }
+
+    public function editShippingRegion($id, $regionId, $model)
+    {
+        $model->load($id);
+        $model->setRegionId($regionId);
+        $model->save();
+    }
+
+    public function editBillingCountry($id, $countryId, $model)
+    {
+        $model->load($id);
+        $model->setCountryId($countryId);
+        $model->save();
+    }
+
+    public function editShippingCountry($id, $countryId, $model)
+    {
+        $model->load($id);
+        $model->setCountryId($countryId);
+        $model->save();
+    }
+
+    public function editBillingAddress($id, $model, $firstName, $lastName, $street, $city, $regionId, $postCode, $countryId, $telephone)
+    {
+        $model->load($id);
+        $model->setFirstname($firstName);
+        $model->setLastname($lastName);
+        $model->setStreet($street);
+        $model->setCity($city);
+        $model->setRegionId($regionId);
+        $model->setPostcode($postCode);
+        $model->setCountryId($countryId);
+        $model->setTelephone($telephone);
+        $model->save();
+    }
+   
+    public function editShippingAddress($id, $model, $firstname, $lastName, $street, $city, $regionId, $postCode, $countryId, $telephone)
+    {
+        $model->load($id);
+        $model->setFirstname($firstName);
+        $model->setLastname($lastName);
+        $model->setStreet($street);
+        $model->setCity($city);
+        $model->setRegionId($regionId);
+        $model->setPostcode($postCode);
+        $model->setCountryId($countryId);
+        $model->setTelephone($telephone);
+        $model->save();
+    }
+
+    public function editAccountInfo($entityId, $model, $prefix, $firstName, $lastName, $email)
+    {
+        $model->load($entityId);
+        $model->setCustomerPrefix($prefix);
+        $model->setCustomerFirstname($firstName);
+        $model->setCustomerLastname($lastName);
+        $model->setCustomerEmail($email);
+        $model->save();
+    }
+}
+?>

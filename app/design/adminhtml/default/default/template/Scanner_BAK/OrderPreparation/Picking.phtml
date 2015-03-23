@@ -1,0 +1,180 @@
+<?php 
+//$products =  mage::helper('Orderpreparation/PickingList')->GetProductsSummary(); 
+$products = $this->getProducts();
+//echo "products is of type ".gettype($products)."<br>\n";
+foreach($products as $index => $product) {
+	//echo "product class ".get_class($product)."<br>\n";// methods:<pre>".print_r(get_class_methods($product), true)."<br>\n";
+	//echo "product index $index id = {$product->getId()} and entity_id = {$product->getEntityId()} and SKU = {$product->getSku()} and qty = {$product->getQty()}<br>\n";
+	//die("<pre>".print_r($product->getData(), true));
+	
+}
+//echo "Picking.phtml products count: ".count($products)."<br>\n";
+?>
+<script>
+	var products = new Array();
+	var scanned_serials = new Array();
+	
+	<?php
+	$i = 0;
+	$serialsCount = array();
+	$locationsCount = array();
+	foreach ($products as $product): $productId = $product->getId(); ?>
+
+	products[<?php echo $productId; ?>] = new Array();
+	products[<?php echo $productId; ?>]['id'] = <?php echo $product->getId(); ?>;
+	products[<?php echo $productId; ?>]['sku'] = '<?php echo $product->getSku(); ?>';
+	products[<?php echo $productId; ?>]['name'] = '<?php echo addslashes($product->getName()); ?>';
+	products[<?php echo $productId; ?>]['manufacturer'] = '<?php echo $product->getManufacturer(); ?>';
+	products[<?php echo $productId; ?>]['location'] = '<?php echo $product->getlocation(); ?>';
+	products[<?php echo $productId; ?>]['weight'] = '<?php echo $product->getWeight(); ?>';
+	<?php $qty = $product->getqty() ? $product->getqty() : 0; ?>
+	<?php $qty_picked = $product->getQtyPicked() ? $product->getQtyPicked() : 0; ?>
+	<?php $expected_qty = $qty - $qty_picked; ?>
+	products[<?php echo $productId; ?>]['qty'] = <?php echo $qty; ?>;
+	products[<?php echo $productId; ?>]['qty_picked'] = <?php echo $qty_picked; ?>;
+	products[<?php echo $productId; ?>]['expected_qty'] = <?php echo $expected_qty; ?>;
+	products[<?php echo $productId; ?>]['sort_value'] = '<?php echo strtolower((mage::getStoreConfig('orderpreparation/picking_list/sort_mode') == 'location') ? $product->getlocation() : $product->getmanufacturer()); ?>';
+	products[<?php echo $productId; ?>]['barcodes'] = new Array();
+	<?php $j = 0; ?>
+	<?php foreach ($this->getBarcodes($product->getId()) as $barcode): ?>
+	products[<?php echo $productId; ?>]['barcodes'][<?php echo $j; ?>] = '<?php echo $barcode->getppb_barcode(); ?>';
+		<?php $j++; ?>
+	<?php endforeach; ?>
+	products[<?php echo $productId; ?>]['serials'] = new Array();
+	products[<?php echo $productId; ?>]['locations'] = new Array();
+		<?php $k = 0; ?>
+		<?php 
+		$serials = $product->getAvSerials();
+		$serialsCount[$product->getId()] = count($serials);
+		$locations = $product->getAvLocations();
+		$locationsCount[$product->getId()] = 0;
+		foreach ($serials as $serial): 
+			if(empty($oldestLocations[$product->getId()]) && !empty($locations[$k])) $oldestLocations[$product->getId()] = $locations[$k];
+		?>
+	products[<?php echo $productId; ?>]['serials'][<?php echo $k; ?>] = '<?php echo $serial; ?>';
+		<?php if(!empty($locations[$k])) $locationsCount[$product->getId()]++; ?>
+	products[<?php echo $productId; ?>]['locations'][<?php echo $k; ?>] = '<?php echo $locations[$k]; ?>';
+			<?php $k++; ?>
+		<?php endforeach; ?>
+	products[<?php echo $productId; ?>]['scanned_serials'] = new Array();
+		<?php $i++; ?>
+	<?php endforeach; ?>	
+	
+	var deleteRowWhenQtyReached = <?php echo (int)mage::getStoreConfig('scanner/misc/hide_product_row_when_qty_reached'); ?>;
+	
+</script>
+
+<div id="picking_list_view">
+	<p class="header">Scan serial number for product.</p>
+	<p id="error_message"></p>
+
+	<form action="<?php echo $this->getSubmitUrl(); ?>" method="POST" name="form_pick" id="form_pick">
+		<input id="picking_form_key" name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+
+		<table border="1" cellspacing="0" cellpadding="5" width="100%">
+			<tr>
+				<th class="a-center" bgcolor="#cccccc" colspan="3"><?php echo $this->__('Picking'); ?></th>
+			</tr>
+			<?php if (count($products) == 0): ?>
+				<tr>
+					<td colspan="3" align="center">
+						<?php echo $this->__('No Products'); ?>
+					</td>
+				</tr>
+			<?php else: ?>
+			<tr>
+				<td align="center" colspan="3">
+					<input type="button" value="Submit" onclick="document.getElementById('form_pick').submit(); return false"/>
+				</td>
+			</tr>
+			<tr>
+				<th class="a-center">Qty</th>
+				<th class="a-center">Product</th>
+				<th class="a-center">Locations</th>
+			</tr>
+				<?php $lastSortValue = ''; ?>
+				<?php foreach ($products as $product): ?>
+					<?php $currentSortValue = strtolower((mage::getStoreConfig('orderpreparation/picking_list/sort_mode') == 'location') ? $product->getlocation() : $product->getmanufacturer()); ?>
+					<?php if ($lastSortValue != $currentSortValue): ?>
+						<tr id="tr_sortvalue_<?php echo $currentSortValue; ?>">
+							<?php if ($currentSortValue != ''): ?>
+									<th bgcolor="#eeeeee" colspan="2" align="center"><?php echo strtoupper($currentSortValue); ?></th>
+							<?php else: ?>
+									<th bgcolor="#eeeeee" colspan="2" align="center"><?php echo $this->__('Unknown'); ?></th>				
+							<?php endif; ?>
+						</tr>
+						<?php $lastSortValue = $currentSortValue; ?>
+					<?php endif; ?>
+					<?php if($product->gettype_id() != 'simple') continue; ?>
+					<tr id="tr_product_<?php echo $product->getId(); ?>">
+						<td nowrap>
+							<input type="hidden" id="product_<?php echo $product->getId(); ?>" name="product_<?php echo $product->getId(); ?>" value="0">
+							<span id="span_product_<?php echo $product->getId(); ?>">0</span> / <?php echo $product->getqty() - $product->getQtyPicked(); ?>
+						</td>
+						<td>
+							<span onclick="showProductInfo(<?php echo $product->getId(); ?>)"><?php echo $product->getSku(); ?></span>
+							<input type="hidden" size="1" id="serials_<?php echo $product->getId(); ?>" name="serials_<?php echo $product->getId(); ?>" value="">
+							<div id="product_scanned_serials_<?php echo $product->getId(); ?>" class="bold blue small"></div>
+						</td>
+						<td align="center">
+							<?php if(!empty($oldestLocations[$product->getId()])) { ?>
+								<?php if(!empty($locationsCount[$product->getId()]) && $locationsCount[$product->getId()] > 1) { ?>
+							<input type="button" value="<?php echo $oldestLocations[$product->getId()]; ?>" class="touch_button" onclick="viewProductSerialLocations(<?php echo $product->getId(); ?>);" />
+								<?php } else { ?>
+							<span onclick="viewProductSerialLocations(<?php echo $product->getId(); ?>);"><?php echo $oldestLocations[$product->getId()]; ?></span>
+								<?php } ?>
+							<?php } ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			<?php endif; ?>
+		</table>
+	</form>
+	scanned_serials: <span id="scanned_serials_list_count"></span>
+	<p id="scanned_serials_list"></p>
+</div>
+
+<div id="product_info_view" style="display: none" onclick="closeProductInfo()">
+	<div class="div_line"><b>Product Info:</b></div>
+	<table border="1" cellspacing="0" width="100%">
+		<tr><td>ID:</td><td id="product_id"></td></tr>
+		<tr><td><b>Name:</b></td><td id="product_name"></td></tr>
+		<tr><td><b>SKU:</b></td><td id="product_sku"></td></tr>
+		<tr><td><b>Type:</b></td><td id="product_type"></td></tr>
+		<tr><td><b>Weight:</b></td><td id="product_weight"></td></tr>
+		<tr><td><b>Ordered:</b></td><td id="product_ordered"></td></tr>
+	</table>
+	<div class="div_line">
+		<button type="button" onclick="closeProductInfo()">CLOSE</button>
+	</div>
+	<div style="text-align: center">
+		<p><b>Serials:</b></p>
+		<p id="product_info_serials"></p>
+		<table id="product_info_serials_table" width="100%" border="1" cellspacing="0">
+			<tbody>
+				<tr>
+					<th>Serials: <span id="product_253_serials_count"></span></th>
+					<th>Locations: <span id="product_253_locations_count"></span></th>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script>
+	<?php //foreach ($products as $product): ?>
+	//colorProductCell(<?php echo $product->getId(); ?>);
+	<?php //endforeach; ?>
+	
+	enableCatchKeys('pickingScanSerial(KC_value);');
+	var pickOpt = 1;		
+	var elementName = 'query';
+
+	function pickOptCntrl(inValue){
+		if(inValue.indexOf('\n') != -1||inValue.indexOf('\n') != -1){
+			alert(inValue);
+			return false;
+			pickingScanSerial(inValue);
+		}
+	}
+</script>

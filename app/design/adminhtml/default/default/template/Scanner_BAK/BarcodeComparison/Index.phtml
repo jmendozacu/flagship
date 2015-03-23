@@ -1,0 +1,31 @@
+
+<table border="0" width="100%">
+<tr>
+	<th>Scan 1 :</th>
+	<td class="a-center"><span id="scan_1"></span></td>
+</tr>
+<tr>
+	<th>Scan 2 : </th>
+	<td class="a-center"><span id="scan_2"></span></td>
+</tr>
+<tr>
+	<th class="a-center" colspan="2">
+		<p>&nbsp;</p>
+		<span id="result" style="font-size: 24px; text-align: center;"></span>
+	</th>
+</tr>
+</table>
+
+<!-- Inivisible form for barcode comparison -->
+
+<form name='compareEntry' id='compareEntry'>
+	<input type='hidden' id='barcode1' name='barcode1' maxlength='255'>
+</form>
+
+<script>
+	var compareFlag = 1;
+	var formName = 'compareEntry'
+	var elementName= 'barcode1';
+	enableCatchKeys('compareScan();');
+	
+</script>

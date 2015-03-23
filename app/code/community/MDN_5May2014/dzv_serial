@@ -1,0 +1,18 @@
+./Scanner_arunvFEB11/Block/Inventory/Result.php:					->addFieldToFilter('dzv_serial', array('eq' => trim($this->_keyword)))
+./Scanner_arunvFEB11/Block/Inventory/Result.php:						->addFieldToFilter('dzv_serial', array('like' => '%' . $this->_keyword . '%'))
+./Scanner_arunvFEB11/Block/Inventory/Result.php_BAKDEC25:			$object = mage::getModel('barcodes/barcodes')->load(trim($keyword), 'dzv_serial');
+./Scanner_arunvFEB11/Block/Inventory/Result.php_27dec2013:	 		$barcode = $object->load(trim($this->_keyword), 'dzv_serial');			
+./Scanner_arunvFEB11/Block/Inventory/Result.php_27dec2013:						    ->addFieldToFilter('dzv_serial', array('like' => '%'.$this->_keyword.'%'))
+./Scanner_arunvFEB11/Block/Inventory/Result.php_BAK_JAN9:					->addFieldToFilter('dzv_serial', array('eq' => trim($this->_keyword)))
+./Scanner_arunvFEB11/Block/Inventory/Result.php_BAK_JAN9:						->addFieldToFilter('dzv_serial', array('like' => '%' . $this->_keyword . '%'))
+./Purchase/controllers/OrdersController.php:							->addExpressionFieldToSelect('max_serial', 'MAX({{dzv_serial}})', 'dzv_serial');
+./Purchase/controllers/OrdersController.php:								->addExpressionFieldToSelect('max_serial', 'MAX({{dzv_serial}})', 'dzv_serial');
+./Purchase/controllers/OrdersController.php_arunV28jan:                      ->addExpressionFieldToSelect('max_serial', 'MAX({{dzv_serial}})', 'dzv_serial');
+./Purchase/controllers/OrdersController.php_20dec2013:                      ->addExpressionFieldToSelect('max_serial', 'MAX({{dzv_serial}})', 'dzv_serial');
+./Scanner/Block/Inventory/Result.php:					->addFieldToFilter('dzv_serial', array('eq' => trim($this->_keyword)))
+./Scanner/Block/Inventory/Result.php:						->addFieldToFilter('dzv_serial', array('like' => '%' . $this->_keyword . '%'))
+./Scanner/Block/Inventory/Result.php_BAKDEC25:			$object = mage::getModel('barcodes/barcodes')->load(trim($keyword), 'dzv_serial');
+./Scanner/Block/Inventory/Result.php_27dec2013:	 		$barcode = $object->load(trim($this->_keyword), 'dzv_serial');			
+./Scanner/Block/Inventory/Result.php_27dec2013:						    ->addFieldToFilter('dzv_serial', array('like' => '%'.$this->_keyword.'%'))
+./Scanner/Block/Inventory/Result.php_BAK_JAN9:					->addFieldToFilter('dzv_serial', array('eq' => trim($this->_keyword)))
+./Scanner/Block/Inventory/Result.php_BAK_JAN9:						->addFieldToFilter('dzv_serial', array('like' => '%' . $this->_keyword . '%'))

@@ -1,0 +1,34 @@
+<config>
+    <menu>
+        <editordertab module="orders_editorder" translate="title">
+            <title>Edit Orders</title>
+            <sort_order>100</sort_order>
+            <children>
+                <orders module="orders_editorder" translate="title">
+                    <title>Orders</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/editorder</action>
+                </orders>
+            </children>
+        </editordertab>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <editorder translate="title" module="orders_editorder">
+                        <title>Edit Orders Controller</title>
+                        <sort_order>-100</sort_order>
+                        <children>
+                            <orders translate="title">
+                                <title>Orders Action</title>
+                                <sort_order>1</sort_order>
+                            </orders>
+                        </children>
+                    </editorder>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
+                                

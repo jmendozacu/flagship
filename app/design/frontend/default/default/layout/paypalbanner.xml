@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <paypalbanner_settings_index>
+        <remove name="right"/>
+        <remove name="left"/>
+        <!--<remove name="head"/>-->
+        <reference name="root">
+            <action method="setTemplate"><template>page/empty.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="paypalbanner/settings" name="settings" template="paypalbanner/settings.phtml" />
+        </reference>
+    </paypalbanner_settings_index>
+</layout>

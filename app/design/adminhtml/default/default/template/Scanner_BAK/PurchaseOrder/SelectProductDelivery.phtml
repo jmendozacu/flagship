@@ -1,0 +1,141 @@
+<?php 
+$products = $this->getProducts();
+foreach($products as $index => $product) {
+	//echo "<pre>product index $index: ".print_r($product->getData(), true)."</pre>\n";
+	//echo "product id = {$product->getData('pop_product_id')}<br>\n";
+}
+$serials = $this->getSerials();
+//die("<pre>serials: ".print_r($serials->getData(), true));
+foreach($serials as $index => $serial) {
+	//echo "<pre>serial index $index: ".print_r($serial->getData(), true)."</pre>\n";
+	//echo "serial {$serial->getDzvSerial()} product id = {$serial->getProductId()}<br>\n";
+}
+?>
+<script type="text/javascript">
+	//var elementName = 'barcode';
+	var products = new Array();
+	var serials = <?php echo json_encode($serials->getData()); ?>;
+	var scanned_serials = new Array();
+
+<?php $i = 0; ?>
+<?php foreach ($products as $product): $productId = $product['pop_product_id']; ?>
+	products['<?php echo $i; ?>'] = new Array();
+	products['<?php echo $i; ?>']['id'] = <?php echo $product->getData('pop_product_id'); ?>;
+	products['<?php echo $i; ?>']['name'] = '<?php echo str_replace("'", ' ', $product->getpop_product_name()); ?>';
+	products['<?php echo $i; ?>']['sku'] = '<?php echo $product->getSku(); ?>';
+	products['<?php echo $i; ?>']['type'] = '<?php echo $product->getTypeId(); ?>';
+	products['<?php echo $i; ?>']['weight'] = '<?php echo $product->getPopWeight(); ?>';
+	products['<?php echo $i; ?>']['ordered'] = '<?php echo $product->getPopQty(); ?>';
+	products['<?php echo $i; ?>']['expected_qty'] = <?php echo ($product->getpop_qty() - $product->getpop_supplied_qty() ) ?>;
+	products['<?php echo $i; ?>']['location'] = '';
+	products['<?php echo $i; ?>']['barcodes'] = new Array();
+	<?php $j = 0; ?>
+	<?php foreach ($this->getBarcodes($product->getpop_product_id()) as $barcode): ?>
+	products['<?php echo $i; ?>']['barcodes'][<?php echo $j; ?>] = "<?php echo str_replace("\n", "", $barcode->getppb_barcode()); ?>";
+		<?php $j++; ?>
+	<?php endforeach; ?>
+	<?php $i++; ?>
+<?php endforeach; ?>
+	var deleteRowWhenQtyReached = <?php echo (int) mage::getStoreConfig('scanner/misc/hide_product_row_when_qty_reached'); ?>;
+	var scanLocationAfterProduct = 0;<?php echo (int) mage::getStoreConfig('scanner/purchase_order/scan_location'); ?>;
+</script>
+
+<table border="1" cellspacing="0" cellpadding="5" width="100%">
+	<tr>
+		<th class="a-center" bgcolor="#eeeeee" colspan="3"><?php echo $this->__('Purchase Order #%s', $this->getOrder()->getpo_order_id()); ?></th>
+	</tr>
+</table>
+
+<form action="<?php echo $this->getSubmitUrl(); ?>" method="POST" name="frm_po" id="frm_po">
+<input id="form_key" name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+<input id="po_num" name="po_num" value="<?php echo $this->getOrder()->getId(); ?>" type="hidden">
+
+<div id="purchase_order_products">
+	<table border="1" cellspacing="0" cellpadding="5" width="100%">
+		<?php if ($this->getProducts()->getSize() == 0): ?>
+		<tr>
+			<td>
+				<?php echo $this->__('No Products'); ?>
+			</td>
+		</tr>
+		<?php else: ?>
+		<tr>
+			<td colspan="3" align="center">
+				<img src="<?php echo $this->getSkinUrl('images/scanner/btn_create_delivery.gif'); ?>" 
+					 onclick="document.getElementById('frm_po').submit();" style="margin-top: 5px;">
+			</td>
+		</tr>
+	</table>
+	
+	<p id="message" class="div_line">- Scan Product Serial -</p>
+	
+	<div id="div_success" class="div_message success">
+		<?php echo $this->getSuccessMessage(); ?>
+	</div>
+	<div id="div_error" class="div_message error">
+		<?php echo $this->getErrorMessage(); ?>
+	</div>
+
+	<table border="1" cellspacing="0" cellpadding="5" width="100%">
+			<?php foreach ($this->getProducts() as $product): ?>
+		<tr id="tr_product_<?php echo $product->getData('pop_product_id'); ?>">
+			<td>
+				<div id="product_name_<?php echo $product->getData('pop_product_id'); ?>" 
+					 onclick="showProductInfo(<?php echo $product->getData('pop_product_id'); ?>)">
+						 <?php echo $product->getpop_product_name(); ?></div>
+				<div id="product_scanned_serials_<?php echo $product->getData('pop_product_id'); ?>" style="color: black"></div>
+			</td>
+			<td align="center" nowrap>
+				<input type="hidden" size="1" id="product_<?php echo $product->getData('pop_product_id'); ?>" name="product_<?php echo $product->getData('pop_product_id'); ?>" value="0">
+				<input type="hidden" size="1" id="location_<?php echo $product->getData('pop_product_id'); ?>" name="location_<?php echo $product->getData('pop_product_id'); ?>" value="">
+				<input type="hidden" size="1" id="barcode_<?php echo $product->getData('pop_product_id'); ?>" name="barcode_<?php echo $product->getData('pop_product_id'); ?>" value="">
+				<input type="hidden" size="1" id="serials_<?php echo $product->getData('pop_product_id'); ?>" name="serials_<?php echo $product->getData('pop_product_id'); ?>" value="">
+				<span id="scanned_product_<?php echo $product->getData('pop_product_id'); ?>">0</span> / <?php echo ($product->getpop_qty() - $product->getpop_supplied_qty() ); ?><br>
+				<!--<img src="<?php echo $this->getSkinUrl('images/scanner/minus.gif'); ?>" onclick="decrementProductQty(<?php echo $product->getData('pop_product_id'); ?>);">-->
+				<!--<img src="<?php echo $this->getSkinUrl('images/scanner/plus.gif'); ?>" onclick="incrementProductQty(<?php echo $product->getData('pop_product_id'); ?>);">-->
+			</td>
+			<?php /*<td align="center">
+				<img id="product_barcode_button_<?php echo $product->getData('pop_product_id'); ?>" src="<?php echo $this->getSkinUrl('images/scanner/barcode.gif'); ?>" onclick="linkSerialForPo(<?php echo $product->getData('pop_product_id'); ?>);"><br>
+				<!--<img src="<?php echo $this->getSkinUrl('images/scanner/barcode.gif'); ?>" onclick="linkBarcodeForPo(<?php echo $product->getData('pop_product_id'); ?>);"><br>-->
+				<!--<img src="<?php echo $this->getSkinUrl('images/scanner/location.gif'); ?>" onclick="addLocationForPo(<?php echo $product->getData('pop_product_id'); ?>);">-->
+			</td> */ ?>
+		</tr>
+			<?php endforeach; ?>
+		<?php endif; ?>
+	</table>
+</div>
+
+</form>
+
+<div id="product_details" style="display: none">
+	<div class="div_line"><b>Product Details:</b></div>
+	<table border="1" cellspacing="0" width="100%">
+		<tr><td>ID:</td><td id="product_id"></td></tr>
+		<tr><td><b>Name:</b></td><td id="product_name"></td></tr>
+		<tr><td><b>SKU:</b></td><td id="product_sku"></td></tr>
+		<tr><td><b>Type:</b></td><td id="product_type"></td></tr>
+		<tr><td><b>Weight:</b></td><td id="product_weight"></td></tr>
+		<tr><td><b>Ordered:</b></td><td id="product_ordered"></td></tr>
+	</table>
+	<div class="div_line">
+		<button type="button" onclick="closeProductDetails()">CLOSE</button>
+	</div>
+	<div style="text-align: center">
+		<table id="product_info_serials_table" width="100%" border="1" cellspacing="0">
+			<tbody>
+				<tr>
+					<th>Serials: <span id="product_serials_count"></span></th>
+					<th>Locations: <span id="product_locations_count"></span></th>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script>
+<?php foreach ($this->getProducts() as $product): ?>
+	//colorProductCell(<?php echo $product->getData('pop_product_id'); ?>);
+<?php endforeach; ?>
+	//enableCatchKeys('newScanEntryForPurchaseOrder(KC_value);');
+	enableCatchKeys('scanProductSerialForPo(KC_value)');
+</script>

@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mageb2bextensions_Customattributes>
+            <version>0.1.1</version>
+        </Mageb2bextensions_Customattributes>
+    </modules>
+    <admin>
+        <routers>
+					<customattributes>
+						<use>admin</use>
+						<args>
+							<module>Mageb2bextensions_Customattributes</module>
+							<frontName>customattributes</frontName>
+						</args>
+					</customattributes>
+        </routers>
+    </admin>
+    <frontend>
+        <routers>
+					<customer>
+							<args>
+									<modules>
+											<Mageb2bextensions_Customattributes before="Mage_Customer">Mageb2bextensions_Customattributes</Mageb2bextensions_Customattributes>
+									</modules>
+							</args>
+					</customer>
+				</routers>
+        <events></events>
+        <translate></translate>
+        <layout></layout>
+    </frontend>
+		<default>
+    	<config_vars></config_vars>
+   	</default>
+    <adminhtml>
+		<menu>
+			<customattributes module="customattributes">
+				<title>Customer Custom Attributes</title>
+				<sort_order>71</sort_order>               
+				<children>
+					<customattributes translate="title" module="customattributes">
+						<title>Manage Attribute Fields</title>
+						<sort_order>0</sort_order>
+						<action>customattributes/index</action>
+					</customattributes>
+				</children>
+			</customattributes>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<customattributes module="customattributes">
+							<title>Customer Custom Attributes Module</title>
+							<sort_order>10</sort_order>              
+							<children>
+								<customattributes translate="title">
+									<title>Manage Attribute Fields</title>
+								</customattributes>
+							</children>
+						</customattributes>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<customattributes>
+					<file>customattributes.xml</file>
+				</customattributes>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+				<!--  controllers   -->    
+        <rewrite>
+            <mageb2bextensions_customattributes_account>
+                <from><![CDATA[#^/customer/account/createpost#]]></from>    
+                <to>/customattributes/account/createpost</to>
+                <from><![CDATA[#^/customer/account/editpost#]]></from>    
+                <to>/customattributes/account/editpost</to>
+            </mageb2bextensions_customattributes_account>
+            <mageb2bextensions_customattributes_adminhtml_customer>
+                <from><![CDATA[#^/admin/customer/save/#]]></from>    
+                <to>/customattributes/customer/save/</to>
+            </mageb2bextensions_customattributes_adminhtml_customer>
+        </rewrite>
+        <blocks>
+            <!--<adminhtml>
+                <rewrite>
+                        <customer_edit_tab_account>Mageb2bextensions_Customattributes_Block_Adminhtml_Customer_Edit_Tab_Rewrite_CustomerEditTabAccount</customer_edit_tab_account>
+                </rewrite>
+            </adminhtml>-->
+            <customer>
+                <rewrite>
+                        <form_register>Mageb2bextensions_Customattributes_Block_Adminhtml_Customattributes_Rewrite_FrontCustomerFormRegister</form_register>
+                </rewrite>
+                <rewrite>
+                        <form_edit>Mageb2bextensions_Customattributes_Block_Adminhtml_Customattributes_Rewrite_FrontCustomerFormEdit</form_edit>
+                </rewrite>
+            </customer>
+            <customattributes>
+                <class>Mageb2bextensions_Customattributes_Block</class>
+            </customattributes>
+        </blocks>
+        <models>
+            <catalog>
+                <rewrite>
+                        <product_flat_observer>Mageb2bextensions_Customattributes_Model_Rewrite_FrontCatalogProductFlatObserver</product_flat_observer>
+                </rewrite>
+            </catalog>
+            <customattributes>
+                <class>Mageb2bextensions_Customattributes_Model</class>
+            </customattributes>
+        </models>
+        <helpers>
+            <customattributes>
+                <class>Mageb2bextensions_Customattributes_Helper</class>
+            </customattributes>
+        </helpers>
+        <resources>
+            <customattributes_setup>
+                <setup>
+                    <module>Mageb2bextensions_Customattributes</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </customattributes_setup>
+            <customattributes_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </customattributes_write>
+            <customattributes_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </customattributes_read>
+        </resources>
+    </global>
+    
+    <frontend>    
+        <layout>
+             <updates>
+                  <customer>
+                        <file>mageb2bextensionscustomer.xml</file>
+                  </customer>
+             </updates>
+        </layout>
+    </frontend>     
+</config>

@@ -1,0 +1,32 @@
+<config>
+    <menu>
+        <editordertab>
+            <children>
+                <deleteorderstab module="orders_deleteorders" translate="title">
+                    <title>Delete Orders</title>
+                    <sort_order>100</sort_order>
+                    <action>adminhtml/deleteorders</action>
+                </deleteorderstab>
+            </children>
+        </editordertab>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <deleteorders translate="title" module="orders_deleteorders">
+                        <title>Delete Orders Controller</title>
+                        <sort_order>-100</sort_order>
+                        <children>
+                            <delete translate="title">
+                                <title>Delete Orders Action</title>
+                                <sort_order>1</sort_order>
+                            </delete>
+                        </children>
+                    </deleteorders>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
+

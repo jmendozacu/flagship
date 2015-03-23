@@ -1,0 +1,105 @@
+<?php
+$orders = $this->getOrders();
+//die("<pre>orders: ".print_r($orders, true));
+$items = $this->getOrderItems();
+//die("<pre>items: ".print_r($items, true));
+$products = $this->getProducts();
+//die("<pre>products: ".print_r($products, true));
+$serials = $this->getSerials();
+//die("<pre>serials: ".print_r($serials, true));
+?>
+<script type="text/javascript">
+	var orders = <?php echo json_encode($orders); ?>;
+	var items = <?php echo json_encode($items); ?>;
+	var products = <?php echo json_encode($products); ?>;
+	var orderProducts = new Array();
+	var serials = <?php echo json_encode($serials); ?>;
+	var scanned_serials = new Array();
+</script>
+
+<table border="1" cellspacing="0" cellpadding="5" width="100%">
+	<tr>
+		<th class="a-center" bgcolor="#cccccc" colspan="3"><?php echo $this->__('Unshipped Items'); ?></th>
+	</tr>
+</table>
+
+<form id="submitUnshippedItems" action="<?php echo $this->getSubmitUrl(); // should be saveShipment ?>" method="post">
+
+<div id="div_orders_view" style="width: 100%; text-align: center">
+	
+	<span id="error_message" style="font-weight: bold; color: red"></span>
+
+	<div id="choose_order_system" style="width: 100%; text-align: center">
+		<p><b>Choose order system:</b><p>
+		<p><button type="button" onclick="toggleOrdersView('magento')">Magento</button></p>
+		<p><button type="button" onclick="toggleOrdersView('zen_cart')">Zen Cart</button></p>
+		<p><button type="button" onclick="toggleOrdersView('amazon')">Amazon</button></p>
+	</div>
+
+	<div id="choose_order_view" style="display: none">
+		<p id="magento_orders_view">
+			<b>Magento Order:</b><br>
+			<select id="select_magento_order" onchange="selectMagentoOrder(this)">
+				<option value="" disabled selected style="display: none">- select -</option>
+				<?php foreach($orders as $index => $order) { ?>
+				<option value="<?php echo $order['entity_id']; ?>"><?php echo $order['increment_id']; ?></option>
+				<?php } ?>
+			</select>
+		</p>
+		<p id="zen_cart_orders_view">
+			<b>Scan or type in Zen Cart order number</b>
+		</p>
+		<p id="amazon_orders_view">
+			<b>Scan or type in Amazon order number</b>
+		</p>
+		<p id="scan_magento_serials" style="display: none"><b>Scan product serial:</b></p>
+		<p>
+			<button type="button" id="submit_serials_button" onclick="submitSerials()" style="display: none">Submit</button>
+			<button type="button" id="close_orders_view" onclick="closeOrdersView()">Cancel</button>
+		</p>
+		<div id="magento_order_products" style="text-align: left; padding-left: 10px"></div>
+	</div>
+	<span id="product_info"></span>
+	<span id="scanned_products"></span>
+
+</div>
+
+selected_order: <input type="text" id="selected_order" name="selected_order" />
+selected_order_type: <input type="text" id="selected_order_type" name="selected_order_type" />
+product_serials: <input type="text" id="product_serials" name="product_serials" />
+
+</form>
+
+<style type="text/css">
+	#product_info td {
+		text-align: left;
+	}
+</style>
+<div id="product_info" style="text-align: center; display: none">
+	<b>Product Details:</b><br>
+	<button type="button" onclick="closeProductDetails()">CLOSE</button>
+	<table border="1" cellspacing="1">
+		<tr>
+			<td><b>ID:</b></td>
+			<td id="product_info_product_id">product['product_id']</td>
+		</tr>
+		<tr>
+			<td><b>Name:</b></td>
+			<td id="product_info_name">product['name']</td>
+		</tr>
+		<tr>
+			<td><b>SKU:</b></td>
+			<td id="product_info_sku">product['sku']</td>
+		</tr>
+		<tr>
+			<td><b>Type:</b></td>
+			<td id="product_info_type">product['product_type']</td>
+		</tr>
+		<tr>
+			<td><b>Weight:</b></td>
+			<td id="product_info_weight">parseFloat(product['weight']) lbs</td>
+		</tr>
+	</table>
+	<b>Serials - Location:</b>
+	<div id="product_info_serials" style="text-align: left"></div>
+</div>

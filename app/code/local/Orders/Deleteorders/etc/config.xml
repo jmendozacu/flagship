@@ -1,0 +1,25 @@
+<config>
+    <modules>
+        <Orders_Deleteorders>
+            <version>0.1.0</version>
+        </Orders_Deleteorders>
+    </modules>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <deleteorders after="Mage_Adminhtml">Orders_Deleteorders_Adminhtml</deleteorders>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <global>
+        <helpers>
+            <orders_deleteorders>
+                <class>Mage_Core_Helper</class>
+            </orders_deleteorders>
+        </helpers>
+    </global>
+</config>

@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <paypalbanner translate="label" module="paypalbanner">
+            <label>PayPal Bill Me Later Banners</label>
+            <tab>general</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>9999</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <settings translate="label">
+                    <label>General Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <id translate="label,comment">
+                            <label></label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>paypalbanner/system_field_id</frontend_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </id>
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </active>
+                        <paypal_email translate="label,comment">
+                            <label>PayPal Email</label>
+                            <frontend_type>text</frontend_type>
+                            <comment><![CDATA[
+                                <div style="display:none" id="advice-required-entry-paypal_email" class="validation-advice">This is a required field.</div>
+                                <div style="display:none" id="advice-required-entry-paypal_email2" class="validation-advice">Please, enter a valid email.</div>
+                            ]]></comment>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </paypal_email>
+                        <paypal_name translate="label,comment">
+                            <label>PayPal Name</label>
+                            <frontend_type>text</frontend_type>
+                            <comment><![CDATA[
+                                <div style="display:none" id="advice-required-entry-paypal_name" class="validation-advice">This is a required field.</div>
+                                <br />
+                                <input type="checkbox" style="margin-right: 5px" value="1" id="paypalbanner_settings_paypal_terms" name="paypal_terms" class="checkbox validation-passed">
+                                <span>I agree to PayPal finance portal <a target="_blank" href="http://financing.paypal.com">terms and conditions</a> </span>
+                                <div style="display: none" id="paypal_terms_validation_failed" class="validation-advice">You must agree to terms and conditions.</div>
+                                <br />
+                                <button class="scalable save" style="margin-top: 5px" onclick="processForm(); return false" type="button" id="paypalbanner_get_id_btn">
+                                    <span><span><span>Activate</span></span></span>
+                                </button>
+                                <button  class="scalable delete" style="margin-top: 5px" onclick="if(confirm('Are you sure?')){clearSettings()}; return false" type="button" id="paypalbanner_clear_btn">
+                                    <span><span><span>Clear Settings</span></span></span>
+                                </button>
+                                <script type="text/javascript">
+
+        function processForm(){
+            $('advice-required-entry-paypal_name').hide();
+            $('advice-required-entry-paypal_email').hide();
+            $('advice-required-entry-paypal_email2').hide();
+            $('paypal_terms_validation_failed').hide();
+
+            var re = /^([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*@([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*\.(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]){2,})$/i;
+
+            if (!$('paypalbanner_settings_paypal_terms').checked
+                || $('paypalbanner_settings_paypal_email').value ==''
+                || $('paypalbanner_settings_paypal_name').value ==''
+                || !re.test($('paypalbanner_settings_paypal_email').value)
+            ){
+                if ($('paypalbanner_settings_paypal_name').value ==''){
+                    $('advice-required-entry-paypal_name').show();
+                }
+                if ($('paypalbanner_settings_paypal_email').value ==''){
+                    $('advice-required-entry-paypal_email').show();
+                } else if (!re.test($('paypalbanner_settings_paypal_email').value)) {
+                    $('advice-required-entry-paypal_email2').show();
+                }
+                if (!$('paypalbanner_settings_paypal_terms').checked ) {
+                    $('paypal_terms_validation_failed').show();
+                }
+                return false;
+            }
+
+            $('loading-mask').show();
+            var terms = ($('paypalbanner_settings_paypal_terms').checked?'1':'0');
+            var params = 'paypal_name='+$('paypalbanner_settings_paypal_name').value;
+            params+='&paypal_email='+$('paypalbanner_settings_paypal_email').value;
+            params+='&paypal_active='+$('paypalbanner_settings_active').value;
+            params+='&paypal_container='+ encodeURI($('paypalbanner_settings_container').value);
+            params+='&paypal_terms='+terms;
+
+            var request = new Ajax.Request(
+                '/paypalbanner/ppbsettings/process/form_key/'+FORM_KEY,
+                {
+                    method:'post',
+                    parameters:params,
+                    onComplete: function(transport){
+                        var response = transport.responseText.evalJSON();
+                        if (!response.success || !response.publisher_id) {
+                            if (response.msg && response.msg != ''){
+                                var msg = response.msg;
+                            } else {
+                                var msg = 'Can not get ID for this name and email';
+                            }
+                            alert(msg);
+                        } else {
+                            $("paypalbanner_settings_id").value = response.publisher_id;
+                            <!--$("ppbanner_msg_holder").removeClassName("notice-msg");-->
+                            <!--$("ppbanner_msg_holder").addClassName("success-msg");-->
+                            <!--$("ppbanner_msg_holder").update("<ul><li><span>Value is set</span>");-->
+                            showSettingsFine();
+                        }
+                        $('loading-mask').hide();
+                    }
+                }
+            );
+
+        }
+
+        function clearSettings(){
+            $('loading-mask').show();
+            var request = new Ajax.Request(
+                '/paypalbanner/ppbsettings/clear/form_key/'+FORM_KEY,
+                {
+                    method:'post',
+                    onComplete: function(transport){
+                        $('paypalbanner_settings_active').value = '0';
+                        $("paypalbanner_settings_id").value = '';
+                        $("paypalbanner_settings_paypal_email").value = '';
+                        $("paypalbanner_settings_paypal_name").value = '';
+                        $("paypalbanner_settings_paypal_terms").checked = false;
+                        $('loading-mask').hide();
+                        showNoSettings();
+                    }
+                }
+            );
+        }
+
+        function showNoSettings(){
+            $("messages_success").hide();
+            $("messages_error").show();
+        }
+
+        function showSettingsFine(){
+            $("messages_success").show();
+            $("messages_error").hide();
+        }
+
+
+</script>]]></comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </paypal_name>
+
+                        <container translate="label,comment">
+                            <label>Code Wrapper</label>
+                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your banner block]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </container>
+                    </fields>
+                </settings>
+                <homepage>
+                    <label>Home Page</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <display translate="label">
+                            <label>Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </display>
+                        <size translate="label">
+                            <label>Banner Size</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>paypalbanner/system_config_size</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </size>
+                        <position translate="label">
+                            <label>Banner Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>paypalbanner/system_config_position</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </position>
+                    </fields>
+                </homepage>
+                <catalog_category>
+                    <label>Catalog Category Page</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <display translate="label">
+                            <label>Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </display>
+                        <size translate="label">
+                            <label>Banner Size</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>paypalbanner/system_config_size</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </size>
+                        <position translate="label">
+                            <label>Banner Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>paypalbanner/system_config_position</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </position>
+                    </fields>
+                </catalog_category>
+                <catalog_product>
+                    <label>Catalog Product Page</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <display translate="label">
+                            <label>Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </display>
+                        <size translate="label">
+                            <label>Banner Size</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>paypalbanner/system_config_size</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </size>
+                        <position translate="label">
+                            <label>Banner Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>paypalbanner/system_config_position</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </position>
+                    </fields>
+                </catalog_product>
+                <checkout_cart>
+                    <label>Checkout Cart Page</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <display translate="label">
+                            <label>Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </display>
+                        <size translate="label">
+                            <label>Banner Size</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>paypalbanner/system_config_size</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </size>
+                        <position translate="label">
+                            <label>Banner Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>paypalbanner/system_config_position</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </position>
+                    </fields>
+                </checkout_cart>
+            </groups>
+        </paypalbanner>
+    </sections>
+</config>

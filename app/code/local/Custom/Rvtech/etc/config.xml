@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config>
+     <global>
+        <blocks>
+          <adminhtml>
+          	<rewrite>
+              <sales_order_grid>Custom_Rvtech_Block_Sales_Order_Grid</sales_order_grid>
+            </rewrite>
+            <rewrite>
+              <customer_grid>Custom_Rvtech_Block_Customer_Grid</customer_grid>
+            </rewrite>
+            <rewrite>
+              <catalog_product_grid>Custom_Rvtech_Block_Catalog_Product_Grid</catalog_product_grid>
+            </rewrite>
+          </adminhtml>
+        </blocks>
+    </global>
+</config>

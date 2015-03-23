@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <customattributes_adminhtml_customattributes_index>
+        <reference name="content">
+            <block type="customattributes/adminhtml_customattributes" name="customattributes" />
+        </reference>
+    </customattributes_adminhtml_customattributes_index>
+    
+    <customattributes_adminhtml_customattributes_address>
+        <reference name="content">
+            <block type="customattributes/adminhtml_customattributes_mb2bcustomfieldsgrid"  name="mb2bcustomfieldsgrid"  as="mb2bcustomfieldsgrid" template="customattributes/grid.phtml" />
+        </reference>
+    </customattributes_adminhtml_customattributes_address>
+    
+    <customattributes_adminhtml_customattributes_edit>
+        <reference name="content">
+            <block type="customattributes/adminhtml_customattributes_mb2bcustomfieldsedit"  name="mb2bcustomfieldsedit"  as="mb2bcustomfieldsedit" template="customattributes/options.phtml" />
+        </reference>
+    </customattributes_adminhtml_customattributes_edit>
+</layout>

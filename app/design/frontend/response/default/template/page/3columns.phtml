@@ -1,0 +1,90 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ */
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+	<?php echo $this->getChildHtml('head') ?>
+</head>
+
+<?php
+if(Mage::getStoreConfig('responseconfiguration/responseconfigs/grid1280')){
+	if(Mage::getStoreConfig('responseconfiguration/responseconfigs/grid1280') == '1'){
+		?><body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().' enable1280"':'' ?>><?php
+	}else{
+		?> <body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>><?php
+	}
+}else{
+	?><body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>><?php
+}
+?>
+	<?php //echo $this->getChildHtml('after_body_start') ?>
+	
+	<header>	
+		<div class="container">
+			<?php echo $this->getChildHtml('header') ?>
+		</div><!--container-->
+	</header>
+	
+	<div class="container">
+	
+		<div class="sixteen columns breadcrumbs">
+			<?php echo $this->getChildHtml('breadcrumbs') ?>
+		</div><!--breadcrumbs-->
+		
+		<div class="sixteen columns notices">
+			<?php echo $this->getChildHtml('global_notices') ?>
+		</div><!--notices-->
+		
+		<div class="three columns leftcol">
+			<?php echo $this->getChildHtml('left') ?>
+		</div><!--leftcol-->
+		
+		<div class="ten columns 1col content">
+			<?php echo $this->getChildHtml('content') ?>
+		</div><!--content-->
+		
+		<div class="three columns rightcol">
+			<?php echo $this->getChildHtml('right') ?>
+		</div><!--rightcol-->		
+		
+	    <?php echo $this->getChildHtml('footer') ?>
+		
+        
+        <?php echo $this->getChildHtml('before_body_end') ?>
+        <?php echo $this->getAbsoluteFooter() ?>
+	</div>        
+
+</body>
+</html>

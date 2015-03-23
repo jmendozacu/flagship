@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<layout version="0.1.0">
+  <barcodes_adminhtml_barcodes_index>
+	<reference name="head">
+				<action method="addCss"><name>barcodegrid.css</name></action>
+	</reference>
+     <reference name="content">
+             <block type="barcodes/adminhtml_grid" name="barcodes" />
+      </reference>
+   </barcodes_adminhtml_barcodes_index>
+</layout>

@@ -1,0 +1,5 @@
+<?php if (Mage::getSingleton('customer/session')->isLoggedIn()==0): ?>
+<a href="<?php echo $this->getUrl('customer/account/login') ?>"><?php echo $this->__('Sign In') ?></a>
+<?php else: ?>
+<a href="<?php echo $this->getUrl('customer/account/logout') ?>"><?php echo $this->__('Sign Out') ?></a>
+<?php endif ?>

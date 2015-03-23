@@ -1,0 +1,22 @@
+<script type="text/javascript">
+	jQuery(function() {
+		var toogle = function(select) {
+			var row = select.parent().parent();
+			if (select.val() == 0) {
+				row.next().show();
+				row.next().next().hide();
+				row.next().next().next().hide();
+			} else {
+				row.next().hide();
+				row.next().next().show();
+				row.next().next().next().show();
+			}
+		};
+		
+		jQuery('.position-type').change(function() {
+			toogle(jQuery(this));
+		});
+		
+		jQuery('.position-type').each(function (idx, val) {toogle(jQuery(val));});
+	});
+</script>

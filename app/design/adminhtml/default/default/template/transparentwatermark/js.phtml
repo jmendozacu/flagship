@@ -1,0 +1,61 @@
+<?php
+/**
+ * MagentoGarden
+ *
+ * @category    template
+ * @package     magentogarden_transparentwatermark
+ * @copyright   Copyright (c) 2012 MagentoGarden Inc. (http://www.magentogarden.com)
+ * @version		1.3.0
+ * @author		MagentoGarden (coder@magentogarden.com)
+ */
+?>
+<?php $_image_url = Mage::helper('transparentwatermark')->getSampleProductImage(); ?>
+<?php $_watermark_url = Mage::helper('transparentwatermark')->getWatermark(); ?>
+<?php $_sample_width = Mage::helper('transparentwatermark')->getSampleProductImageWidth(); ?>
+<?php $_sample_height = Mage::helper('transparentwatermark')->getSampleProductImageHeight(); ?>
+<?php $_watermark_x = Mage::helper('transparentwatermark')->getCustomWatermarkX(); ?>
+<?php $_watermark_y = Mage::helper('transparentwatermark')->getCustomWatermarkY(); ?>
+<style>
+	.mg-tm-preview { position: relative; }
+	.mg-tm-preview .watermark { position: absolute; cursor: move; }
+</style>
+<div class="mg-tm-preview" style="border: 1px solid #ddd; width: <?php echo $_sample_width; ?>px; height: <?php echo $_sample_height; ?>px">
+	<img class="watermark" src="<?php echo $_watermark_url; ?>" style="left: <?php echo $_watermark_x; ?>px; top: <?php echo $_watermark_y; ?>px;"/>
+	<img class="background" src="<?php echo $_image_url; ?>" width="<?php echo $_sample_width; ?>px" height="<?php echo $_sample_height; ?>px" />
+</div>
+<script type="text/javascript">
+	jQuery(function() {
+		jQuery('.mg-tm-preview .watermark').draggable({
+			drag: function() {
+				var watermark = jQuery('.mg-tm-preview .watermark');
+				var x = watermark.position().left;
+				var y = watermark.position().top;
+				jQuery('#magentogarden_transparentwatermark_general_transparentwatermark_custom_position_x').val(x);
+				jQuery('#magentogarden_transparentwatermark_general_transparentwatermark_custom_position_y').val(y);
+			}, 
+			containment: 'parent'
+		});
+		
+		jQuery('#magentogarden_transparentwatermark_general_transparentwatermark_sample_image_height').blur(function() {
+			var height = jQuery(this).val();
+			jQuery('.mg-tm-preview .background').css('height', height+'px');
+			jQuery('.mg-tm-preview').css('height', height+'px');
+		});
+		
+		jQuery('#magentogarden_transparentwatermark_general_transparentwatermark_sample_image_width').blur(function() {
+			var width = jQuery(this).val();
+			jQuery('.mg-tm-preview .background').css('width', width+'px');
+			jQuery('.mg-tm-preview').css('width', width+'px');
+		});
+		
+		jQuery('#magentogarden_transparentwatermark_general_transparentwatermark_custom_position_x').blur(function() {
+			var x = jQuery(this).val();
+			jQuery('.mg-tm-preview .watermark').css('left', x+'px');
+		});
+		
+		jQuery('#magentogarden_transparentwatermark_general_transparentwatermark_custom_position_y').blur(function() {
+			var y = jQuery(this).val();
+			jQuery('.mg-tm-preview .watermark').css('top', y+'px');
+		})
+	});
+</script>

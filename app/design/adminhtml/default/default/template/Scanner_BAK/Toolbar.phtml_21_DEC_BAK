@@ -1,0 +1,25 @@
+<script>
+	var postamble = '<?php echo mage::getStoreConfig('scanner/misc/postamble'); ?>';
+</script>
+<style>
+    .div_toolbar
+    {
+            top: <?php echo (mage::getStoreConfig('scanner/display/screen_height') - 30); ?>px;
+    }
+    
+
+</style>
+
+
+<div id="div_toolbar" name="div_toolbar" class="div_toolbar">
+<form method="POST" action="<?php echo $this->getSubmitUrl(); ?>" name="form1" id="form1">
+	<table width="100%" border="0">
+	<tr>
+		<td><input type="text" class="div_barcode" id="query" name="query" maxlength="255"></td>
+		<td><input type="button" value=" Menu " onclick="document.location.href='<?php echo $this->getMenuUrl(); ?>'"></td>
+		<td><input id="form_key" name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /></td>
+	</tr>
+
+	</table>
+</form>
+</div>

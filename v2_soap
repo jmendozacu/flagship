@@ -1,0 +1,8 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                <SOAP-ENV:Body>
+                <SOAP-ENV:Fault>
+                <faultcode>0</faultcode>
+                <faultstring>SOAP extension is not loaded.</faultstring>
+                </SOAP-ENV:Fault>
+                </SOAP-ENV:Body>
+                </SOAP-ENV:Envelope>

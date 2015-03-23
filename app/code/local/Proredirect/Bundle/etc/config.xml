@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config>
+   <modules>
+        <Proredirect_Bundle>
+            <version>0.1.0</version>
+        </Proredirect_Bundle>
+    </modules>
+    <frontend>
+     <routers>
+      <catalog>
+       <args>
+        <modules>
+         <Proredirect_Bundle before="Mage_Catalog">Proredirect_Bundle_Catalog</Proredirect_Bundle>
+        </modules>
+       </args>
+      </catalog>
+     </routers>
+    </frontend>
+   </config>

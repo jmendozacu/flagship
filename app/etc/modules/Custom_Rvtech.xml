@@ -1,0 +1,9 @@
+<?xml version = "1.0"?>
+   	<config>
+        <modules>
+        	<Custom_Rvtech>
+            	<active>true</active>
+            	<codePool>local</codePool>
+        	</Custom_Rvtech>
+        </modules>
+    </config>

@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <Orders_Editorder>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Orders_Editorder>
+    </modules>
+</config>

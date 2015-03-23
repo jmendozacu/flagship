@@ -1,0 +1,24 @@
+<script>
+	var postamble = '<?php echo mage::getStoreConfig('scanner/misc/postamble'); ?>';
+</script>
+
+<div id="div_toolbar" name="div_toolbar" class="div_toolbar">
+
+	<table border="0" width="100%">
+		<tr>
+			<td align="left">
+				<!--<div id="barcode" name="barcode" class="div_barcode"></div>-->
+				<!-- hidden form -->
+				<form method="POST" action="<?php echo $this->getSubmitUrl(); ?>" name="form1" id="form1">
+					<input id="form_key" name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+					<input type="hidden" id="query" name="query" maxlength="255" />
+					<input type="text" id="barcode" name="barcode" class="input_barcode" />
+				</form>
+			</td>
+			<td align="right">
+				<input type="button" value=" Menu " onclick="document.location.href = '<?php echo $this->getMenuUrl(); ?>'">
+			</td>
+		</tr>
+	</table>
+	
+</div>

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<config>
+     <modules>
+        <Rvtech_Purchaseorder>
+          <version>1.0.0</version>
+        </Rvtech_Purchaseorder>
+     </modules>
+    <admin>
+     <routers>
+         <purchaseorder>
+            <use>admin</use>
+            <args>
+               <module>Rvtech_Purchaseorder</module>
+               <frontName>purchaseorder_admin</frontName>
+            </args>
+         </purchaseorder>
+      </routers>
+    </admin>
+     <adminhtml>
+       <layout>
+          <updates>
+              <purchaseorder>
+                  <file>purchaseorder.xml</file>
+               </purchaseorder>
+          </updates>
+       </layout>
+       <menu>
+          <barcodes translate="title" module="adminhtml">
+             <children>
+                  <set_purchaseorder>
+                       <title>Purchase Order Serials</title>
+                       <action>purchaseorder_admin/adminhtml_purchaseorder/</action>
+                       <sort_order>20</sort_order>
+                  </set_purchaseorder>
+              </children>
+           </barcodes>
+        </menu>
+        <acl>
+          <resources>
+            <admin>
+                <children>
+                    <barcodes translate="title" module="adminhtml">
+                        <children>
+                            <set_purchaseorder>
+                                 <title>Purchase Order Serials</title>
+                                 <sort_order>20</sort_order>
+                            </set_purchaseorder>
+                        </children>
+                    </barcodes>
+                </children>
+            </admin>
+         </resources>
+      </acl>
+    </adminhtml>
+    <global>
+           <blocks>
+               <purchaseorder>
+                    <class>Rvtech_Purchaseorder_Block</class>
+               </purchaseorder>
+            </blocks>
+      </global>
+</config>

@@ -1,0 +1,19 @@
+_______________________________________________________________________________________________
+v 1.3
+- New feature : product image can be added to the label.
+- New feature : logo can be JPEG or PNG file.
+- Fix : When clicking on the button "generate barcode", only products with attribute barcode empty will being updated (a new bacode is generated).
+- New feature : list of principal standards (EAN13, Planet, Code128, Leitcode, UCP-A ...) available on configuration view
+- Fix : the attribut "sku" is hidden on configuration, because of confused "ean" and "sku"
+_______________________________________________________________________________________________
+v 1.2.1
+
+- Fix : logo display option was not considered
+- new option : if barcode width & height are set to 0, the system will automatically use the barcode image size
+
+_______________________________________________________________________________________________
+v 1.2
+
+- Modified files : Helpers/BarcodePicture.php the barcode is generate for all standards
+- Fixed errors : Undefined variable in files "Label.php", "Generation.php". 
+- Deprecated functionality : fixed in files "BarcodePicture.php".

@@ -1,0 +1,414 @@
+<script>
+
+	var productIdForAddBarcodeInPo = '';
+	var productIdForAddSerialInPo = '';
+
+	function scanProductSerialForPo(serial) {
+		//console.log("running scanProductSerialForPo with serial " + serial);
+		document.getElementById('div_error').innerHTML = '';
+		document.getElementById('div_success').innerHTML = '';
+		
+		if (scanned_serials.indexOf(serial) == -1) {
+			//console.log("serial not already scanned");
+			for (var s in serials) {
+				//console.log("checking serials " + s + " " + serials[s]['dzv_serial'] + " product " + serials[s]['product_id']);
+				if (serials[s]['dzv_serial'] == serial) {
+					//console.log("found match with product " + serials[s]['product_id']);
+					scanned_serials.push(serial);
+					//console.log("pushed serial to scanned_serials index " + scanned_serials.indexOf(serial));
+					var productId = serials[s]['product_id'];
+					//console.log("found product id " + productId);
+					document.getElementById('serials_' + productId).value += serial += ",";
+					incrementProductQty(productId);
+					//var ps = document.getElementById('product_scanned_serials_' + productId);
+					//if(ps.innerHTML) ps.innerHTML += ',';
+					//ps.innerHTML += serial;
+				}
+			}
+			if(productId == undefined) {
+				//console.log("couldn't find product id!");
+				document.getElementById('div_error').innerHTML = "Serial " + serial + " not found!";
+			}
+		} else {
+			//console.log("serial already scanned");
+		}
+	}
+
+	//***************************************************************************************************
+	//
+	function linkBarcodeForPo(productId)
+	{
+		productIdForAddBarcodeInPo = productId;
+		enableCatchKeys('addProductBarcodeForPo(KC_value);');
+		showInputBox('Please scan barcode for ' + getProductName(productId));
+	}
+
+	function linkSerialForPo(productId)
+	{
+		// clear barcode menu bar and KC_value for idiot-proofing
+		document.getElementById('barcode').innerHTML = '';
+		KC_value = '';
+		productIdForAddSerialInPo = productId;
+		enableCatchKeys('addProductSerialForPo(KC_value);');
+		showInputBox('Scan serial for:<br>' + getProductName(productId));
+	}
+
+	//***************************************************************************************************
+	//
+	function addLocationForPo(productId)
+	{
+		productIdForAddBarcodeInPo = productId;
+		enableCatchKeys('addProductLocationForPo(KC_value);');
+		showInputBox('Please scan location for ' + getProductName(productId));
+	}
+
+	//***************************************************************************************************
+	//Manually add a location for a product in a PO
+	function addProductLocationForPo(barcode)
+	{
+		var productId = productIdForAddBarcodeInPo;
+		var i;
+		for (i = 0; i < products.length; i++)
+		{
+			if (products[i]['id'] == productId)
+			{
+				products[i]['location'] = barcode;
+				document.getElementById('location_' + productId).value = barcode;
+			}
+		}
+
+		//reenable barcode scanning
+		resetHandledKey();
+		enableCatchKeys('newScanEntryForPurchaseOrder(KC_value);');
+		closeSimpleMessage();
+	}
+
+	//***************************************************************************************************
+	//Manually add a barcode for a product in a PO
+	function addProductBarcodeForPo(barcode)
+	{
+		var productId = productIdForAddBarcodeInPo;
+		var i;
+		for (i = 0; i < products.length; i++)
+		{
+			if (products[i]['id'] == productId)
+			{
+				var nb = products[i]['barcodes'].length + 1;
+				products[i]['barcodes'][nb] = barcode;
+				document.getElementById('barcode_' + productId).value = barcode;
+			}
+		}
+
+		//reenable barcode scanning
+		resetHandledKey();
+		enableCatchKeys('newScanEntryForPurchaseOrder(KC_value);');
+		closeSimpleMessage();
+	}
+
+	//Manually add a product serial for a product in a PO
+	function addProductSerialForPo(serial)
+	{
+		// check if serial has not already been scanned
+		var serialAlreadyScanned = false;
+		for (s in serials) {
+			if (serial == serials[s]) {
+				serialAlreadyScanned = true;
+				break;
+			}
+		}
+		if (!serialAlreadyScanned) {
+			var productId = productIdForAddSerialInPo;
+			var product_scanned_serials = document.getElementById('product_scanned_serials_' + productId);
+			var i;
+			for (i = 0; i < products.length; i++)
+			{
+				if (products[i]['id'] == productId)
+				{
+					serials.push(serial);
+					var nb = products[i]['serials'].length + 1;
+					products[i]['serials'][nb] = serial;
+					document.getElementById('serials_' + productId).value += "\n" + serial;
+					product_scanned_serials.innerHTML += "\n" + serial;
+					incrementProductQty(productId);
+				}
+			}
+		}
+
+		//reenable serial scanning
+		resetHandledKey();
+		enableCatchKeys('newScanEntryForPurchaseOrder(KC_value);');
+		closeSimpleMessage();
+	}
+
+	//***************************************************************************************************
+	//return product name from product id
+	function getProductName(productId)
+	{
+		var i;
+		for (i = 0; i < products.length; i++)
+		{
+			if (products[i]['id'] == productId)
+			{
+				return products[i]['name'];
+			}
+		}
+
+		return 'unknown';
+	}
+
+	function showProductInfo(productId) {
+		//console.log("running showProductInfo with product id " + productId);
+		for (var i in products) {
+			//console.log("searching products[" + i + "] with product id " + products[i]['id']);
+			if (products[i]['id'] == productId) {
+				//console.log("found product with name " + products[i]['name']);
+				var product = products[i];
+				//console.log("product:");
+				//console.log(product);
+				document.getElementById('purchase_order_products').style.display = 'none';
+				document.getElementById('product_details').style.display = '';
+				document.getElementById('product_id').innerHTML = productId;
+				document.getElementById('product_name').innerHTML = product['name'];
+				document.getElementById('product_sku').innerHTML = product['sku'];
+				document.getElementById('product_type').innerHTML = product['type'];
+				document.getElementById('product_weight').innerHTML = parseFloat(product['weight']) + " lbs";
+				document.getElementById('product_ordered').innerHTML = parseFloat(product['ordered']);
+				
+				var serialsCount = 0;
+				var locationsCount = 0;
+				var i = 1;
+				for(s in serials) {
+					if(serials[s]['product_id'] == productId) {
+						serialsCount++;
+						var serial = serials[s];
+						//console.log(serial);
+						var table = document.getElementById('product_info_serials_table');
+						var row = table.insertRow(i++);
+						var cell = row.insertCell(0);
+						cell.innerHTML = serial['dzv_serial'];
+						cell = row.insertCell(1);
+						cell.innerHTML = serial['location'];
+					}
+				}
+				document.getElementById('product_serials_count').innerHTML = serialsCount;
+				document.getElementById('product_locations_count').innerHTML = locationsCount;
+			}
+		}
+	}
+
+	function closeProductDetails() {
+		document.getElementById('purchase_order_products').style.display = '';
+		document.getElementById('product_details').style.display = 'none';
+	}
+
+	//***************************************************************************************************
+	//Increment product qty
+	function incrementProductQty(productId)
+	{
+		//console.log("running incrementProductQty with productId " + productId);
+		var qty = document.getElementById('product_' + productId).value;
+		//console.log("qty is " + qty);
+		qty++;
+		//console.log("incrementing qty to " + qty);
+		document.getElementById('product_' + productId).value = qty;
+		document.getElementById('scanned_product_' + productId).innerHTML = qty;
+
+		colorProductCell(productId);
+	}
+
+	//***************************************************************************************************
+	//decrement product qty
+	function decrementProductQty(productId)
+	{
+		var qty = document.getElementById('product_' + productId).value;
+		if (qty > 0)
+		{
+			qty--;
+			document.getElementById('product_' + productId).value = qty;
+			document.getElementById('scanned_product_' + productId).innerHTML = qty;
+		}
+
+		colorProductCell(productId);
+	}
+
+	//**************************************************************************************************************
+	//Check if all products qty for 1 manufacturer are ok
+	function sortObjectProductsQtyReached(sortValue)
+	{
+		var i;
+		for (i = 0; i < products.length; i++)
+		{
+			if (products[i]['sort_value'] == sortValue)
+			{
+				var productId = products[i]['id'];
+				var expectedQty = products[i]['expected_qty'];
+				var scannedQty = document.getElementById('product_' + productId).value;
+				if (scannedQty < expectedQty)
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+	//***************************************************************************************************
+	//Color cell in green whe delivered qty = expected qty
+	function colorProductCell(productId)
+	{
+		//console.log("running colorProductCell with productId " + productId);
+		var rowId = 'tr_product_' + productId;
+		var qty = document.getElementById('product_' + productId).value;
+		var color = '';
+
+		var i;
+		for (i = 0; i < products.length; i++){
+			if(products[i]['id'] == productId){
+				if(qty == 0) {
+					//console.log("scanned quantity is less than ordered");
+					// color black and turn off bold
+					//console.log("setting color to black");
+					document.getElementById('tr_product_' + productId).style.color = 'black';
+					document.getElementById(rowId).style.fontWeight = '';
+				} else if(qty == products[i]['expected_qty']){
+					//console.log("scanned quantity is equal to ordered");
+					document.getElementById(rowId).style.fontWeight = 'bold';
+					document.getElementById(rowId).style.color = 'green';
+					document.getElementById(rowId).className = 'bgreen';
+					
+					//delete row if configured
+					if(deleteRowWhenQtyReached == 1){
+						document.getElementById(rowId).style.display = 'none';
+						
+						var sortValue = products[i]['sort_value'];
+						if(sortObjectProductsQtyReached(sortValue)){
+							rowId = 'tr_sortvalue_' + sortValue;
+							//if (document.getElementById(rowId))
+							//    document.getElementById(rowId).style.display = 'none';
+						}
+					}
+				} else if(qty > products[i]['expected_qty']){
+					//console.log("scanned quantity is greater than ordered; setting color to red");
+					color = 'red';
+					//console.log("setting color to blue");
+					//display row if qty greater
+					var rowId = 'tr_product_' + productId;
+					document.getElementById(rowId).style.display = '';
+					document.getElementById(rowId).style.fontWeight = 'bold';
+				} else if(qty > 0) {
+					// color blue
+					document.getElementById(rowId).style.color = 'blue';
+					document.getElementById(rowId).style.fontWeight = 'bold';
+				}
+			}
+		}
+		
+		if (color == 'green') {
+			//document.getElementById('tr_product_' + productId).style.display = 'none';
+			// instead hide the barcode button
+			//document.getElementById('product_barcode_button_' + productId).style.display = 'none';
+		} else {
+			document.getElementById('tr_product_' + productId).style.display = '';
+			//document.getElementById('product_barcode_button_' + productId).style.display = '';
+		}
+	}
+
+	//***************************************************************************************************
+	//Scan product location
+	function scanProductLocation(barcode)
+	{
+
+		//store location (if not null)
+		if (barcode != '')
+		{
+			var i;
+			for (i = 0; i < products.length; i++)
+			{
+				if (products[i]['id'] == scanLocationProductId)
+				{
+					products[i]['location'] = barcode;
+					document.getElementById('location_' + scanLocationProductId).value = barcode;
+				}
+			}
+		}
+
+		//reenable barcode scanning
+		resetHandledKey();
+		enableCatchKeys('newScanEntryForPurchaseOrder(KC_value);');
+		closeSimpleMessage();
+	}
+
+	//***************************************************************************************************
+	//New scan entry
+	function newScanEntry(barcode)
+	{
+		//console.log("running newScanEntry with barcode = " + barcode);
+		//search for product
+		var productId = null;
+		var i;
+		//console.log("products.length = " + products.length);
+		for (i = 0; i < products.length; i++)
+		{
+			//search for barcode
+			var j;
+			//console.log("products[i]['barcodes'].length = " + products[i]['barcodes'].length);
+			for (j = 0; j < products[i]['barcodes'].length; j++)
+			{
+
+				if (barcode == products[i]['barcodes'][j])
+				{
+					//console.log("barcode = products[i]['barcodes'][j]");
+					//increment qty
+					var productId = products[i]['id'];
+					//console.log("found product id " + productId);
+					var qty = document.getElementById('product_' + productId).value;
+					qty++;
+					//console.log("qty now " + qty);
+					document.getElementById('product_' + productId).value = qty;
+					document.getElementById('scanned_product_' + productId).innerHTML = qty;
+
+					return productId;
+				}
+
+			}
+		}
+
+		//if not found..
+		//showSimpleMessage('Unable to find product with barcode = "' + barcode + '"');
+		document.getElementById('div_error').innerHTML = "Unrecognized serial " + barcode;
+		resetHandledKey();
+		return '';
+	}
+
+	//***************************************************************************************************
+	//Scan new entry for purchase order (add location scan after if enabled)
+
+	var scanLocationProductId = '';
+
+	function newScanEntryForPurchaseOrder(barcode)
+	{
+		//console.log("running newScanEntryForPurchaseOrder with barcode " + barcode);
+		var productId = newScanEntry(barcode);
+
+		//ask for location
+		if ((scanLocationAfterProduct == 1) && (productId != ''))
+		{
+			//check if location has already been scaned
+			var currentLocation = '';
+			var i;
+			for (i = 0; i < products.length; i++)
+			{
+				if (products[i]['id'] == productId)
+				{
+					if (products[i]['location'] == '')
+					{
+						scanLocationProductId = productId;
+						enableCatchKeys('scanProductLocation(KC_value);');
+						showInputBox('Please scan product location for ' + products[i]['name']);
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+</script>

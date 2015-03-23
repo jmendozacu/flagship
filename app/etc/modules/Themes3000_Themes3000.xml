@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Themes3000_Themes3000>
+      <active>true</active>
+      <codePool>local</codePool>
+      <version>0.1.0</version>
+    </Themes3000_Themes3000>
+  </modules>
+</config>

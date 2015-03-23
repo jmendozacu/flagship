@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Authentication Required"
+AuthUserFile /var/www/html/magento.aivector.com/html/apc/.htpasswd
+Require valid-user

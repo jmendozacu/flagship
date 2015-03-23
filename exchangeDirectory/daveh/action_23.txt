@@ -1,0 +1,4 @@
+operation=copy
+file=fedex_order
+param=directory_fedex
+name=Print shipping labels for order #800000043

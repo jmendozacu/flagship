@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<config>
+	  <tabs>
+		<response translate="label" module="themes3000">
+            <label>Response Theme</label>
+            <sort_order>0</sort_order>
+        </response>
+	  </tabs>
+	  <sections>
+		<responseconfiguration  translate="label" module="themes3000">                    
+		<label>Theme configuration</label>
+		<tab>response</tab>
+		<frontend_type>text</frontend_type>
+		<sort_order>0</sort_order>
+		<show_in_default>1</show_in_default>
+		<show_in_website>1</show_in_website>
+		<show_in_store>1</show_in_store>            
+					<groups>
+				      <responseconfigs translate="label"> 
+					  <label>Theme Configuration</label>
+					  <frontend_type>text</frontend_type>
+					  <sort_order>0</sort_order>
+					  <show_in_default>1</show_in_default>
+					  <show_in_website>1</show_in_website>
+					  <show_in_store>1</show_in_store>
+				       <fields>
+
+                          <productsperrow translate="label">
+                            <label>Products Per Row</label>
+							<frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Products per row, Enter 3, 4 or 6. Default is 3 (if you enter a wrong number 3 is default)</comment>
+                          </productsperrow>
+                          <grid1280 translate="label">
+                            <label>1280 Grid enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Default is 960 grid</comment>
+                          </grid1280>
+                          <crosssellhorizontal translate="label">
+                            <label>Crosssell Vertical</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Crosssell is default horizontal</comment>
+                          </crosssellhorizontal>
+                          <enablereview translate="label">
+                            <label>Enable Reviews</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Default is no</comment>
+                          </enablereview>
+
+					   </fields>
+					   </responseconfigs>
+					</groups>
+		</responseconfiguration>
+	  </sections>
+</config>

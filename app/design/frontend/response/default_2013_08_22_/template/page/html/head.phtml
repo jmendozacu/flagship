@@ -1,0 +1,74 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+	<!-- Basic Page Needs
+  ================================================3000themes.com== -->
+	<meta charset="utf-8">
+	<title><?php echo $this->getTitle() ?></title>
+	
+	<meta name="description" content="<?php echo htmlspecialchars($this->getDescription()) ?>" />
+	<meta name="keywords" content="<?php echo htmlspecialchars($this->getKeywords()) ?>" />
+	<meta name="robots" content="<?php echo htmlspecialchars($this->getRobots()) ?>" />
+
+	<!-- Mobile meta
+	================================================3000themes.com== -->	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<!-- CSS and scripts
+	================================================3000themes.com== -->	
+	<?php echo $this->getCssJsHtml() ?>
+
+
+	<!-- HTML5Shim
+	================================================3000themes.com== -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+
+
+	<!-- Favicons
+	================================================3000themes.com== -->
+	<link rel="icon" href="/media/favicon.ico" />
+	<link rel="shortcut icon" href="/media/favicon.ico" />	
+	<link rel="apple-touch-icon" href="/media/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/media/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="/media/apple-touch-icon-114x114.png">
+
+
+	<!--[if lt IE 7]>
+	<script type="text/javascript">
+	//<![CDATA[
+	    var BLANK_URL = '<?php echo $this->helper('core/js')->getJsUrl('blank.html') ?>';
+	    var BLANK_IMG = '<?php echo $this->helper('core/js')->getJsUrl('spacer.gif') ?>';
+	//]]>
+	</script>
+	<![endif]-->
+
+	<?php echo $this->getChildHtml() ?>
+	<?php echo $this->helper('core/js')->getTranslatorScript() ?>
+	<?php echo $this->getIncludes() ?>

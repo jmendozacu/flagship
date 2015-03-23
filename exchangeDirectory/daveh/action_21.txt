@@ -1,0 +1,4 @@
+operation=copy
+file=flat_rate
+param=directory_flatrate
+name=Print shipping labels for order #1200000105

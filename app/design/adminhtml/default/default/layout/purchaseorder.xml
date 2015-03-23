@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<layout version="0.1.0">
+  <purchaseorder_adminhtml_purchaseorder_index>
+     <reference name="content">
+             <block type="purchaseorder/adminhtml_grid" name="purchaseorder" />
+      </reference>
+   </purchaseorder_adminhtml_purchaseorder_index>
+</layout>

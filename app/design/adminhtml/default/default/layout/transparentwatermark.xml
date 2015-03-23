@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<!--<adminhtml_imagesitemap_grid>
+		<reference name="head">
+			<action method="addJs"><script>magentogarden/jquery-1.6.4.min.js</script></action>
+			<action method="addJs"><script>magentogarden/global.js</script></action>
+			<action method="addJs"><script>magentogarden/ajaxupload.3.5.js</script></action>
+		</reference>
+</adminhtml_imagesitemap_grid>-->
+	
+	<adminhtml_twcategory_edit>
+		<reference name="head">
+			<action method="addJs"><script>magentogarden/jquery-1.6.4.min.js</script></action>
+			<action method="addJs"><script>magentogarden/global.js</script></action>
+		</reference>
+    	<reference name="content">
+    		<block type="transparentwatermark/adminhtml_twcategory_edit" name="transparentwatermark.twcategory.edit"></block>
+    		<block type="transparentwatermark/adminhtml_js" name="transparentwatermark.twcategory.edit.js" template="transparentwatermark/twcategory/js.phtml"></block>
+    	</reference>
+    </adminhtml_twcategory_edit>
+    
+</layout>

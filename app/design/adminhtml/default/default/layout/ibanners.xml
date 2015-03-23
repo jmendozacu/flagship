@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<layout>
+
+	<ibanners_admin_adminhtml_group_index>
+		<reference name="head">
+			<action method="setTitle" translate="title" module="ibanners"><title>Manage Banner Groups - iBanners by Fishpig</title></action>
+		</reference>
+		<reference name="content">
+			<block type="ibanners/adminhtml_group" name="groups" />
+		</reference>
+	</ibanners_admin_adminhtml_group_index>
+	
+	<ibanners_admin_adminhtml_group_edit>
+		<reference name="left">
+			<block type="ibanners/adminhtml_group_edit_tabs" name="group.tabs" />
+		</reference>
+		<reference name="content">
+			<block type="ibanners/adminhtml_group_edit" name="groups" />
+		</reference>
+	</ibanners_admin_adminhtml_group_edit>
+	
+	<ibanners_admin_adminhtml_banner_index>
+		<reference name="head">
+			<action method="setTitle" translate="title" module="ibanners"><title>Manage Banners - iBanners by Fishpig</title></action>
+		</reference>
+		<reference name="content">
+			<block type="ibanners/adminhtml_banner" name="banner" />
+		</reference>
+	</ibanners_admin_adminhtml_banner_index>
+	
+	<ibanners_admin_adminhtml_banner_edit>
+		<reference name="left">
+			<block type="ibanners/adminhtml_banner_edit_tabs" name="banners.tabs" />
+		</reference>
+		<reference name="content">
+			<block type="ibanners/adminhtml_banner_edit" name="banners" />
+		</reference>
+	</ibanners_admin_adminhtml_banner_edit>
+	
+</layout>

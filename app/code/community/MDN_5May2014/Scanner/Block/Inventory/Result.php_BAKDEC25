@@ -1,0 +1,82 @@
+<?php
+
+class MDN_Scanner_Block_Inventory_Result extends Mage_Adminhtml_Block_Widget_Form
+{
+	private $_collection = null;
+	private $_product = null;
+	private $_keyword = null;
+
+		
+	public function getQueryString()
+	{
+		return $this->_keyword;
+	}
+	
+	/**
+	 * Initialise la collection
+	 *
+	 * @param unknown_type $keyword
+	 */
+	public function initResult($keyword)
+	{
+		$this->_keyword = $keyword;
+		
+	
+		//perform search using barcode first
+		$object = mage::getModel('AdvancedStock/ProductBarcode')->load(trim($keyword), 'ppb_barcode');
+	
+		if ($object->getId()){
+			$this->_product = mage::getModel('catalog/product')->load($object->getppb_product_id());
+		}else{
+
+			$object = mage::getModel('barcodes/barcodes')->load(trim($keyword), 'dzv_serial');
+	        if ($object->getId()){
+				$this->_product = Mage::getModel('catalog/product')->load($object->getProductId());
+		    }		 
+		}
+
+		
+
+	}
+	
+	/**
+	 * Définit si un seul produit correspond
+	 *
+	 * @return unknown
+	 */
+	public function hasOnlyOneResult()
+	{
+		if ($this->_product != null)
+			return true;
+		else
+		{
+			return ($this->getCollection()->getSize() == 1);
+		}
+	}
+	
+	/**
+	 * retourne tous les résultats
+	 *
+	 * @return unknown
+	 */
+	public function getCollection()
+	{
+		return $this->_collection;
+	}
+	
+	/**
+	 * retourne le seul produit
+	 *
+	 * @return unknown
+	 */
+	public function getOnlyProduct()
+	{
+		if ($this->_product != null)
+			return $this->_product;
+		else 
+		{
+			foreach ($this->getCollection() as $item)
+				return $item;
+		}
+	}
+}

@@ -1,0 +1,202 @@
+<?php
+
+class MDN_Scanner_Block_Inventory_Result extends Mage_Adminhtml_Block_Widget_Form {
+
+	private $_collection = null;
+	private $_product = null;
+	private $_keyword = null;
+	private $_arunSearchMulti = array();
+
+	public function getQueryString() {
+		return $this->_keyword;
+	}
+
+	/**
+	 * Initialise la collection
+	 *
+	 * @param unknown_type $keyword
+	 */
+	public function initResult($keyword) {
+		$this->_keyword = $keyword;
+		$this->queryAdvBarcode();
+		$this->queryBarcode();
+		$this->queryUPC();
+		$this->queryAdvSerials();
+
+		if (count($this->_arunSearchMulti)) {
+			$this->_collection = Mage::getResourceModel('catalog/product_collection')
+					->addAttributeToSelect('*')
+					//->addAttributeToSelect('name')
+					->addIdFilter(array_unique($this->_arunSearchMulti))
+					//->setStore(Mage_Core_Model_App::ADMIN_STORE_ID)
+					->load();
+		}
+	}
+
+	/**
+	 * Chcek results for AdvancedStock Barcode 
+	 *
+	 * @return boolean
+	 * @author ArunV
+	 */
+	public function queryAdvBarcode() {
+		if ($this->_keyword) {
+			// Check for Single product
+			$object = Mage::getModel('AdvancedStock/ProductBarcode');
+			$barcode = $object->load(trim($this->_keyword), 'ppb_barcode');
+
+			if ($barcode->getData('ppb_product_id')) {
+				$this->_product = Mage::getModel('catalog/product')
+						->load($barcode->getData('ppb_product_id'));
+			} else {
+				$barcode = $object->getCollection()
+						->addFieldToFilter('ppb_barcode', array('like' => '%' . $this->_keyword . '%'))
+						->getData();
+
+
+				if (count($barcode) > 0) {
+					foreach ($barcode as $value) {
+						$this->_arunSearchMulti[] = $value['ppb_product_id'];
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Chcek results for AdvancedStock Serails 
+	 *
+	 * @return boolean
+	 * @author ArunV
+	 */
+	public function queryAdvSerials() {
+		if ($this->_keyword) {
+			// Check for Single product
+			$object = Mage::getModel('AdvancedStock/ProductSerial');
+			$serial = $object->load(trim($this->_keyword), 'pps_serial');
+
+			if ($serial->getData('pps_product_id')) {
+				$this->_product = Mage::getModel('catalog/product')
+						->load($serial->getData('pps_product_id'));
+			} else {
+				$serial = $object->getCollection()
+						->addFieldToFilter('pps_serial', array('like' => '%' . $this->_keyword . '%'))
+						->getData();
+
+
+				if (count($serial) > 0) {
+					foreach ($serial as $value) {
+						$this->_arunSearchMulti[] = $value['ppb_product_id'];
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Chcek results for Barcode 
+	 *
+	 * @return boolean
+	 * @author ArunV
+	 */
+	public function queryBarcode() {
+		if ($this->_keyword) {
+			// Check for Single product
+			$object = Mage::getModel('barcodes/barcodes');
+			$barcode = $object->getCollection()
+					->addFieldToFilter('dzv_serial', array('eq' => trim($this->_keyword)))
+					->join('Purchase/OrderProduct', 'pop_product_id=product_id');
+
+			if ($object->getData('product_id')) {
+				$this->_product = Mage::getModel('catalog/product')
+						->load($object->getData('product_id'));
+			} else {
+				$barcode = $object->getCollection()
+						->addFieldToFilter('dzv_serial', array('like' => '%' . $this->_keyword . '%'))
+						->join('Purchase/OrderProduct', 'pop_product_id=product_id')
+						->getData();
+
+
+				if (count($barcode) > 0) {
+					foreach ($barcode as $value) {
+						$this->_arunSearchMulti[] = $value['product_id'];
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Chcek results for UPC 
+	 *
+	 * @return boolean
+	 * @author ArunV
+	 */
+	public function queryUPC() {
+		if ($this->_keyword) {
+			// Check for Single product
+			$UPCollection = Mage::getModel('catalog/product')
+					->getCollection();
+
+			$UPCFirst = $UPCollection->addFieldToFilter('upc', array('eq' => trim($this->_keyword)))
+					->getFirstItem();
+
+			if ($UPCFirst->getData('entity_id')) {
+				$this->_product = $UPCFirst;
+			} else {
+				$UPC = $UPCollection->addFieldToFilter('upc', array('like' => '%' . trim($this->_keyword) . '%'));
+
+				if (count($UPC) > 0) {
+					foreach ($UPC as $value) {
+						$this->_arunSearchMulti[] = $value['product_id'];
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * D�finit si un seul produit correspond
+	 *
+	 * @return unknown
+	 */
+	public function hasOnlyOneResult() {
+		if ($this->_product != null)
+			return true;
+		else {
+			return (count($this->getCollection()) == 1);
+		}
+	}
+
+	/**
+	 * retourne tous les r�sultats
+	 *
+	 * @return unknown
+	 */
+	public function getCollection() {
+		return $this->_collection;
+	}
+
+	/**
+	 * retourne le seul produit
+	 *
+	 * @return unknown
+	 */
+	public function getOnlyProduct() {
+		if ($this->_product != null)
+			return $this->_product;
+		else {
+			foreach ($this->getCollection() as $item)
+				return $item;
+		}
+	}
+
+}

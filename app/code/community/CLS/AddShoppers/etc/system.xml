@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CLS_AddShoppers
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to support@classyllama.com so we can send you a copy immediately.
+ *
+ * @category    Code
+ * @package     CLS_AddShoppers
+ * @copyright   Copyright (c) 2012 Classy Llama Studios, LLC (classyllama.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <sections>
+        <cls_addshoppers translate="label" module="cls_addshoppers">
+            <label>AddShoppers</label>
+            <class>addshoppers-tab</class>
+            <tab>catalog</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>800</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <settings translate="label">
+                    <comment><![CDATA[To sign up for a free account or view the Merchant Admin, <a href="https://www.addshoppers.com/merchants" target="_blank">click here</a>. ]]></comment>
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label,comment">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enabled>
+                        <account_id translate="label,comment">
+                            <label>Account ID</label>
+                            <comment><![CDATA[You will find this in the Merchant Admin panel.]]></comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </account_id>
+                        <use_schema translate="label,comment">
+                            <label>Use Product Schema for Data?</label>
+                            <comment><![CDATA[If set to yes, AddShoppers will use the product schema included in the page.  Set this to no if you do not have Product Schemas installed on your site.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </use_schema>
+                        <button_code translate="label,comment">
+                            <label>Button Code</label>
+                            <comment><![CDATA[Paste the button code from the AddShoppers Admin here.]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>400</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </button_code>
+                    </fields>
+                </settings>
+            </groups>
+        </cls_addshoppers>
+    </sections>
+</config>

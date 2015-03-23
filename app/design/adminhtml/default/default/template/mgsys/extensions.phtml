@@ -1,0 +1,45 @@
+<?php
+$_extensions = $this->getMgExtensions();
+?>
+
+<div class="content-header">
+	<table cellspacing="0">
+		<tbody>
+			<tr>
+				<td style="width: 50%;">
+					<h3 class="icon-head head-adminhtml-extension">Manage Extensions</h3>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div>
+	<div class="left" style="width: 500px;">
+		<div class="grid">
+			<div class="hor-scroll">
+				<table class="data" cellpadding="0" cellspacing="0">
+					<thead>
+						<tr class="headings">
+							<th>Name</th>
+							<th>Version</th>
+							<th>Latest Version</th>
+							<th class="last">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $_count = 0;?>
+						<?php foreach ($_extensions as $_extension): ?>
+						<tr class="<?php if ($_count % 2 == 0) echo "even"; ?>">
+							<td><?php echo $_extension['name']?></td>
+							<td><?php echo $_extension['ver']?></td>
+							<td><?php echo $_extension['latest']?></td>
+							<td class="last"><a target="_blank" href="<?php echo $_extension['url'] ?>">View</a></td>
+						</tr>
+						<?php $_count ++; ?>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

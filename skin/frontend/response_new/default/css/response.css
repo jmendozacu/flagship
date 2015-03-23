@@ -1,0 +1,347 @@
+/* @override 
+	http://responsive.3000themes.com/skin/frontend/response/default/css/response.css */
+
+
+/**
+ * 3000Themes.com Responsive magento theme and boilerplate
+ * 
+ * RESPONSE COLOR SCHEME
+ *
+ * @category    design
+ * @package     response_default
+ * @license     Read license file
+ *
+ * @author		Kay in 't Veen - 3000themes
+ * @Project		Response
+ * @version		V1.2 July 2012
+ *
+ *
+ * 3000Themes is part of Microdesign B.V. - http://www.microdesign.nl
+ */
+
+/*================================================================================ */
+/* 1. Basics & Buttons												3000Themes.com
+/*================================================================================ */
+
+body{ background: #f6f6f6; font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;}
+
+	.button,
+	button,
+	input[type="submit"],
+	input[type="reset"],
+	input[type="button"] {
+	background: #ee7440;
+	font-size: 10px;
+	text-transform: uppercase;
+	text-shadow: none;
+	color: #fff;
+	border: 0;
+	padding: 9px;
+	float: left;
+	margin: 0;
+	}
+
+	.button:hover,
+	button:hover,
+	input[type="submit"]:hover,
+	input[type="reset"]:hover,
+	input[type="button"]:hover {
+	background: #ee7440;
+	font-size: 10px;
+	text-transform: uppercase;
+	text-shadow: none;
+	color: #fff;
+	border: 0;
+	padding: 9px;
+	float: left;
+	margin: 0;
+	background: #d86939;
+	}
+
+	.button:active,
+	button:active,
+	input[type="submit"]:active,
+	input[type="reset"]:active,
+	input[type="button"]:active {
+	background: #d86939;
+	}
+	
+/*================================================================================ */
+/* 2. Typography													3000Themes.com
+/*================================================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+	color: #212b33;
+	font-family: Helvetica, Arial, Verdana;
+	font-weight: bold; }
+
+h1 { font-size: 46px; line-height: 54px; margin-bottom: 18px;}
+h2 { font-size: 35px; line-height: 48px; margin-bottom: 12px; }
+h3 { font-size: 28px; line-height: 42px; margin-bottom: 6px; }
+h4 { font-size: 21px; line-height: 36px; margin-bottom: 0; }
+h5 { font-size: 17px; line-height: 30px; }
+h6 { font-size: 14px; line-height: 24px; }
+h2.legend{ text-transform:uppercase; }
+a{
+	color: #ee7440;
+	text-decoration: none;
+	cursor: pointer;
+}
+/*================================================================================ */
+/* 3. Header														3000Themes.com
+/*================================================================================ */ 
+header{
+	margin: 0;
+	background: #fff;
+	padding-top: 24px;
+	border-bottom: 1px solid #dadada;
+}
+.thelogo{
+	display: block;
+	background: url(../images/response-logo.png) no-repeat;
+	width: 305px;
+	height: 78px !important;
+	padding: 0 !important;
+	/* http://nicolasgallagher.com/another-css-image-replacement-technique/ */
+	font: 0/0 a;
+	text-shadow: none;
+	color: transparent;
+	width: 100%;
+}
+h1.logo{
+	margin: 0;
+}
+
+/*================================================================================ */
+/* 4. Navigation														3000Themes.com
+/*================================================================================ */
+
+nav.primary ul li a { color: #212b33; font-weight: bold; text-decoration: none; }	
+nav.primary ul li a:hover {
+	color: #ee7440;
+	cursor: pointer;
+}
+nav.primary li a{
+	width: auto !important;
+	height: auto !important;
+	font-size: 14px !important;
+}
+
+
+/*sub menu*/
+nav.primary ul ul {
+	opacity: 0; 
+  	filter: alpha(opacity=0); 
+	position: absolute;
+	top:100%;
+	left: 0;
+	z-index: 999999;
+	background: #212b33;
+	height: 0px;
+	overflow: hidden;
+	min-width: 100%;
+	-webkit-transition: opacity 0.4s ease-out;
+	-moz-transition: opacity 0.4s ease-out;
+	-o-transition: opacity 0.4s ease-out;
+	-ms-transition: opacity 0.4s ease-out;
+	transition: opacity 0.4s ease-out;
+	
+	-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);	
+    
+	-moz-border-radius: 5px; /* Firefox */
+	-webkit-border-radius: 5px; /* Safari, Chrome */
+	border-radius: 5px; /* CSS3 */	
+}
+nav.primary ul ul li a {
+	text-transform: none;
+	color: #fff;
+}
+nav.primary ul li:hover > a {
+	color: #ee7440;
+}
+
+.toplinks ul li,
+.toplinks ul{
+	display: inherit;
+	float: right !important;
+}
+.toplinks ul li{
+	width: 80px !important;
+}
+.toplinks ul li.topcart{
+	width: 160px !important;
+}
+.toplinks ul li,
+.toplinks ul li a,
+.toplinks ul {
+	width: auto !important;
+	height: auto !important;
+}
+.toplinks ul li a {
+	color: #212b33;
+	text-decoration: none;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+.toplinks ul li a:hover {
+	color: #ee7440;
+	cursor: pointer;
+}
+
+/*================================================================================ */
+/* 5. Footer														3000Themes.com
+/*================================================================================ */
+
+footer{
+	border-top: 5px solid #dfe3e7;
+}
+footer h3{ 
+text-transform: uppercase;
+color: #aab8c4;
+}
+footer a{ color: #212b33; }
+footer .about a,
+footer .contact a{ text-transform: uppercase;	color: #ee7440 !important;}
+footer .contact a{ text-transform: capitalize; }
+/*================================================================================ */
+/* 6. Breadcrumbs													3000Themes.com
+/*================================================================================ */
+.breadcrumbs{
+	font-size: 10px;
+	color: #aab8c4 !important;
+	text-transform: uppercase;
+	
+}
+.breadcrumbs a{color: #aab8c4;}
+.breadcrumbs li strong{ color: #aab8c4;	}
+
+/*================================================================================ */
+/* 7. Shop By filter												3000Themes.com
+/*================================================================================ */
+
+.block-layered-nav dt,
+.block-layered-nav p.block-subtitle{
+	text-transform: uppercase;
+	color: #aab8c4;
+	margin-bottom: 0;
+}
+.block-layered-nav li a{ color: #212b33; text-transform: uppercase;}
+.block-layered-nav li a{ color: #212b33; text-transform: uppercase;}
+.currently ol li a.btn-remove{
+	color: #ee7440;
+	text-transform: uppercase;
+}
+.currently{
+	border-bottom: 3px solid #dfe3e7;
+}
+
+/*================================================================================ */
+/* 8. Products Grid 												3000Themes.com
+/*================================================================================ */
+
+.products-grid h2.product-name a,
+.products-list h2.product-name a{ color: #212b33; }
+.products-list .price-box .price{ color: #aab8c4; font-size: 18px; }
+.products-grid .price-box .price,
+.products-list .price-box .price{ color: #aab8c4; font-size: 18px;}
+button:hover.btn-cart{ background: #d86939; }
+.products-grid ul.add-to-links li a,
+.products-list ul.add-to-links li a{
+	 color: #aab8c4;
+}
+.pages ol li a{color: #212b33;}
+button.btn-cart,
+button:hover.btn-cart{
+	padding: 0;
+	background: #ee7440;
+	font-size: 10px;
+	text-transform: uppercase;
+	text-shadow: none;
+	color: #fff;
+	border: 0;
+	padding: 9px;
+	float: left;
+	margin: 0;
+}
+.catalog-product-view .add-to-cart  .button.btn-cart,
+.catalog-product-view .add-to-cart  .button.btn-cart{
+	font-size: 15px;
+	padding: 18px;
+	float: right;
+	-moz-border-radius: 0px; /* Firefox */
+	-webkit-border-radius: 0px; /* Safari, Chrome */
+	border-radius: 0px; /* CSS3 */	
+	height: 54px;
+} 
+/*================================================================================ */
+/* 10. Product detail page											3000Themes.com
+/*================================================================================ */
+.catalog-product-view ul.add-to-links li a,
+.catalog-product-view .add-to-box p.email-friend a{ color: #aab8c4;	}
+.catalog-product-view .pricecontainer,
+
+.catalog-product-view .price-box{
+	float: left;
+	font-size: 30px;
+	padding-top: 4px;
+	color: #ee7440;
+}
+.product-options-bottom  .price-box{
+	padding-top: 24px;
+}
+.catalog-product-view ul.add-to-links li a,
+.catalog-product-view .add-to-box p.email-friend a{ color: #aab8c4;	}
+.catalog-product-view .add-to-cart input{
+	float: right;
+	padding: 12px;
+	margin: 0;
+	width: 60px;
+	text-align: center;
+	-moz-border-radius: 0px; /* Firefox */
+	-webkit-border-radius: 0px; /* Safari, Chrome */
+	border-radius: 0px; /* CSS3 */
+	height: 54px;	
+}
+.addtobuttons li a.link-wishlist{
+	background: url('../images/ico_wishlist.png') no-repeat top right; 
+	padding: 11px 34px 12px 0;
+	margin: 0 0 6px 0;
+}
+.addtobuttons li a.link-compare{
+	background: url('../images/ico_compare.png') no-repeat top right; 
+	padding: 11px 34px 12px 0;
+	text-align: right !important; 
+}
+.addtobuttons  p.email-friend a{
+	background: url('../images/ico_email.png') no-repeat top right; 
+	padding: 11px 34px 12px 0;
+	color: #aab8c4;
+	text-align: right !important;
+}
+.catalog-product-view .pricecontainer{
+	float: left;
+	font-size: 30px;
+	padding-top: 24px;
+	color: #ee7440;
+}
+
+/*================================================================================ */
+/* 12. Cart														3000Themes.com
+/*================================================================================ */
+	
+button.btn-empty,
+button.btn-update,
+button.btn-continue{
+	background: #aab8c4;
+}
+#shopping-cart-totals-table{
+	color: #aab8c4;
+}
+	.crosssell .price-box .price{ color: #aab8c4;}
+	.crosssell h3.product-name a{ color: #212b33; }
+.crosssell ul.add-to-links li a{ color: #aab8c4;}
+
+
+

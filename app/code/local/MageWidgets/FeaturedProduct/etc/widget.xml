@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mage Widgets
+ * Featured Products Widget 
+ *
+ * @category   Mage
+ * @package    Mage_Widgets
+ * @copyright  Copyright (c) 2009-2010 Mage Widgets.
+ */
+-->
+<widgets>
+    <featuredproduct_featuredproduct type="featuredproduct/Featuredproduct" module="featuredproduct">
+
+        <name>Featured Product Widget</name>
+        <description type="desc">Adds Featured Product Widget to any CMS Page or Static Block</description>
+        
+        <parameters>
+            <limit translate="label">
+                <label>The number of products to display</label>
+                <required>1</required>
+                <visible>1</visible>
+                <type>text</type>
+                <value>3</value>
+                <sort_order>10</sort_order>
+            </limit>
+            <columnlimit translate="label">
+                <label>The number of products per row</label>
+                <required>1</required>
+                <visible>1</visible>
+                <type>text</type>
+                <value>3</value>
+                <sort_order>10</sort_order>
+            </columnlimit>
+            <template translate="label">
+                <label>Template</label>
+                <required>1</required>
+                <visible>1</visible>
+                <type>text</type>
+                <value>catalog/product/list.phtml</value>
+                <description>Products list template</description>
+                <sort_order>20</sort_order>
+            </template>
+            <has_toolbar translate="label">
+                <label>Show Toolbar</label>
+                <type>select</type>
+                <source_model>adminhtml/system_config_source_yesno</source_model>
+                <required>1</required>
+                <visible>1</visible>
+                <sort_order>30</sort_order>
+            </has_toolbar>
+            <display_mode translate="label">
+                <label>List Mode</label>
+                <type>select</type>
+                <source_model>featuredproduct/config_source_listMode</source_model>
+                <required>1</required>
+                <visible>1</visible>
+                <sort_order>40</sort_order>
+            </display_mode>
+            <filter_by_category translate="label">
+                <label>Filter by category</label>
+                <type>select</type>
+                <source_model>adminhtml/system_config_source_yesno</source_model>
+                <required>1</required>
+                <visible>1</visible>
+                <description>Display only featured products from the specified category</description>
+                <sort_order>50</sort_order>
+            </filter_by_category>
+            <category_id translate="label">
+                <label>Category ID</label>
+                <type>text</type>
+                <source_model>featuredproduct/config_source_listMode</source_model>
+                <required>1</required>
+                <visible>1</visible>
+                <description>If the category is not specified, then the extension will use current category that is being viewed.</description>
+                <sort_order>60</sort_order>
+                <value>0</value>
+            </category_id>
+            <cache_lifetime translate="label">
+                <label>Cache lifetime(in seconds)</label>
+                <type>text</type>
+                <required>1</required>
+                <visible>1</visible>
+                <description>24 hours by default (default value setting = 0). To refresh and clear the cache, Clear the Blocks HTML Output Cache.</description>
+                <sort_order>50</sort_order>
+                <value>0</value>
+            </cache_lifetime>
+        </parameters>
+
+    </featuredproduct_featuredproduct>
+</widgets> 

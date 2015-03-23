@@ -1,0 +1,241 @@
+<script>
+
+	//**********************************************************************************************************
+	//**********************************************************************************************************
+	// CATCH KEYS
+	//**********************************************************************************************************
+	//**********************************************************************************************************
+
+
+	var KC_catchKeys = false;
+	var KC_displayInput = null;
+	var KC_value = '';
+	var KC_onEnter = null;
+
+	//*************************************************************************************************
+	//submit and assigning action for the Inventory Search
+
+	function submitAndAssign() {
+		console.log("running submitAndAssign");
+		if (typeof (elementName) !== 'undefined' && typeof (formName) !== 'undefined') {
+			console.log("elementName = " + elementName + " and formName = " + formName);
+			//enableCatchKeys("document.getElementById('query').value=KC_value;form1.submit();");
+			console.log("putting KC_value " + KC_value + " into element " + elementName);
+			document.getElementById(elementName).value = KC_value;
+			var q = document.getElementById('query').value;
+			console.log("submitting form " + formName + " with query " + q + "...");
+			//alert("submitting form " + formName + " with query " + q + "...");
+			//return;
+			document.forms[formName].submit();
+		}
+	}
+
+
+	//***************************************************************************************************
+
+	//enable catch keys
+	function enableCatchKeys(eOnEnter)
+	{
+		console.log("running enableCatchKeys with eOnEnter " + eOnEnter);
+		KC_catchKeys = true;
+		//console.log("set KC_catchKeys to true");
+		KC_displayInput = document.getElementById('barcode');
+		//console.log("set KC_displayInput to element with id 'barcode'");
+		KC_onEnter = eOnEnter;
+		//console.log("set KC_onEnter to " + KC_onEnter);
+	}
+
+
+	//**********************************************************************************************************
+	//disable catch key
+	function disableCatchKeys()
+	{
+		console.log("running disableCatchKeys");
+		KC_catchKeys = false;
+	}
+
+	//**********************************************************************************************************
+	//handle key press
+	function handleKey(evt) {
+		///console.log("running handleKey");
+		if (!KC_catchKeys) {
+			console.log("KC_catchKeys is false; cancelling");
+			return true;
+		}
+		var evt = (evt) ? evt : ((event) ? event : null);
+		//console.log("evt.charCode " + evt.charCode + " and evt.keyCode " + evt.keyCode);
+		document.getElementById('barcode_debug').innerHTML += "keyCode " + evt.keyCode + ", charcode " + evt.charCode + "<br>\n";
+		// not used: var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+		var postambleKeyCode = postamble.charCodeAt(0);
+		// keyCode must be used for non-character keys //
+		if(evt.keyCode != 116) { // F5 (refresh)
+			//console.log("evt.keyCode is not 116 (F5 refresh)");
+			if (evt.keyCode == 13 || evt.keyCode == postambleKeyCode) {
+				console.log("evt.keyCode is Enter");
+				console.log("setting KC_value to KC_displayInput.value: " + KC_displayInput.value);
+				KC_value = KC_displayInput.value;
+				KC_displayInput.blur();
+				console.log("eval'ing KC_onEnter: " + KC_onEnter);
+				eval(KC_onEnter);
+
+				//**************************************************
+				//This is here because the form is not being submitted properly by the Search.phtml file in template/Scanner/Inventory. 
+				if (typeof compareFlag !== 'undefined' && compareFlag == 1) {
+					console.log("compareFlag == 1");
+					codeComparer(document.getElementById(elementName).value);
+				} else if (typeof pickOpt !== 'undefined' && pickOpt  == 1) {
+					console.log("pickOpt == 1");
+					pickOptCntrl(document.getElementById(elementName).value);
+				} else if (typeof createFreeDelivery !== 'undefined' && createFreeDelivery == 1) {
+					console.log("createFreeDelivery == 1");
+					deliver_createFree(document.getElementById(elementName).value);
+				} else {
+					submitAndAssign();
+				}
+				resetHandledKey();
+			} else {
+				//console.log("appending " + String.fromCharCode(evt.charCode) + " to input");
+				// append char to input
+				KC_value += String.fromCharCode(evt.charCode);
+				KC_displayInput.value = KC_value;
+				
+				if (typeof elementName !== 'undefined' && elementName) {
+					console.log("setting elementName " + elementName + " to KC_value: " + KC_value);
+					document.getElementById(elementName).value = KC_value;
+				}
+
+			}
+
+		}
+		
+		return false;
+	}
+
+	//**********************************************************************************************************
+	//reset chars entered
+	function resetHandledKey()
+	{
+		console.log("running resetHandledKey");
+		KC_value = '';
+		console.log("set KC_value to empty");
+		if (KC_displayInput != null) {
+			console.log("clearing KC_displayInput value " + KC_displayInput.value);
+			//KC_displayInput.innerHTML = '';
+			KC_displayInput.value = '';
+		}
+	}
+
+	function handleSpecialKey(evt) {
+		//console.log("running handleSpecialKey with evt.keyCode = " + evt.keyCode + " and evt.charCode = " + evt.charCode);
+		// only keyCode is used on keydown //
+		if (evt.keyCode == 8 || evt.keyCode == 46) { // Backspace or Delete key
+			//console.log("Backspace or Delete entered; preventing default");
+			evt.preventDefault();
+			// remove one char from the end
+			//KC_value = KC_displayInput.innerHTML.slice(0, -1);
+			KC_value = KC_displayInput.value.slice(0, -1);
+			KC_displayInput.value = KC_value;
+		}
+	}
+	
+	//**********************************************************************************************************
+	//execute function associated to enter
+	function commitBarcode()
+	{
+		console.log("running commitBarcode");
+		eval(KC_onEnter);
+		resetHandledKey();
+	}
+
+
+	//**********************************************************************************************************
+	//**********************************************************************************************************
+	// TOOLS
+	//**********************************************************************************************************
+	//**********************************************************************************************************
+
+	//**********************************************************************************************************
+	//
+	function cleanBarcode(barcode)
+	{
+		barcode = barcode.replace("\r", '');
+		barcode = barcode.replace("\n", '');
+		return barcode;
+	}
+
+	//**********************************************************************************************************
+	//
+	function getTopScrollPosition()
+	{
+		return f_filterResults(
+				window.pageYOffset ? window.pageYOffset : 0,
+				document.documentElement ? document.documentElement.scrollTop : 0,
+				document.body ? document.body.scrollTop : 0
+				);
+	}
+
+	function f_filterResults(n_win, n_docel, n_body) {
+		var n_result = n_win ? n_win : 0;
+		if (n_docel && (!n_result || (n_result > n_docel)))
+			n_result = n_docel;
+		return n_body && (!n_result || (n_result > n_body)) ? n_body : n_result;
+	}
+
+	//**********************************************************************************************************
+	//keep toolbar at the top of the screen
+	function handleScroll()
+	{
+		var value = getTopScrollPosition();
+		document.getElementById('div_toolbar').style.top = value + 'px';
+	}
+
+	//**********************************************************************************************************
+	//Show message
+	function showSimpleMessage(message)
+	{
+		document.getElementById('div_content').style.display = 'none';
+		document.getElementById('simple_message_btn_ok').style.display = '';
+		document.getElementById('div_message_txt').innerHTML = message;
+		document.getElementById('div_message').style.display = '';
+	}
+
+	//**********************************************************************************************************
+	//Show message
+	function showInputBox(message)
+	{
+		document.getElementById('div_content').style.display = 'none';
+		document.getElementById('simple_message_btn_ok').style.display = '';
+		document.getElementById('div_message_txt').innerHTML = message;
+		document.getElementById('div_message').style.display = '';
+	}
+
+	// show list view
+	function showNewView(title, text)
+	{
+		document.getElementById('div_content').style.display = 'none';
+		document.getElementById('div_new_view_title').innerHTML = title;
+		document.getElementById('div_new_view_text').innerHTML = text;
+		document.getElementById('div_new_view').style.display = '';
+	}
+
+	//**********************************************************************************************************
+	//close message
+	function closeSimpleMessage()
+	{
+		document.getElementById('div_message').style.display = 'none';
+		document.getElementById('div_content').style.display = '';
+	}
+
+	//**********************************************************************************************************
+	// close list view
+	function closeNewView()
+	{
+		document.getElementById('div_new_view').style.display = 'none';
+		document.getElementById('div_content').style.display = '';
+	}
+
+	//handler key press
+	document.onkeypress = handleKey;
+	document.onkeydown = handleSpecialKey;
+	window.onscroll = handleScroll;
+</script>

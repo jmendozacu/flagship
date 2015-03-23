@@ -1,0 +1,158 @@
+<?php
+$orders = $this->getOrders();
+$products = $this->getProducts();
+$serials = $this->getSerials();
+?>
+<script type="text/javascript">
+	var orders = <?php echo json_encode($orders); ?>;
+	var orderProducts = new Array();
+	var products = <?php echo json_encode($products); ?>;
+	var serials = <?php echo json_encode($serials); ?>;
+	var scanned = new Array();
+</script>
+
+<table border="1" cellspacing="0" cellpadding="5" align="center" width="100%">
+	<tr>
+		<th class="a-center" bgcolor="#dddddd" colspan="3"><?php echo $this->__('Sales Order Shipping'); ?></th>
+	</tr>
+</table>
+
+<?php
+$messages = $this->getMessagesBlock()->getMessages();
+//echo "<pre>messages: ".print_r($messages, true)."</pre>\n";
+if(count($messages) > 0) {
+	echo "<p class=\"messages\" style=\"text-align: center\">\n";
+	foreach($messages as $message) {
+		if($message->getType() == 'success') {
+			echo "<span class='success-msg'>{$message->getCode()}</span><br>\n";
+		} else if($message->getType() == 'error') {
+			echo "<span class='error-msg'>{$message->getCode()}</span><br>\n";
+		}
+	}
+	echo "</p>\n";
+}
+?>
+
+<?php //echo $this->getMessagesBlock()->getHtml() ?>
+<?php //echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php //echo $this->getChildHtml('global_messages') ?>
+
+<form id="submitUnshippedItems" name="saveShipmentForm" action="<?php echo $this->getSubmitUrl(); ?>" method="post">
+
+<div id="div_orders_view" style="width: 100%; text-align: center">
+	
+	<span id="error_message" style="font-weight: bold; color: red; font-size: 14px"></span>
+
+	<div id="choose_order_system" style="width: 100%; text-align: center">
+		<p><b>Choose order system:</b><p>
+		<p><button type="button" onclick="toggleOrdersView('magento')">Magento</button></p>
+		<p><button type="button" onclick="toggleOrdersView('zen_cart')">Zen Cart</button></p>
+		<p><button type="button" onclick="toggleOrdersView('amazon')">Amazon</button></p>
+	</div>
+
+	<div id="choose_order_view" style="display: none">
+		<div id="magento_order_view">
+			<p><b>Choose Magento order:</b></p>
+			<select id="select_magento_order" onchange="selectMagentoOrder(this)">
+				<option value="" disabled selected style="display: none">- select -</option>
+				<?php foreach($orders as $index => $order) { ?>
+				<option value="<?php echo $order['entity_id']; ?>"><?php echo $order['increment_id']; ?></option>
+				<?php } ?>
+			</select>
+		</div>
+		<div id="custom_order_view">
+			<p id="zen_cart_order_view" style="display: none">
+				<b>Scan or type Zen Cart order:</b>
+			</p>
+			<p id="amazon_order_view" style="display: none">
+				<b>Scan or type Amazon order:</b>
+			</p>
+			<p><button type="button" id="toggle_keypad_button" onclick="toggleKeypad()">Keypad</button></p>
+			<div id="keypad" style="display: none">
+				<table align="center">
+					<tr>
+						<td><button type="button" onclick="keypad(1)">1</button></td>
+						<td><button type="button" onclick="keypad(2)">2</button></td>
+						<td><button type="button" onclick="keypad(3)">3</button></td>
+					</tr>
+					<tr>
+						<td><button type="button" onclick="keypad(4)">4</button></td>
+						<td><button type="button" onclick="keypad(5)">5</button></td>
+						<td><button type="button" onclick="keypad(6)">6</button></td>
+					</tr>
+					<tr>
+						<td><button type="button" onclick="keypad(7)">7</button></td>
+						<td><button type="button" onclick="keypad(8)">8</button></td>
+						<td><button type="button" onclick="keypad(9)">9</button></td>
+					</tr>
+					<tr>
+						<td><button type="button" onclick="keypad('-')">-</button></td>
+						<td><button type="button" onclick="keypad(0)">0</button></td>
+						<td><button type="button" onclick="keypad('#')">#</button></td>
+					</tr>
+				</table>
+				<button type="button" onclick="keypad('<')">< Backspace</button><br>
+				<button type="button" onclick="keypad('>')">Accept ></button>
+			</div>
+			<p id="custom_order_number" type=""></p>
+		</div>
+	</div>
+	<p id="scan_product_serials" style="display: none"><b>Scan product serials:</b></p>
+	<p id="scanned_serials_list"></p>
+	<p><input type="submit" name="submit" id="submit_serials_button" style="display: none" /></p>
+	<p><button type="button" id="cancel_button" style="display: none" onclick="closeOrdersView()">CANCEL</button></p>
+	<div id="magento_order_products" style="display: none"></div>
+	
+</div>
+
+type: <input type="text" id="order_type" name="order_type" /><br>
+order: <input type="text" id="selected_order" name="selected_order" /><br>
+serials: <input type="text" id="product_serials" name="product_serials" /><br>
+
+<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+</form>
+
+<style type="text/css">
+	#product_info td {
+		text-align: left;
+	}
+</style>
+<div id="product_info" style="text-align: center; display: none">
+	<b>Product Info:</b><br>
+	<button type="button" onclick="closeProductInfo()">CLOSE</button>
+	<table border="1" cellspacing="0">
+		<tr>
+			<td><b>ID:</b></td>
+			<td id="product_info_product_id"></td>
+		</tr>
+		<tr>
+			<td><b>Name:</b></td>
+			<td id="product_info_name"></td>
+		</tr>
+		<tr>
+			<td><b>SKU:</b></td>
+			<td id="product_info_sku"></td>
+		</tr>
+		<tr>
+			<td><b>Type:</b></td>
+			<td id="product_info_type"></td>
+		</tr>
+		<tr>
+			<td><b>Weight:</b></td>
+			<td id="product_info_weight"></td>
+		</tr>
+	</table>
+	<!--<b>Serials - Location:</b>
+	<div id="product_info_serials" style="text-align: left"></div>-->
+</div>
+
+<?php 
+foreach($orders as $orderId => $order) {
+	if($order['increment_id'] == '1000000223') {
+		echo "order id {$order['entity_id']} number {$order['increment_id']}<br>total quantity ordered: {$order['total_qty_ordered']}<br>\n";
+		foreach($order['items'] as $itemId => $item) {
+			echo "item id $itemId product id {$item['product_id']} type {$item['product_type']}<br>sku {$item['sku']}<br>quantity ordered {$item['qty_ordered']}<br>shipped {$item['qty_shipped']}<br>reserved {$item['reserved_qty']}<br>\n";
+		}
+	}
+} 
+?>

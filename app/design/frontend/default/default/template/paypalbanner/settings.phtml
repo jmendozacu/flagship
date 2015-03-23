@@ -1,0 +1,103 @@
+<link rel="stylesheet" type="text/css" href="/skin/adminhtml/default/default/boxes.css" media="all" />
+<h3 style="border-bottom: 4px solid #dfdfdf; padding-bottom: .25em;">Please, enter  following data:</h3>
+<ul class="messages">
+    <li class="error-msg" id="error-msg-holder" style="display: none">
+        <ul>
+            <li>
+                <span id="error-msg-text"></span>
+            </li>
+        </ul>
+    </li>
+</ul>
+<fieldset class="config collapseable" id="paypalbanner_settings" style="">
+    <legend>General Settings</legend>
+    <table cellspacing="0" class="form-list">
+        <tbody>
+        <tr id="paypalbanner_settings_name">
+            <td class="label">
+                <label for="paypal_name">PayPal Name</label>
+            </td>
+            <td class="value">
+                <input id="paypal_name" name="paypal_name"class="required-entry input-text" type="text" value="<?php echo $this->getPaypalName()?>">
+            </td>
+        </tr>
+        <tr id="paypalbanner_settings_email">
+            <td class="label">
+                <label for="paypal_email">PayPal Email</label>
+            </td>
+            <td class="value">
+                <input id="paypal_email" name="paypal_email" class="input-text validate-email required-entry" type="text" value="<?php echo $this->getPaypalEmail()?>">
+            </td>
+        </tr>
+        <tr id="paypalbanner_settings_terms">
+            <td class="label">&nbsp;</td>
+            <td class="value">
+                <input type="checkbox" class="checkbox" name="paypal_terms" id="paypal_terms" value="41" price="0.01">
+                I agree to PayPal finance portal <a href="http://financing.paypal.com" target=_blank>terms and conditions</a>.
+                <div style="display: none" id="paypal_terms_validation_failed" class="validation-advice">You must agree to terms and conditions.</div>
+            </td>
+        </tr>
+        <tr id="paypalbanner_settings_container">
+            <td class="label">&nbsp;</td>
+            <td class="value">
+                <span>
+                    <button style="margin-top: 5px" class="scalable" type="button" onclick="processForm(); return false" id="get_id_submit_btn">
+                        <span><span><span>Continue!</span></span></span>
+                    </button>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</fieldset>
+<div style="left: -2px; top: 0px; width: 100%       ; height: 100%; display: none;" id="loading-mask">
+    <p id="loading_mask_loader" class="loader"><img alt="Loading..." src="/skin/adminhtml/default/default/images/ajax-loader-tr.gif"><br>Please wait...</p>
+</div>
+
+<script type="text/javascript">
+    //<![CDATA[
+        function processForm(){
+            var form = $('paypalbanner_settings');
+            var validator= new Validation(form);
+            if (!$('paypal_terms').checked){
+                $('paypal_terms_validation_failed').show();
+                validator.validate();
+                return false;
+            } else {
+                $('paypal_terms_validation_failed').hide();
+            }
+            if (validator.validate()) {
+                $('loading-mask').show();
+                var params = Form.serialize(form);
+                var request = new Ajax.Request(
+                    '<?php echo $this->getUrl('paypalbanner/settings/process');?>',
+                    {
+                        method:'post',
+                        parameters:params,
+                        onComplete: function(transport){
+                            var response = transport.responseText.evalJSON();
+                            if (!response.success || !response.publisher_id) {
+
+                                $('loading-mask').hide();
+                                if (response.msg && response.msg != ''){
+                                    var msg = response.msg;
+                                } else {
+                                    var msg = 'Can not get ID for this name and email';
+                                }
+                                $('error-msg-text').update(msg);
+                                $('error-msg-holder').show();
+                            } else {
+                                window.opener.document.getElementById("paypalbanner_settings_id").value = response.publisher_id;
+                                $('error-msg-holder').hide();
+                                $('loading-mask').hide();
+                                self.close();
+                            }
+                            $('loading-mask').hide();
+                        }
+                    }
+                );
+            }
+        }
+
+    //]]!>
+</script>

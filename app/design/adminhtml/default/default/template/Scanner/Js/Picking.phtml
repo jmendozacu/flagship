@@ -1,0 +1,211 @@
+<script>
+    //**************************************************************************************************************
+	//Check if all products qty for 1 manufacturer are ok
+	function sortObjectProductsQtyReached(sortValue) {
+		alert("running sortObjectProductsQtyReached with sortValue = " + sortValue + "; this is deprecated for some reason");
+		return false;
+		for(i in products) {
+			if(products[i]['sort_value'] == sortValue) {
+				var productId = products[i]['id'];
+				var expectedQty = products[i]['expected_qty'];
+				var scannedQty = document.getElementById('product_' + productId).value;
+				if(scannedQty < expectedQty)
+					return false;
+			}
+		}
+		return true;
+	}
+
+
+	//***************************************************************************************************
+	//Color cell in green whe delivered qty = expected qty
+	function colorProductCell(productId) {
+		return;
+		console.log("running colorProductCell with productId " + productId);
+		var qty = document.getElementById('product_' + productId).value;
+		console.log("product_" + productId + " value = " + qty);
+		if(products[productId] != undefined) { 	
+			var color = 'black';
+			var rowId = 'tr_product_' + productId;
+			if(qty == 0) {
+				document.getElementById(rowId).style.fontWeight = 'normal';
+			} else if(qty == products[productId]['expected_qty']) {
+				// found all products
+				color = '#00FF00';
+				document.getElementById(rowId).style.fontWeight = 'bold';
+				//document.getElementById(rowId).style.display = 'none';
+				
+				var sortValue = products[productId]['sort_value'];
+				if(sortObjectProductsQtyReached(sortValue)) {
+					rowId = 'tr_sortvalue_' + sortValue;
+					//document.getElementById(rowId).style.display = 'none';
+				}
+			} else {
+				document.getElementById(rowId).style.display = '';
+				if(qty < products[productId]['expected_qty']) {
+					color = 'blue';
+					document.getElementById(rowId).style.fontWeight = 'normal';
+				} else if (qty > products[productId]['expected_qty']) {
+					color = 'red';
+				}
+			}
+			document.getElementById(rowId).style.color = color;
+		}
+	}
+
+
+	//***************************************************************************************************
+	// when a serial is scanned
+	function pickingScanSerial(serial) {
+		console.log("pickingScanSerial serial " + serial);
+		var error_message = '';
+		
+		//search for product
+		for(i in products) {
+			//console.log("parsing products index " + i);
+			for(j in products[i]['serials']) {
+				if(serial == products[i]['serials'][j]) {
+					console.log("found product " + products[i]['sku']);
+					// check if product has reached expected quantity
+					console.log("scanned serials count: " + products[i]['scanned_serials'].length);
+					if(products[i]['scanned_serials'].indexOf(serial) > -1) {
+						error_message = "Serial " + serial + " already attached.";
+						document.getElementById('error_message').innerHTML = error_message;
+						resetHandledKey();
+						return;
+					} else if(products[i]['scanned_serials'].length >= products[i]['expected_qty']) {
+						console.log("scanned serials equal to or greater than expected quantity");
+						error_message = "Scanned serials maxed for product " + products[i]['sku'];
+						document.getElementById('error_message').innerHTML = error_message;
+						resetHandledKey();
+						return;
+					} else {
+						console.log("getting value of element product_" + i);
+						var qty = document.getElementById('product_' + i).value;
+						console.log("element product_" + i + " value = " + qty);
+						qty++;
+						document.getElementById('product_' + i).value = qty;
+						document.getElementById('span_product_' + i).innerHTML = qty;
+						console.log("set span_product_" + i + " innerHTML = " + document.getElementById('span_product_' + i).innerHTML);
+						addScannedSerial(serial);
+						document.getElementById('serials_' + i).value += serial + ",";
+						document.getElementById('product_scanned_serials_' + i).innerHTML += "<span id=\"product_serial_" + serial + "\">" + serial + " " 
+							//+ "<img onclick=\"removeSerial('" + serial + "')\" src=\"<?php echo $this->getSkinUrl('images/scanner/btn_cancel_small.gif'); ?>\" /></span>\n";
+							+ "<img onclick=\"removeSerial('" + serial + "')\" src=\"<?php echo $this->getSkinUrl('images/scanner/mini-x-gray-hollow.png'); ?>\" /></span>\n"
+						;
+						console.log("product_scanned_serials_" + i + " innerHTML = " + document.getElementById('product_scanned_serials_' + i).innerHTML);
+						products[i]['scanned_serials'].push(serial);
+						colorProductCell(i);
+						
+						document.getElementById('error_message').innerHTML = error_message;
+						resetHandledKey();
+						return;
+					}
+				}
+			}
+		}
+		document.getElementById('error_message').innerHTML = "Serial not found:<br>\n" + serial;
+		console.log("error message: " + document.getElementById('error_message').innerHTML);
+		resetHandledKey();
+	}
+
+	function addScannedSerial(serial) {
+		scanned_serials.push(serial);
+		drawScannedSerials();
+	}
+	
+	function removeSerial(serial) {
+		for(i in products) {
+			if(products[i]['scanned_serials'] != undefined) {
+				for(j in products[i]['scanned_serials']) {
+					if(products[i]['scanned_serials'][j] == serial) {
+						products[i]['scanned_serials'].splice(j, 1);
+					}
+				}
+			}
+		}
+		if(scanned_serials.indexOf(serial) != -1) {
+			scanned_serials.splice(serial, 1);
+		}
+		var d = document.getElementById('product_serial_' + serial);
+		if(d != undefined) {
+			d.parentNode.removeChild(d);
+		}
+		drawScannedSerials();
+	}
+	
+	function drawScannedSerials() {
+		document.getElementById('scanned_serials_list_count').innerHTML = scanned_serials.length;
+		document.getElementById('scanned_serials_list').innerHTML = '';
+		for(var s in scanned_serials) {
+			document.getElementById('scanned_serials_list').innerHTML += s + " -> " + scanned_serials[s] + "<br>\n";
+		}
+	}
+	
+	function viewProductSerialLocations(productId) {
+		var text = '';
+		if(products[productId] != undefined) {
+			for(i in products[productId]['serials']) {
+				if(products[productId]['locations'][i] != '')
+					text += products[productId]['serials'][i] + " - " + products[productId]['locations'][i] + "<br>\n";
+			}
+			showNewView('All Serial Locations for Product:<br><span style="font-weight: normal">' + products[productId]['name']
+				+ "<br>SKU: " + products[productId]['sku'] + "</span>", text);
+		} else {
+			alert("Product not found!");
+		}
+	}
+
+	function showProductInfo(productId) {
+		if(products[productId] != undefined) {
+			var product = products[productId];
+			document.getElementById('picking_list_view').style.display = 'none';
+			document.getElementById('product_info_view').style.display = '';
+			
+			document.getElementById('product_name').innerHTML = product['name'];
+			document.getElementById('product_sku').innerHTML = product['sku'];
+			document.getElementById('product_type').innerHTML = product['type'];
+			document.getElementById('product_weight').innerHTML = parseFloat(product['weight']) + " lbs";
+			document.getElementById('product_ordered').innerHTML = parseFloat(product['ordered']);
+
+			document.getElementById('product_info_serials').innerHTML = '';
+			if(products[productId]['serials'] != undefined) {
+				var serials = products[productId]['serials'];
+				//var i = 0;
+				for(s in serials) {
+					var table = document.getElementById('product_info_serials_table');
+					var row = table.insertRow();
+					var cell = row.insertCell();
+					cell.innerHTML = serials['serial'];
+					cell = row.insertCell();
+					cell.innerHTML = serials['location'];
+				}
+				/*
+				serialLocations += "<table width=\"100%\" border=\"1\" cellspacing=\"0\">\n";
+				serialLocations += "	<tr><th>Serials: <span id=\"product_" + productId + "_serials_count\"></span></th>";
+				serialLocations += "<th>Locations: <span id=\"product_" + productId + "_locations_count\"></span></th></tr>\n";
+				for(i in products[productId]['serials']) {
+					serialsCount++;
+					if(products[productId]['serials'][i] != undefined) {
+						serialLocations += "	<tr>\n";
+						serialLocations += "		<td>" + products[productId]['serials'][i] + "</td>\n";
+						serialLocations += "		<td>";
+						if(products[productId]['locations'][i]) {
+							serialLocations += products[productId]['locations'][i];
+							locationsCount++;
+						}
+						serialLocations += "		</td>\n";
+						serialLocations += "	</tr>\n";
+					}
+				}
+				serialLocations += "</table>\n";
+				*/
+			}
+		}
+	}
+	
+	function closeProductInfo() {
+		document.getElementById('product_info_view').style.display = 'none';
+		document.getElementById('picking_list_view').style.display = '';
+	}
+</script>

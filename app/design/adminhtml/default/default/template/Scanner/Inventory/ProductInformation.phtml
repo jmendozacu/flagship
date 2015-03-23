@@ -1,0 +1,93 @@
+<?php  
+$product = $this->getProduct();
+$serials = $this->arvGetSerials()->getData();
+//echo "<pre>"; print_r($serials); echo"</pre>";exit();
+?>
+
+<script>
+    var getProductInformationUrl = '<?php echo $this->getProductInformationUrl(); ?>';
+    var getNewBarcodeUrl = '<?php echo $this->getNewBarcodeUrl(); ?>';
+    var changeProductLocationUrl = '<?php echo $this->changeProductLocationUrl(); ?>';
+    var arvSearchData = <?php echo $this->arvKeywordTypeArr(); ?>;
+	var getProductSerialLocationURL = '<?php echo $this->getProductSerialLocationURL() ?>';
+</script>
+
+<table id="InventoryProductInformation" border="0" width="100%">
+    <tr>
+		<td>
+			<?php if ($this->getImageUrl()): ?>
+			<img src="<?php echo $this->getImageUrl(); ?>" width="50" height="50">
+			<?php endif; ?>
+        </td>
+        <td>
+            <h3><?php echo $product->getAttributeText('manufacturer') . ' ' . $product->getName(); ?></h3>
+            <p><i><?php echo $product->getSku(); ?></i></p>
+        </td>
+    </tr>
+	<?php if($product->getUpc()) { ?>
+	<tr><td colspan="2" align="center">UPC: <?php echo $product->getUpc(); ?></td></tr>
+	<?php } ?>
+</table>
+
+<?php foreach ($this->getStocks() as $stock): ?>
+<table width="100%">
+	<tr>
+		<th class="a-center" bgcolor="#cccccc" colspan="3"><?php echo $stock->getstock_name(); ?></th>
+	</tr>
+	<tr>
+		<td><b><?php echo $this->__('Stock'); ?> : </b></td>
+		<td class="a-center">
+			<input type="button" value="&nbsp;<?php echo (int) $stock->getqty(); ?>&nbsp;" class="touch_button" onclick="document.location.href='<?php echo $this->getUrl('Scanner/Inventory/EditStock', array('stock_id' => $stock->getId())); ?>'" />
+		</td>
+	</tr>
+	<tr>
+		<td><b><?php echo $this->__('Available'); ?> : </b></td>
+		<td class="a-center"><?php echo (int) $stock->getAvailableQty(); ?></td>
+	</tr>
+	<tr>
+		<td><b><?php echo $this->__('Default Location'); ?> : </b></td>
+		<td class="a-center">
+			<input type="button" value="<?php echo ($stock->getshelf_location() ? $stock->getshelf_location() : $this->__('Set location')); ?>" class="touch_button" onclick="setProductStockLocation(<?php echo $stock->getId(); ?>);" />
+		</td>
+	</tr>
+</table>
+<?php endforeach; ?>
+
+<table width="100%" id="barcodes_table">
+	<tr>
+		<th class="a-center" bgcolor="#cccccc" colspan="5"><?php echo $this->__('Barcodes'); ?></th>
+	</tr>
+	<?php $barcodesCount = count($this->getBarcodes()); ?>
+	<?php if ($barcodesCount == 0): ?>
+	<tr>
+		<td style="text-align: center">
+			<input type="button" value="Link barcode" class="touch_button" onclick="linkBarcode(<?php echo $product->getId(); ?>);" />
+		</td>
+	</tr>
+	<?php else: ?>
+	<?php foreach ($this->getBarcodes() as $barcode): ?>
+	<tr>
+		<td align="center"><?php echo $barcode->getppb_barcode(); ?></td>
+	</tr>
+	<?php endforeach; ?>
+	<?php endif; ?>
+</table>
+
+<table width="100%" id="serials_table">
+	<tr>
+		<th class="a-center" bgcolor="#cccccc" colspan="5"><?php echo $this->__('Serials'); ?></th>
+	</tr>
+	<?php // fetch product serials and locations from purchase_product_serial table ?>
+	<?php foreach($serials as $serial) { ?>
+	<tr>
+		<td align="center"><?php echo $serial['dzv_serial']; ?></td>
+		<td class="a-center"<?php if($this->arvKeywordTypeArr() == $serial['dzv_serial']) echo ' bgcolor="gray"'; ?>>
+			<input type="button" value="<?php echo ($serial['location'] ? $serial['location'] : $this->__('Set location')); ?>" class="touch_button" onclick="setProductSerialStockLocation('<?php echo $serial['dzv_serial']; ?>');" />
+		</td>
+	</tr>
+	<?php } ?>
+</table>
+
+<script>
+	enableCatchKeys("document.getElementById('query').value=KC_value;form1.submit();");
+</script>

@@ -1,0 +1,234 @@
+<script>
+	function toggleOrdersView(type) {
+		document.getElementById('magento_orders_view').style.display = 'none';
+		document.getElementById('zen_cart_orders_view').style.display = 'none';
+		document.getElementById('amazon_orders_view').style.display = 'none';
+		document.getElementById('scan_magento_serials').style.display = 'none';
+		document.getElementById('close_orders_view').style.display = 'none';
+		document.getElementById('magento_order_products').innerHTML = '';
+		document.getElementById('magento_order_products').style.display = 'none';
+		document.getElementById('product_info').innerHTML = '';
+		
+		document.getElementById('selected_order').value = '';
+		document.getElementById('selected_order_type').value = '';
+		document.getElementById('product_serials').value = '';
+		document.getElementById('scanned_products').innerHTML = '';
+		document.getElementById('select_magento_order').value = '';
+		document.getElementById('submit_serials_button').style.display = 'none';
+		console.log("clearing scanned serials");
+		scanned_serials = new Array();
+		clearMagentoScannedSerials();
+		
+		if(type) {
+			document.getElementById('choose_order_view').style.display = '';
+			document.getElementById('choose_order_system').style.display = 'none';
+			document.getElementById(type + '_orders_view').style.display = '';
+			document.getElementById('close_orders_view').style.display = '';
+			document.getElementById('selected_order_type').value = type;
+			document.getElementById('submit_serials_button').style.display = '';
+		} else {
+			document.getElementById('choose_order_view').style.display = 'none';
+			document.getElementById('choose_order_system').style.display = '';
+		}
+	}
+	
+	function closeOrdersView() {
+		toggleOrdersView();
+		enableCatchKeys('showProductInfo(KC_value)');
+	}
+	
+	function selectMagentoOrder(element) {
+		var orderId = element.value;
+		var orderNum = element.options[element.selectedIndex].text;
+		console.log("selected Magento order id " + orderId + " with order number " + orderNum);
+		document.getElementById('selected_order').value = orderNum;
+		document.getElementById('scan_magento_serials').style.display = '';
+		document.getElementById('magento_order_products').innerHTML = '';
+		document.getElementById('magento_order_products').style.display = '';
+		document.getElementById('scanned_products').innerHTML = '';
+		
+		scanned_products = new Array();
+		clearMagentoScannedSerials();
+		
+		// build order products list
+		if(orders[orderId] != undefined) {
+			console.log("found orders[" + orderId + "]");
+			console.log(orders[orderId]);
+			orderProducts[orderId] = new Array();
+			for(var oi in orders[orderId]['items']) {
+				console.log("parsing order " + orderId + " item " + oi);
+				console.log(items);
+				var item = items[orders[orderId]['items'][oi]];
+				console.log(item);
+				var productId = item['product_id'];
+				console.log("item product id = " + productId);
+				orderProducts[orderId][productId] = new Array();
+				orderProducts[orderId][productId]['name'] = item['name'];
+				orderProducts[orderId][productId]['sku'] = item['sku'];
+				orderProducts[orderId][productId]['product_type'] = item['product_type'];
+				orderProducts[orderId][productId]['shippable'] = item['qty_ordered'] - item['qty_shipped'];
+				orderProducts[orderId][productId]['comments'] = item['comments'];
+				console.log("setting magento product scanned serials to empty array");
+				orderProducts[orderId][productId]['scanned_serials'] = new Array();
+				console.log(orderProducts[orderId][productId]);
+			}
+		}
+		console.log("order products:");
+		console.log(orderProducts);
+		refreshMagentoOrderProducts();
+		
+		enableCatchKeys('scanMagentoProduct(KC_value)');
+	}
+	
+	function refreshMagentoOrderProducts() {
+		console.log("refreshing Magento order products");
+		var orderId = document.getElementById('select_magento_order').value;
+		console.log("using order id " + orderId);
+		var output = "<b>Left to ship:</b><hr>\n";
+		
+		// redraw order products list (includes updated scan count)
+		if(orderProducts[orderId] != undefined) {
+			console.log("found order products");
+			console.log(orderProducts[orderId]);
+			for(var productId in orderProducts[orderId]) {
+				console.log(orderProducts[orderId][productId]);
+				var orderProduct = orderProducts[orderId][productId];
+				output += 
+					"<b><span id=\"scanned_order_product_count_" + productId + "\">" 
+					+ orderProduct['scanned_serials'].length + "</span>/"
+					+ orderProduct['shippable'] + "</b>"
+					+ " - <span onclick=\"showProductInfo(" + productId + ")\">" + orderProduct['sku'] + "</span>";
+				if(orderProduct['scanned_serials'].length > 0) {
+					output += "<br>\n<span style=\"color: green\"><b>" + orderProduct['scanned_serials'].join(', ') + "</b></span>\n";
+				}
+				output += "<hr>\n";
+			}
+		}
+		document.getElementById('magento_order_products').innerHTML = output;
+	}
+	
+	function scanMagentoProduct(serial) {
+		console.log("running scanMagentoProduct with serial " + serial);
+		var orderId = document.getElementById('select_magento_order').value;
+		console.log("found order id " + orderId);
+		var orderNum = document.getElementById('selected_order').value;
+		console.log("using Magento order number " + orderNum);
+		document.getElementById('error_message').innerHTML = '';
+		
+		// find the product for the serial
+		console.log(serials);
+		if(serials[serial] != undefined) {
+			console.log("found serial product id " + serials[serial]['product_id'] + " with location " + serials[serial]['location']);
+			var productId = serials[serial]['product_id'];
+			console.log("found product id " + productId);
+			// make sure product is in order
+			console.log(orderProducts);
+			if(orderProducts[orderId] != undefined) {
+				console.log("found orderProducts " + orderId);
+				if(orderProducts[orderId][productId] != undefined) {
+					console.log("found order product " + orderProducts[orderId][productId]['sku']);
+					console.log(orderProducts[orderId][productId]);
+					var orderProduct = orderProducts[orderId][productId];
+					if(orderProduct['scanned_serials'].indexOf(serial) == -1) {
+						console.log("orderProducts " + orderId + " product " + productId + " serial not found!");
+						if(orderProduct['scanned_serials'] >= orderProduct['shippable']) {
+							alert("Scanned " + orderProduct['scanned_serials'] + "/" + orderProduct['shippable'] + " shippable for this product! Double-check order.");
+						} else {
+							orderProduct['scanned_serials'].push(serial);
+							console.log("added serial " + serial + " to orderProducts orderId " + orderId + " productId " + productId);
+							addScannedSerial(serial);
+							console.log("refreshing Magento order products...!");
+							refreshMagentoOrderProducts();
+						}
+					}
+				}
+			}
+		} else {
+			console.log("not found!");
+			document.getElementById('error_message').innerHTML = 'Barcode not found!';
+		}
+	}
+	
+	function clearMagentoScannedSerials() {
+		console.log("running clearMagentoScannedSerials");
+		for(var p in orderProducts) {
+			console.log("emptying Magento product " + p + " scanned serials array");
+			orderProducts[p]['scanned_serials'] = new Array();
+		}
+	}
+	
+	function selectZenCartOrder() {
+		document.getElementById('choose_order_system').style.display = 'none';
+		document.getElementById('choose_order_view').style.display = 'none';
+	}
+	
+	function showProductInfo(productId) {
+		console.log("running showProductInfo with product id " + productId);
+		if(products[productId] != undefined) {
+			console.log("found product " + productId);
+			var product = products[productId];
+			console.log(product);
+			document.getElementById('product_info_product_id').innerHTML = productId;
+			document.getElementById('product_info_name').innerHTML = product['name'];
+			document.getElementById('product_info_sku').innerHTML = product['sku'];
+			document.getElementById('product_info_type').innerHTML = product['product_type'];
+			document.getElementById('product_info_weight').innerHTML = parseFloat(product['weight']) + " lbs";
+			
+			serialList = '';
+			console.log("fetching serials for product " + productId);
+			for(var serial in serials) {
+				console.log("checking if serial " + serial + " product " + serials[serial]['product_id'] + " matches " + productId);
+				if(serials[serial]['product_id'] == productId) {
+					console.log("matches!")
+					serialList += serial + " - " + serials[serial]['location'] + "<br>\n";
+				}
+			}
+			document.getElementById('product_info_serials').innerHTML = serialList;
+			
+			document.getElementById('div_orders_view').style.display = 'none';
+			document.getElementById('product_info').style.display = 'block';
+		}
+	}
+	
+	function closeProductInfo() {
+		document.getElementById('product_info').style.display = 'none';
+		document.getElementById('div_orders_view').style.display = 'block';
+	}
+
+	function showProductInfo(serial) {
+		console.log("running showProductInfo with serial " + serial);
+		document.getElementById('error_message').innerHTML = '';
+		if(serials[serial] != undefined) {
+			var productId = serials[serial]['product_id'];
+			if(products[productId] != undefined) {
+				document.getElementById('product_info').innerHTML = "<b>Lookup: " + serial + "</b><br>Product: " 
+					+ products[productId]['name'] + "<br>SKU: " + products[productId]['sku'];
+			} else {
+				document.getElementById('error_message').innerHTML = "Product not found!";
+			}
+		} else {
+			document.getElementById('error_message').innerHTML = "Serial not found!";
+		}
+	}
+	
+	function addScannedSerial(serial) {
+		console.log("running addScannedSerial " + serial);
+		scanned_serials.push(serial);
+		console.log("added serial to scanned_serials array:");
+		console.log(scanned_serials);
+		var product_serials = document.getElementById('product_serials');
+		if(product_serials.value) {
+			product_serials.value += ", ";
+		}
+		product_serials.value += serial;
+		console.log("added serial to product_serials input: " + product_serials.value);
+	}
+	
+	function submitShipment() {
+		console.log("submitting shipment");
+		return;
+		document.forms[shipment].submit();
+	}
+	
+	//enableCatchKeys('showProductInfo(KC_value)');
+</script>
