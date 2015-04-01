@@ -143,7 +143,7 @@ nav.primary ul ul {
     
 	-moz-border-radius: 5px; /* Firefox */
 	-webkit-border-radius: 5px; /* Safari, Chrome */
-	border-radius: 5px; /* CSS3 */	
+	border-radius: 5px; /* CSS3 */	 float:left; width:220px
 }
 nav.primary ul ul li a {
 	text-transform: none;
@@ -207,9 +207,14 @@ footer .contact a{ text-transform: capitalize; }
 .breadcrumbs{
 	font-size: 10px;
 	color: #aab8c4 !important;
-	text-transform: uppercase;
+	text-transform: uppercase; }
+.catalog-category-view .breadcrumbs, .catalog-product-view .breadcrumbs{
+	font-size: 10px;
+	color: #aab8c4 !important;
+	text-transform: uppercase; border-radius:5px;  background-color:rgba(255, 255, 255, 0.4);  padding:10px; margin:10px 0}
 	
-}
+	
+	li.topcart .block-content{ display:none}
 .breadcrumbs a{color: #aab8c4;}
 .breadcrumbs li strong{ color: #aab8c4;	}
 
@@ -283,7 +288,7 @@ button:hover.btn-cart{
 	border: 0;
 	padding: 9px;
 	float: left;
-	margin: 0; width:100%
+	margin: 0; width:80%
 }
 .catalog-product-view .add-to-cart  .button.btn-cart,
 .catalog-product-view .add-to-cart  .button.btn-cart{
@@ -354,7 +359,7 @@ button:hover.btn-cart{
 button.btn-empty,
 button.btn-update,
 button.btn-continue{
-	background: #aab8c4;
+	background: #e23737; color:#fff !important; border:none !important
 }
 #shopping-cart-totals-table{
 	color: #aab8c4;
@@ -367,7 +372,19 @@ button.btn-continue{
 
 
 .cms-index-index{ background: url('../images/rengehood_bg.png') no-repeat top center; }
+.catalog-category-view{ background:#e3e5e4; background-attachment:fixed:}
+body.enable1280{ background-color:#e3e5e4; background-attachment:fixed:}
+body.enable1280{}
+
+.customer-account-login {    background: none repeat scroll 0 0 #e3e5e4;}
+.catalog-product-view {    background: none repeat scroll 0 0 #e3e5e4;}
+.checkout-onepage-index{ background:#e3e5e4; background-attachment:fixed:}
+
+.catalog-category-view header{ background:#fff transparent}
 .cms-index-index header{ background:transparent !important
-}
+}.catalog-category-view h2.product-name{ font-size:13px; font-weight:700; float:left; min-height:78px;}
 .logoandmenuwrapper{ float:left; width:71% !important}
 .loginandsearch{ float:right; width:29% !important}
+.checkout-cart-index .page-title h1{ font-size:30px;}.checkout-cart-index #shopping-cart-table{ background-color:rgba(255, 255, 255, 0.4)
+}
+.checkout-cart-index #shopping-cart-table tfoot{ padding:10px !important}

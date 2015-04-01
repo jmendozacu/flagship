@@ -86,12 +86,12 @@
         .enable1280 .container .one.column,
         .enable1280 .container .one.columns                     { width: 60px; }
         .enable1280 .container .two.columns                     { width: 140px; }
-        .enable1280 .container .three.columns                   { width: 220px; }
+        .enable1280 .container .three.columns                   { width: 217px; }
         .enable1280 .container .four.columns                    { width: 245px; }
         .enable1280 .container .five.columns                    { width: 380px; }
         .enable1280 .container .six.columns                     { width: 460px; }
         .enable1280 .container .seven.columns                   { width: 540px; }
-        .enable1280 .container .eight.columns                   { width: 620px;  }
+        .enable1280 .container .eight.columns                   { width: 580px;  }
         .enable1280 .container .nine.columns                    { width: 700px; }
         .enable1280 .container .ten.columns                     { width: 780px; }
         .enable1280 .container .eleven.columns                  { width: 860px; }
@@ -100,6 +100,9 @@
         .enable1280 .container .fourteen.columns                { width: 1100px; }
         .enable1280 .container .fifteen.columns                 { width: 1180px; }
         .enable1280 .container .sixteen.columns                 { width: 100%; }
+		.catalog-category-view  .sixteen.columns.1col.content                 { width: 100%; background: #fff; border-radius: 5px; padding: 10px; float:left }
+		.catalog-product-view  .sixteen.columns.1col.content                 { width: 100%; background: #fff; border-radius: 5px; padding: 10px; float:left }
+		
         .cms-index-index .container footer.sixteen .four.columns {width: 245px;}
         .cms-index-index .container .four.columns               {width: 300px;}
         .enable1280 .container .one-third.column                { width: 406px; }
@@ -133,9 +136,20 @@
 .aboutus_innerwrapper{ margin:0 auto; width:1220px;}
 .footer_inner{ margin:0 auto; width:1220px;}
 .subscribe{  margin:0 auto; width:1000px; text-align:center; background-color:#999}
-.footerinside{ width:24% !important}
+.footerinside{ width:24.5% !important; float:left}
 .footerinside h3{ font-weight:bold !important; }
-.innerwrapper{ margin:0 auto; width:1220px;}
+.innerwrapper{ margin:0 auto; /*width:1220px;*/}
+.innerwrapper1020{ margin:0 auto; width:1220px;}
+.catalog-product-view .innerwrapper{ margin:0 auto; width:1220px;}
+.checkout-cart-index .sixteen.columns.1col {
+	background-color: rgba(255, 255, 255, 0.8) !important; border-radius:5px; padding:10px; 
+}
+.customer-account-login .innerwrapper{ width:1220px}
+.customer-account-forgotpassword .innerwrapper{ width:1220px}
+.customer-account-forgotpassword .sixteen{
+	background-color: rgba(255, 255, 255, 0.8) !important; border-radius:5px; padding:10px; 
+}
+.formwrapper2{  width:1220px; margin:0 auto}
 
 }
 

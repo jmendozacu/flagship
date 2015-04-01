@@ -38,7 +38,7 @@
 </script>
 <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
 
-
+<div class="pdwitewrapper">
 <!-- Hidden form part-->
 <form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
     <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
@@ -89,7 +89,7 @@
 
     <!-- End add to cart-->
     <hr class="addtocart">
-    <div class="addtobuttons clearfix">
+    <div style="display:none" class="addtobuttons clearfix">
         <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
         <?php echo $this->getChildHtml('addto') ?>
         <?php endif; ?>
@@ -240,4 +240,4 @@
 
         
     <?php //echo $this->getChildHtml('product_additional_data') ?>
-    
+    </div>

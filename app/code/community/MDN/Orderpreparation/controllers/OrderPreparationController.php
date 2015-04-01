@@ -106,6 +106,19 @@ class MDN_Orderpreparation_OrderPreparationController extends Mage_Adminhtml_Con
         //redirige sur la page de s�lection des commandes
         $this->RefreshListAction();
     }
+    
+    public function hideRecordsAction(){
+    	
+    	$postData = $this->getRequest()->getPost();
+    	$orderIds = $postData[$postData['massaction_prepare_key']];
+        if (!empty($orderIds)) {
+            foreach ($orderIds as $orderId) {
+               Mage::getModel('Orderpreparation/ordertoprepare')->hideOrder($orderId);
+            }
+        }
+        Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Orders successfully removed.'));
+        $this->_redirect('OrderPreparation/OrderPreparation/');
+    }
 
     /**
      * Ajoute une commande a la s�lection

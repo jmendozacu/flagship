@@ -42,28 +42,35 @@
 	box-sizing: border-box;
 	font-weight: bold !important;
 	
-	font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	/*font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+font-family:Arial, sans-serif !important;
 	
 }
 img {
 	max-width: 100%;
 }
 body {
-	font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	/*font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+font-family:Arial, sans-serif !important;
 	
 }
 .content {
 	z-index: 10;
 }
 .twelve.columns.col2l.content {
-	float: right;
+	float: right; background-color: rgba(255, 255, 255, 0.4); border-radius:5px; padding:10px; 
 }
+
+
 .twelve.columns.col2r.content {
 	float: left;
-	border-right: 2px solid lightgrey;
+	/*border-right: 2px solid lightgrey;*/
 }
 .four.columns.rightcol {
 	float: right !important;
+	background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 5px;
+    padding: 10px;
 }
 /*================================================================================ */
 /* 2. Typography													3000Themes.com
@@ -244,14 +251,14 @@ footer {
 	border-top: 1px solid #ccc;
 	padding-top: 12px;
 	font-size: 10px;
-	line-height: 18px !important;
+	line-height: 18px !important; float:left; width:100%
 	
 }
 footer address {
 	border-top: 1px solid #444444;
 	font-weight: normal !important;
 	margin-top: 12px;
-	padding: 6px 0;
+	padding: 6px 0; float:left; width:100%
 }
 footer h3 {
 	font-size: 18px;
@@ -423,8 +430,14 @@ footer .subscribe .input-text {
 	clear: both;
 }
 .products-grid li.item {
-	margin-top: 12px;
+	  background: none repeat scroll 0 0 #fff;
+    border: 1px solid #f5f2f2;
+    border-radius: 3px;
+    margin-top: 12px;
+	 margin-right: 12px;
+    padding: 13px;
 }
+.products-grid  li.item.last { margin-right:0 !important}
 .products-grid .price-box {
 	margin-bottom: 12px;
 }
@@ -504,10 +517,11 @@ footer .subscribe .input-text {
 	float: left !important;
 }
 .catalog-product-view .add-to-cart {
-	margin-top: 12px;
-	float: right;
-	width: 210px;
+float: left;
+    margin-top: 12px;
+    width: 301px;
 }
+.product-options-bottom button.btn-cart{ width:80%}
 .catalog-product-view .add-to-cart label {
 	display: none;
 }
@@ -782,7 +796,7 @@ table.cart-table a {
 }
 table.cart-table tfoot td {
 	border-bottom: none;
-	padding: 10px 0;
+	padding: 10px;
 }
 table.cart-table .item-options dt {
 	float: left;
@@ -1264,7 +1278,7 @@ li.topcart:hover .cartpop {
 	width: 92%;
 }
 .opc #billing-new-address-form input,  .opc #billing-new-address-form select {
-	width: 85%;
+	/*width: 85%;*/
 	margin-bottom: 6px;
 }
 .opc ul.form-list {
@@ -2003,7 +2017,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000, endCo
 	margin-top:10px;
 }
 .four.columns.leftcol {
-	float: left;
+	float: left; background-color:rgba(255, 255, 255, 0.4); padding:10px; border-radius:5px;	
 }
 /* 
 =============================================================================
@@ -2477,9 +2491,11 @@ li.topcart {
 	padding-top:20px;
 }
 #search_mini_form {
-	float: left;
-	margin-left: 45px;
-	width: 312px;
+	   margin-left: 45px;
+    position: absolute;
+    right: 0;
+    top: 65px;
+    width: 312px;
 }
 #search_mini_form label {
 	display:none
@@ -2573,6 +2589,68 @@ li.topcart {
 	background-position:center top;
 	padding-top:60px;
 }
+
+
+
+
+
+
+li.myaccount { margin-right:0 !important}
+
+.cms-index-index .shippingsectionheader{ display:none}
+
+.shippingsectionheader {
+  background-color: #fff;
+    float: left;
+    margin-top: 24px;
+    padding: 0;
+    text-align: center;
+    width: 73%;
+}
+.shippingsectionheader ul {
+	margin:0 auto;
+	width:100%;
+	padding:0;
+}
+.shippingsectionheader ul li {
+	 float: left;
+    font-size: 12px;
+    font-weight: 300;
+    text-align: center;
+    width: 25%;
+}
+.shippingsectionheader ul li.freeshipping {
+	background: url(../images/freeshipping.png) no-repeat;
+	background-position:center top;
+	background-size:17%;
+	padding-top:20px;
+}
+.shippingsectionheader ul li.freereturn {
+	background: url(../images/freereturn.png) no-repeat;
+	background-position:center top;
+background-size:17%;
+	padding-top:20px;
+}
+.shippingsectionheader ul li.moneyback {
+	background: url(../images/100moneyback.png) no-repeat;
+	background-position:center top;
+background-size:17%;
+	padding-top:20px;
+}
+.shippingsectionheader ul li.support {
+	background: url(../images/support.png) no-repeat;
+	background-position:center top;
+background-size:17%;
+	padding-top:20px;
+}
+
+
+.checkout-onepage-index  .twelve{  background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 5px;
+       padding: 10px;}
+
+
+
 ul.featuredproducts li.four {
 	border: 1px solid #f5f2f2;
 	border-radius: 5px;
@@ -2654,7 +2732,8 @@ ul.featuredproducts li.four .price-box, ul.featuredproducts li.four .price-box a
 .aboutus_innerwrapper .left_content {
 	float:left;
 	width:58%;
-	color:#fff; font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight:normal !important
+	color:#fff; /*font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+font-family:Arial, sans-serif !important; font-weight:normal !important
 }
 .aboutus_innerwrapper .left_content h2{ text-align:right; width:100%; text-transform:uppercase; color:#fff; font: 25px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight:bold !important; text-align:justify }
 .aboutus_innerwrapper .right_video {
@@ -2668,7 +2747,7 @@ ul.featuredproducts li.four .price-box, ul.featuredproducts li.four .price-box a
 	padding:10px;
 }
 
-.newslettersecton{ width:100%; float:left; background-color:#f1f1f1; padding:30px 0}
+.newslettersecton{ width:100%; float:left; background-color:#f1f1f1; padding:30px 0; margin-top:10px;}
 .labelsection{ float:left; width:30%; margin-right:5%; text-align:right}
 .formsection{ float:left; width:65%}
 .formsection input#newsletter{ float:left; width:60%; padding: 10px 4px;}
@@ -2692,3 +2771,32 @@ footer, footer a { color:#9a9a9a !important;}
     font-weight: normal !important;
     line-height: 20px;
     text-transform: uppercase;}
+	
+#product_addtocart_form .leftpart { width:580px;}
+#product_addtocart_form .rightpart h1{ font-size:25px}
+#product_addtocart_form .rightpart { width:545px; margin-left:45px}
+
+.pdwitewrapper{background: rgba(255, 255, 255, 0.8); border-radius: 5px; padding: 10px; float:left; margin-bottom:10px}
+ol#cart-sidebar{ display:none}
+header p.block-subtitle{ display:none}
+header nav.user p.paypal-logo{ display:none}
+header nav.user button.button{ display:none}
+.checkout-cart-index .innerwrapper{ width:1220px;}
+.checkout-cart-index .innerwrapper fieldset{ float:left; width:100%}
+.checkout-cart-index  {
+    background: none repeat scroll 0 0 #e3e5e4;
+}.checkout-cart-index #search_mini_form {
+    float: right;
+    margin-left: 0;
+    margin-right: -3px;
+    margin-top: -70px;
+    width: 312px;
+    z-index: 999 !important;
+}
+
+
+.customer-account-login .sixteen{  background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 5px;
+
+    padding: 10px;
+}

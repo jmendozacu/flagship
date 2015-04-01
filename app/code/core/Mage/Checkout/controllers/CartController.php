@@ -189,11 +189,11 @@ class Mage_Checkout_CartController extends Mage_Core_Controller_Front_Action
      * @throws Exception
      */
     public function addAction()
-    {
+    {/*
         if (!$this->_validateFormKey()) {
             $this->_goBack();
             return;
-        }
+        }*/
         $cart   = $this->_getCart();
         $params = $this->getRequest()->getParams();
         try {
@@ -414,10 +414,10 @@ class Mage_Checkout_CartController extends Mage_Core_Controller_Front_Action
      */
     public function updatePostAction()
     {
-        if (!$this->_validateFormKey()) {
-            $this->_redirect('*/*/');
-            return;
-        }
+        //if (!$this->_validateFormKey()) {
+         //   $this->_redirect('*/*/');
+         //   return;
+       // }
 
         $updateAction = (string)$this->getRequest()->getParam('update_cart_action');
 

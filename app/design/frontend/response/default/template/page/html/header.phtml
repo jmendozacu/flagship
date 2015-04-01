@@ -44,7 +44,17 @@
                 <?php print $this->getLayout()->createBlock("catalog/navigation")->setTemplate("catalog/navigation/top.phtml")->toHtml(); ?>
         	</nav>
             
-            
+            <div class="shippingsectionheader">
+<ul>
+<li class="freeshipping">FREE SHIPPING</li>
+<li class="freereturn">FREE RETURN</li>
+<li class="moneyback">100% MONEY BACK GUARANTEE</li>
+<li class="support">1-800 SUPPORT</li>
+</ul>
+</div>
+
+
+
             </div>
        <div class="loginandsearch">
        <nav class="user">
@@ -78,11 +88,12 @@
                     </li>
         			<li class="topcart"><?php echo $this->getChildHtml('cart_header') ?></li>
         		</ul>
+                <?php echo $this->getChildHtml('topSearch') ?>
         	</nav>
             
             
             
-       <?php echo $this->getChildHtml('topSearch') ?>
+       <div class=""></div>
        </div>
        
        

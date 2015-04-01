@@ -58,7 +58,7 @@ if(Mage::getStoreConfig('responseconfiguration/responseconfigs/grid1280')){
 	</header>
 	
 	<div class="container">
-	
+	<div class="innerwrapper1020">
 		<div class="sixteen columns breadcrumbs">
 			<?php echo $this->getChildHtml('breadcrumbs') ?>
 		</div><!--breadcrumbs-->
@@ -76,12 +76,13 @@ if(Mage::getStoreConfig('responseconfiguration/responseconfigs/grid1280')){
 		</div><!--LeftCol-->
 
 		
-	    <?php echo $this->getChildHtml('footer') ?>
+	    
+        </div>
+	</div>        
+<?php echo $this->getChildHtml('footer') ?>
 		
         
         <?php echo $this->getChildHtml('before_body_end') ?>
         <?php echo $this->getAbsoluteFooter() ?>
-	</div>        
-
 </body>
 </html>

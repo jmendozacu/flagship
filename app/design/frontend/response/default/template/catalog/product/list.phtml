@@ -99,7 +99,7 @@
         if(Mage::getStoreConfig('responseconfiguration/responseconfigs/productsperrow')){
             $productsperrow = Mage::getStoreConfig('responseconfiguration/responseconfigs/productsperrow');
         }else{
-           $productsperrow = '3'; 
+           $productsperrow = '4'; 
         }
 
         // Only for demo perposes
@@ -127,7 +127,7 @@
             <li class="<?php echo $colums?> columns item item<?php echo $ii ?> <?php if(($i-1)%$_columnCount==0): ?> alpha first<?php elseif($i%$_columnCount==0): ?> omega last<?php endif; ?>">
 
 
-                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(300); ?>" width="220"  alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(150); ?>" width="150"  alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
 
                 <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
                 <?php if($_product->getRatingSummary()): ?>

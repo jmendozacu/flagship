@@ -673,5 +673,15 @@ class MDN_Orderpreparation_Model_OrderToPrepare extends Mage_Core_Model_Abstract
             }
         }
     }
+    
+    /* FUCTION DEVELOPED BY VICTOR JONES */
+    public function hideOrder($orderId){
+    	try{
+	    	$orderPreparendingModel = Mage::getModel('Orderpreparation/ordertopreparepending')->load($orderId); 
+	    	$orderPreparendingModel->setIsHide(1)->save();
+    	}catch (Exception $e){
+    		
+    	}
+    }
 
 }

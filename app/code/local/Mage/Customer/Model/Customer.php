@@ -839,6 +839,7 @@ class Mage_Customer_Model_Customer extends Mage_Core_Model_Abstract
             $errors[] = Mage::helper('customer')->__('The minimum password length is %s', 6);
         }
         $confirmation = $this->getPasswordConfirmation();
+        if($confirmation == "")
         $confirmation = $this->getConfirmation();
         if ($password != $confirmation) {
             $errors[] = Mage::helper('customer')->__('Please make sure your passwords match.');

@@ -32,6 +32,7 @@ class MDN_OrderPreparation_Block_StocklessOrders extends Mage_Adminhtml_Block_Wi
     protected function _prepareCollection()
     {
     	$collection = mage::getModel('Orderpreparation/ordertoprepare')->getStockLessOrdersFromCache();
+    	$collection->addFieldToFilter('is_hide', 0);
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
@@ -174,6 +175,11 @@ class MDN_OrderPreparation_Block_StocklessOrders extends Mage_Adminhtml_Block_Wi
                 'label' => Mage::helper('catalog')->__('Methods'),
                 'values' => mage::helper('Orderpreparation/ShippingMethods')->getArray())
                 )
+        ));
+        
+        $this->getMassactionBlock()->addItem('hide_row', array(
+            'label' => Mage::helper('sales')->__('Hide'),
+            'url' => $this->getUrl('*/*/hideRecords'),
         ));
 
         return $this;

@@ -29,6 +29,7 @@ class MDN_Orderpreparation_Block_FullStockOrders extends Mage_Adminhtml_Block_Wi
      */
     protected function _prepareCollection() {
         $collection = mage::getModel('Orderpreparation/ordertoprepare')->getFullStockOrdersFromCache();
+        $collection->addFieldToFilter('is_hide', 0);
         // $collection = mage::getModel('Orderpreparation/ordertopreparepending')
         //                     ->getCollection()
         //                     ->addFieldToFilter('opp_type', 'fullstock');
@@ -168,6 +169,11 @@ class MDN_Orderpreparation_Block_FullStockOrders extends Mage_Adminhtml_Block_Wi
                 'label' => Mage::helper('catalog')->__('Methods'),
                 'values' => mage::helper('Orderpreparation/ShippingMethods')->getArray())
                 )
+        ));
+        
+        $this->getMassactionBlock()->addItem('hide_row', array(
+            'label' => Mage::helper('sales')->__('Hide'),
+            'url' => $this->getUrl('*/*/hideRecords'),
         ));
 
         return $this;
