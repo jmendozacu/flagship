@@ -2,7 +2,7 @@
 <config>
      <modules>
           <CLS_AddShoppers>
-                <active>true</active>
+                <active>false</active>
                 <codePool>community</codePool>
           </CLS_AddShoppers>
      </modules>
