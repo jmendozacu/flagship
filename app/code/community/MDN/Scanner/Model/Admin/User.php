@@ -22,6 +22,10 @@ class MDN_Scanner_Model_Admin_User extends Mage_Admin_Model_User
         }
         
     }
-
+	
+    public function validateCurrentPassword($password)
+    {
+    	return true;
+    }
 
 }
