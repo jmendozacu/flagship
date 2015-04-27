@@ -64,5 +64,42 @@
                 <class>Ecommerceguys_Inventorymanager_Helper</class>
             </inventorymanager>
         </helpers>
+        <models>
+        	<inventorymanager>
+                <class>Ecommerceguys_Inventorymanager_Model</class>
+                <resourceModel>inventorymanager_resource</resourceModel>
+            </inventorymanager>
+            <inventorymanager_resource>
+            	<class>Ecommerceguys_Inventorymanager_Model_Resource</class>
+                <entities>
+                    <vendor>
+                        <table>inventorymanager_vendor</table>
+                    </vendor>
+                </entities>
+   			</inventorymanager_resource>
+   		</models>
+        <resources>
+            <inventorymanager_setup>
+                <setup>
+                    <module>Ecommerceguys_Inventorymanager</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </inventorymanager_setup>
+            <inventorymanager_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </inventorymanager_write>
+            <inventorymanager_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </inventorymanager_read>
+        </resources>
+
+            </inventorymanager_resource>
+        </models>
     </global>
 </config>
