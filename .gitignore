@@ -6,3 +6,6 @@
 .htaccess.sample
 .modgit/
 .modman/
+/sitemaps
+sitemaps/
+.gitignore
