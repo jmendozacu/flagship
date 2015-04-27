@@ -98,7 +98,11 @@
                 </connection>
             </inventorymanager_read>
         </resources>
-
+		<blocks>
+            <inventorymanager>
+                <class>Ecommerceguys_Inventorymanager_Block</class>
+            </inventorymanager>
+        </blocks>
             </inventorymanager_resource>
         </models>
     </global>
