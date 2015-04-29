@@ -1,83 +1,25 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <config>
     <modules>
         <Ecommerceguys_Inventorymanager>
             <version>0.1.0</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
-    <frontend>
-        <routers>
-            <inventorymanager>
-                <use>standard</use>
-                <args>
-                    <module>Ecommerceguys_Inventorymanager</module>
-                    <frontName>inventorymanager</frontName>
-                </args>
-            </inventorymanager>
-        </routers>
-        <layout>
-            <updates>
-                <inventorymanager>
-                    <file>inventorymanager.xml</file>
-                </inventorymanager>
-            </updates>
-        </layout>
-    </frontend>
-    <admin>
-        <routers>
-			<inventorymanager>
-				<use>admin</use>
-				<args>
-					<module>Ecommerceguys_Inventorymanager</module>
-					<frontName>inventorymanager</frontName>
-				</args>
-			</inventorymanager>
-        </routers>
-    </admin>
-    <adminhtml>
-		<acl>
-			<resources>
-				<all>
-					<title>Allow Everything</title>
-				</all>
-				<admin>
-					<children>
-						<Ecommerceguys_Inventorymanager>
-							<title>Inventorymanager Module</title>
-							<sort_order>10</sort_order>
-						</Ecommerceguys_Inventorymanager>
-					</children>
-				</admin>
-			</resources>
-		</acl>
-		<layout>
-			<updates>
-				<inventorymanager>
-					<file>inventorymanager.xml</file>
-				</inventorymanager>
-			</updates>
-		</layout>
-    </adminhtml>   
     <global>
-        <helpers>
+    	<models>
             <inventorymanager>
-                <class>Ecommerceguys_Inventorymanager_Helper</class>
-            </inventorymanager>
-        </helpers>
-        <models>
-        	<inventorymanager>
                 <class>Ecommerceguys_Inventorymanager_Model</class>
                 <resourceModel>inventorymanager_resource</resourceModel>
             </inventorymanager>
             <inventorymanager_resource>
             	<class>Ecommerceguys_Inventorymanager_Model_Resource</class>
-                <entities>
+            	 <entities>
                     <vendor>
                         <table>inventorymanager_vendor</table>
                     </vendor>
                 </entities>
-   			</inventorymanager_resource>
-   		</models>
+            </inventorymanager_resource>
+        </models>
         <resources>
             <inventorymanager_setup>
                 <setup>
@@ -98,12 +40,67 @@
                 </connection>
             </inventorymanager_read>
         </resources>
-		<blocks>
+        <helpers>
+            <inventorymanager>
+                <class>Ecommerceguys_Inventorymanager_Helper</class>
+            </inventorymanager>
+        </helpers>
+        <blocks>
             <inventorymanager>
                 <class>Ecommerceguys_Inventorymanager_Block</class>
             </inventorymanager>
         </blocks>
-            </inventorymanager_resource>
-        </models>
     </global>
+    <adminhtml>
+        <layout>
+            <updates>
+                <inventorymanager>
+                    <file>inventorymanager.xml</file>
+                </inventorymanager>
+            </updates>
+        </layout>
+        <menu>
+			<inventorymanager module="inventorymanager">
+				<title>Inventory Manager</title>
+				<sort_order>71</sort_order>               
+				<children>
+					<item module="inventorymanager">
+						<title>Manage Vendors</title>
+						<sort_order>0</sort_order>
+						<action>inventorymanager/adminhtml_vendor</action>
+					</item>
+				</children>
+			</inventorymanager>
+		</menu>
+		<acl>
+			<resources>
+				<admin>
+					<children>
+						<system>
+							<children>
+								<config>
+									<children>
+										<inventorymanager  translate="title" module="inventorymanager">
+											<title>Inventory Manager</title>
+										</inventorymanager>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+    </adminhtml>
+    <admin>
+        <routers>
+            <inventorymanager>
+                <use>admin</use>
+                <args>
+                    <module>Ecommerceguys_Inventorymanager</module>
+                    <frontName>inventorymanager</frontName>
+                </args>
+            </inventorymanager>
+        </routers>
+    </admin>
 </config>
