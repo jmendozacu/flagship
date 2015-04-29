@@ -27,14 +27,19 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Vendor_Grid extends Mage_Ad
           'index'     => 'vendor_id',
       ));
 
-      $this->addColumn('title', array(
-          'header'    => Mage::helper('inventorymanager')->__('Title'),
+      $this->addColumn('name', array(
+          'header'    => Mage::helper('inventorymanager')->__('Name'),
           'align'     =>'left',
-          'index'     => 'title',
+          'index'     => 'name',
       ));
 
+      $this->addColumn('email', array(
+          'header'    => Mage::helper('inventorymanager')->__('Email'),
+          'align'     =>'left',
+          'index'     => 'email',
+      ));
 	  
-      $this->addColumn('status', array(
+      /*$this->addColumn('status', array(
           'header'    => Mage::helper('inventorymanager')->__('Status'),
           'align'     => 'left',
           'width'     => '80px',
@@ -44,7 +49,7 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Vendor_Grid extends Mage_Ad
               1 => 'Enabled',
               2 => 'Disabled',
           ),
-      ));
+      ));*/
 	  
         $this->addColumn('action',
             array(
@@ -65,8 +70,8 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Vendor_Grid extends Mage_Ad
                 'is_system' => true,
         ));
 		
-		$this->addExportType('*/*/exportCsv', Mage::helper('inventorymanager')->__('CSV'));
-		$this->addExportType('*/*/exportXml', Mage::helper('inventorymanager')->__('XML'));
+		//$this->addExportType('*/*/exportCsv', Mage::helper('inventorymanager')->__('CSV'));
+		//$this->addExportType('*/*/exportXml', Mage::helper('inventorymanager')->__('XML'));
 	  
       return parent::_prepareColumns();
   }

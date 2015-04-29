@@ -5,6 +5,6 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor_Collection extends Ma
     public function _construct()
     {
         parent::_construct();
-        $this->_init('vendor/vendor');
+        $this->_init('inventorymanager/vendor');
     }
 }
