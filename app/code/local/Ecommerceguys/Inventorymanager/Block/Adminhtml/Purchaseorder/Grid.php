@@ -45,6 +45,18 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Purchaseorder_Grid extends 
           'index'     => 'payment_terms',
       ));
       
+      $this->addColumn('order_qty', array(
+          'header'    => Mage::helper('inventorymanager')->__('Ordered Qty'),
+          'align'     =>'left',
+          'index'     => 'order_qty',
+      ));
+      
+      $this->addColumn('received_qty', array(
+          'header'    => Mage::helper('inventorymanager')->__('Received Qty'),
+          'align'     =>'left',
+          'index'     => 'received_qty',
+      ));
+      
       $this->addColumn('date_of_po', array(
           'header'    => Mage::helper('inventorymanager')->__('Date of Purchase order'),
           'align'     =>'left',
