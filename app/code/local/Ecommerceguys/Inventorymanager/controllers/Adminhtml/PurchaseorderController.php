@@ -1,0 +1,4 @@
+<?php 
+class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends Mage_Adminhtml_Controller_action
+{
+}
