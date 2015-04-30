@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ecommerceguys_Inventorymanager>
-            <version>0.1.2</version>
+            <version>0.1.3</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
     <global>
