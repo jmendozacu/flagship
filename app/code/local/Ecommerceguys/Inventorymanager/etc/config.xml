@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ecommerceguys_Inventorymanager>
-            <version>0.1.1</version>
+            <version>0.1.2</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
     <global>
@@ -17,6 +17,12 @@
                     <vendor>
                         <table>inventorymanager_vendor</table>
                     </vendor>
+                    <purchaseorder>
+                    	<table>inventorymanager_purchase_order</table>
+                    </purchaseorder>
+                    <product>
+                    	<table>inventorymanager_product</table>
+                    </product>
                 </entities>
             </inventorymanager_resource>
         </models>
