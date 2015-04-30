@@ -70,11 +70,16 @@
 				<title>Inventory Manager</title>
 				<sort_order>71</sort_order>               
 				<children>
-					<item module="inventorymanager">
+					<vendor module="inventorymanager">
 						<title>Manage Vendors</title>
 						<sort_order>0</sort_order>
 						<action>inventorymanager/adminhtml_vendor</action>
-					</item>
+					</vendor>
+					<purchaseorder module="inventorymanager">
+						<title>Purchase Order</title>
+						<sort_order>1</sort_order>
+						<action>inventorymanager/adminhtml_purchaseorder</action>
+					</purchaseorder>
 				</children>
 			</inventorymanager>
 		</menu>

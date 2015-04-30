@@ -5,4 +5,10 @@
             <block type="inventorymanager/adminhtml_vendor" name="vendor" />
         </reference>
     </inventorymanager_adminhtml_vendor_index>
+    
+    <inventorymanager_adminhtml_purchaseorder_index>
+    	<reference name="content">
+            <block type="inventorymanager/adminhtml_purchaseorder" name="purchaseorder" />
+        </reference>
+    </inventorymanager_adminhtml_purchaseorder_index>
 </layout>
