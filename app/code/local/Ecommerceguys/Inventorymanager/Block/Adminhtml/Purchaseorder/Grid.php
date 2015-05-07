@@ -27,10 +27,18 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Purchaseorder_Grid extends 
           'index'     => 'po_id',
       ));
 
+      $vendors = Mage::getModel('inventorymanager/vendor')->getCollection();
+      $vendorArray = array();
+      foreach ($vendors as $vendor){
+      		$vendorArray[$vendor->getId()] = $vendor->getName();
+      }
+      
       $this->addColumn('vendor_id', array(
           'header'    => Mage::helper('inventorymanager')->__('Vendor'),
           'align'     =>'left',
           'index'     => 'vendor_id',
+          'type'	=> 'options',
+          'options'	=> $vendorArray
       ));
       $methods = Mage::getSingleton('shipping/config')->getActiveCarriers();
 	  $shippingMethods = array();
