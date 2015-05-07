@@ -18,6 +18,12 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Purchaseorder_Edit_Tabs ext
           'title'     => Mage::helper('inventorymanager')->__('Information'),
           'content'   => $this->getLayout()->createBlock('inventorymanager/adminhtml_purchaseorder_edit_tab_form')->toHtml(),
       ));
+      
+      $this->addTab('products', array(
+          'label'     => Mage::helper('inventorymanager')->__('Products'),
+          'title'     => Mage::helper('inventorymanager')->__('Products'),
+          'content'   => $this->getLayout()->createBlock('inventorymanager/adminhtml_purchaseorder_edit_tab_Product')->toHtml(),
+      ));
      
       return parent::_beforeToHtml();
   }
