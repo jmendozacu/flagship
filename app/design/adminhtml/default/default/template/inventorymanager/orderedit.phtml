@@ -1,0 +1,203 @@
+<div class=" ">
+	<div class="1main-col">
+		<div class="main-col-inner">
+			<div class="content-header">
+				<h3 class="icon-head head-adminhtml-purchaseorder">
+					<?php echo $this->__("Add/Edit Purchase Order") ?>
+				</h3>	
+				<p class="form-buttons">
+					<button style="" onclick="editForm.submit();" class="scalable save" type="button" title="<?php echo $this->__("Save Order") ?>">
+						<span><span><span><?php echo $this->__("Save Order") ?></span></span></span>
+					</button>
+				</p>
+			</div>
+			<div class="entry-edit">
+				<form id="edit_form" enctype="multipart/form-data" method="post" action="<?php echo Mage::helper("adminhtml")->getUrl("inventorymanager/adminhtml_purchaseorder/save") ?>">
+					<div class="no-display">
+						<input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key" />
+					</div>
+					<div id="purchaseorder_tabs_form_section_content">
+						<div class="entry-edit">
+							<div class="entry-edit-head">
+								<h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__("Fill bellow information") ?></h4>
+							</div>
+							<div id="purchaseorder_form" class="fieldset ">
+								<div class="hor-scroll">
+									<table class="form-list" cellspacing="0">
+										<tr>
+											<td class="label">
+												<label for="vendor"><?php echo $this->__("Vendor") ?>&nbsp;<span class="required">*</span></label>
+											</td>
+											<td class="value">
+												<select id="vendor_id" name="vendor_id" class="required-entry select">
+													<?php foreach ($this->getVendors() as $vendorId => $vendorName){ ?>
+														<option value="<?php echo $vendorId ?>"><?php echo $vendorName ?></option>
+													<?php } ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td class="label">
+												<label for="shipping_method"><?php echo $this->__("Shipping Method") ?>&nbsp;<span class="required">*</span></label>
+											</td>
+											<td class="value">
+												<select id="shipping_method" name="shipping_method" class="required-entry select">
+													<?php foreach ($this->getAllShippingMethod() as $code => $title){ ?>
+														<option value="<?php echo $code ?>"><?php echo $title ?></option>
+													<?php } ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td class="label">
+												<label for="payment_terms"><?php echo $this->__("Payment Terms") ?>&nbsp;<span class="required">*</span></label>
+											</td>
+											<td class="value">
+												<select id="payment_terms" name="payment_terms" class="required-entry select">
+													<?php foreach ($this->getPaymentTerms() as $code => $title){ ?>
+														<option value="<?php echo $code ?>"><?php echo $title ?></option>
+													<?php } ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td class="label">
+												<label for="date_of_po"><?php echo $this->__("Date of Purchase Order") ?>&nbsp;<span class="required">*</span></label>
+											</td>
+											<td class="value">
+												<input type="text" style="width:110px !important;" class=" input-text required-entry" title="<?php echo $this->__("Date Of Purchase Order") ?>" value="<?php echo date('m/d/Y') ?>" id="date_of_po" name="date_of_po">
+												<img style="" title="<?php echo $this->__("Select Date") ?>" id="date_of_po_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
+											</td>
+										</tr>
+										<tr>
+											<td class="label">
+												<label for="date_of_po"><?php echo $this->__("Expted Date") ?></label>
+											</td>
+											<td class="value">
+												<input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" name="expected_date" id="expected_date">
+												<img style="" title="<?php echo $this->__("Select Date") ?>" id="expected_date_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
+											</td>
+										</tr>
+										<?php if(!$this->getCurrentOrder()) { ?>
+										<tr>
+											<td class="label">
+												<label for="add_product"><?php echo $this->__("Add Product to purchase order") ?></label>
+											</td>
+											<td class="value">
+												<input style="width:300px" type="text" class="input-text" id="add_product" onkeyup="loadProducts(this.value)"  />
+												<div id="product_suggestion_box"></div>
+											</td>
+										</tr>
+										<?php } ?>
+									</table>
+									<ul id="products_grid">
+										<li>
+											<div class="product-content-header p-name"><?php echo $this->__("Name") ?></div>
+											<div class="product-content-header p-qty"><?php echo $this->__("Qty") ?></div>
+											<div class="product-content-header p-cost"><?php echo $this->__("Price/Unit") ?></div>
+											<div class="product-content-header p-input"><?php echo $this->__("Total") ?></div>
+											<?php if(!$this->getCurrentOrder()) { ?>
+												<div class="product-content-header p-remove"><?php echo $this->__("Remove") ?></div> 
+											<?php } ?>
+											<div class="clear-float"></div>
+										</li>
+										<?php if($this->getCurrentOrder()) { ?>
+											<?php foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
+											<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
+												<li>
+													<div class="product-content p-name"><?php echo $productObject->getName() ?></div>
+													<div class="product-content p-qty"><?php echo $orderProduct->getQty() ?></div>
+													<div class="product-content p-cost"><?php echo $orderProduct->getPrice() ?></div>
+													<div class="product-content p-input"><?php echo $orderProduct->getTotal() ?></div>
+													<div class="clear-float"></div>
+												</li>
+											<?php } ?>
+										<?php } ?>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">// <![CDATA[
+Calendar.setup({
+    inputField : 'date_of_po',
+    ifFormat : '%m/%d/%Y',
+    button : 'date_of_po_trig',
+    align : 'Bl',
+    singleClick : true
+});
+
+Calendar.setup({
+    inputField : 'expected_date',
+    ifFormat : '%m/%d/%Y',
+    button : 'expected_date_trig',
+    align : 'Bl',
+    singleClick : true
+});
+// ]]>
+</script>
+<script>
+var oldkeyword = "";
+$('product_suggestion_box').hide();
+$('products_grid').hide();
+	function loadProducts(keyword){
+		if(keyword == "") return ;
+		if(keyword == oldkeyword) return;
+		oldkeyword = keyword; 
+		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_purchaseorder/findproduct") ?>', {
+			method:'post',
+			parameters: {keyword: keyword},
+  			onSuccess: function(transport) {
+  				$('product_suggestion_box').show();
+    			var response = transport.responseText || "no response text";
+    			$('product_suggestion_box').innerHTML = response;
+  			},
+  			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	function addProduct(pid){
+		$('product_suggestion_box').hide();
+		
+		
+		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_purchaseorder/getproductinfo") ?>', {
+			method:'post',
+			parameters: {product_id: pid},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText || "no response text";
+    			$('products_grid').insert(response);
+    			var lis = $('products_grid').childElements();
+    			
+    				$('products_grid').show();
+    			
+  			},
+  			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	
+	function countTotal(element){
+		if(element.up('div').className == "product-content p-qty"){
+			var val2 = element.up('li').down('div.p-cost').down('input').value;
+		}else{
+			var val2 = element.up('li').down('div.p-qty').down('input').value;
+		}
+		total = val2 * element.value;
+		total = total.toFixed(4);
+		element.up('li').down('div.p-total').innerHTML = total;
+	}
+	
+	function removeProduct(element){
+		element.up('li').remove();
+		var lis = $('products_grid').childElements();
+		if(lis.length == 1){
+			$('products_grid').hide();
+		}
+	}
+	var editForm = new varienForm('edit_form', '');
+</script>

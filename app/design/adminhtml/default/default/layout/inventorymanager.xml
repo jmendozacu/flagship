@@ -11,4 +11,43 @@
             <block type="inventorymanager/adminhtml_purchaseorder" name="purchaseorder" />
         </reference>
     </inventorymanager_adminhtml_purchaseorder_index>
+    
+    <inventorymanager_adminhtml_purchaseorder_edit>
+    	<reference name="content">
+    		<block type="inventorymanager/adminhtml_purchaseorder_purchaseorder" template="inventorymanager/purchaseorder.phtml" />
+    	</reference>
+    </inventorymanager_adminhtml_purchaseorder_edit>
+    
+    <!--<inventorymanager_adminhtml_purchaseorder_grid>
+	    <block type="core/text_list" name="root" output="toHtml">
+	        <block type="inventorymanager/adminhtml_purchaseorder_edit_tab_product" name="purchaseorder.grid"/>
+	    </block>
+	</inventorymanager_adminhtml_purchaseorder_grid>-->
+	
+	<inventorymanager_adminhtml_purchaseorder_orderedit>
+		<reference name="head">
+			<action method="addCss"><name>inventorymanager/style.css</name></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/adminhtml_purchaseorder_orderedit" name="purchaseorder.edit" template="inventorymanager/orderedit.phtml" />
+		</reference>
+	</inventorymanager_adminhtml_purchaseorder_orderedit>
+	
+	<inventorymanager_adminhtml_purchaseorder_findproduct>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/adminhtml_purchaseorder_findproduct" name="purchaseorder.findproduct" template="inventorymanager/findproduct.phtml" />
+		</reference>
+	</inventorymanager_adminhtml_purchaseorder_findproduct>
+	
+	<inventorymanager_adminhtml_purchaseorder_getproductinfo>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/adminhtml_purchaseorder_addproduct" name="purchaseorder.addproduct" template="inventorymanager/addproduct.phtml" />
+		</reference>
+	</inventorymanager_adminhtml_purchaseorder_getproductinfo>
 </layout>

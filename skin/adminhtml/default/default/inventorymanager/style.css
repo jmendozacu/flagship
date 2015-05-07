@@ -1,0 +1,65 @@
+#product_suggestion_box {
+	position:absolute;
+	padding:3px;
+	border:1px solid;
+	background-color:#fff;
+}
+#product_suggestion_box ul {
+	border:1px solid #ccc;
+	padding:3px; 
+}
+#product_suggestion_box ul li{
+	margin:2px;
+	padding:3px 5px;
+	border:1px solid #ccc;
+	cursor:pointer;
+}
+#products_grid  {
+	border:1px solid;
+	padding:5px;
+}
+#products_grid li div.product-content {
+	padding:5px;
+	border:1px solid #ccc;
+	float:left;
+	height:23px;
+	width:150px;
+}
+#products_grid li div.product-content-header {
+	padding:5px;
+	border:1px solid #ccc;
+	float:left;
+	height:23px;
+	background-color:#fff;
+	width:150px;
+}
+.clear-float {
+	float:none;
+	clear:both;
+}
+div.p-name{
+	width:400px !important;
+}
+div.p-qty {
+	width:165px !important;
+	text-align:right;
+}
+div.p-cost {
+	width:300px !important;
+	text-align:right;
+}
+/*div.p-input {
+	width:165px !important;
+}*/
+#products_grid li input {
+	text-align:right;
+}
+div.p-total{
+	text-align:right;
+}
+div.p-remove{
+	text-align:center;
+}
+#products_grid li a {
+	cursor:pointer;
+}
