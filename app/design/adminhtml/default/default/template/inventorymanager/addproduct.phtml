@@ -9,7 +9,7 @@
 	<div class="product-content p-cost"><?php echo $currentProduct->getPrice()?$currentProduct->getPrice():0; ?>
 		<input type="text" value="0.0000" name="product_value[<?php echo $currentProduct->getId() ?>]" class="input-text" onchange="countTotal(this)" />
 	</div>
-	<div id="total" class="product-content p-total">
+	<div id="total" class="product-content p-total p-input">
 		0.0000
 	</div>
 	<div class="product-content p-remove"> <a onclick="removeProduct(this)" >X</a> </div>

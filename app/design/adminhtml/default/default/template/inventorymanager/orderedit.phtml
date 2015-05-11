@@ -1,3 +1,17 @@
+<?php
+	$c_vendorId = "";
+	$c_shippingMethod = "";
+	$c_paymentTerms = "";
+	$c_dateOfPo = "";
+	$c_expectedDate = "";
+	if($currentPurchaseOrder = $this->getCurrentOrder()){
+		$c_vendorId = $currentPurchaseOrder->getVendorId();
+		$c_shippingMethod = $currentPurchaseOrder->getShippingMethod();
+		$c_paymentTerms = $currentPurchaseOrder->getPaymentTerms();
+		$c_dateOfPo = $currentPurchaseOrder->getDateOfPo();
+		$c_expectedDate = $currentPurchaseOrder->getExpectedDate();
+	}
+?>
 <div class=" ">
 	<div class="1main-col">
 		<div class="main-col-inner">
@@ -9,6 +23,11 @@
 					<button style="" onclick="editForm.submit();" class="scalable save" type="button" title="<?php echo $this->__("Save Order") ?>">
 						<span><span><span><?php echo $this->__("Save Order") ?></span></span></span>
 					</button>
+					<?php if($this->getCurrentOrder()) { ?>
+					<button style="" onclick="setLocation('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_purchaseorder/generatePdf", array('id'=>$this->getCurrentOrder()->getId()) ) ?>');" class="scalable save" type="button" title="<?php echo $this->__("Download PDF") ?>">
+						<span><span><span><?php echo $this->__("Download PDF") ?></span></span></span>
+					</button>
+					<?php } ?>
 				</p>
 			</div>
 			<div class="entry-edit">
@@ -31,7 +50,7 @@
 											<td class="value">
 												<select id="vendor_id" name="vendor_id" class="required-entry select">
 													<?php foreach ($this->getVendors() as $vendorId => $vendorName){ ?>
-														<option value="<?php echo $vendorId ?>"><?php echo $vendorName ?></option>
+														<option value="<?php echo $vendorId ?>" <?php echo $c_vendorId==$vendorId?"selected='seleted'":""; ?> ><?php echo $vendorName ?></option>
 													<?php } ?>
 												</select>
 											</td>
@@ -43,7 +62,7 @@
 											<td class="value">
 												<select id="shipping_method" name="shipping_method" class="required-entry select">
 													<?php foreach ($this->getAllShippingMethod() as $code => $title){ ?>
-														<option value="<?php echo $code ?>"><?php echo $title ?></option>
+														<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
 													<?php } ?>
 												</select>
 											</td>
@@ -55,7 +74,7 @@
 											<td class="value">
 												<select id="payment_terms" name="payment_terms" class="required-entry select">
 													<?php foreach ($this->getPaymentTerms() as $code => $title){ ?>
-														<option value="<?php echo $code ?>"><?php echo $title ?></option>
+														<option value="<?php echo $code ?>" <?php echo $c_paymentTerms==$code?"selected='selected'":""; ?>><?php echo $title ?></option>
 													<?php } ?>
 												</select>
 											</td>
@@ -65,7 +84,7 @@
 												<label for="date_of_po"><?php echo $this->__("Date of Purchase Order") ?>&nbsp;<span class="required">*</span></label>
 											</td>
 											<td class="value">
-												<input type="text" style="width:110px !important;" class=" input-text required-entry" title="<?php echo $this->__("Date Of Purchase Order") ?>" value="<?php echo date('m/d/Y') ?>" id="date_of_po" name="date_of_po">
+												<input type="text" style="width:110px !important;" class=" input-text required-entry" title="<?php echo $this->__("Date Of Purchase Order") ?>" value="<?php echo $c_dateOfPo!=""?date('d/m/Y', strtotime($c_dateOfPo)):date('d/m/Y'); ?>" id="date_of_po" name="date_of_po">
 												<img style="" title="<?php echo $this->__("Select Date") ?>" id="date_of_po_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
 											</td>
 										</tr>
@@ -74,11 +93,11 @@
 												<label for="date_of_po"><?php echo $this->__("Expted Date") ?></label>
 											</td>
 											<td class="value">
-												<input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" name="expected_date" id="expected_date">
+												<input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo date("d/m/Y", strtotime($c_expectedDate)); ?>" name="expected_date" id="expected_date">
 												<img style="" title="<?php echo $this->__("Select Date") ?>" id="expected_date_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
 											</td>
 										</tr>
-										<?php if(!$this->getCurrentOrder()) { ?>
+										<?php /*if(!$this->getCurrentOrder()) {*/ ?>
 										<tr>
 											<td class="label">
 												<label for="add_product"><?php echo $this->__("Add Product to purchase order") ?></label>
@@ -88,32 +107,58 @@
 												<div id="product_suggestion_box"></div>
 											</td>
 										</tr>
-										<?php } ?>
+										<?php /*}*/ ?>
+										<tr>
+											<td colspan="4">
+												<ul id="products_grid">
+													<li>
+														<div class="product-content-header p-name"><?php echo $this->__("Name") ?></div>
+														<div class="product-content-header p-qty"><?php echo $this->__("Qty") ?></div>
+														<div class="product-content-header p-cost"><?php echo $this->__("Price/Unit") ?></div>
+														<div class="product-content-header p-input"><?php echo $this->__("Total") ?></div>
+														<div class="product-content-header p-remove"><?php echo $this->__("Remove") ?></div> 
+														<div class="clear-float"></div>
+													</li>
+													<?php if($this->getCurrentOrder()) { ?>
+														<?php foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
+														<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
+															<li>
+																<div class="product-content p-name"><?php echo $productObject->getName() ?></div>
+																<div class="product-content p-qty"><?php echo $orderProduct->getQty() ?></div>
+																<div class="product-content p-cost"><?php echo $orderProduct->getPrice() ?></div>
+																<div class="product-content p-input"><?php echo $orderProduct->getTotal() ?></div>
+																<div class="clear-float"></div>
+															</li>
+														<?php } ?>
+													<?php } ?>
+												</ul>
+											</td>
+										</tr>
+										<tr>
+											<td class="label">
+												<label for="total"><?php echo $this->__("Units Ordered") ?></label>
+											</td>
+											<td class="value">
+												<span id="total_qty"></span>
+											</td>
+										</tr>
+										<tr>
+											<td class="label">
+												<label for="total"><?php echo $this->__("Units Received") ?></label>
+											</td>
+											<td class="value">
+												<span ></span>
+											</td>
+										</tr>
+										<tr>
+											<td class="label">
+												<label for="total"><?php echo $this->__("Total") ?></label>
+											</td>
+											<td class="value">
+												<span id="grant_total"></span>
+											</td>
+										</tr>
 									</table>
-									<ul id="products_grid">
-										<li>
-											<div class="product-content-header p-name"><?php echo $this->__("Name") ?></div>
-											<div class="product-content-header p-qty"><?php echo $this->__("Qty") ?></div>
-											<div class="product-content-header p-cost"><?php echo $this->__("Price/Unit") ?></div>
-											<div class="product-content-header p-input"><?php echo $this->__("Total") ?></div>
-											<?php if(!$this->getCurrentOrder()) { ?>
-												<div class="product-content-header p-remove"><?php echo $this->__("Remove") ?></div> 
-											<?php } ?>
-											<div class="clear-float"></div>
-										</li>
-										<?php if($this->getCurrentOrder()) { ?>
-											<?php foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
-											<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
-												<li>
-													<div class="product-content p-name"><?php echo $productObject->getName() ?></div>
-													<div class="product-content p-qty"><?php echo $orderProduct->getQty() ?></div>
-													<div class="product-content p-cost"><?php echo $orderProduct->getPrice() ?></div>
-													<div class="product-content p-input"><?php echo $orderProduct->getTotal() ?></div>
-													<div class="clear-float"></div>
-												</li>
-											<?php } ?>
-										<?php } ?>
-									</ul>
 								</div>
 							</div>
 						</div>
@@ -143,8 +188,9 @@ Calendar.setup({
 </script>
 <script>
 var oldkeyword = "";
+var lis = $('products_grid').childElements();
+if(lis.length<=1) {$('products_grid').hide();  }
 $('product_suggestion_box').hide();
-$('products_grid').hide();
 	function loadProducts(keyword){
 		if(keyword == "") return ;
 		if(keyword == oldkeyword) return;
@@ -161,6 +207,27 @@ $('products_grid').hide();
 		});
 	}
 	
+	function countGTotal(){
+		var total = 0;
+		$$('div.p-input').each(function(e){
+			if(e.innerHTML > 0)
+				total += parseFloat(e.innerHTML);
+		});
+		$('grant_total').innerHTML = total.toFixed(4);;
+	}
+	
+	function countQty(){
+		var totalQty = 0;
+		$$('div.p-qty').each(function(e){
+			if(e.innerHTML > 0)
+				totalQty += parseFloat(e.innerHTML);
+			if(e.down('input') != 'undefined' && e.down('input')){
+				totalQty += parseFloat(e.down('input').value);
+			}
+		});
+		$('total_qty').innerHTML = totalQty;
+	}
+	
 	function addProduct(pid){
 		$('product_suggestion_box').hide();
 		
@@ -174,7 +241,8 @@ $('products_grid').hide();
     			var lis = $('products_grid').childElements();
     			
     				$('products_grid').show();
-    			
+    			countTotal();
+				countQty();
   			},
   			onFailure: function() { alert('Something went wrong...'); }
 		});
@@ -188,8 +256,11 @@ $('products_grid').hide();
 			var val2 = element.up('li').down('div.p-qty').down('input').value;
 		}
 		total = val2 * element.value;
+		
 		total = total.toFixed(4);
 		element.up('li').down('div.p-total').innerHTML = total;
+		countGTotal();
+		countQty();
 	}
 	
 	function removeProduct(element){
@@ -198,6 +269,12 @@ $('products_grid').hide();
 		if(lis.length == 1){
 			$('products_grid').hide();
 		}
+		countGTotal();
+		countQty();
 	}
+	
+	
+	countGTotal();
+	countQty();
 	var editForm = new varienForm('edit_form', '');
 </script>
