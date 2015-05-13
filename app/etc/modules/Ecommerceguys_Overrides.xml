@@ -1,0 +1,9 @@
+<?xml version="1.0"?>  
+<config>  
+    <modules>  
+        <Ecommerceguys_Overrides>  
+            <active>true</active>  
+            <codePool>local</codePool>
+        </Ecommerceguys_Overrides>  
+    </modules>  
+</config>

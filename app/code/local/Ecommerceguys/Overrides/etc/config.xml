@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+        <Ecommerceguys_Overrides>
+            <version>1.0.0</version>
+        </Ecommerceguys_Overrides>
+    </modules>
+    <global>
+		<blocks>
+			<overrides>
+                <class>Ecommerceguys_Overrides_Block</class>
+            </overrides>
+			<adminhtml>
+				<rewrite>
+					<customer_edit_tab_account>Ecommerceguys_Overrides_Block_Adminhtml_Customer_Edit_Tab_Account</customer_edit_tab_account>
+				</rewrite>
+			</adminhtml>
+		</blocks>
+		<helpers>
+            <overrides>
+                <class>Ecommerceguys_Overrides_Helper</class>
+            </overrides>
+        </helpers>
+	</global>
+</config>
