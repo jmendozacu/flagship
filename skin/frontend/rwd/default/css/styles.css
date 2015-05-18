@@ -436,7 +436,7 @@ fieldset {
 }
 
 img {
-  display: block;
+ /* display: block;*/
 }
 
 ol,
@@ -1291,10 +1291,11 @@ a.button:hover {
  */
 .main-container,
 .footer-container {
-  position: relative;
-  max-width: 1260px;
-  margin: 0 auto;
-  padding: 15px;
+  float: left;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative;
+    width: 100%;
 }
 .main-container:after,
 .footer-container:after {
@@ -1407,6 +1408,7 @@ a.button:hover {
   .col3-layout .col-wrapper .col-left {
     width: 25%;
   }
+  
 }
 @media only screen and (max-width: 770px) {
   .col-left,
@@ -1653,6 +1655,28 @@ a.button:hover {
     width: 20%;
     padding-top: 0;
   }
+  
+  .account-cart-wrapper {
+    position: absolute;
+    right: 0;
+    top: -51px !important;
+}
+  .skip-link {
+    background: none repeat scroll 0 0 transparent  !important;}
+	.account-cart-wrapper .icon{ display:none  !important}
+	.header-minicart .icon{ display:none  !important}
+	
+	#header-search {
+    display: block;
+    height: 50px;
+    padding: 0;
+    position: absolute;
+    right: 164px !important;
+    top: -45px !important;
+    width: 23% !important;
+}
+#header-search .input-text{ background-color:transparent !important; border:none !important}
+	
 }
 /* -------------------------------------------- *
  * Page Popup
@@ -1760,7 +1784,7 @@ a.button:hover {
 }
 
 .price-box .price {
-  color: #3399cc;
+  color: red;
   font-size: 16px;
 }
 
@@ -2036,7 +2060,7 @@ span.weee {
  * Standard Formatted Text Block
  */
 .std p {
-  margin: 0 0 1.5em;
+  margin: 0 0 0;
 }
 
 .std ol {
@@ -2054,7 +2078,7 @@ span.weee {
 }
 
 .std ul li {
-  margin-left: 2em;
+ /* margin-left: 2em;*/
 }
 
 .std .note {
@@ -3164,13 +3188,15 @@ body {
  * ============================================ */
 @media only screen and (min-width: 771px) {
   .page-header {
-    max-width: 1260px;
+  /*  max-width: 1260px;*/
     margin: 0 auto;
-    padding: 0 30px;
+    padding: 0 0px;
+	width:100%;   background-image: url(../images/header_bg.jpg);
+  background-repeat: repeat;
   }
 
   .page-header-container {
-    position: relative;
+    position: relative; max-width:1140px; margin:0 auto
   }
 }
 .header-language-container,
@@ -3182,8 +3208,8 @@ body {
  * Language switcher + welcome message
  * ============================================ */
 .header-language-background {
-  padding: 10px;
-  background-color: #3399cc;
+  padding: 25px;
+  background-color: #1c1c1c;
   text-transform: uppercase;
 }
 .header-language-background .header-language-container {
@@ -3971,13 +3997,11 @@ a.skip-link {
 }
 
 .footer {
-  clear: both;
-  width: 100%;
-  border-top: 1px solid #cccccc;
-  padding-top: 30px;
-  /* -------------------------------------------- *
-   * Social icons
-   */
+ border-top: 1px solid #cccccc;
+    clear: both;
+    margin: 0 auto;
+    max-width: 1140px;
+    padding-top: 30px;
 }
 @media only screen and (max-width: 479px) {
   .footer {
@@ -10597,3 +10621,95 @@ div.calendar table td.button {
   color: inherit;
   text-transform: none;
 }
+
+
+
+/* common style start */
+.topgraybar{ float:left; width:}
+.innerwrapper{ margin:0 auto;}
+.delivery_banner {
+    background-color: #2373c8;
+    color: #fff;
+    font-size: 30px;
+    line-height: 50px;
+    margin-bottom: -15px;
+    margin-top: 10px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+}p.banner{ margin-top:-20px;}
+
+.topgraysection_wrapper{  background-color: #1c1c1c;}
+.desktopmenu{ float:right;}
+.shippingsection{ float:left; border-top:solid #2373c8 3px; border-bottom:solid #dddddc 2px; min-height:150px;   background-image: url(../images/shipping-bg.jpg);
+  background-repeat: repeat; width:100%}
+  .shippingsection ul{ margin:0; padding:0}
+    .shippingsection ul li{ list-style:none; display:inline; width:25%; text-align:center; float:left; margin:0;  font-size: 18px;
+    margin-top: 25px;
+    padding: 58px 0 20px;}
+	 .shippingsection ul li:hover{ background-size:20%}
+	
+	.shippingsection ul li.freeshipping{ background-image: url(../images/shipping.png);  background-repeat: no-repeat; background-position:center top; }
+	.shippingsection ul li.freereturn{background-image: url(../images/return.png);  background-repeat: no-repeat; background-position:center top; }
+	.shippingsection ul li.moneyback{background-image: url(../images/moneyback.png);  background-repeat: no-repeat; background-position:center top; }
+	.shippingsection ul li.support{background-image: url(../images/support.png);  background-repeat: no-repeat; background-position:center top; }
+	
+.satisfaction-category{ float:left; width:100%; margin-top:20px;}
+.satisfaction-category .satisfaction{ width:25%; background-color:#00237e; min-height:260px; float:left; text-align:center}
+.satisfaction-category .satisfaction img{ padding:10px; text-align:center}
+.satisfaction-category .categorysection{ width:74.5%; margin-left:0.5%; background-color:#d3e8fd; min-height:250px; float:left; min-height:260px; }
+.satisfaction-category .categorysection ul{ margin:0; padding:20px}
+.satisfaction-category .categorysection ul li{ list-style:none; float:left; width:25%; padding:1%}
+.satisfaction-category .categorysection ul li h2{ margin:0; padding:0; color:#2373c8; font-weight:normal; font-size:21px; text-transform:uppercase}
+.satisfaction-category .categorysection ul li h3{ margin:0; padding:0; color:#000; font-weight:bold; font-size:15px;text-transform:uppercase  }
+.satisfaction-category .categorysection ul li .catthumb{ margin:4px 0 0 0; padding:0 }
+
+.businessinsider-phone-wrapper{ float:left; width:100%; margin:10px 0;}
+.businessinsider{ float:left; width:62%; background-color:#f0f0f0; min-height:300px}
+.phone{ float:left; width:38%; background-color:#58c9e7; min-height:300px}
+.phone span.phonicon{ padding:60px 0; float:left; width:100%; text-align:center}
+.phone span.phontext{ padding:20px 10% 40px 10%; float:left; width:100%; text-align:center}
+.bin_inner{ padding:40px; min-height:330px}
+.businessinsider h2{ color:#444444; margin:0; padding:0; font-size:25px;}
+.clearboth{ clear:both; width:100%}
+.bi{ float:left; width:30%; padding-right:10%; border-right:#555 solid 1px; text-transform:uppercase; font-size:30px;  line-height: 29px;}
+.bi_text{ float: right;    font-size: 14px;    padding-left: 7%;    width: 70%;}
+.mtb30{ margin:30px 0; }
+.fl{ float:left}
+.aboutussection{ float:left; width:100%; background-image:url(../images/about_bg.jpg); background-position:center center; background-attachment:fixed; min-height:200px; margin-bottom:20px; padding:50px 0}
+.aboutussection .video{ float:left; width:35%;}
+.aboutussection .video img{ max-width:100%; width:100%; border:solid 10px #fff}
+.aboutussection .contentarea{ float:right; width:62%;}
+.aboutussection .contentarea h2{ color:#fff; font-size:25px; margin:0 0 10px 0; padding:0; text-transform:uppercase}
+.aboutussection .contentarea p{ color:#8c9bbb; font-size:14px; text-align:justify }
+.homepdtabsection{ float:left; width:100%; margin-top:20px  !important; background-image:url(../images/home_tab_bg.jpg); background-position:center top; background-color:#d3e8fd; min-height:500px; background-repeat:repeat-x  }
+ul#tabs { list-style-type: none; margin: 26px 0 10px 0; padding: 0 0 0.3em 0; }
+ul#tabs li { display: inline;  margin-right: 34px; }
+ul#tabs li a { color: #fff; padding: 0.3em; text-decoration: none; text-transform:uppercase; font-weight:bold}
+ul#tabs li a:hover { }
+ul#tabs li a.selected { background-image:url(../images/TAB_ACTIVE.jpg); background-position:top center; color:#000; background-repeat:repeat-x; padding:22px 20px }
+div.tabContent { padding: 0.5em; background-color: #fff; }
+div.tabContent.hide { display: none; }
+.category-products li{ list-style:none}	
+.footer-container	{background-image:url(../images/f_bg.jpg); background-position:top center; }
+	
+/* common ends*/
+@media only screen and (min-width: 1000px) {
+ #header-nav {
+    border-bottom: 1px solid #ededed;
+    display: block;
+    float: right !important;
+    position: absolute;
+    right: 0;
+    top: 30px;
+}.nav-primary a.level0 {
+    border-right: 1px solid #555;
+    padding: 0 11px;
+}
+.logo{ padding-top:20px; min-height:inherit}
+.nav-primary a{ line-height:17px;}
+.innerwrapper{ margin:0 auto; width:1140px;}
+.category-products{ float:left; width:100%}
+..cms-index-index .products-grid .ratings, .cms-index-index .products-grid .actions, .cms-index-noroute .products-grid .ratings, .cms-index-noroute .products-grid .actions{ display:block !important}
+}
+
