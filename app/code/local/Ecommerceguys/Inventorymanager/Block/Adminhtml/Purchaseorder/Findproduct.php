@@ -11,8 +11,9 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Purchaseorder_Findproduct e
 			return null;
 		}
 		$productCollection = Mage::getModel('catalog/product')->getCollection();
+		$productCollection->addAttributeToSelect('sku');
 		$productCollection->addAttributeToSelect('name');
-		$productCollection->addAttributeToFilter('name', array('like'=>$searchKeyword.'%'));
+		$productCollection->addAttributeToFilter('sku', array('like'=>$searchKeyword.'%'));
 		return $productCollection;
 	}
 }
