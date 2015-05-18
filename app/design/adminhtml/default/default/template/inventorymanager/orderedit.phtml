@@ -20,20 +20,26 @@
 					<?php echo $this->__("Add/Edit Purchase Order") ?>
 				</h3>	
 				<p class="form-buttons">
-					<button style="" onclick="editForm.submit();" class="scalable save" type="button" title="<?php echo $this->__("Save Order") ?>">
-						<span><span><span><?php echo $this->__("Save Order") ?></span></span></span>
-					</button>
+				
 					<?php if($this->getCurrentOrder()) { ?>
 					<button style="" onclick="setLocation('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_purchaseorder/generatePdf", array('id'=>$this->getCurrentOrder()->getId()) ) ?>');" class="scalable save" type="button" title="<?php echo $this->__("Download PDF") ?>">
 						<span><span><span><?php echo $this->__("Download PDF") ?></span></span></span>
 					</button>
 					<?php } ?>
+				
+					<button style="" onclick="editForm.submit();" class="scalable save" type="button" title="<?php echo $this->__("Save Order") ?>">
+						<span><span><span><?php echo $this->__("Save Order") ?></span></span></span>
+					</button>
+					
 				</p>
 			</div>
 			<div class="entry-edit">
 				<form id="edit_form" enctype="multipart/form-data" method="post" action="<?php echo Mage::helper("adminhtml")->getUrl("inventorymanager/adminhtml_purchaseorder/save") ?>">
 					<div class="no-display">
 						<input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key" />
+						<?php if($this->getCurrentOrder()) { ?>
+							<input type="hidden" value="<?php echo $currentPurchaseOrder->getId() ?>" name="id" />
+						<?php } ?>
 					</div>
 					<div id="purchaseorder_tabs_form_section_content">
 						<div class="entry-edit">
@@ -123,10 +129,20 @@
 														<?php foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
 														<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
 															<li>
-																<div class="product-content p-name"><?php echo $productObject->getName() ?></div>
-																<div class="product-content p-qty"><?php echo $orderProduct->getQty() ?></div>
-																<div class="product-content p-cost"><?php echo $orderProduct->getPrice() ?></div>
+																<div class="product-content p-name">
+																	<?php echo $productObject->getName() ?>
+																	<input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
+																</div>
+																<div class="product-content p-qty">
+																	<?php echo $orderProduct->getQty() ?>
+																	<input type="text" value="<?php echo $orderProduct->getQty() ?>" name="qty[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
+																</div>
+																<div class="product-content p-cost">
+																	<?php echo $orderProduct->getPrice() ?>
+																	<input type="text" value="<?php echo $orderProduct->getPrice() ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
+																</div>
 																<div class="product-content p-input"><?php echo $orderProduct->getTotal() ?></div>
+																<div class="product-content p-remove"><a onclick="removeProduct(this)">X</a></div>
 																<div class="clear-float"></div>
 															</li>
 														<?php } ?>
@@ -159,11 +175,13 @@
 											</td>
 										</tr>
 									</table>
+									
 								</div>
 							</div>
 						</div>
 					</div>
 				</form>
+				<?php echo $this->getChildHtml('purchaseorder.comment') ?>
 			</div>
 		</div>
 	</div>

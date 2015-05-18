@@ -63,3 +63,11 @@ div.p-remove{
 #products_grid li a {
 	cursor:pointer;
 }
+.orderspro-delete{
+	float:right;
+	text-decoration:none;
+}
+.note-list li {
+	padding-top:5px;
+	background-position:0 7px;
+}

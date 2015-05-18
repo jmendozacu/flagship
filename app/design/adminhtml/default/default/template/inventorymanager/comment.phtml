@@ -1,0 +1,95 @@
+<table class="form-list" cellspacing="0" style="width:100%">
+	<tr>
+		<td>
+			<div class="box-left">
+				<div class="entry-edit">
+					<div class="entry-edit-head">
+						<h4><?php echo $this->__("Comments History") ?></h4>
+					</div>
+					<fieldset>
+						<div>
+							<form action="<?php echo Mage::helper('adminhtml')->getUrl('inventorymanager/adminhtml_comment/post') ?>" method="POST" enctype="multipart/form-data">
+								<div class="no-display">
+									<input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key" />
+									<input type="hidden" name="po_id" id="comment_po_id" value="<?php echo $this->getCurrentOrderId() ?>" />
+								</div>
+								<div class="order-history-form">
+									<span class="field-row">
+            							<label for="history_comment" class="normal"><?php echo $this->__("Comment") ?></label>
+            							<textarea id="history_comment" style="height:6em; width:99%;" cols="5" rows="3" name="comment"></textarea>
+        							</span>
+        							<div class="f-right">
+            							<button style="" onclick="subminComment()" class="scalable save" type="button" title="<?php echo $this->__("Submit Comment") ?>">
+            								<span><span><span><?php echo $this->__("Submit Comment") ?></span></span></span>
+            							</button>
+            						</div>
+        							<div class="clear"></div>
+								</div>
+							</form>
+							<div class="divider"></div>
+							<?php $comments = $this->getPurchaseOrderComments(); if($comments && $comments->count() > 0){ ?>
+							<ul class="note-list" id="comments_list">
+								<?php foreach ($comments as $comment){ ?>
+									<li>
+										<strong><?php echo date("M d, Y h:i:s a",strtotime($comment->getCreatedTime())); ?></strong>
+										<a class="orderspro-delete" title="Delete" onclick="deleteComment(<?php echo $comment->getId() ?>); return false;" href="">x</a>
+										<br/>
+										<?php echo $comment->getComment(); ?>
+									</li>
+								<?php } ?>
+							</ul>
+							<?php } ?>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</td>
+	</tr>
+</table>
+<script>
+	function subminComment(){
+		var comment = $('history_comment').value;
+		
+		var poId = $('comment_po_id').value
+		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_comment/post") ?>', {
+			method:'post',
+			parameters: {po_id: poId, comment : comment},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText || "no response text";
+    			$('history_comment').value = '';
+    			refreshList();
+  			},
+  			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	function refreshList(){
+		var poId = $('comment_po_id').value
+		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_comment/refresh") ?>', {
+			method:'post',
+			parameters: {id: poId},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText || "no response text";
+    			$('comments_list').innerHTML = response;
+  			},
+  			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	function deleteComment(id){
+		var conf = confirm("<?php echo $this->__("Are you sure want to delete the comment?") ?>");
+		if(!conf){
+			return;
+		}
+		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_comment/remove") ?>', {
+			method:'post',
+			parameters: {id: id},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText || "no response text";
+    			//$('comments_list').innerHTML = response;
+    			refreshList();
+  			},
+  			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+</script>
