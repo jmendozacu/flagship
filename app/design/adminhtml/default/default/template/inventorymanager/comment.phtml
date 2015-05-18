@@ -14,6 +14,17 @@
 									<input type="hidden" name="po_id" id="comment_po_id" value="<?php echo $this->getCurrentOrderId() ?>" />
 								</div>
 								<div class="order-history-form">
+									
+									<span class="field-row">
+            							<label for="status" class="normal"><?php echo $this->__("Status") ?></label><br>
+            							<select id="status" class="select" name="status">
+				                            <option value="processing"><?php echo $this->__("Processing") ?></option>
+				                            <option value="partial"><?php echo $this->__("Partial Shipped") ?></option>
+				                            <option value="complete"><?php echo $this->__("Fully Shipped") ?></option>
+				                            <option value="received"><?php echo $this->__("Received") ?></option>
+				                            <option value="returned"><?php echo $this->__("Returned") ?></option>
+                        				</select>            
+            							<input type="file" style="float:right" id="send_file" name="send_file" value="">        </span>
 									<span class="field-row">
             							<label for="history_comment" class="normal"><?php echo $this->__("Comment") ?></label>
             							<textarea id="history_comment" style="height:6em; width:99%;" cols="5" rows="3" name="comment"></textarea>
@@ -27,18 +38,19 @@
 								</div>
 							</form>
 							<div class="divider"></div>
-							<?php $comments = $this->getPurchaseOrderComments(); if($comments && $comments->count() > 0){ ?>
+							
 							<ul class="note-list" id="comments_list">
-								<?php foreach ($comments as $comment){ ?>
-									<li>
-										<strong><?php echo date("M d, Y h:i:s a",strtotime($comment->getCreatedTime())); ?></strong>
-										<a class="orderspro-delete" title="Delete" onclick="deleteComment(<?php echo $comment->getId() ?>); return false;" href="">x</a>
-										<br/>
-										<?php echo $comment->getComment(); ?>
-									</li>
+								<?php $comments = $this->getPurchaseOrderComments(); if($comments && $comments->count() > 0){ ?>
+									<?php foreach ($comments as $comment){ ?>
+										<li>
+											<strong><?php echo date("M d, Y h:i:s a",strtotime($comment->getCreatedTime())); ?></strong>
+											<a class="orderspro-delete" title="Delete" onclick="deleteComment(<?php echo $comment->getId() ?>); return false;" href="">x</a>
+											<br/>
+											<?php echo $comment->getComment(); ?>
+										</li>
+									<?php } ?>
 								<?php } ?>
 							</ul>
-							<?php } ?>
 						</div>
 					</fieldset>
 				</div>
