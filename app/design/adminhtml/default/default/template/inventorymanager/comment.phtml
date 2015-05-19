@@ -18,11 +18,16 @@
 									<span class="field-row">
             							<label for="status" class="normal"><?php echo $this->__("Status") ?></label><br>
             							<select id="status" class="select" name="status">
-				                            <option value="processing"><?php echo $this->__("Processing") ?></option>
-				                            <option value="partial"><?php echo $this->__("Partial Shipped") ?></option>
-				                            <option value="complete"><?php echo $this->__("Fully Shipped") ?></option>
-				                            <option value="received"><?php echo $this->__("Received") ?></option>
-				                            <option value="returned"><?php echo $this->__("Returned") ?></option>
+				                            <?php
+				                            	$purchaseorderModel = $this->getCurrentOrder();
+				                            	
+				                            	$statuses = Mage::getModel('inventorymanager/status')->getValues();
+				                            	foreach ($statuses as $code => $label){
+				                            ?>
+				                            <option value="<?php echo $code ?>" <?php echo $purchaseorderModel->getStatus() == $code?"selected='selected'":""; ?>>
+				                            	<?php echo $label ?>
+				                            </option>
+				                            <?php } ?>
                         				</select>            
             							<input type="file" style="float:right" id="send_file" name="send_file" value="">        </span>
 									<span class="field-row">

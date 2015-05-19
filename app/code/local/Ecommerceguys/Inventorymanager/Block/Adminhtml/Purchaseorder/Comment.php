@@ -3,7 +3,8 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Purchaseorder_Comment exten
 {
 	public function getCurrentOrder(){
 		$id = $this->getCurrentOrderId();
-		$commentObject = Mage::getModel('inventorymanager/comment')->load($id);
+		$commentObject = Mage::getModel('inventorymanager/purchaseorder')->load($id);
+		return $commentObject;
 	}
 	
 	public function getCurrentOrderId(){
