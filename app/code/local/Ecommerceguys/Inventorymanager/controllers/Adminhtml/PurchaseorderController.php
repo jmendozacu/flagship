@@ -64,6 +64,8 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 		if ($data = $this->getRequest()->getPost()) {
 			//print_r($data); exit;
 			
+			$poProductIds = $data['po_product'];
+			
 			$model = Mage::getModel('inventorymanager/purchaseorder');		
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
@@ -72,13 +74,30 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 				$productData['po_id'] = $model->getId();
 				$tatalQty = 0;
 				foreach ($data['qty'] as $productId => $qty){
+					if(!in_array($productId, $poProductIds)){ continue; }
 					$tatalQty+=$qty;
 					$productData['qty'] = $qty;
 					$productData['main_product_id'] = $productId;
 					$productData['price'] = $data['product_value'][$productId];
 					$productData['total'] = $productData['qty'] * $productData['price'];
 					$orderProduct = Mage::getModel('inventorymanager/product');
-					$orderProduct->setData($productData)->save();
+					$existOrderProductColl = Mage::getModel('inventorymanager/product')->getCollection();
+					$existOrderProductColl->addFieldToFilter('po_id', $model->getId());
+					$existOrderProductColl->addFieldToFilter('main_product_id', $productId);
+					if($existOrderProductColl->count() > 0){
+						$existOrderProductObject = $existOrderProductColl->getFirstItem();
+						$orderProduct->setId($existOrderProductObject->getId());
+					}
+					$orderProduct->setData($productData);
+					$orderProduct->save();
+				}
+				if(isset($data['id'])){
+					$orderProduct = Mage::getModel('inventorymanager/product')->getCollection();
+					$orderProduct->addFieldToFilter('po_id', $model->getId());
+					$orderProduct->addFieldToFilter('main_product_id', array('nin' => $poProductIds));
+					foreach ($orderProduct as $orderP){
+						$orderP->delete();
+					}
 				}
 				$model->setOrderQty($tatalQty)->save();
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order was successfully saved'));

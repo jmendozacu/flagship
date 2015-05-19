@@ -29,7 +29,9 @@
 			<action method="addCss"><name>inventorymanager/style.css</name></action>
 		</reference>
 		<reference name="content">
-			<block type="inventorymanager/adminhtml_purchaseorder_orderedit" name="purchaseorder.edit" template="inventorymanager/orderedit.phtml" />
+			<block type="inventorymanager/adminhtml_purchaseorder_orderedit" name="purchaseorder.edit" template="inventorymanager/orderedit.phtml">
+				<block type="inventorymanager/adminhtml_purchaseorder_comment" name="purchaseorder.comment" template="inventorymanager/comment.phtml" />
+			</block>
 		</reference>
 	</inventorymanager_adminhtml_purchaseorder_orderedit>
 	
@@ -50,4 +52,15 @@
 			<block type="inventorymanager/adminhtml_purchaseorder_addproduct" name="purchaseorder.addproduct" template="inventorymanager/addproduct.phtml" />
 		</reference>
 	</inventorymanager_adminhtml_purchaseorder_getproductinfo>
+	
+	<inventorymanager_adminhtml_comment_refresh>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/adminhtml_purchaseorder_comment" name="purchaseorder.comment.refresh" template="inventorymanager/comment_refresh.phtml" />
+		</reference>
+	</inventorymanager_adminhtml_comment_refresh>
+	
+	
 </layout>

@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ecommerceguys_Inventorymanager>
-            <version>0.1.4</version>
+            <version>0.1.6</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
     <global>
@@ -23,6 +23,9 @@
                     <product>
                     	<table>inventorymanager_product</table>
                     </product>
+                     <comment>
+                    	<table>inventorymanager_pohistory</table>
+                    </comment>
                 </entities>
             </inventorymanager_resource>
         </models>
