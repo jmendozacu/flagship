@@ -18,6 +18,14 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Vendor_Edit_Tabs extends Ma
           'title'     => Mage::helper('inventorymanager')->__('Vendor Information'),
           'content'   => $this->getLayout()->createBlock('inventorymanager/adminhtml_vendor_edit_tab_form')->toHtml(),
       ));
+      
+      $this->addTab('products', array(
+          'label'     => Mage::helper('inventorymanager')->__('Vendor Products'),
+          'title'     => Mage::helper('inventorymanager')->__('Vendor Products'),
+          //'content'   => $this->getLayout()->createBlock('inventorymanager/adminhtml_vendor_edit_tab_products')->toHtml(),
+          'url'   	  => Mage::helper('adminhtml')->getUrl('*/*/products'),
+          'class'     => 'ajax',
+      ));
      
       return parent::_beforeToHtml();
   }
