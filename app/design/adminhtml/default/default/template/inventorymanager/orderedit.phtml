@@ -31,6 +31,10 @@
 						<span><span><span><?php echo $this->__("Save Order") ?></span></span></span>
 					</button>
 					
+					<button style="" onclick="$('save_back').value = 1; editForm.submit();" class="scalable save" type="button" title="<?php echo $this->__("Save and continue edit") ?>">
+						<span><span><span><?php echo $this->__("Save and continue edit") ?></span></span></span>
+					</button>
+					
 				</p>
 			</div>
 			<div class="entry-edit">
@@ -40,6 +44,7 @@
 						<?php if($this->getCurrentOrder()) { ?>
 							<input type="hidden" value="<?php echo $currentPurchaseOrder->getId() ?>" name="id" />
 						<?php } ?>
+						<input type="hidden" value="" id="save_back" name="back" />
 					</div>
 					<div id="purchaseorder_tabs_form_section_content">
 						<div class="entry-edit">

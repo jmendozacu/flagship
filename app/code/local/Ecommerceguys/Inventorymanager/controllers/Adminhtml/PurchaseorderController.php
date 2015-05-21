@@ -103,7 +103,7 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order was successfully saved'));
 				Mage::getSingleton('adminhtml/session')->setFormData(false);
 
-				if ($this->getRequest()->getParam('back')) {
+				if ($this->getRequest()->getParam('back') && $this->getRequest()->getParam('back') == 1) {
 					$this->_redirect('*/*/edit', array('id' => $model->getId()));
 					return;
 				}
