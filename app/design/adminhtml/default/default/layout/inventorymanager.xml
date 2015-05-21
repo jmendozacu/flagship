@@ -6,6 +6,9 @@
         </reference>
     </inventorymanager_adminhtml_vendor_index>
     
+    
+        
+    
     <inventorymanager_adminhtml_purchaseorder_index>
     	<reference name="content">
             <block type="inventorymanager/adminhtml_purchaseorder" name="purchaseorder" />
@@ -62,5 +65,28 @@
 		</reference>
 	</inventorymanager_adminhtml_comment_refresh>
 	
+	<inventorymanager_adminhtml_vendor_products>
+		<block type="core/text_list" name="root" output="toHtml">
+           <block type="inventorymanager/adminhtml_vendor_edit_tab_products" name="products.grid"/>
+           <block type="adminhtml/widget_grid_serializer" name="grid_serializer">
+               <reference name="grid_serializer">
+                   <action method="initSerializerBlock">
+                       <grid_block_name>products.grid</grid_block_name>
+                       <data_callback>getProductVals</data_callback>
+                       <hidden_input_name>links[products]</hidden_input_name>
+                       <reload_param_name>products</reload_param_name>
+                   </action>
+                   <!--<action method="addColumnInputName">
+                       <input_name>position</input_name>
+                   </action>-->                  
+               </reference>
+           </block>
+       </block>
+	</inventorymanager_adminhtml_vendor_products>
 	
+	<inventorymanager_adminhtml_vendor_productsgrid>
+		<block type="core/text_list" name="root" output="toHtml">
+            <block type="inventorymanager/adminhtml_vendor_edit_tab_products" name="products.grid"/>
+        </block>
+	</inventorymanager_adminhtml_vendor_productsgrid>
 </layout>

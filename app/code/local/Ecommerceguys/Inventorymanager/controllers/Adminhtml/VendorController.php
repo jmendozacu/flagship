@@ -51,7 +51,12 @@ class Ecommerceguys_Inventorymanager_Adminhtml_VendorController extends Mage_Adm
 	
 	public function saveAction() {
 		if ($data = $this->getRequest()->getPost()) {
-	  			
+			//print_r($data); exit;
+			if(isset($data['links'])){
+				$products = Mage::helper('adminhtml/js')->decodeGridSerializedInput($data['links']['products']); //Save the array to your database
+			}
+			
+			
 			$model = Mage::getModel('inventorymanager/vendor');		
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
@@ -65,6 +70,12 @@ class Ecommerceguys_Inventorymanager_Adminhtml_VendorController extends Mage_Adm
 				}	
 				
 				$model->save();
+				$vendorProductResource = Mage::getResourceModel('inventorymanager/vendor_products');
+				$vendorProductResource->remove($model->getId());
+				foreach ($products as $productId){
+					$vendorProductResource->insertOne(array('product_id'=>$productId, 'vendor_id'=>$model->getId()));
+				}
+				
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor was successfully saved'));
 				Mage::getSingleton('adminhtml/session')->setFormData(false);
 
@@ -124,5 +135,19 @@ class Ecommerceguys_Inventorymanager_Adminhtml_VendorController extends Mage_Adm
             }
         }
         $this->_redirect('*/*/index');
+    }
+    
+    public function productsAction(){
+    	$this->loadLayout();
+        $this->getLayout()->getBlock('products.grid')
+        ->setProducts($this->getRequest()->getPost('products', null));
+        $this->renderLayout();
+    }
+    
+    public function productsgridAction(){
+    	$this->loadLayout();
+        $this->getLayout()->getBlock('products.grid')
+        ->setProducts($this->getRequest()->getPost('products', null));
+        $this->renderLayout();
     }
 }
