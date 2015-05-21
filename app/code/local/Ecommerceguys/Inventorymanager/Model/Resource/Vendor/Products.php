@@ -1,5 +1,5 @@
 <?php
-class Ecommerceguys_Inventorymanager_Model_Resource_Vendor_Product extends Mage_Core_Model_Resource_Db_Abstract
+class Ecommerceguys_Inventorymanager_Model_Resource_Vendor_Products extends Mage_Catalog_Model_Resource_Abstract
 {
 	protected $_writeConn;
 	protected $_vendorProductTable;
@@ -11,20 +11,46 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor_Product extends Mage_
 		$this->_vendorProductTable = Mage::getSingleton('core/resource')->getTableName('inventorymanager_vendorproduct');
 	}
 	
-	public function delete($id){
-		if(is_array($id)){
-			$where = 'product_id in ('.implode(",", $id) . ')';
-		}else{
-			$where = 'product_id = ' .$id ;
+	public function remove($id,$field = ""){
+		if($field == ""){
+			$field = "vendor_id";
 		}
-		$this->_writeConn->delete($this->_vendorProductTable, $where);
+		if(is_array($id)){
+			$where = "$field in (".implode(",", $id) . ")";
+		}else{
+			$where = "$field = " .$id ;
+		}
+		try{
+			$this->_writeConn->delete($this->_vendorProductTable, $where);
+		}catch (Exception $e){
+			
+		}
 	}
 	
 	public function insertOne($insertVar){
-		$this->_writeConn->insert($this->_vendorProductTable, $insertVar);
+		try{
+			$this->_writeConn->insert($this->_vendorProductTable, $insertVar);
+		}catch (Exception $e){
+			
+		}
 	}
 	
 	public function insertMulti($insertVars){
-		$this->_writeConn->insertMultiple($this->_vendorProductTable, $insertVar);
+		try{
+			$this->_writeConn->insertMultiple($this->_vendorProductTable, $insertVar);
+		}catch (Exception $e){
+			
+		}
+	}
+	
+	public function getRecords($vendorId){
+		try {
+		$select = $this->_writeConn->select()
+                ->from($this->_vendorProductTable)
+                ->where("vendor_id = $vendorId");
+        return $this->_writeConn->fetchAll($select);
+		}catch (Exception $e){
+			
+		}
 	}
 }

@@ -72,7 +72,7 @@
                <reference name="grid_serializer">
                    <action method="initSerializerBlock">
                        <grid_block_name>products.grid</grid_block_name>
-                       <data_callback>getSelectedProducts</data_callback>
+                       <data_callback>getProductVals</data_callback>
                        <hidden_input_name>links[products]</hidden_input_name>
                        <reload_param_name>products</reload_param_name>
                    </action>
