@@ -16,13 +16,14 @@
 	</tr>
 </table>
 <table border="1" class="products-table">
-	<?php if($vendorProducts && $vendorProducts->count() > 0){ ?>
+	<?php if($vendorProducts && sizeof($vendorProducts) > 0){ ?>
 		<tr class="heads">
 			<td><?php echo $this->__("Id") ?></td>
 			<td><?php echo $this->__("Name") ?></td>
 			<td><?php echo $this->__("Sku") ?></td>
 		</tr>
-		<?php  foreach ($vendorProducts as $product){?>
+		<?php  foreach ($vendorProducts as $productData){?>
+		<?php $product = Mage::getModel('catalog/product')->load($productData['entity_id']) ?>
 			<tr>
 				<td><?php echo $product->getId() ?></td>
 				<td><?php echo $product->getName() ?></td>
