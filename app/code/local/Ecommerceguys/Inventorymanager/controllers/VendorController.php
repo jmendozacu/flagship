@@ -41,7 +41,12 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
 	
 	
 	public function indexAction(){
-		
+		if (!$this->_getSession()->isLoggedIn()) {
+            $this->_redirect('*/*/login');
+            return;
+        }
+		$this->loadLayout();
+		$this->renderLayout();
 	}
 	
 	public function loginAction(){
@@ -96,6 +101,13 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
                 $coreSession->addError($this->__('Login and password are required.'));
             }
         }
+        $this->_redirect('*/*/login');
+	}
+	
+	public function logoutAction(){
+		$this->_getSession()->logout()
+            ->renewSession();
+
         $this->_redirect('*/*/login');
 	}
 }
