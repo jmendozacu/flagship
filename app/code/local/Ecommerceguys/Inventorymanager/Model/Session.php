@@ -97,7 +97,7 @@ class Ecommerceguys_Inventorymanager_Model_Session extends Mage_Core_Model_Sessi
     {
         $this->setId(null);
         $this->getCookie()->delete($this->getSessionName());
-        Mage::getSingleton('core/session')->getVendor(new Verien_Object());
+        Mage::getSingleton('core/session')->setVendor("");
         return $this;
     }
 
