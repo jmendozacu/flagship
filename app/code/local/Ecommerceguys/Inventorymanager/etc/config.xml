@@ -5,6 +5,24 @@
             <version>0.1.7</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
+    <frontend>
+        <routers>
+            <inventorymanager>
+                <use>standard</use>
+                <args>
+                    <module>Ecommerceguys_Inventorymanager</module>
+                    <frontName>inventorymanager</frontName>
+                </args>
+            </inventorymanager>
+        </routers>
+        <layout>
+            <updates>
+                <inventorymanager>
+                    <file>inventorymanager.xml</file>
+                </inventorymanager>
+            </updates>
+        </layout>
+    </frontend>
     <global>
     	<models>
             <inventorymanager>
