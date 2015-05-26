@@ -1,0 +1,38 @@
+<div class="logout">
+	<a href="<?php echo $this->getUrl('inventorymanager/vendor/logout') ?>"><?php echo $this->__("Logout") ?></a>
+</div>
+<?php $vendorProducts = $this->getVendorProducts() ?>
+<?php $vender = $this->getCurrentVendor(); ?>
+<h2><?php echo $this->__("Vendor Products") ?></h2>
+<table class="vendor-table">
+	<tr>
+		<td><?php echo $this->__("Vendor Name") ?>&nbsp;:&nbsp;</td>
+		<td><?php echo $vender->getName() ?></td>
+	</tr>
+	
+	<tr>
+		<td><?php echo $this->__("Vendor Email") ?>&nbsp;:&nbsp;</td>
+		<td><?php echo $vender->getEmail() ?></td>
+	</tr>
+</table>
+<table border="1" class="products-table">
+	<?php if($vendorProducts && sizeof($vendorProducts) > 0){ ?>
+		<tr class="heads">
+			<td><?php echo $this->__("Id") ?></td>
+			<td><?php echo $this->__("Name") ?></td>
+			<td><?php echo $this->__("Sku") ?></td>
+		</tr>
+		<?php  foreach ($vendorProducts as $productData){?>
+		<?php $product = Mage::getModel('catalog/product')->load($productData['entity_id']) ?>
+			<tr>
+				<td><?php echo $product->getId() ?></td>
+				<td><?php echo $product->getName() ?></td>
+				<td><?php echo $product->getSku() ?></td>
+			</tr>
+		<?php } ?>
+	<?php }else{ ?>
+		<tr>
+			<td><?php echo $this->__("No Products found") ?></td>
+		</tr>
+	<?php } ?>
+</table>
