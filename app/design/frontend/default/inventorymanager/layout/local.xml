@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
 	<default>
-		<action method="addCss"><stylesheet>css/bootstrap.css</stylesheet></action>
-		<action method="addCss"><stylesheet>css/font-awesome.css</stylesheet></action>
-		<action method="addCss"><stylesheet>js/morris/morris-0.4.3.min.css</stylesheet></action>
-		<action method="addCss"><stylesheet>css/custom.css</stylesheet></action>
+		<reference name="head">
+			<action method="addCss"><stylesheet>css/bootstrap.css</stylesheet></action>
+			<action method="addCss"><stylesheet>css/font-awesome.css</stylesheet></action>
+			<action method="addCss"><stylesheet>js/morris/morris-0.4.3.min.css</stylesheet></action>
+			<action method="addCss"><stylesheet>css/custom.css</stylesheet></action>
+		</reference>
 	</default>
 </layout>

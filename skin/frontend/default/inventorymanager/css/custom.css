@@ -376,4 +376,37 @@ line-height: 1.428571429;
    
 }
 
+/**********************/
+.validation-advice{
+	color:red;
+}
+.login-form { width:400px; }
+.navbar-side {
+	background-color:#000;
+	min-height:1250px;
+}
+.vendor-info-table{
+	width:100%;
+}
+.vendor-info-table td{
+	color:#fff;
+}
+.products-table{
+	width:100%;
+}
 
+.products-table td {
+	padding:5px;
+}
+.products-table .heads td {
+	font-weight:bold;
+}
+div.logout{
+	padding:5px;
+	border:1px solid;
+	margin:5px 0;
+	text-align:right;
+}
+.vendor-table td{
+	padding:5px;
+}
