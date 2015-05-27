@@ -36,11 +36,13 @@ Default layout, loads most of the pages
 
             <block type="page/html_head" name="head" as="head">
             	<action method="addItem"><type>skin_js</type><name>js/jquery-1.10.2.js</name></action>
-            	<action method="addItem"><type>skin_js</type><name>js/noconfict.js</name></action>
+            	
             	<action method="addItem"><type>skin_js</type><name>js/bootstrap.min.js</name></action>
             	<action method="addItem"><type>skin_js</type><name>js/jquery.metisMenu.js</name></action>
+            	<action method="addItem"><type>skin_js</type><name>js/morris/raphael-2.1.0.min.js</name></action>
             	<action method="addItem"><type>skin_js</type><name>js/morris/morris.js</name></action>
-            	<action method="addItem"><type>skin_js</type><name>js/custom.js</name></action>
+            	<action method="addItem"><type>skin_js</type><name>js/noconfict.js</name></action>
+            	<!--<action method="addItem"><type>skin_js</type><name>js/custom.js</name></action>-->
             	
             	
                 <action method="addJs"><script>prototype/prototype.js</script></action>

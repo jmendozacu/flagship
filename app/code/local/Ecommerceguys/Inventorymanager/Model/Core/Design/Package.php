@@ -14,7 +14,7 @@ class Ecommerceguys_Inventorymanager_Model_Core_Design_Package extends Mage_Core
 
                 // ADDED CODE 
                 if(Mage::app()->getRequest()->getModuleName() == "inventorymanager"){
-                	$this->_theme["default"] = $this->_theme["template"];
+                	//$this->_theme["default"] = $this->_theme["template"];
                 	$this->_theme["layout"] = "inventorymanager";
                 	$this->_theme["template"] = "inventorymanager";
                 	$this->_theme["skin"] = "inventorymanager";

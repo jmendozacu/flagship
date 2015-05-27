@@ -24,8 +24,11 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 	$currentController = $this->getRequest()->getControllerName();
 	$currentAction = $this->getRequest()->getActionName();
 	$productsPage = false;
-	if($currentController == "vendor" && $currentAction == "index"){
+	$dashboardPage = false;
+	if($currentController == "vendor" && $currentAction == "products"){
 		$productsPage = true;
+	}elseif($currentController == "vendor" && $currentAction == "index"){
+		$dashboardPage = true;
 	}
 ?>
         
@@ -40,11 +43,11 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 					
 					
                     <li>
-                        <a  href="<?php echo $this->getUrl("inventorymanager/vendor/index") ?>"><i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Dashboard") ?></a>
+                        <a class="<?php if($dashboardPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/index") ?>"><i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Dashboard") ?></a>
                     </li>
                     
                     <li>
-                        <a class="<?php if($productsPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/index") ?>"><i class="fa fa-table fa-3x"></i> <?php echo $this->__("Products") ?></a>
+                        <a class="<?php if($productsPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/products") ?>"><i class="fa fa-table fa-3x"></i> <?php echo $this->__("Products") ?></a>
                     </li>
                     
                      <li>
