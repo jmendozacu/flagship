@@ -26,4 +26,13 @@
 			<block type="inventorymanager/vendor_dashboard" name="vendor.dashboard" template="inventorymanager/dashboard.phtml" />
 		</reference>
 	</inventorymanager_vendor_index>
+	
+	<inventorymanager_vendor_product_edit>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_product_edit" name="vendor.product.edit" template="inventorymanager/product/edit.phtml" />
+		</reference>
+	</inventorymanager_vendor_product_edit>
 </layout>
