@@ -49,9 +49,16 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
 		$this->renderLayout();
 	}
 	
+	public function productsAction(){
+		if (!$this->_getSession()->isLoggedIn()) {
+            $this->_redirect('*/*/login');
+            return;
+        }
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
 	public function loginAction(){
-		
-		//print_r($this->_getSession()->getVendor()->getData()); exit;
 		
 		if ($this->_getSession()->isLoggedIn()) {
 		

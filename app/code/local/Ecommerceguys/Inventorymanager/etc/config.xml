@@ -25,6 +25,11 @@
     </frontend>
     <global>
     	<models>
+    		<core>
+    			<rewrite>
+    				<design_package>Ecommerceguys_Inventorymanager_Model_Core_Design_Package</design_package>
+    			</rewrite>
+    		</core>
             <inventorymanager>
                 <class>Ecommerceguys_Inventorymanager_Model</class>
                 <resourceModel>inventorymanager_resource</resourceModel>
