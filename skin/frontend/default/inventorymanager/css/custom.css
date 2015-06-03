@@ -410,3 +410,7 @@ div.logout{
 .vendor-table td{
 	padding:5px;
 }
+.btn-fileupload{
+	margin-top:5px;
+	float:left;
+}
