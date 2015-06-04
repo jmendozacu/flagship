@@ -11,13 +11,16 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
-			<div class="panel-heading">
-				<?php echo $this->__("Mofify Product Information") ?>	
+			<div class="panel-heading" id="main-tab" >
+				<?php echo $this->__("Product Information") ?>	
 			</div>
-			<div class="panel-body">
+			<div class="panel-body" id="main-tab-content">
 				<div class="row">
 					<div class="col-md-12">
 						<form>
+							<div class="no-display">
+								<input type="hidden" name="file" id="uploaded_file" />
+							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Description") ?></label>
 								<textarea name="description" class="required-entry form-control"></textarea>
@@ -65,8 +68,25 @@
 				</div>
 			</div>
 		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" id="drow-tab" >
+				<?php echo $this->__("Drawings") ?>	
+			</div>
+			<div class="drow-tab-content" id="drow-tab-content">
+				<?php echo $this->getChildHtml("product.emage.upload") ?>
+			</div>
+		</div>
 	</div>
 </div>
 <script>
-
+	$('main-tab').observe('click', function(){
+		$('main-tab-content').fade({from: 0,to: 1, afterFinish: function(){ $('main-tab-content').show(); }});
+		$('drow-tab-content').fade({from: 1,to: 0, afterFinish: function(){ $('drow-tab-content').hide(); }});
+	});
+	
+	$('drow-tab').observe('click', function(){
+		$('main-tab-content').fade({from: 1,to: 0, afterFinish: function(){ $('main-tab-content').hide(); }});
+		$('drow-tab-content').fade({from: 0,to: 1, afterFinish: function(){ $('drow-tab-content').show(); }});
+	});
+	$('drow-tab-content').hide();
 </script>

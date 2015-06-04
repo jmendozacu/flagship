@@ -1,0 +1,43 @@
+<?php /* <form id="upload" method="post" action="<?php echo $this->getUrl("inventorymanager/vendor_product/upload") ?>" enctype="multipart/form-data">
+	<div id="drop">Drop Here
+		<a>Browse</a>
+		<input type="file" name="upl" multiple />
+	</div>
+	<ul>
+		<!-- The file uploads will be shown here -->
+	</ul>
+</form>
+*/ ?>
+<div class="panel-body">
+	<form id="file_upload_form" method="post" enctype="multipart/form-data" action="<?php echo $this->getUrl("inventorymanager/vendor_product/upload") ?>">
+	<div class="btn-fileupload">
+		<input name="upl" class="btn-default " id="upl" size="27" type="file" />
+		<div class="validation-advice" id="advice-required-entry-upl"></div>
+	</div>
+	<button type="submit" name="action" class="btn btn-default"><?php echo $this->__("Upload") ?></button>
+	
+	<iframe id="upload_target" name="upload_target" src="" style="width:0;height:0;border:0px solid #fff;"></iframe>
+	</form>
+	<div id="message">
+	</div>
+</div>
+<script>
+function init() {
+	document.getElementById('file_upload_form').onsubmit=function() {
+		
+		if($('upl').value != ""){
+			document.getElementById('file_upload_form').target = 'upload_target'; //'upload_target' is the name of the iframe
+			$('uploaded_file').value = $('upl').value;
+			displayfile($('upl').value);
+		}else{
+			$('advice-required-entry-upl').innerHTML = "<?php echo $this->__("Please select a file") ?>";
+			return false;
+		}
+	}
+}
+
+function displayfile(file){
+	$('message').innerHTML += '<div class="">'+ file +'</div>';
+}
+window.onload=init;
+</script>
