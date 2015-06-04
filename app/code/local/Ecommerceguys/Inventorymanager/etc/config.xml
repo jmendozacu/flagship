@@ -49,6 +49,9 @@
                      <comment>
                     	<table>inventorymanager_pohistory</table>
                     </comment>
+                    <vendor_productinfo>
+                    	<table>inventorymanager_vendor_productdetail</table>
+                    </vendor_productinfo>
                 </entities>
             </inventorymanager_resource>
         </models>
