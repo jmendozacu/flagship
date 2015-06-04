@@ -1,5 +1,6 @@
 <?php
 	$_product = $this->getCurrentProduct();
+	$_vendor = $this->getCurrentVendor();
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -8,6 +9,7 @@
 	</div>
 </div>
 <hr>
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
@@ -17,9 +19,12 @@
 			<div class="panel-body" id="main-tab-content">
 				<div class="row">
 					<div class="col-md-12">
-						<form>
+						<?php echo $this->getMessagesBlock()->toHtml() ?>
+						<form id="vendor-product-form" action="<?php echo $this->getUrl("inventorymanager/vendor_product/saveProeductinfo") ?>" method="POST">
 							<div class="no-display">
 								<input type="hidden" name="file" id="uploaded_file" />
+								<input type="hidden" name="product_id" id="product_id" value="<?php echo $_product->getId() ?>" />
+								<input type="hidden" name="vendor_id" id="vendor_id" value="<?php echo $_vendor->getId() ?>" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Description") ?></label>
@@ -27,7 +32,7 @@
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Cost") ?></label>
-								<input type="text" class="required-entry form-control" name="cost" />
+								<input type="text" class="required-entry validate-number form-control" name="cost" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Length") ?></label>
@@ -43,7 +48,7 @@
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Fun Specs") ?></label>
-								<input type="text" class="required-entry form-control" name="fun_specs" />
+								<input type="text" class="required-entry form-control" name="fun_spec" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Material") ?></label>
@@ -55,7 +60,7 @@
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Lighting") ?></label>
-								<select class="required-entry form-control" name="material">
+								<select class="required-entry form-control" name="lighting">
 									<option value="1"><?php echo $this->__("Led 1w") ?></option>
 									<option value="2"><?php echo $this->__("Led 2w") ?></option>
 									<option value="3"><?php echo $this->__("Led 3w") ?></option>
@@ -89,4 +94,7 @@
 		$('drow-tab-content').fade({from: 0,to: 1, afterFinish: function(){ $('drow-tab-content').show(); }});
 	});
 	$('drow-tab-content').hide();
+</script>
+<script>
+	var dataForm = new VarienForm('vendor-product-form', true);
 </script>
