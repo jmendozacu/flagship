@@ -19,19 +19,11 @@ CREATE TABLE {$this->getTable('inventorymanager_vendor_productdetail')} (
   `fun_spec` varchar(255) NOT NULL default '',
   `material` smallint(6) NOT NULL default 0,
   `lighting` smallint(6) NOT NULL default 0,
+  `files` text NOT NULL default '',
   `created_time` datetime NULL,
+  `updated_time` datetime NULL,
   PRIMARY KEY (`entity_id`)
 ) ENGINE=nuInnoDB DEFAULT CHARSET=utf8;
-
-
--- DROP TABLE IF EXISTS {$this->getTable('inventorymanager_vendor_productdrawings')};
-CREATE TABLE {$this->getTable('inventorymanager_vendor_productdrawings')} (
-  `drawing_id` int(11) unsigned NOT NULL auto_increment,
-  `entity_id` int(11) unsigned NOT NULL default 0,
-  `file_name` varchar(255) NOT NULL default '',
-  PRIMARY KEY (`drawing_id`)
-) ENGINE=nuInnoDB DEFAULT CHARSET=utf8;
-
 
 
     ");
