@@ -36,7 +36,7 @@
 		</reference>
 		<reference name="content">
 			<block type="inventorymanager/vendor_product_edit" name="vendor.product.edit" template="inventorymanager/product/edit.phtml" >
-				<block type="core/template" name="product.emage.upload" template="inventorymanager/product/upload.phtml" />
+				<block type="inventorymanager/vendor_product_file" name="product.emage.upload" template="inventorymanager/product/upload.phtml" />
 			</block>
 		</reference>
 	</inventorymanager_vendor_product_edit>
