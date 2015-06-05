@@ -55,7 +55,7 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 	
 	public function downloadAction(){
 		$fileName = $this->getRequest()->getParam('file','');
-		$filepath = "D:/wamp/www/prolinestores/prolinehoods/media/uploads/".$fileName;
+		$filepath = Mage::getBaseDir('media')."/uploads/".$fileName;
 		header("Cache-Control: public");
 		header("Content-Description: File Transfer");
 		header("Content-Disposition: attachment; filename=$filepath");

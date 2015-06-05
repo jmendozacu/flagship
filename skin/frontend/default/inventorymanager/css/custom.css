@@ -414,3 +414,5 @@ div.logout{
 	margin-top:5px;
 	float:left;
 }
+#drow-tab { cursor:pointer; }
+#main-tab { cursor:pointer; }

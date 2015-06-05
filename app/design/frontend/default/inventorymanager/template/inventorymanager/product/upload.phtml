@@ -5,6 +5,7 @@
 	<div class="drow-tab-content" id="drow-tab-content">
 		<div class="panel-body">
 			<?php $files = $this->getFiles(); ?>
+			<?php if(sizeof($files) > 0) { ?>
 			<div class="table-responsive">
 				<table class="table table-striped table-bordered table-hover">
 					<thead>
@@ -25,7 +26,7 @@
 					</tbody>
 				</table>
 			</div>
-		
+			<?php } ?>
 			<form id="file_upload_form" method="post" enctype="multipart/form-data" action="<?php echo $this->getUrl("inventorymanager/vendor_product/upload") ?>">
 				<div class="btn-fileupload">
 					<input name="upl" class="btn-default " id="upl" size="27" type="file" />
