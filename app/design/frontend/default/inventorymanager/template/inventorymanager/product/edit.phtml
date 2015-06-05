@@ -28,42 +28,44 @@
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Description") ?></label>
-								<textarea name="description" class="required-entry form-control"></textarea>
+								<textarea name="description" class="required-entry form-control"> <?php echo $this->getProductInfoDescription(); ?> </textarea>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Cost") ?></label>
-								<input type="text" class="required-entry validate-number form-control" name="cost" />
+								<input type="text" class="required-entry validate-number form-control" name="cost" value="<?php echo $this->getProductInfoCost() ?>" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Length") ?></label>
-								<input type="text" class="required-entry form-control" name="length" />
+								<input type="text" class="required-entry form-control" name="length" value="<?php echo $this->getProductInfoLength(); ?>" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Width") ?></label>
-								<input type="text" class="required-entry form-control" name="width" />
+								<input type="text" class="required-entry form-control" name="width" value="<?php echo $this->getProductInfoWidth() ?>" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Hight") ?></label>
-								<input type="text" class="required-entry form-control" name="height" />
+								<input type="text" class="required-entry form-control" name="height" value="<?php echo $this->getProductInfoHeight(); ?>" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Fun Specs") ?></label>
-								<input type="text" class="required-entry form-control" name="fun_spec" />
+								<input type="text" class="required-entry form-control" name="fun_spec" value="<?php echo $this->getProductInfoFunSpec() ?>" />
 							</div>
+							<?php $_material = $this->getProductInfoMaterial(); ?>
 							<div class="form-group">
 								<label><?php echo $this->__("Material") ?></label>
 								<select class="required-entry form-control" name="material">
-									<option value="3"><?php echo $this->__("30") ?></option>
-									<option value="4"><?php echo $this->__("40") ?></option>
-									<option value="5"><?php echo $this->__("50") ?></option>
+									<option value="3" <?php echo $_material==3?'selected="selected"':''; ?>><?php echo $this->__("30") ?></option>
+									<option value="4" <?php echo $_material==4?'selected="selected"':''; ?>><?php echo $this->__("40") ?></option>
+									<option value="5" <?php echo $_material==5?'selected="selected"':''; ?>><?php echo $this->__("50") ?></option>
 								</select>
 							</div>
+							<?php $_lighting = $this->getProductInfoLighting(); ?>
 							<div class="form-group">
 								<label><?php echo $this->__("Lighting") ?></label>
 								<select class="required-entry form-control" name="lighting">
-									<option value="1"><?php echo $this->__("Led 1w") ?></option>
-									<option value="2"><?php echo $this->__("Led 2w") ?></option>
-									<option value="3"><?php echo $this->__("Led 3w") ?></option>
+									<option value="1" <?php echo $_lighting==1?'selected="selected"':''; ?>><?php echo $this->__("Led 1w") ?></option>
+									<option value="2" <?php echo $_lighting==2?'selected="selected"':''; ?>><?php echo $this->__("Led 2w") ?></option>
+									<option value="3" <?php echo $_lighting==3?'selected="selected"':''; ?>><?php echo $this->__("Led 3w") ?></option>
 								</select>
 							</div>
 							<button class="btn btn-default" type="submit"><?php echo $this->__("Save") ?></button>
@@ -73,14 +75,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading" id="drow-tab" >
-				<?php echo $this->__("Drawings") ?>	
-			</div>
-			<div class="drow-tab-content" id="drow-tab-content">
-				<?php echo $this->getChildHtml("product.emage.upload") ?>
-			</div>
-		</div>
+		<?php echo $this->getChildHtml("product.emage.upload") ?>	
 	</div>
 </div>
 <script>
@@ -96,5 +91,5 @@
 	$('drow-tab-content').hide();
 </script>
 <script>
-	var dataForm = new VarienForm('vendor-product-form', true);
+	var dataForm = new VarienForm('vendor-product-form', false);
 </script>
