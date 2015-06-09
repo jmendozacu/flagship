@@ -30,6 +30,35 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 	
 	public function saveProeductinfoAction(){
 		if($data = $this->getRequest()->getPost()){
+			$data['description'] = trim($data['description']);
+			if($activeObject  = $this->getProductInfoModel()->getActiveObject($data['vendor_id'], $data['product_id'])){
+				// only enters in this condition if active object found
+				
+				$activeObjectData = $activeObject->getData();
+				// modify active array elements to compare with post data
+				$activeObjectData['file'] = implode(",", Mage::helper('core')->jsonDecode($activeObjectData['files'])).",";
+				$activeObjectData['description'] = trim($activeObjectData['description']);
+				unset($activeObjectData['entity_id']);
+				unset($activeObjectData['created_time']);
+				unset($activeObjectData['updated_time']);
+				unset($activeObjectData['is_revision']);
+				unset($activeObjectData['files']);
+				
+				//echo "POST DATA<br/>";
+				//print_r($data);
+				//echo "OBJ DATA<br/>";
+				//print_r($activeObjectData);
+				
+				$difference = array_diff($data, $activeObjectData);
+				if(sizeof($difference) <= 0){
+					// if no change done then nothing to do
+					Mage::getSingleton('core/session')->addSuccess($this->__("Product Information updated successfully"));
+					$this->_redirect("*/*/edit", array('id'=>$data['product_id']));
+					return $this;
+				}
+				//print_r($difference); 
+			}			
+			$this->getProductInfoModel()->setRevision($data['vendor_id'], $data['product_id']);
 			
 			$files = explode(",",$data['file']);
 			$files = array_filter($files);
@@ -37,7 +66,7 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 				$jsonFiles = Mage::helper('core')->jsonEncode($files);
 				$data['files'] = $jsonFiles;
 			}
-			$vendorProduct = Mage::getModel('inventorymanager/vendor_productinfo');
+			$vendorProduct = $this->getProductInfoModel();
 			$vendorProduct->setData($data);
 			$vendorProduct->setCreatedTime(now());
 			try {
@@ -45,10 +74,10 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 				Mage::getSingleton('core/session')->addSuccess($this->__("Product Information updated successfully"));
 				
 			}catch (Exception $e){
-				Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+				Mage::getSingleton('core/session')->addError($e->getMessage());
 			}
 		}else{
-			Mage::getSingleton('adminhtml/session')->addError($this->__("Something went wrong"));
+			Mage::getSingleton('core/session')->addError($this->__("Something went wrong"));
 		}
 		$this->_redirect("*/*/edit", array('id'=>$data['product_id']));
 	}
@@ -66,5 +95,32 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 		
 		readfile($filepath);
 	    exit;
+	}
+	
+	public function getProductInfoModel(){
+		return Mage::getModel('inventorymanager/vendor_productinfo');
+	}
+	
+	public function showrevisionAction(){
+		$this->loadLayout();
+		$this->_initLayoutMessages('core/session');
+		$this->renderLayout();
+	}
+	
+	public function loadRevisionAction(){
+		$revisionId = $this->getRequest()->getParam("revision_id");
+		if($revisionId && $revisionId>0){
+			try {
+				$revisionObject = $this->getProductInfoModel()->load($revisionId);
+				$this->getProductInfoModel()->setRevision($revisionObject->getVendorId(), $revisionObject->getProductId());
+				$revisionObject->setIsRevision(0)->save();
+				Mage::getSingleton('core/session')->addSuccess($this->__("Revision set successfullly"));
+			}catch (Exception $e){
+				Mage::getSingleton('core/session')->addError($e->getMessage());
+			}
+		}else{
+			Mage::getSingleton('core/session')->addError($this->__("Something went wrong"));
+		}
+		$this->_redirect("*/*/edit", array('id'=>$revisionObject->getProductId()));
 	}
 }

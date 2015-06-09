@@ -18,6 +18,7 @@ class Ecommerceguys_Inventorymanager_Block_Vendor_Product_Edit extends Mage_Core
 		$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
 		$productInfoCollection->addFieldToFilter("product_id", $productId);
 		$productInfoCollection->addFieldToFilter("vendor_id", $vendorId);
+		$productInfoCollection->addFieldToFilter("is_revision", 0);
 		
 		if($productInfoCollection->count() > 0){
 			return $productInfoCollection->getFirstItem();

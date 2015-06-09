@@ -68,14 +68,21 @@
 									<option value="3" <?php echo $_lighting==3?'selected="selected"':''; ?>><?php echo $this->__("Led 3w") ?></option>
 								</select>
 							</div>
-							<button class="btn btn-default" type="submit"><?php echo $this->__("Save") ?></button>
-							<button class="btn btn-primary" type="reset"><?php echo $this->__("Reset") ?></button>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-		<?php echo $this->getChildHtml("product.emage.upload") ?>	
+		<?php echo $this->getChildHtml("product.image.upload") ?>
+		<div class="panel panel-default">
+			<div>
+				<div class="panel-body">
+					<button class="btn btn-default" id="productinfo-submit-button" type="button"><?php echo $this->__("Save") ?></button>
+					<button class="btn btn-primary" id="productinfo-reset-button" type="button"><?php echo $this->__("Reset") ?></button>
+				</div>
+			</div>
+		</div>
+		<?php echo $this->getChildHtml("product.revision.list") ?>
 	</div>
 </div>
 <script>
@@ -92,4 +99,13 @@
 </script>
 <script>
 	var dataForm = new VarienForm('vendor-product-form', false);
+</script>
+<script>
+	$("productinfo-submit-button").observe("click", function(){
+		dataForm.form.submit();
+	});
+	$("productinfo-reset-button").observe("click", function(){
+		$("vendor-product-form").reset();
+		Form.reset('vendor-product-form');
+	});
 </script>

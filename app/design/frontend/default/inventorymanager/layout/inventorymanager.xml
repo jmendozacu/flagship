@@ -36,8 +36,22 @@
 		</reference>
 		<reference name="content">
 			<block type="inventorymanager/vendor_product_edit" name="vendor.product.edit" template="inventorymanager/product/edit.phtml" >
-				<block type="inventorymanager/vendor_product_file" name="product.emage.upload" template="inventorymanager/product/upload.phtml" />
+				<block type="inventorymanager/vendor_product_file" name="product.image.upload" template="inventorymanager/product/upload.phtml" />
+				<block type="inventorymanager/vendor_product_revisionlist" name="product.revision.list" template="inventorymanager/product/revision_list.phtml" />
 			</block>
 		</reference>
 	</inventorymanager_vendor_product_edit>
+	<inventorymanager_vendor_product_showrevision>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_product_revision" name="vendor.product.revision" template="inventorymanager/product/revision.phtml" >
+				
+			</block>
+		</reference>
+	</inventorymanager_vendor_product_showrevision>
 </layout>
