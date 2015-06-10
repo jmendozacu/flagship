@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>       
+	    <Ecommerceguys_Inventorymanager>
+	        <active>true</active>
+            <codePool>local</codePool>
+	    </Ecommerceguys_Inventorymanager>  
+    </modules>
+</config>

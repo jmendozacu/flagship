@@ -1,0 +1,30 @@
+
+<section class="slider">
+<div class="flexslider">
+  <ul class="slides">
+    <li> <a href="#"><img src="<?php echo $this->getSkinUrl('images/banner1.jpg');?>"/> </li>
+    <li> <a href="#"><img src="<?php echo $this->getSkinUrl('images/banner2.jpg');?>"/> </li>
+    <li> <a href="#"><img src="<?php echo $this->getSkinUrl('images/banner3.jpg');?>"/> </li>
+    <li> <a href="#"><img src="<?php echo $this->getSkinUrl('images/banner4.jpg');?>"/> </li>
+	 <li> <a href="#"><img src="<?php echo $this->getSkinUrl('images/banner5.jpg');?>"/> </li>
+	  <li> <a href="#"><img src="<?php echo $this->getSkinUrl('images/banner6.jpg');?>"/> </li>
+  </ul>
+</div>
+</section>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.flexslider.js') ?>"></script>
+<script type="text/javascript">
+  var $j = jQuery.noConflict();
+    $j(function(){
+      SyntaxHighlighter.all();
+    });
+    $j(window).load(function(){
+      $j('.flexslider').flexslider({
+        animation: "fade",
+        start: function(slider){
+          $j('body').removeClass('loading');
+        }
+      });
+    });
+  </script>
+<div style=" clear:both"></div>

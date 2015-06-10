@@ -48,6 +48,8 @@
     <div class="page">
         <?php echo $this->getChildHtml('header') ?>
         <div class="main-container col2-left-layout">
+        
+        <div class="innerwrapper">
             <div class="main">
                 <?php echo $this->getChildHtml('breadcrumbs') ?>
                 <?php // This left_first block will display above the main content on smaller viewports ?>
@@ -59,6 +61,7 @@
                     <?php echo $this->getChildHtml('content') ?>
                 </div>
                 <div class="col-left sidebar"><?php echo $this->getChildHtml('left') ?></div>
+            </div>
             </div>
         </div>
         <?php echo $this->getChildHtml('footer_before') ?>

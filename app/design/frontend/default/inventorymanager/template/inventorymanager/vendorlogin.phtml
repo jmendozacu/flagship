@@ -1,0 +1,22 @@
+<div>
+	<div class="login-form">
+		<?php echo $this->getMessagesBlock()->toHtml() ?>
+		<form action="<?php echo $this->getUrl('inventorymanager/vendor/loginpost') ?>" id="vendor-form" method="POST">
+			<h3><?php echo $this->__("Vendor Login") ?></h3>
+			<div class="form-group">
+				<label><?php echo $this->__("Username")  ?></label>
+				<input type="text" class="required-entry form-control input-sm input-text" name="username" />
+			</div>
+			<div class="form-group">
+				<label><?php echo $this->__("Password")  ?></label>
+				<input type="password" class="required-entry form-control input-sm input-text" name="password" />
+			</div>
+			<div class="form-group">
+				<input type="submit" class="btn btn-default" value="<?php echo $this->__("Login") ?>" />
+			</div>
+		</form>
+		<script>
+			var dataForm = new VarienForm('vendor-form', true);
+		</script>
+	</div>
+</div>
