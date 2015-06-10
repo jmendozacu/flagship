@@ -3507,8 +3507,9 @@ a.skip-link {
   display: block;
   color: #636363;
   line-height: 30px;
-  font-family: "Raleway", "Helvetica Neue", Verdana, Arial, sans-serif;
+  font-family: "Raleway", "Helvetica Neue", Verdana, Arial, sans-serif; 
 }
+li.level1 a{ padding:3px 0}
 .nav-primary li {
   position: relative;
 }
@@ -3594,7 +3595,7 @@ a.skip-link {
   }
   .nav-primary li.level0,
   .nav-primary a.level0 {
-    display: inline-block;
+    display: inline-block; padding:3px 0
   }
   .nav-primary li:last-child > a {
     border-bottom: none;
@@ -3604,22 +3605,21 @@ a.skip-link {
     color: #3399cc;
   }
   .nav-primary .menu-active {
-    z-index: 200;
-  }
+    z-index: 200; background-color:#4c4c4c !important; color:#fff 
+  } .nav-primary .menu-active a{color:#fff !important }
+  li.level1 a.level1 :hover{color:#c6c6c6 !important }
   .nav-primary li.level0 ul {
-    background: #FBFBFB;
-    border: solid 1px #cccccc;
-    position: absolute;
-    left: 0;
-    top: 30px;
-    /* Height of ".nav-primary a.level0" */
-    z-index: 10;
-    width: 250px;
-    padding-left: 10px;
-    padding-right: 10px;
+     background: #4c4c4c none repeat scroll 0 0;
+    border: 1px solid #4c4c4c;
     display: none;
+    left: 0;
+    padding: 10px;
+    position: absolute;
+    top: 26px;
+    width: 250px;
+    z-index: 10;
     /* Hide until displayed. */
-  }
+  }.nav-primary li.level0 ul li a{ color:#fff !important}
   .nav-primary li.level1 ul {
     left: 60px;
     top: 15px;
@@ -10635,14 +10635,14 @@ div.calendar table td.button {
 .delivery_banner {
     background-color: #2373c8;
     color: #fff;
-    font-size: 30px;
+    font-size: 15px;
     line-height: 50px;
     margin-bottom: -15px;
     margin-top: 10px;
     position: relative;
     text-align: center;
-    z-index: 10;
-}p.banner{ margin-top:-20px; text-align:center}
+    z-index: 10; text-transform:uppercase}
+	p.banner{ margin-top:-20px; text-align:center}
 
 .topgraysection_wrapper{  background-color: #1c1c1c;}
 .desktopmenu{ float:right;}
@@ -10663,14 +10663,25 @@ div.calendar table td.button {
 .satisfaction-category .satisfaction{ width:25%; background-color:#00237e; min-height:260px; float:left; text-align:center}
 .satisfaction-category .secondsection{ width:25%; background-color:#00237e; min-height:260px; float:right !important; text-align:center}
 .satisfaction-category .satisfaction img{ padding:10px; text-align:center}
-.satisfaction-category .categorysection.second{ margin-right:0.5% !important; margin-left:0 !important}
+.satisfaction-category .categorysection.second{ margin-right:0.5% !important; margin-left:0 !important; width:100%}
+.satisfaction-category .categorysection.second li{ width:20%} 
 .phoneimg{}
 .satisfaction-category .categorysection{ width:74.5%; margin-left:0.5%; background-color:#d3e8fd; min-height:250px; float:left; min-height:260px; }
 .satisfaction-category .categorysection ul{ margin:0; padding:20px}
 .satisfaction-category .categorysection ul li{ list-style:none; float:left; width:25%; padding:1%}
-.satisfaction-category .categorysection ul li h2{ margin:0; padding:0; color:#2373c8; font-weight:normal; font-size:21px; text-transform:uppercase}
+.satisfaction-category .categorysection ul li h2{ margin:0; padding:0; color:#2373c8; font-weight:normal; font-size:17px; text-transform:uppercase}
 .satisfaction-category .categorysection ul li h3{ margin:0; padding:0; color:#000; font-weight:bold; font-size:15px;text-transform:uppercase  }
 .satisfaction-category .categorysection ul li .catthumb{ margin:4px 0 0 0; padding:0 }
+.f_sosialmedia{ float:right; width:250px;}
+.h_sosialmedia{  float: right;
+    margin-right: 10px;
+    margin-top: 8px; }
+.sicons{ width:32px; height:32px; margin-right:3px; float:left;  background-position:top center; background-repeat:no-repeat; transition: all 0.5s ease 0s;}
+.sicons:hover{  background-position:bottom center; background-repeat:no-repeat; transition: all 0.5s ease 0s;}
+.ficon{background-image:url(../images/Facebook.png); }
+.picon{background-image:url(../images/Pinterest.png);}
+.ticon{background-image:url(../images/Twitter.png); }
+
 
 .businessinsider-phone-wrapper{ float:left; width:100%; margin:10px 0;}
 .businessinsider{ float:left; width:62%; background-color:#f0f0f0; min-height:300px}
@@ -10864,7 +10875,7 @@ position: relative;
 .banner .slider ul li {
 position: absolute;
 top: 0;
-left: 50%;
+/*left: 50%;*/ text-align:center !important; width:100% !important; margin:0 !important
 }
 .banner .slider .dots:after {
 display: table;
@@ -10999,3 +11010,5 @@ html[xmlns] .slides {display: block;}
   .flex-direction-nav .flex-prev {opacity: 1; left: 0;}
   .flex-direction-nav .flex-next {opacity: 1; right: 0;}
 }
+.caption.dark3{ display:none !important}
+.gen-slider-pager1-pos-bottom-right .control-nav{ right:50% !important}

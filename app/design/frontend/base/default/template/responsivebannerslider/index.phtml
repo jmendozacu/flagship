@@ -1,0 +1,174 @@
+<?php   $view=$this->getResponsivebannersliderEnabled();   ?>
+<?php  $slide_speed=$this->getResponsivebannersliderSpeed();   ?>
+<?php   $slide_type =$this->getResponsivebannerSlideType(); ?>
+<?php   $slide_loop =$this->getResponsivebannerBannerLoop(); ?>
+<?php   $slide_PauseOnhover =$this->getResponsivebannerPauseOnhover(); ?>
+
+<?php if($view==1) { ?>
+
+<?php  $slide_type =$this->getResponsivebannerSlideType(); ?>
+<?php if($slide_type==1) {  ?>
+
+<?php $cssurl =  str_replace('index.php/','',$this->getUrl());?>
+<link rel="stylesheet" type="text/css" href="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/css/generic-nav.css'; ?>" media="all">
+<link rel="stylesheet" type="text/css" href="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/css/grid12.css'; ?>" media="all">
+<script type="text/javascript" src="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/js/jquery-1.js'; ?>"></script>
+<script type="text/javascript" src="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/js/jquery-noconflict.js'; ?>"></script>
+<script type="text/javascript" src="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/js/jquery_004.js'; ?>"></script>
+<script type="text/javascript" src="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/js/jquery_003.js'; ?>"></script>
+
+
+
+<!-- BEGIN GOOGLE ANALYTICS CODEs -->
+
+
+<div class="the-slideshow-wrapper nested-container clearer">
+<div style="height: 428px;" class="the-slideshow gen-slider-arrows2 gen-slider-pager1 gen-slider-pager1-pos-bottom-right grid12-9  ">
+
+<ul class="slides">
+<?php 
+$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+$sql = $connection->query("select * from  manvresponsivebannerslider where status='0'");
+while($row1 = $sql->fetch())
+{
+$title = $row1["title"];
+$description = $row1["description"]; 
+$pageurl = $row1["url"]; 
+$urlx = $row1["image"]; 
+$media_url =  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+$imgurl=$media_url.$urlx;
+?>
+<li style="width: 100%; float: left; margin-right: -100%; position: relative; display: none;" class="slide">
+<a href="<?php echo $pageurl; ?>">
+<img src="<?php echo $imgurl; ?>" alt="<?php echo $title; ?>" title="<?php echo $title; ?>">
+<div class="caption dark3">
+<h2><?php echo $description; ?></h2>
+</div>
+<div class="caption dark1 top-right">
+<h2></h2>
+</div>
+</a></li>
+
+<?php } ?>
+</ul>
+
+<ul class="direction-nav">
+<li><a class="prev" href="#">Previous</a></li>
+<li><a class="next disabled" href="#">Next</a></li>
+</ul>
+</div>
+</div>
+
+
+
+
+
+
+
+
+<!-- BEGIN GOOGLE ANALYTICS CODEs -->
+
+
+<script type="text/javascript">
+//<![CDATA[
+//jQuery(function($) {
+jQuery(window).load(function(){
+jQuery('.the-slideshow').flexslider({
+namespace:"",
+animation:'fade',
+easing:'easeInOutCirc',
+useCSS:	false,
+animationLoop:<?php echo  $slide_loop; ?>,
+smoothHeight: true,
+slideshowSpeed:<?php  echo $slide_speed; ?>,
+animationSpeed:	100,
+pauseOnHover:<?php echo  $slide_PauseOnhover; ?>
+});
+});
+//]]>
+</script>  
+
+  
+
+
+<?php } 
+
+ if($slide_type==2) {  ?>
+
+
+ <?php  $slide_type =$this->getResponsivebannerSlideType(); ?>
+
+
+<?php $cssurl =  str_replace('index.php/','',$this->getUrl());?>
+<link rel="stylesheet" type="text/css" href="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/css/generic-nav.css'; ?>" media="all">
+<link rel="stylesheet" type="text/css" href="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/css/grid12.css'; ?>" media="all">
+
+<script type="text/javascript" src="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/js/jquery-1.7.2.min.js'; ?>"></script>
+
+<script type="text/javascript" src="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/js/jquery.easing.min.js'; ?>"></script>
+
+<script type="text/javascript" src="<?php echo $cssurl.'skin/frontend/base/default/manvresponsiveslider/js/jquery.flexslider.min.js'; ?>"></script>
+
+
+
+	
+
+
+<div class="the-slideshow gen-slider-arrows2 gen-slider-pager1 gen-slider-pager1-pos-bottom-right grid12-9  ">
+<ul class="slides" style="padding:0px!important;">
+<?php 
+$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+$sql = $connection->query("select * from  manvresponsivebannerslider where status='0'");
+while($row1 = $sql->fetch())
+{
+$title = $row1["title"];
+$description = $row1["description"]; 
+$pageurl = $row1["url"]; 
+$urlx = $row1["image"]; 
+$media_url =  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+$imgurl=$media_url.$urlx;
+?>
+
+<li class="slide">
+<a href="<?php echo $pageurl; ?>">
+<img src="<?php echo $imgurl; ?>" alt="<?php echo $title; ?>" title="<?php echo $title; ?>">
+<div class="caption dark3">
+<h2><?php echo $description; ?></h2>
+</div>
+<div class="caption dark1 top-right">
+<h2></h2>
+</div>
+</a></li>
+
+<?php } ?>
+</ul>
+</div>
+    
+<script type="text/javascript">
+//<![CDATA[
+//jQuery(function($) {
+jQuery(window).load(function(){
+jQuery('.the-slideshow').flexslider({
+namespace:"",
+animation:'slide',
+easing:'easeInOutCirc',
+useCSS:	false,
+animationLoop:<?php echo  $slide_loop; ?>,
+smoothHeight: true,
+slideshowSpeed:<?php  echo $slide_speed; ?>,
+animationSpeed:	600,
+pauseOnHover:<?php echo  $slide_PauseOnhover; ?>
+});
+});
+//]]>
+</script>  
+        
+
+ <?php } ?>
+
+<?php }  else { ?>
+
+<div ><h1 style="color:red;">Please Enable responsive banner Slider from <br/> Syestem-> Configuration-> Manv_Responsive Baner -> Banner Setting </h1></div>
+ <?php } ?>
+
+
