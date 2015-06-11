@@ -105,9 +105,16 @@ class Custom_Rvtech_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_Sales_Or
             'header' => Mage::helper('sales')->__('Ship to Name'),
             'index' => 'shipping_name',
         ));
-        $this->addColumn('shipping_company', array(
+        /*$this->addColumn('shipping_company', array(
             'header' => Mage::helper('sales')->__('Ship to Company'),
             'index' => 'shipping_company',
+        ));*/
+        
+        $observer = new Ecommerceguys_Overrides_Model_Observer;
+        $this->addColumn('value', array(
+            'header' => Mage::helper('sales')->__('Ship to Company'),
+            'index' => 'value',
+            'filter_condition_callback' => array($observer,'filterCustomerCompany')
         ));
 
         $this->addColumn('base_grand_total', array(

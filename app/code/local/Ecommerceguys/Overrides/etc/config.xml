@@ -2,7 +2,7 @@
 <config>
 	<modules>
         <Ecommerceguys_Overrides>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </Ecommerceguys_Overrides>
     </modules>
     <global>
@@ -21,5 +21,36 @@
                 <class>Ecommerceguys_Overrides_Helper</class>
             </overrides>
         </helpers>
+        <events>
+    		<sales_order_grid_collection_load_before>
+	            <observers>
+	                <ecommerceguys_overrides_extendedgrid>
+	                    <model>Ecommerceguys_Overrides_Model_Observer</model>
+	                    <method>salesOrderGridCollectionLoadBefore</method>
+	                </ecommerceguys_overrides_extendedgrid>
+	            </observers>
+	        </sales_order_grid_collection_load_before>
+    	</events>
+    	<resources>
+			<overrides_setup>
+				<setup>
+					<module>Ecommerceguys_Overrides</module>
+					<class>Mage_Customer_Model_Entity_Setup</class>
+				</setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+			</overrides_setup>
+			<overrides_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</overrides_write>
+			<overrides_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</overrides_read>
+  		</resources>
 	</global>
 </config>

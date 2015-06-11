@@ -937,7 +937,7 @@ body:not(.customer-account) .block:first-child .block-title {
 .footer .button:hover {
   background: #2e8ab8;
   cursor: pointer;
-  border:solid 1px #2e8ab8
+  border:solid 1px #2e8ab8; color:#fff !important
 }
 .button:active,
 .cart-table .product-cart-actions .button:active,
@@ -10730,6 +10730,9 @@ div.tabContent.hide { display: none; }
 .nav-primary a{ line-height:17px;}
 .innerwrapper{ margin:0 auto; width:1140px;}
 .category-products{ float:left; width:100%}
+.page-header-container{ min-height:115px}
+#header-nav{ top:68px}
+.the-slideshow{ height:580px !important}
 ..cms-index-index .products-grid .ratings, .cms-index-index .products-grid .actions, .cms-index-noroute .products-grid .ratings, .cms-index-noroute .products-grid .actions{ display:block !important}
 }
 
@@ -11012,3 +11015,5 @@ html[xmlns] .slides {display: block;}
 }
 .caption.dark3{ display:none !important}
 .gen-slider-pager1-pos-bottom-right .control-nav{ right:50% !important}
+ul.slides li.slide{ text-align:center !important}
+ul.slides li.slide img{ width:auto !important}

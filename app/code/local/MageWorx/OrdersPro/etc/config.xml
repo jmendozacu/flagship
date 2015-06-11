@@ -134,10 +134,10 @@
         </blocks>        
         
         <rewrite>
-            <mageworx_adminhtml_orderspro_order>
+            <!--<mageworx_adminhtml_orderspro_order>
                 <from><![CDATA[#(^/.+?/sales_order/)|(^/exadmin/adminhtml_sales_order/)#]]></from>
                 <to>/mageworx/orderspro_order/</to>
-            </mageworx_adminhtml_orderspro_order>
+            </mageworx_adminhtml_orderspro_order>-->
             <mageworx_adminhtml_orderspro_order_edit>
                 <from><![CDATA[#^/.+?/sales_order_edit/#]]></from>
                 <to>/mageworx/orderspro_order_edit/</to>
