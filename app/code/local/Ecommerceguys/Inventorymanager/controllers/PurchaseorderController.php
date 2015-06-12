@@ -5,4 +5,24 @@ class Ecommerceguys_Inventorymanager_PurchaseorderController extends Mage_Core_C
 		$this->loadLayout();
 		$this->renderLayout();
 	}
+	
+	public function viewAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function downloadAction(){
+		$fileName = $this->getRequest()->getParam('file','');
+		$filepath = Mage::getBaseDir('media')."/purchaseorder_comments/".$fileName;
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=$filepath");
+		header("Content-Type: mime/type");
+		header("Content-Transfer-Encoding: binary");
+		// UPDATE: Add the below line to show file size during download.
+		header('Content-Length: ' . filesize($filepath));
+		
+		readfile($filepath);
+	    exit;
+	}
 }

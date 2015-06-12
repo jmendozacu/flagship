@@ -43,6 +43,7 @@
 									<th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1"  aria-label="CSS grade: activate to sort column ascending">
 										<?php echo $this->__("Order Date") ?>
 									</th>
+									<th><?php echo $this->__("Action") ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -58,6 +59,7 @@
 											<td><?php echo $paymentTerms[$order->getPaymentTerms()] ?></td>
 											<td><?php echo $order->getOrderQty() ?></td>
 											<td><?php echo $order->getDateOfPo() ?></td>
+											<td><a href="<?php echo $this->getUrl("inventorymanager/purchaseorder/view", array('id'=>$order->getId())) ?>"><?php echo $this->__("View") ?></a></td>
 										</tr>
 								<?php } ?>
 							</tbody>
