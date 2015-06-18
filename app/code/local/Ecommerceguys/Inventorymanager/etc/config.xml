@@ -52,6 +52,12 @@
                     <vendor_productinfo>
                     	<table>inventorymanager_vendor_productdetail</table>
                     </vendor_productinfo>
+                    <label>
+                    	<table>inventorymanager_purchaseorder_label</table>
+                    </label>
+                    <label_comment>
+                    	<table>inventorymanager_purchaseorder_label_comment</table>
+                    </label_comment>
                 </entities>
             </inventorymanager_resource>
         </models>

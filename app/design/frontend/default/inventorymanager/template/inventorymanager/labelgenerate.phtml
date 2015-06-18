@@ -1,0 +1,36 @@
+<?php $products = $this->getProducts() ?>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<div>
+	<ul>
+		<?php foreach ($products as $product){ ?>
+		<?php
+			$orderProduct = Mage::getModel('inventorymanager/product')->load($product->getProductId());
+			$catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
+		?>
+			<li>
+				<table>
+					<tr>
+						<td><?php echo $this->__("Serial") ?></td>
+						<td><?php echo $product->getSerial() ?></td>
+					</tr>
+					<tr>
+						<td><?php echo $this->__("Weight") ?></td>
+						<td><?php echo $catalogProduct->getWeight() ?></td>
+					</tr>
+				</table>
+				<table>
+					<tr>
+						<td><?php echo $this->__("Height") ?></td>
+						<td><?php echo $this->__("Width") ?></td>
+						<td><?php echo $this->__("Depth") ?></td>
+					</tr>
+					<tr>
+						<td><?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches') ?></td>
+						<td><?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches') ?></td>
+						<td><?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth') ?></td>
+					</tr>
+				</table>
+			</li>
+		<?php } ?>
+	</ul>
+</div>
