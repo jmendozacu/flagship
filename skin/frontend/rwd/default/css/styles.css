@@ -844,6 +844,9 @@ body:not(.customer-account) .block:first-child .block-title {
   .sidebar .block:last-of-type {
     border-bottom: 1px solid #cccccc;
   }
+  ul.slides li.slide img {
+    width: 100% !important;
+}
 }
 /* -------------------------------------------- *
  * Secondary Navigation
@@ -1019,6 +1022,10 @@ a.button:hover {
   .col2-set .buttons-set .required {
     display: none;
   }
+  .delivery_banner {
+    background-color: #2373c8;
+    color: #2373c8 !important;
+    font-size: 1px !important;}
 }
 @media only screen and (max-width: 479px) {
   .buttons-set .button {
@@ -1677,7 +1684,7 @@ a.button:hover {
     width: 23% !important;
 }
 #header-search .input-text{ background-color:transparent !important; border:none !important}
-	
+	ul.slides li.slide img{ width:auto !important}
 }
 /* -------------------------------------------- *
  * Page Popup
@@ -10854,6 +10861,17 @@ left:auto !important;
 }
 .banner .slider ul li img{ width:100% !important}
 .banner .slider ul { height:141px !important;}
+.satisfaction-category .categorysection ul li {
+    min-height: 197px;
+    width: 50%;
+}
+
+.satisfaction-category .categorysection.second li {
+    min-height: 197px;
+    width: 50%;
+}
+
+
 	}
 	
 	.secondsection{ float:right; background-color:#57c8e6}
@@ -11012,8 +11030,9 @@ html[xmlns] .slides {display: block;}
 @media screen and (max-width: 860px) {
   .flex-direction-nav .flex-prev {opacity: 1; left: 0;}
   .flex-direction-nav .flex-next {opacity: 1; right: 0;}
+.the-slideshow-wrapper ul li img{ width:100%}
 }
 .caption.dark3{ display:none !important}
 .gen-slider-pager1-pos-bottom-right .control-nav{ right:50% !important}
 ul.slides li.slide{ text-align:center !important}
-ul.slides li.slide img{ width:auto !important}
+

