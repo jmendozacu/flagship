@@ -1,8 +1,12 @@
 <?php
 
-class AnattaDesign_AwesomeCheckout_Block_Onepage extends Mage_Checkout_Block_Onepage_Abstract {
+class AnattaDesign_AwesomeCheckout_Block_Onepage extends Mage_Checkout_Block_Onepage {
 
 	public function getSteps() {
+		$storeCode = Mage::app()->getStore()->getCode();
+		if($storeCode != "directrangehoods"){
+			return parent::getSteps();
+		}
 		$steps = array( );
 
 		if ( Mage::helper( 'anattadesign_awesomecheckout' )->isVirtualOnly() ) {
@@ -25,6 +29,10 @@ class AnattaDesign_AwesomeCheckout_Block_Onepage extends Mage_Checkout_Block_One
 	}
 
 	public function getActiveStep() {
+		$storeCode = Mage::app()->getStore()->getCode();
+		if($storeCode != "directrangehoods"){
+			return parent::getActiveStep();
+		}
 		if ( Mage::helper( 'anattadesign_awesomecheckout' )->isVirtualOnly() ) {
 			return 'billing';
 		}

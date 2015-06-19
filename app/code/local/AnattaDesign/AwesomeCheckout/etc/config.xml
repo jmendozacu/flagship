@@ -83,7 +83,7 @@
 		<rewrite>
 			<anattadesign_awesomecheckout_onepage_index>
 				<from><![CDATA[#^/checkout/onepage(.*)#]]></from>
-				<to>/anattadesign_awesomecheckout/onepage$1</to>
+				<to>/anattadesign_awesomecheckout/extend$1</to>
 			</anattadesign_awesomecheckout_onepage_index>
 		</rewrite>
 		<events>
