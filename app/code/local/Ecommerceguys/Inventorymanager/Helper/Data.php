@@ -18,7 +18,7 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 	
 	public function getSerial(){
 		 $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-		 $random_string_length = 32;
+		 $random_string_length = 14;
 		 $string = '';
 		 for ($i = 0; $i < $random_string_length; $i++) {
 		      $string .= $characters[rand(0, strlen($characters) - 1)];

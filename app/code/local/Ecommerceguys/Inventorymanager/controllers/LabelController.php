@@ -10,29 +10,27 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		if(!$labelCollection->count() || $labelCollection->count() <= 0){
 			$products = Mage::getModel('inventorymanager/product')->getCollection();
 			$products->addFieldToFilter('po_id', $orderId);
-			
 			foreach ($products as $product){
-				$serial = Mage::helper('inventorymanager')->getSerial();
-				$label = Mage::getModel('inventorymanager/label');
-				$labelData = array(
-					'product_id'	=>	$product->getId(),
-					'order_id'		=>	$orderId,
-					'location'		=>	1,
-					'serial'		=>	$serial,
-					'created_time'	=>	now(),
-					'updated_time'	=>	now()
-				);
-				$label->setData($labelData)->save();
+				for($qtyCounter = 1; $qtyCounter <= $product->getQty(); $qtyCounter++){
+					$serial = Mage::helper('inventorymanager')->getSerial();
+					$label = Mage::getModel('inventorymanager/label');
+					$labelData = array(
+						'product_id'	=>	$product->getId(),
+						'order_id'		=>	$orderId,
+						'location'		=>	1,
+						'serial'		=>	$serial,
+						'created_time'	=>	now(),
+						'updated_time'	=>	now()
+					);
+					$label->setData($labelData)->save();
+				}
 			}
 		}
 		
 		$content = $this->getLayout()->createBlock('inventorymanager/label_generate')
 		->setTemplate('inventorymanager/labelgenerate.phtml')->toHtml();
 		
-//		echo $content;
-		
-		
-		
+		//echo $content;
 		
 		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		
