@@ -1,0 +1,29 @@
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Find Label") ?></h2>
+		<h5><?php echo $this->__("Find a product label using serial key") ?></h5>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Find a Label") ?></div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<form action="<?php echo $this->getUrl("inventorymanager/label/edit") ?>" method="POST">
+							<div class="form-group">
+								<label><?php echo $this->__("Enter Serial Key") ?></label>
+								<input type="text" class="form-control required-entry" name="serial_key" />
+							</div>
+							<div class="form-group">
+								<a class="btn btn-warning" href="#"><?php echo $this->__("Find") ?></a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

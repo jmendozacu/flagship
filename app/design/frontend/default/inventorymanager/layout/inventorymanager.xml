@@ -64,4 +64,15 @@
 			<block type="inventorymanager/purchaseorder_view" name="purchaseorder.view" template="inventorymanager/purchaseorder/view.phtml" />
 		</reference>
 	</inventorymanager_purchaseorder_view>
+	<inventorymanager_label_find>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/label_find" name="purchaseorder.label.find" template="inventorymanager/label/find.phtml" />
+		</reference>
+	</inventorymanager_label_find>
 </layout>

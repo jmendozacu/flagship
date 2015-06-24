@@ -33,10 +33,6 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		//echo $content;
 		
 		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
-		
-		
-		
 		$pdf->SetCreator(PDF_CREATOR);
 		$pdf->SetAuthor('Inventory Manager');
 		$pdf->SetTitle('Inventory Manager');
@@ -69,12 +65,8 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 			require_once(dirname(__FILE__).'/lang/eng.php');
 			$pdf->setLanguageArray($l);
 		}
-		
 		// ---------------------------------------------------------
-		
 		// set font
-		
-		
 		// add a page
 		$pdf->AddPage();
 		$pdf->SetFont('helvetica', '', 8);
@@ -83,13 +75,24 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		$pdf->lastPage();
 
 		// ---------------------------------------------------------
-		
 		//Close and output PDF document
 		$pdf->Output('orderlabel.pdf', 'D');
-		
-		
-		
-		
+	}
+	
+	
+	public function findAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function editAction(){
+		$apiKey = $this->getRequest()->getParam('serial_key');
+		$validate = $this->validateApiKey();
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function validateApiKey(){
 		
 	}
 }
