@@ -10,4 +10,24 @@ class Ecommerceguys_Inventorymanager_Block_Label_Edit extends Mage_Core_Block_Te
 		}
 		return false;
 	}
+	
+	public function getOrderProduct(){
+		$labelObject = $this->getLabelObject();
+		return Mage::getModel('inventorymanager/product')->load($labelObject->getProductId());
+	}
+	
+	public function gerMainProduct(){
+		$orderProduct = $this->getOrderProduct();
+		if($orderProduct && $orderProduct->getId()){
+			return Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
+		}
+		return false;
+	}
+	
+	public function getComments(){
+		$label = $this->getLabelObject();
+		$labelComments = Mage::getModel('inventorymanager/label_comment')->getCollection();
+		$labelComments->addFieldToFilter('label_id', $label->getId());
+		return $labelComments;
+	}
 }

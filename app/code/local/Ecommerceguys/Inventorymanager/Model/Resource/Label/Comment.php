@@ -4,6 +4,6 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label_Comment extends Mage_C
 {
 	public function _construct()
     {    
-        $this->_init('inventorymanager/comment_label', 'comment_id');
+        $this->_init('inventorymanager/label_comment', 'comment_id');
     }
 }

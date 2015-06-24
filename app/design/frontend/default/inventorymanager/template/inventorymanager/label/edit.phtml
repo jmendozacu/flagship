@@ -1,24 +1,84 @@
+<?php
+	$labelObject = $this->getLabelObject();
+	$catalogProduct = $this->gerMainProduct();
+	$_helper = $this->helper('catalog/output');
+	$labelComments = $this->getComments();
+	$status = Mage::getModel('inventorymanager/label_status')->getValues();
+?>
 <div class="row">
 	<div class="col-md-12">
-		<h2><?php echo $this->__("Label Information") ?></h2>
-		<h5><?php echo $this->__("Modify label information") ?></h5>
+		<h2><?php echo $this->__("Product Information") ?></h2>
+		<h5><?php echo $this->__("Update Product Information") ?></h5>
 	</div>
 </div>
 <hr>
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
-			<div class="panel-heading"><?php echo $this->__("Find a Product") ?></div>
+			<div class="panel-heading"><?php echo $catalogProduct->getName() ?></div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-12">
-						<form action="<?php echo $this->getUrl("inventorymanager/label/edit") ?>" method="POST">
+					<div class="col-md-6">
+						<form action="<?php echo $this->getUrl("inventorymanager/label/editpost") ?>" method="POST" id="edit_productlabel">
+							<input type="hidden" value="<?php echo $labelObject->getId() ?>" name="label_id" />
 							<div class="form-group">
-								<label><?php echo $this->__("Enter Serial Key") ?></label>
-								<input type="text" class="form-control required-entry" name="serial_key" />
+								<label><?php echo $this->__("Serial Key") ?></label>
+								<p class="form-control-static"><?php echo $labelObject->getSerial(); ?></p>
 							</div>
 							<div class="form-group">
-								<a class="btn btn-warning" href="#"><?php echo $this->__("Find") ?></a>
+								<label><?php echo $this->__("Height") ?></label>
+								<p class="form-control-static">
+									<?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches') ?>
+								</p>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Width") ?></label>
+								<p class="form-control-static">
+									<?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches') ?>
+								</p>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Depth") ?></label>
+								<p class="form-control-static">
+									<?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth') ?>
+								</p>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Status") ?></label>
+								<select name="status" class="form-control required-entry">
+									<option></option>
+									<?php foreach ($status as $key => $statusLabel){ ?>
+										<option <?php echo $labelObject->getStatus()==$key? "selected='selected'":""; ?> value="<?php echo $key ?>"><?php echo $statusLabel ?></option>
+									<?php } ?>
+								</select>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Comments") ?></label>
+							</dir>
+							<div class="table-responsive" class="">
+								<?php if($labelComments && $labelComments->count() > 0){ ?>
+									<table class="table table-striped table-bordered table-hover">
+										<thead>
+											<tr>
+												<td><?php echo $this->__("Date") ?></td>
+												<td><?php echo $this->__("Comment") ?></td>
+											</tr>
+										</thead>
+										<?php foreach ($labelComments as $comment){ ?>
+											<tr>
+												<td><?php echo date("Y-m-d", strtotime($comment->getCreatedTime())); ?></td>
+												<td><?php echo $comment->getComment() ?></td>
+											</tr>
+										<?php } ?>
+									</table>
+								<?php } ?>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Comment") ?></label>
+								<textarea class="form-control" rows="2" name="comment"></textarea>
+							</div>
+							<div class="form-group">
+								<a class="btn btn-warning" onclick="if(dataForm.validator && dataForm.validator.validate()){ dataForm.form.submit(); }" href="#"><?php echo $this->__("Update") ?></a>
 							</div>
 						</form>
 					</div>
@@ -27,3 +87,6 @@
 		</div>
 	</div>
 </div>
+<script>
+	var dataForm = new VarienForm('edit_productlabel', false);
+</script>

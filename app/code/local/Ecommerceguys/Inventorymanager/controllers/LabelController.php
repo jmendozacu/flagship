@@ -82,17 +82,51 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function findAction(){
 		$this->loadLayout();
+		$this->_initLayoutMessages('core/session');
 		$this->renderLayout();
 	}
 	
 	public function editAction(){
-		$apiKey = $this->getRequest()->getParam('serial_key');
-		$validate = $this->validateApiKey();
+		$serialKey = $this->getRequest()->getParam('serial_key');
+		$validate = $this->validateSerialKey();
+		if(!$validate){
+			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Not valid serial key"));
+			$this->_redirect("*/*/find");
+			return $this;
+		}
 		$this->loadLayout();
 		$this->renderLayout();
 	}
 	
-	public function validateApiKey(){
-		
+	public function validateSerialKey(){
+		$serialKey = $this->getRequest()->getParam('serial_key');
+		$labelCollection = Mage::getModel('inventorymanager/label')->getCollection();
+		$labelCollection->addFieldToFilter('serial', $serialKey);
+		if($labelCollection->count() > 0){
+			return true;
+		}
+		return false;
+	}
+	
+	public function editpostAction(){
+		if($data = $this->getRequest()->getPost()){
+			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
+			try{
+				$model->setStatus($data['status'])->save();
+				if(isset($data['comment']) && trim($data['comment'])!= ""){
+					$comment = Mage::getModel('inventorymanager/label_comment');
+					$commentData = array(
+						'comment'	=>	trim($data['comment']),
+						'created_time'	=>	now(),
+						'label_id'	=>	$model->getId()
+					);
+					$comment->setData($commentData)->save();
+				}
+				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product label updated successfully"));
+			}catch (Exception $e){
+				Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Something went wrong, Please try again"));
+			}
+			$this->_redirect('*/*/edit', array('serial_key'=>$model->getSerial()));
+		}
 	}
 }

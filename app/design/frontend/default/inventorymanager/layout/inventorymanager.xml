@@ -75,4 +75,15 @@
 			<block type="inventorymanager/label_find" name="purchaseorder.label.find" template="inventorymanager/label/find.phtml" />
 		</reference>
 	</inventorymanager_label_find>
+	<inventorymanager_label_edit>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/label_edit" name="purchaseorder.label.edit" template="inventorymanager/label/edit.phtml" />
+		</reference>
+	</inventorymanager_label_edit>
 </layout>
