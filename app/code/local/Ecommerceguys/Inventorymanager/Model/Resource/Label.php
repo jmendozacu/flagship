@@ -18,4 +18,19 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
                 ->where("status.vendor_id = ? OR status.vendor_id = 0", $vendorId);
         return $readConnection->fetchAll($select);
     }
+    
+    public function addStatus($status){
+    	$resource = Mage::getSingleton('core/resource');
+    	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_status');
+    	$writeConnection = $resource->getConnection('core_write');
+    	
+    	$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+    	
+    	$data = array('vendor_id' => $vendorId, 'status' => $status);
+    	try {
+    		$writeConnection->insert($tableName, $data);
+    	}catch (Exception $e){
+    		
+    	}
+    }
 }

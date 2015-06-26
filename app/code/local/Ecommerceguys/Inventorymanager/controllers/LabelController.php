@@ -2,6 +2,19 @@
 require_once(Mage::getBaseDir().'/tcpdf/tcpdf.php');
 class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controller_Front_Action 
 {
+	
+	protected function _getSession()
+    {
+        return Mage::getSingleton('inventorymanager/session');
+    }
+	
+//	public function preDispatch(){
+//		if (!$this->_getSession()->isLoggedIn()) {
+//            $this->_redirect('*/vendor/login');
+//            return;
+//        }
+//	}
+	
 	public function generateAction(){
 		$orderId = $this->getRequest()->getParam('id');
 		

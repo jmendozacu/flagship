@@ -48,7 +48,7 @@
 								<div class="form-control-static" >
 									<div class="btn-group show-dropbox">
 										<div class="form-group input-group" style="float:left; margin-right:0px;">
-							  				<input type="text" class="form-control" name="status" id="new_status" value="<?php echo isset($status[$labelObject->getStatus()])?$status[$labelObject->getStatus()]:""; ?>" />
+							  				<input type="text" class="form-control" name="status" id="new_status" value="<?php echo $labelObject->getStatus(); ?>" />
 							  			</div>
 									  	<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" style="z-index:999"><span class="caret"></span></button>
 									  	<ul class="dropdown-menu">

@@ -6,4 +6,12 @@ class Ecommerceguys_Inventorymanager_Model_Label extends Mage_Core_Model_Abstrac
         parent::_construct();
         $this->_init('inventorymanager/label');
     }
+    
+    public function setStatus($status){
+    	$statuses = Mage::helper('inventorymanager')->getOrderedProductStatusArray();
+    	if(!in_array($status, $statuses)){
+    		Mage::getResourceModel('inventorymanager/label')->addStatus($status);
+    	}
+    	return parent::setStatus($status);
+    }
 }
