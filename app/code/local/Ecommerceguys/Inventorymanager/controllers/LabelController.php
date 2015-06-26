@@ -8,12 +8,14 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
         return Mage::getSingleton('inventorymanager/session');
     }
 	
-//	public function preDispatch(){
-//		if (!$this->_getSession()->isLoggedIn()) {
-//            $this->_redirect('*/vendor/login');
-//            return;
-//        }
-//	}
+	public function preDispatch(){
+		parent::preDispatch();
+		if (!$this->_getSession()->isLoggedIn()) {
+            $this->_redirect('*/vendor/login');
+            $this->setFlag('', self::FLAG_NO_DISPATCH, true);
+            return false;
+        }
+	}
 	
 	public function generateAction(){
 		$orderId = $this->getRequest()->getParam('id');
