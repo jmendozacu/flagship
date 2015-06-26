@@ -25,4 +25,16 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 		 }
 		 return $string;
 	}
+	
+	public function getOrderedProductStatusArray(){
+		$status = Mage::getResourceModel('inventorymanager/label')->getStatuses();
+		$statusArray = array_map(array($this, formatStatusArray), $status);
+		return $statusArray;
+	}
+	
+	public function formatStatusArray($value){
+		if(isset($value['status']))
+			return $value['status'];
+		return "";
+	}
 }

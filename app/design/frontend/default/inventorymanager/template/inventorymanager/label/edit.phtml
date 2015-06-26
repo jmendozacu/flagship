@@ -3,7 +3,7 @@
 	$catalogProduct = $this->gerMainProduct();
 	$_helper = $this->helper('catalog/output');
 	$labelComments = $this->getComments();
-	$status = Mage::getModel('inventorymanager/label_status')->getValues();
+	$status = Mage::helper('inventorymanager')->getOrderedProductStatusArray();
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -45,17 +45,24 @@
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Status") ?></label>
-								<select name="status" class="form-control required-entry">
-									<option></option>
-									<?php foreach ($status as $key => $statusLabel){ ?>
-										<option <?php echo $labelObject->getStatus()==$key? "selected='selected'":""; ?> value="<?php echo $key ?>"><?php echo $statusLabel ?></option>
-									<?php } ?>
-								</select>
+								<div class="form-control-static" >
+									<div class="btn-group show-dropbox">
+										<div class="form-group input-group" style="float:left; margin-right:0px;">
+							  				<input type="text" class="form-control" name="status" id="new_status" value="<?php echo isset($status[$labelObject->getStatus()])?$status[$labelObject->getStatus()]:""; ?>" />
+							  			</div>
+									  	<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" style="z-index:999"><span class="caret"></span></button>
+									  	<ul class="dropdown-menu">
+									  		<?php foreach ($status as $key => $statusLabel) { ?>
+									  			<li><a onclick="$('new_status').value = '<?php echo $statusLabel ?>';" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  		<?php } ?>
+									  	</ul>
+									</div>
+								</div>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Comments") ?></label>
 							</dir>
-							<div class="table-responsive" class="">
+							
 								<?php if($labelComments && $labelComments->count() > 0){ ?>
 									<table class="table table-striped table-bordered table-hover">
 										<thead>
@@ -72,7 +79,7 @@
 										<?php } ?>
 									</table>
 								<?php } ?>
-							</div>
+							
 							<div class="form-group">
 								<label><?php echo $this->__("Comment") ?></label>
 								<textarea class="form-control" rows="2" name="comment"></textarea>
@@ -89,4 +96,9 @@
 </div>
 <script>
 	var dataForm = new VarienForm('edit_productlabel', false);
+</script>
+<script>
+	function openSelect(){
+		$('select_status').toggle();
+	}
 </script>
