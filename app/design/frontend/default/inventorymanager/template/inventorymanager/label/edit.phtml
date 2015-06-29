@@ -139,6 +139,7 @@
     				alert(response);
     			}else{
     				$('dropdown-box').innerHTML = $('dropdown-box').innerHTML + '<li><a class="status-options" href="javascript:void(0);">'+status+'</a></li>';
+    				statuses.push(status);
     				$$('a.status-options').each(function(e){
 						e.observe('click', function(){
 							$('new_status').value = e.innerHTML;
