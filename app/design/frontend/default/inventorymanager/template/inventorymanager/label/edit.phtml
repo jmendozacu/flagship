@@ -54,7 +54,7 @@
 									  	<ul class="dropdown-menu" id="dropdown-box">
 									  		<li class="add-status-li"><a href="javascript:void(0);" id="new_status_link" ><?php echo $this->__("Add New") ?></a></li>
 									  		<?php foreach ($status as $key => $statusLabel) { ?>
-									  			<li><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  			<li><span class="remove-status-link">X</span><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
 									  		<?php } ?>
 									  	</ul>
 									</div>
@@ -125,6 +125,11 @@
 	});
 	
 	$('new_status_link').observe('click', function(){
+		addStatusFunction();
+	});
+	
+	
+	function addStatusFunction(){
 		var status = $('new_status').value;
 		var currentIndex = statuses.indexOf(status);
 		if(currentIndex>=0){
@@ -138,7 +143,7 @@
     			if(response != ''){
     				alert(response);
     			}else{
-    				$('dropdown-box').innerHTML = $('dropdown-box').innerHTML + '<li><a class="status-options" href="javascript:void(0);">'+status+'</a></li>';
+    				$('dropdown-box').innerHTML = $('dropdown-box').innerHTML + '<span class="remove-status-link">X</span><li><a class="status-options" href="javascript:void(0);">'+status+'</a></li>';
     				statuses.push(status);
     				$$('a.status-options').each(function(e){
 						e.observe('click', function(){
@@ -147,9 +152,47 @@
 						});
 					});
 					$('dropdown-box').toggleClassName('show-dropbox');
+					$('new_status_link').observe('click', function(){
+						addStatusFunction();
+					});
+					$$("span.remove-status-link").each(function(el){
+						el.observe('click', function(){
+							removeStatusFunction(this); 
+						});
+					});
     			}
   			},
   			onFailure: function() { alert('Something went wrong...');}
 		});
+	}
+	
+	
+	$$("span.remove-status-link").each(function(e){
+		e.observe('click', function(){
+			removeStatusFunction(e);
+		});
 	});
+	
+	function removeStatusFunction(e){
+		var status = e.up('li').down('a').innerHTML;
+		var currentIndex = statuses.indexOf(status);
+		if(currentIndex<0){
+			return;
+		}
+		
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removenewstatus') ?>', {
+  			method:'post',
+  			parameters: {status: status},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				statuses.splice(currentIndex, 1);
+    				e.up('li').remove();
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
 </script>

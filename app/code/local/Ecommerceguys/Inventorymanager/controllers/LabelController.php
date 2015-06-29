@@ -153,4 +153,13 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 			echo $e->getMessage();
 		}
 	}
+	
+	public function removenewstatusAction(){
+		$status = $this->getRequest()->getParam('status');
+		try{
+			Mage::getModel('inventorymanager/label')->removeStatus($status);
+		}catch (Exception $e){
+			echo $e->getMessage();
+		}
+	}
 }

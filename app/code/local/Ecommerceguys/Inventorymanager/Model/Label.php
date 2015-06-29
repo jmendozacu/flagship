@@ -14,4 +14,11 @@ class Ecommerceguys_Inventorymanager_Model_Label extends Mage_Core_Model_Abstrac
     	}
     	//return parent::setStatus($status);
     }
+    
+    public function removeStatus($status){
+    	$statuses = Mage::helper('inventorymanager')->getOrderedProductStatusArray();
+    	if(in_array($status, $statuses)){
+    		Mage::getResourceModel('inventorymanager/label')->removeStatus($status);
+    	}
+    }
 }
