@@ -418,3 +418,4 @@ div.logout{
 #main-tab { cursor:pointer; }
 .load-revision-link{ float:right; }
 .show-dropbox { display:inline-block !important; }
+.add-status-li { background-color:#ccc; }
