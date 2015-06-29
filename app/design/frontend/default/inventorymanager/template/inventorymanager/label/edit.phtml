@@ -47,13 +47,14 @@
 								<label><?php echo $this->__("Status") ?></label>
 								<div class="form-control-static" >
 									<div class="btn-group show-dropbox">
-										<div class="form-group input-group" style="float:left; margin-right:0px;">
-							  				<input type="text" class="form-control" name="status" id="new_status" value="<?php echo $labelObject->getStatus(); ?>" />
+										<div class="form-group input-group show-dropbox" id="status-text-div" style="float:left; margin-right:0px;">
+							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" name="status" id="new_status" value="<?php echo $labelObject->getStatus(); ?>" />
 							  			</div>
-									  	<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" style="z-index:999"><span class="caret"></span></button>
-									  	<ul class="dropdown-menu">
+									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button" style="z-index:999"><span class="caret"></span></button>
+									  	<ul class="dropdown-menu" id="dropdown-box">
+									  		<li><a href="javascript:void(0);" id="new_status_link" ><?php echo $this->__("Add New") ?></a></li>
 									  		<?php foreach ($status as $key => $statusLabel) { ?>
-									  			<li><a onclick="$('new_status').value = '<?php echo $statusLabel ?>';" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  			<li><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
 									  		<?php } ?>
 									  	</ul>
 									</div>
@@ -98,7 +99,56 @@
 	var dataForm = new VarienForm('edit_productlabel', false);
 </script>
 <script>
-	function openSelect(){
-		$('select_status').toggle();
+
+	var statuses = [];
+	<?php foreach ($status as $statusLabel) { ?>
+		statuses.push("<?php echo $statusLabel ?>");
+	<?php } ?>
+
+	function statusText(val){
+		$('new_status_link').innerHTML = '<?php echo $this->__("Add") ?> ' + val;
 	}
+	
+	$$('a.status-options').each(function(e){
+		e.observe('click', function(){
+			$('new_status').value = e.innerHTML;
+			$('dropdown-box').toggleClassName('show-dropbox');
+		});
+	});
+	
+	$('status-text-div').observe('click', function(){
+		$('dropdown-box').addClassName('show-dropbox');
+	});
+	
+	$('openbox-button').observe('click', function(){
+		$('dropdown-box').toggleClassName('show-dropbox');
+	});
+	
+	$('new_status_link').observe('click', function(){
+		var status = $('new_status').value;
+		var currentIndex = statuses.indexOf(status);
+		if(currentIndex>=0){
+			return;
+		}
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addnewstatus') ?>', {
+  			method:'post',
+  			parameters: {status: status},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				$('dropdown-box').innerHTML = $('dropdown-box').innerHTML + '<li><a class="status-options" href="javascript:void(0);">'+status+'</a></li>';
+    				$$('a.status-options').each(function(e){
+						e.observe('click', function(){
+							$('new_status').value = e.innerHTML;
+							$('dropdown-box').toggleClassName('show-dropbox');
+						});
+					});
+					$('dropdown-box').toggleClassName('show-dropbox');
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	});
 </script>

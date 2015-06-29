@@ -144,4 +144,13 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 			$this->_redirect('*/*/edit', array('serial_key'=>$model->getSerial()));
 		}
 	}
+	
+	public function addnewstatusAction(){
+		$status = $this->getRequest()->getParam('status');
+		try{
+			Mage::getModel('inventorymanager/label')->setNewStatus($status);
+		}catch (Exception $e){
+			echo $e->getMessage();
+		}
+	}
 }
