@@ -54,7 +54,7 @@
 									  	<ul class="dropdown-menu" id="dropdown-box">
 									  		<li class="add-status-li"><a href="javascript:void(0);" id="new_status_link" ><?php echo $this->__("Add New") ?></a></li>
 									  		<?php foreach ($status as $key => $statusLabel) { ?>
-									  			<li><span class="remove-status-link">X</span><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  			<li><span class="remove-status-link">x</span><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
 									  		<?php } ?>
 									  	</ul>
 									</div>
@@ -95,11 +95,21 @@
 		</div>
 	</div>
 </div>
+<!-- Small modal -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+    	<div class="labelpage-loader-div">
+      		<img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo $this->__("Loading...") ?>" />
+      </div>
+    </div>
+  </div>
+</div>
 <script>
 	var dataForm = new VarienForm('edit_productlabel', false);
 </script>
 <script>
-
+//jQuery('#myModal1').modal('show');
 	var statuses = [];
 	<?php foreach ($status as $statusLabel) { ?>
 		statuses.push("<?php echo $statusLabel ?>");
@@ -128,22 +138,36 @@
 		addStatusFunction();
 	});
 	
-	
+	jQuery('#indicator').show();
 	function addStatusFunction(){
 		var status = $('new_status').value;
 		var currentIndex = statuses.indexOf(status);
 		if(currentIndex>=0){
 			return;
 		}
+		jQuery('.bs-example-modal-sm').modal('show');
 		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addnewstatus') ?>', {
   			method:'post',
   			parameters: {status: status},
   			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
     			var response = transport.responseText;
+    			jQuery('#indicator').hide();
     			if(response != ''){
     				alert(response);
     			}else{
-    				$('dropdown-box').innerHTML = $('dropdown-box').innerHTML + '<span class="remove-status-link">X</span><li><a class="status-options" href="javascript:void(0);">'+status+'</a></li>';
+    				var removeSpan = document.createElement("span");
+    				removeSpan.addClassName('remove-status-link');
+    				removeSpan.innerHTML = 'x';
+    				
+    				var liElement = document.createElement("li");
+    				liElement.appendChild(removeSpan);
+    				liElement.insert('<a class="status-options" href="javascript:void(0);">'+status+'</a></li>');
+    				
+    				var tempDiv = document.createElement("div");
+    				tempDiv.appendChild(liElement);
+    				
+    				$('dropdown-box').innerHTML = $('dropdown-box').innerHTML + tempDiv.innerHTML;
     				statuses.push(status);
     				$$('a.status-options').each(function(e){
 						e.observe('click', function(){
@@ -174,16 +198,18 @@
 	});
 	
 	function removeStatusFunction(e){
+		
 		var status = e.up('li').down('a').innerHTML;
 		var currentIndex = statuses.indexOf(status);
 		if(currentIndex<0){
 			return;
 		}
-		
+		jQuery('.bs-example-modal-sm').modal('show');
 		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removenewstatus') ?>', {
   			method:'post',
   			parameters: {status: status},
   			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
     			var response = transport.responseText;
     			if(response != ''){
     				alert(response);

@@ -420,10 +420,15 @@ div.logout{
 .show-dropbox { display:inline-block !important; }
 .add-status-li { background-color:#ccc; }
 .remove-status-link{
-	float:left;
+	float:right;
 	position:absolute;
 	margin:0;
 	padding:3px 0 0 5px;
 	cursor:pointer;
 	color:red;
+	right:10px;
+}
+.labelpage-loader-div{
+	padding:30px 10px;
+	text-align:center;
 }
