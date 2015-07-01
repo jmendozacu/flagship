@@ -38,77 +38,36 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 	}
 ?>
         
- <nav class="navbar-default navbar-side" role="navigation">
- <?php if (Mage::getSingleton('inventorymanager/session')->isLoggedIn()) { ?>
-            <div class="sidebar-collapse">
-                <ul class="nav" id="main-menu">
-				<li class="text-center">
-                    <img src="<?php echo $this->getSkinUrl("images/find_user.png") ?>" class="user-image img-responsive"/>
-                    <?php echo $this->getLayout()->createBlock('inventorymanager/vendor_info')->setTemplate("inventorymanager/vendorinfo.phtml")->toHtml() ?>
-					</li>
-					
-					
-                    <li>
-                        <a class="<?php if($dashboardPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/index") ?>"><i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Dashboard") ?></a>
-                    </li>
-                    
-                    <li>
-                        <a class="<?php if($productsPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/products") ?>"><i class="fa fa-table fa-3x"></i> <?php echo $this->__("Products") ?></a>
-                    </li>
-                    
-                     <li>
-                        <a class="<?php echo $purchaseorderPage?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/purchaseorder/grid") ?>">
-                        	<i class="fa fa-desktop fa-3x"></i>
-                        	<?php echo $this->__("Purchase Orders") ?>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="<?php if($printendLabel) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/label/find') ?>"><i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Printed Labels") ?></a>
-                    </li>
-						   <li  >
-                        <a   href="chart.html"><i class="fa fa-bar-chart-o fa-3x"></i> Morris Charts</a>
-                    </li>	
-                      <li  >
-                        <a  href="table.html"><i class="fa fa-table fa-3x"></i> Table Examples</a>
-                    </li>
-                    <li  >
-                        <a  href="form.html"><i class="fa fa-edit fa-3x"></i> Forms </a>
-                    </li>				
-					
-					                   
-                    <li>
-                        <a href="#"><i class="fa fa-sitemap fa-3x"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Second Level Link</a>
-                            </li>
-                            <li>
-                                <a href="#">Second Level Link</a>
-                            </li>
-                            <li>
-                                <a href="#">Second Level Link<span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">Third Level Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Link</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Link</a>
-                                    </li>
-
-                                </ul>
-                               
-                            </li>
-                        </ul>
-                      </li>  
-                  <li  >
-                        <a  href="blank.html"><i class="fa fa-square-o fa-3x"></i> Blank Page</a>
-                    </li>	
-                </ul>
-               
-            </div>
-            <?php } ?>
-        </nav> 
-        
+<nav class="navbar-default navbar-side" role="navigation">
+<?php if (Mage::getSingleton('inventorymanager/session')->isLoggedIn()) { ?>
+	<div class="sidebar-collapse">
+		<ul class="nav" id="main-menu">
+			<li class="text-center">
+				<img src="<?php echo $this->getSkinUrl("images/find_user.png") ?>" class="user-image img-responsive"/>
+				<?php echo $this->getLayout()->createBlock('inventorymanager/vendor_info')->setTemplate("inventorymanager/vendorinfo.phtml")->toHtml() ?>
+			</li>
+            <li>
+                <a class="<?php if($dashboardPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/index") ?>">
+                	<i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Dashboard") ?>
+                </a>
+            </li>
+            <li>
+                <a class="<?php if($productsPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/products") ?>">
+                	<i class="fa fa-table fa-3x"></i> <?php echo $this->__("Products") ?>
+                </a>
+            </li>   
+			<li>
+                <a class="<?php echo $purchaseorderPage?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/purchaseorder/grid") ?>">
+                	<i class="fa fa-desktop fa-3x"></i>
+                	<?php echo $this->__("Purchase Orders") ?>
+                </a>
+            </li>
+            <li>
+                <a class="<?php if($printendLabel) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/label/find') ?>">
+                	<i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Serial Number Status") ?>
+                </a>
+            </li>
+		</ul>           
+	</div>
+<?php } ?>
+</nav>
