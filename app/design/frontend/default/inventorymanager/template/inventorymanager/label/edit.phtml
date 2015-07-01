@@ -19,7 +19,7 @@
 			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-6">
-						<form action="<?php echo $this->getUrl("inventorymanager/label/editpost") ?>" method="POST" id="edit_productlabel">
+						<form action="<?php echo $this->getUrl("inventorymanager/label/editpost") ?>" method="POST" id="edit_productlabel" enctype="multipart/form-data">
 							<input type="hidden" value="<?php echo $labelObject->getId() ?>" name="label_id" />
 							<div class="form-group">
 								<label><?php echo $this->__("Serial Key") ?></label>
@@ -70,12 +70,31 @@
 											<tr>
 												<td><?php echo $this->__("Date") ?></td>
 												<td><?php echo $this->__("Comment") ?></td>
+												<td><?php echo $this->__("Image") ?></td>
 											</tr>
 										</thead>
 										<?php foreach ($labelComments as $comment){ ?>
 											<tr>
 												<td><?php echo date("Y-m-d", strtotime($comment->getCreatedTime())); ?></td>
 												<td><?php echo $comment->getComment() ?></td>
+												<td>
+													<?php if($comment->getImage() != ""){ ?>
+														<a href="javascript:void();" onclick="jQuery('#image_model_<?php echo $comment->getId() ?>').modal('show');">
+															<img src="<?php echo $this->helper("inventorymanager")->resizeImage($comment->getImage(), 100, 100); ?>" />
+														</a>
+														<?php
+															$imageSize = getimagesize(Mage::getBaseUrl('media') . 'label/comments/' . $comment->getImage());
+														?>
+														<div class="modal fade bs-example-modal-lg" id="image_model_<?php echo $comment->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+	  														<div class="modal-dialog modal-lg" style="width:<?php echo $imageSize[0]+30 ?>px !important;">
+    															<div class="modal-content"">
+    																<div style="height:20px;"><a href="#" style="float:right; margin:8px;" onclick="jQuery('#image_model_<?php echo $comment->getId() ?>').modal('hide');">X</a></div>
+      																<img src="<?php echo Mage::getBaseUrl('media') . 'label/comments/' . $comment->getImage(); ?>" />
+    															</div>
+  															</div>
+														</div>
+													<?php } ?>
+												</td>
 											</tr>
 										<?php } ?>
 									</table>
@@ -84,6 +103,12 @@
 							<div class="form-group">
 								<label><?php echo $this->__("Comment") ?></label>
 								<textarea class="form-control" rows="2" name="comment"></textarea>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Comment Image") ?></label>
+								<p class="form-control-static">
+									<input type="file" name="comment_image" id="comment_image"  />
+								</p>
 							</div>
 							<div class="form-group">
 								<a class="btn btn-warning" onclick="if(dataForm.validator && dataForm.validator.validate()){ dataForm.form.submit(); }" href="#"><?php echo $this->__("Update") ?></a>

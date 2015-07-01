@@ -125,6 +125,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function editpostAction(){
 		if($data = $this->getRequest()->getPost()){
+			
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
 			try{
 				$model->setStatus($data['status'])->save();
@@ -136,6 +137,28 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 						'label_id'	=>	$model->getId()
 					);
 					$comment->setData($commentData)->save();
+					
+					if(isset($_FILES['comment_image']) && $_FILES['comment_image']['name'] != ""){
+						try {	
+							/* Starting upload */	
+							$uploader = new Varien_File_Uploader('comment_image');
+							// Any extention would work
+			           		$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
+							$uploader->setAllowRenameFiles(false);
+							$uploader->setFilesDispersion(false);
+									
+							// We set media as the upload dir
+							$path = Mage::getBaseDir('media') . DS . "label" . DS . "comments" . DS;
+							$uploader->save($path,$comment->getId() . "_" . $_FILES['comment_image']['name'] );
+							
+						} catch (Exception $e) {
+				      
+				        }
+			        
+				        //this way the name is saved in DB
+			  			$data['comment_image'] = $comment->getId() . "_" .$_FILES['comment_image']['name'];
+					}
+					$comment->setImage($data['comment_image'])->save();
 				}
 				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product label updated successfully"));
 			}catch (Exception $e){
