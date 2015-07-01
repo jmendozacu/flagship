@@ -79,7 +79,7 @@
 												<td><?php echo $comment->getComment() ?></td>
 												<td>
 													<?php if($comment->getImage() != ""){ ?>
-														<a href="javascript:void();" onclick="jQuery('#image_model_<?php echo $comment->getId() ?>').modal('show');">
+														<a href="javascript:void(0);" onclick="jQuery('#image_model_<?php echo $comment->getId() ?>').modal('show');">
 															<img src="<?php echo $this->helper("inventorymanager")->resizeImage($comment->getImage(), 100, 100); ?>" />
 														</a>
 														<?php
