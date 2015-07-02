@@ -128,7 +128,27 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 			
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
 			try{
-				$model->setStatus($data['status'])->save();
+				$model->setStatus($data['status']);
+				if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
+					try {	
+						$uploader = new Varien_File_Uploader('main_image');
+		           		$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
+						$uploader->setAllowRenameFiles(false);
+						$uploader->setFilesDispersion(false);
+						$path = Mage::getBaseDir('media') . DS . "label" . DS ;
+						$uploader->save($path,$model->getId() . "_" . $_FILES['main_image']['name'] );
+					} catch (Exception $e) {
+			      
+			        }
+		  			$data['main_image'] = $model->getId() . "_" .$_FILES['main_image']['name'];
+				}
+				//print_r($data); exit;
+				$model->setMainImage($data['main_image']);
+				if(isset($data['remove_main_image']) && $data['remove_main_image'] == 1){
+					$model->setMainImage("");
+				}
+				$model->save();
+				
 				if(isset($data['comment']) && trim($data['comment'])!= ""){
 					$comment = Mage::getModel('inventorymanager/label_comment');
 					$commentData = array(

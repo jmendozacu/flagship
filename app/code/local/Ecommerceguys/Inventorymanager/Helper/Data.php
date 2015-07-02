@@ -38,27 +38,38 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 		return "";
 	}
 	
-	public function resizeImage($_file_name, $width = 139, $height = 139){
+	public function resizeImage($_file_name, $width = 139, $height = 139, $linkpath = ""){
+		if(substr($linkpath,0,1) == "/"){
+			$linkpath = substr($linkpath,1);
+		}
 		
 		
-		$_media_dir = Mage::getBaseDir('media') . DS . 'label' . DS . 'comments' . DS;
+		
+		if(strlen($linkpath) > 0 && substr($linkpath,strlen($linkpath)-1) != "/"){
+			$linkpath.="/";
+		}
+		
+		$dirPath = str_replace("/",DS,$linkpath);
+		
+		$_media_dir = Mage::getBaseDir('media') . DS . $dirPath;
         $cache_dir = $_media_dir . 'resize' . DS; // Here i create a resize folder. for upload new category image
-
 		if (!file_exists($cache_dir . $_file_name) && file_exists($_media_dir . $_file_name)) {
-			
-             if (!is_dir($cache_dir)) {
-                 mkdir($cache_dir);
-             }
-             $_image = new Varien_Image($_media_dir . $_file_name);
-             $_image->constrainOnly(true);
-             $_image->keepAspectRatio(true);
-             $_image->keepFrame(false);
-             $_image->keepTransparency(true);
-             $_image->resize($width, $height); // change image height, width
-             $_image->save($cache_dir . $_file_name);
-             
-         }
-         $catImg =Mage::getBaseUrl('media') .  'label/comments/resize/' . $_file_name;
- 		return  $catImg ; 
+			if (!is_dir($cache_dir)) {
+				mkdir($cache_dir);
+            }
+            try {
+	            $_image = new Varien_Image($_media_dir . $_file_name);
+	            $_image->constrainOnly(true);
+	            $_image->keepAspectRatio(true);
+	            $_image->keepFrame(false);
+	            $_image->keepTransparency(true);
+	            $_image->resize($width, $height); // change image height, width
+	            $_image->save($cache_dir . $_file_name);
+            }catch (Exception $e){
+            	return $e->getMessage();
+            }
+        }
+        $catImg =Mage::getBaseUrl('media') .  $linkpath ."resize/" . $_file_name;
+		return  $catImg ; 
 	}
 }
