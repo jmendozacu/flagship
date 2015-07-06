@@ -65,7 +65,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     	try {
     		$writeConnection->insert($tableName, $data);
     	}catch (Exception $e){
-    		
+    		Mage::log($e->getMessage());
     	}
     }
     
@@ -78,7 +78,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     	try {
     		$writeConnection->delete($tableName, $whereCondition);
     	}catch (Exception $e){
-    		
+    		Mage::log($e->getMessage());
     	}
     }
     
@@ -95,7 +95,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     	try {
     		$writeConnection->insert($tableName, $data);
     	}catch (Exception $e){
-    		
+    		Mage::log($e->getMessage());
     	}
     }
     
@@ -108,7 +108,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     	try {
     		$writeConnection->delete($tableName, $whereCondition);
     	}catch (Exception $e){
-    		
+    		Mage::log($e->getMessage());
     	}
     }
 }
