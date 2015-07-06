@@ -419,7 +419,7 @@ div.logout{
 .load-revision-link{ float:right; }
 .show-dropbox { display:inline-block !important; }
 .add-status-li { background-color:#ccc; }
-.remove-status-link{
+.remove-status-link , .remove-material-link , .remove-lighting-link{
 	float:right;
 	position:absolute;
 	margin:0;

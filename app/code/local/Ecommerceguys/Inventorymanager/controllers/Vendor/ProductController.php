@@ -123,4 +123,48 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 		}
 		$this->_redirect("*/*/edit", array('id'=>$revisionObject->getProductId()));
 	}
+	
+	public function addmaterialAction(){
+		$material = $this->getRequest()->getParam('material');
+		if($material != ""){
+			try{
+				$resourceVendor = Mage::getResourceModel('inventorymanager/vendor')->addMaterial($material);
+			}catch (Exception $e){
+				echo $e->getMessage();
+			}
+		}
+	}
+	
+	public function removematerialAction(){
+		$material = $this->getRequest()->getParam('material');
+		if($material != ""){
+			try{
+				$resourceVendor = Mage::getResourceModel('inventorymanager/vendor')->removeMaterial($material);
+			}catch (Exception $e){
+				echo $e->getMessage();
+			}
+		}
+	}
+	
+	public function addlightingAction(){
+		$lighting = $this->getRequest()->getParam('lighting');
+		if($lighting != ""){
+			try {
+				$resourceVendor = Mage::getResourceModel('inventorymanager/vendor')->addLighting($lighting);
+			}catch (Exception $e){
+				
+			}
+		}
+	}
+	
+	public function removelightingAction(){
+		$lighting = $this->getRequest()->getParam('lighting');
+		if($lighting != ""){
+			try {
+				$resourceVendor = Mage::getResourceModel('inventorymanager/vendor')->removeLighting($lighting);
+			}catch (Exception $e){
+				
+			}
+		}
+	}
 }

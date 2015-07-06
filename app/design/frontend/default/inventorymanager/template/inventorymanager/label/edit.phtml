@@ -200,7 +200,7 @@
 		addStatusFunction();
 	});
 	
-	jQuery('#indicator').show();
+
 	function addStatusFunction(){
 		var status = $('new_status').value;
 		var currentIndex = statuses.indexOf(status);
@@ -214,7 +214,7 @@
   			onSuccess: function(transport) {
   				jQuery('.bs-example-modal-sm').modal('hide');
     			var response = transport.responseText;
-    			jQuery('#indicator').hide();
+
     			if(response != ''){
     				alert(response);
     			}else{

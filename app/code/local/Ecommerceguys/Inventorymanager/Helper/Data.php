@@ -38,19 +38,40 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 		return "";
 	}
 	
+	public function getVendorMaterials(){
+		$vendor = Mage::getSingleton('core/session')->getVendor();
+		$materials = $vendor->getMaterial();
+		$materialArray = array_map(array($this, formatMaterialArray), $materials);
+		return $materialArray;
+	}
+	
+	public function formatMaterialArray($value){
+		if(isset($value['material']))
+			return $value['material'];
+		return "";
+	}
+	
+	public function getVendorLighting(){
+		$vendor = Mage::getSingleton('core/session')->getVendor();
+		$lighting = $vendor->getLighting();
+		$lightingArray = array_map(array($this, formatLightingArray), $lighting);
+		return $lightingArray;
+	}
+	
+	public function formatLightingArray($value){
+		if(isset($value['lighting']))
+			return $value['lighting'];
+		return "";
+	}
+	
 	public function resizeImage($_file_name, $width = 139, $height = 139, $linkpath = ""){
 		if(substr($linkpath,0,1) == "/"){
 			$linkpath = substr($linkpath,1);
 		}
-		
-		
-		
 		if(strlen($linkpath) > 0 && substr($linkpath,strlen($linkpath)-1) != "/"){
 			$linkpath.="/";
 		}
-		
 		$dirPath = str_replace("/",DS,$linkpath);
-		
 		$_media_dir = Mage::getBaseDir('media') . DS . $dirPath;
         $cache_dir = $_media_dir . 'resize' . DS; // Here i create a resize folder. for upload new category image
 		if (!file_exists($cache_dir . $_file_name) && file_exists($_media_dir . $_file_name)) {

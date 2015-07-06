@@ -35,4 +35,14 @@ class Ecommerceguys_Inventorymanager_Model_Vendor extends Mage_Core_Model_Abstra
     	}
     	return false;
     }
+    
+    public function getMaterial(){
+    	$verndorId = $this->getId();
+    	return Mage::getResourceModel('inventorymanager/vendor')->getMaterial($verndorId);
+    }
+    
+    public function getLighting(){
+    	$verndorId = $this->getId();
+    	return Mage::getResourceModel('inventorymanager/vendor')->getLighting($verndorId);
+    }
 }
