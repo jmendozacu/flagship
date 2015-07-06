@@ -53,6 +53,10 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     }
     
     public function addMaterial($material){
+    	$addedMaterials = Mage::helper('inventorymanager')->getVendorMaterials();
+    	if(in_array($material, $addedMaterials)){
+    		return $this;
+    	}
     	$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
     	$resource = $this->getResourceObject();
     	$tableName = $resource->getTableName('inventorymanager_vendor_product_material');
@@ -79,6 +83,10 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     }
     
     public function addLighting($lighting){
+    	$addedLightings = Mage::helper('inventorymanager')->getVendorLighting();
+    	if(in_array($lighting, $addedLightings)){
+    		return $this;
+    	}
     	$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
     	$resource = $this->getResourceObject();
     	$tableName = $resource->getTableName('inventorymanager_vendor_product_lighting');

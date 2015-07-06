@@ -69,8 +69,11 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 			$vendorProduct = $this->getProductInfoModel();
 			$vendorProduct->setData($data);
 			$vendorProduct->setCreatedTime(now());
+			$vendorResourceModel = Mage::getResourceModel('inventorymanager/vendor');
 			try {
 				$vendorProduct->save();
+				$vendorResourceModel->addMaterial($data['material']);
+				$vendorResourceModel->addLighting($data['lighting']);
 				Mage::getSingleton('core/session')->addSuccess($this->__("Product Information updated successfully"));
 				
 			}catch (Exception $e){
