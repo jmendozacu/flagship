@@ -140,7 +140,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 					} catch (Exception $e) {
 			      
 			        }
-		  			$data['main_image'] = $model->getId() . "_" .$_FILES['main_image']['name'];
+		  			$data['main_image'] = $uploader->getUploadedFileName();
 				}
 				//print_r($data); exit;
 				$model->setMainImage($data['main_image']);
