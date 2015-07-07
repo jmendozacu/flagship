@@ -4,6 +4,7 @@
 	$_helper = $this->helper('catalog/output');
 	$labelComments = $this->getComments();
 	$status = Mage::helper('inventorymanager')->getOrderedProductStatusArray();
+	$locations = $this->helper('inventorymanager')->getLocations();
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -69,6 +70,24 @@
 										</div>
 									</div>
 								<?php } ?>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Location") ?></label>
+								<div class="form-control-static" >
+									<div class="btn-group show-dropbox">
+											<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
+							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" name="location" id="new_location" value="<?php echo $labelObject->getLocation(); ?>" />
+							  			</div>
+									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button-location" style="z-index:999"><span class="caret"></span></button>
+									  	<ul class="dropdown-menu" id="dropdown-box-location">
+									  		<li class="add-location-li"><a href="javascript:void(0);" id="new_location_link" ><?php echo $this->__("Add New") ?></a></li>
+									  		<li class="add-location-li"><a href="javascript:void(0);" class="location-options"  ><?php echo $this->__("In Stock On Magento") ?></a></li>
+									  		<?php foreach ($locations as $key => $locationLabel) { ?>
+									  			<li><span class="remove-location-link">x</span><a class="location-options" href="javascript:void(0);"><?php echo $locationLabel ?></a></li>
+									  		<?php } ?>
+									  	</ul>
+									</div>
+								</div>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Status") ?></label>
@@ -172,6 +191,8 @@
 	var dataForm = new VarienForm('edit_productlabel', false);
 </script>
 <script>
+	// SMART DROPBOX
+	// LABEL STATUS
 	var statuses = [];
 	<?php foreach ($status as $statusLabel) { ?>
 		statuses.push("<?php echo $statusLabel ?>");
@@ -277,6 +298,120 @@
     				alert(response);
     			}else{
     				statuses.splice(currentIndex, 1);
+    				e.up('li').remove();
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+</script>
+
+<script>
+	// SMART DROPBOX SCRIPTS
+	// locations
+	var locations = [];
+	<?php foreach ($locations as $location){ ?>
+		locations.push("<?php echo $location; ?>");
+	<?php } ?>
+	
+	$('openbox-button-location').observe('click', function(){
+		$('dropdown-box-location').toggleClassName('show-dropbox');
+	});
+	
+	$('new_location').observe("keyup", function(){
+		$('dropdown-box-location').addClassName('show-dropbox');
+		$('new_location_link').innerHTML = '<?php echo $this->__("Add") ?> ' + this.value;
+	});
+	
+	$('new_location').observe("click", function(){
+		$('dropdown-box-location').addClassName('show-dropbox');
+	});
+	
+	$('new_location_link').observe('click', function(){
+		addNewLocation();
+	});
+	
+	$$('a.location-options').each(function(e){
+		e.observe('click', function(){
+			$('new_location').value = e.innerHTML;
+			$('dropdown-box-location').toggleClassName('show-dropbox');
+		});
+	});
+	
+	function addNewLocation(){
+		var location = $('new_location').value;
+		var currentIndex = locations.indexOf(location);
+		if(currentIndex>=0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addlocation') ?>', {
+  			method:'post',
+  			parameters: {location:location},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				var removeSpan = document.createElement("span");
+    				
+    				removeSpan.addClassName('remove-location-link');
+    				removeSpan.innerHTML = 'x';
+    				
+    				var liElement = document.createElement("li");
+    				liElement.appendChild(removeSpan);
+    				liElement.insert('<a class="location-options" href="javascript:void(0);">'+location+'</a></li>');
+    				
+    				var tempDiv = document.createElement("div");
+    				tempDiv.appendChild(liElement);
+    				
+    				$('dropdown-box-location').innerHTML = $('dropdown-box-location').innerHTML + tempDiv.innerHTML;
+    				locations.push(location);
+    				$$('a.location-options').each(function(e){
+						e.observe('click', function(){
+							$('new_location').value = e.innerHTML;
+							$('dropdown-box-location').toggleClassName('show-dropbox');
+						});
+					});
+					$('dropdown-box-location').toggleClassName('show-dropbox');
+					$('new_location_link').observe('click', function(){
+						addNewLocation();
+					});
+					$$("span.remove-location-link").each(function(el){
+						el.observe('click', function(){
+							removeLocationFunction(el); 
+						});
+					});
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	$$("span.remove-location-link").each(function(e){
+		e.observe('click', function(){
+			removeLocationFunction(e);
+		});
+	});
+	
+	function removeLocationFunction(e){
+		var location = e.up('li').down('a').innerHTML;
+		var currentIndex = locations.indexOf(location);
+		if(currentIndex<0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removelocation') ?>', {
+  			method:'post',
+  			parameters: {location: location},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				locations.splice(currentIndex, 1);
     				e.up('li').remove();
     			}
   			},

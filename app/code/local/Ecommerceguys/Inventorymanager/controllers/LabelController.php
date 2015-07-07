@@ -125,10 +125,10 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function editpostAction(){
 		if($data = $this->getRequest()->getPost()){
-			
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
 			try{
 				$model->setStatus($data['status']);
+				$model->setLocation($data['location']);
 				if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
 					try {	
 						$uploader = new Varien_File_Uploader('main_image');
@@ -203,6 +203,24 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 			Mage::getModel('inventorymanager/label')->removeStatus($status);
 		}catch (Exception $e){
 			echo $e->getMessage();
+		}
+	}
+	
+	public function addlocationAction(){
+		$location = $this->getRequest()->getParam('location');
+		try {
+			Mage::getResourceModel('inventorymanager/label')->addLocation($location);
+		}catch (Exception $e){
+			Mage::log($e->getMessage());
+		}
+	}
+	
+	public function removelocationAction(){
+		$location = $this->getRequest()->getParam('location');
+		try {
+			Mage::getResourceModel('inventorymanager/label')->removeLocation($location);
+		}catch (Exception $e){
+			Mage::log($e->getMessage());
 		}
 	}
 }

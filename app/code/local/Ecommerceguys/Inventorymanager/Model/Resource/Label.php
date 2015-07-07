@@ -6,6 +6,8 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
         $this->_init('inventorymanager/label', 'label_id');
     }
     
+    
+    
     public function getStatuses(){
     	$resource = Mage::getSingleton('core/resource');
     	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_status');
@@ -30,7 +32,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	try {
     		$writeConnection->insert($tableName, $data);
     	}catch (Exception $e){
-    		
+    		Mage::log($e->getMessage());
     	}
     }
     
@@ -45,7 +47,49 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	try {
     		$writeConnection->delete($tableName, $whereCondition);
     	}catch (Exception $e){
-    		
+    		Mage::log($e->getMessage());
+    	}
+    }
+    
+    public function getLocations(){
+    	$resource = Mage::getSingleton('core/resource');
+    	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
+    	$readConnection = $resource->getConnection('core_read');
+    	$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+    	$select = $readConnection->select()
+                ->from(array('location' => $tableName))
+                ->where("location.vendor_id = ?", $vendorId);
+        return $readConnection->fetchAll($select);
+    }
+    
+    public function addLocation($location){
+    	$locations = Mage::helper('inventorymanager')->getLocations();
+    	if(in_array($location, $locations)){
+    		return $this;
+    	}
+    	$resource = Mage::getSingleton('core/resource');
+    	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
+    	$writeConnection = $resource->getConnection('core_write');
+    	$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+    	$data = array('vendor_id' => $vendorId, 'location' => $location);
+    	try {
+    		$writeConnection->insert($tableName, $data);
+    	}catch (Exception $e){
+    		Mage::log($e->getMessage());
+    	}
+    }
+    
+    public function removeLocation($location){
+    	$resource = Mage::getSingleton('core/resource');
+    	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
+    	$writeConnection = $resource->getConnection('core_write');
+    	
+    	$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+    	$whereCondition = $writeConnection->quoteInto('vendor_id=? AND location = "'.$location.'"', $vendorId);
+    	try {
+    		$writeConnection->delete($tableName, $whereCondition);
+    	}catch (Exception $e){
+    		Mage::log($e->getMessage());
     	}
     }
 }

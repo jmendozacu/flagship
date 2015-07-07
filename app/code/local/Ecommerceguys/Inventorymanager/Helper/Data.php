@@ -93,4 +93,17 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
         $catImg =Mage::getBaseUrl('media') .  $linkpath ."resize/" . $_file_name;
 		return  $catImg ; 
 	}
+	
+	public function getLocations(){
+		$locations = Mage::getModel('inventorymanager/label')->getLocations();
+		$locationArray = array_map(array($this, formatLocationArray), $locations);
+		return $locationArray;
+	}
+	
+	public function formatLocationArray($value){
+		if(isset($value['location'])){
+			return $value['location'];
+		}
+		return "";
+	}
 }

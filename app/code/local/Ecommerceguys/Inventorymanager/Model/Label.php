@@ -21,4 +21,13 @@ class Ecommerceguys_Inventorymanager_Model_Label extends Mage_Core_Model_Abstrac
     		Mage::getResourceModel('inventorymanager/label')->removeStatus($status);
     	}
     }
+    
+    public function getLocations(){
+    	return Mage::getResourceModel('inventorymanager/label')->getLocations();
+    }
+    
+    public function setLocation($location){
+    	Mage::getResourceModel('inventorymanager/label')->addLocation($location);
+    	return parent::setLocation($location);
+    }
 }
