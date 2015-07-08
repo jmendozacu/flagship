@@ -5,7 +5,7 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Labels extends Mage
 	public function __construct()
     {
         parent::__construct();
-        $this->setId('inventory_product_labels');
+        $this->setId('label_product_content');
         $this->setDefaultSort('label_id');
         $this->setUseAjax(true);
         $this->setDefaultLimit(3);
@@ -27,7 +27,20 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Labels extends Mage
 		return false;
 	}
 	
+	public function getTabUrl() 
+    {
+        return $this->getUrl('inventorymanager/adminhtml_label/serialgrid', array('_current' => true));
+    }
+ 
+    public function getTabClass()
+    {
+        return 'ajax';
+    }
+	
     public function getCurrentProductId(){
+    	if($this->getProductId()  && $this->getProductId() > 0){
+    		return $this->getProductId();
+    	}
     	return $this->getRequest()->getParam('id',0);
     }
     
@@ -103,6 +116,6 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Labels extends Mage
 
     public function getGridUrl()
     {
-        return $this->getUrl('inventorymanager/adminhtml_label/serialgrid', array('_current'=>true));
+        return $this->getUrl('inventorymanager/adminhtml_label/serialgrid', array('_current' => true));
     }
 }
