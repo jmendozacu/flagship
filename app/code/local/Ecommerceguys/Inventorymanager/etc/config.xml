@@ -90,6 +90,11 @@
             <inventorymanager>
                 <class>Ecommerceguys_Inventorymanager_Block</class>
             </inventorymanager>
+            <adminhtml>
+            	<rewrite>
+            		<catalog_product_edit_tabs>Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Tabs</catalog_product_edit_tabs>
+           		</rewrite>
+            </adminhtml>
         </blocks>
     </global>
     <adminhtml>

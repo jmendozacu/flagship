@@ -52,7 +52,18 @@ class MDN_Organizer_Block_Adminhtml_Catalog_Product_Edit_Tabs extends Mage_Admin
                 'content'   => $content,
             ));
         }
-
+        
+        if(Mage::helper('core')->isModuleEnabled("Ecommerceguys_Inventorymanager")){
+	        $product = $this->getProduct();
+	    	$setId = $product->getAttributeSetId();
+	    	if ($setId) {
+	    		 $this->addTab('labeled', array(
+	                'label'     => Mage::helper('catalog')->__('Product Labels'),
+	                'url'       => $this->getUrl('inventorymanager/adminhtml_label/grid', array('_current' => true)),
+	                'class'     => 'ajax',
+	            ));
+	    	}
+        }
         return $this;
     }
 
