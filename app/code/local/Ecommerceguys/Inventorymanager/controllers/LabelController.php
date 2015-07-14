@@ -91,7 +91,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 
 		// ---------------------------------------------------------
 		//Close and output PDF document
-		$pdf->Output('orderlabel.pdf', 'D');
+		$pdf->Output($orderId.'_orderlabel.pdf', 'D');
 	}
 	
 	
