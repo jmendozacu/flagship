@@ -5,6 +5,8 @@
 	$materials = $this->helper('inventorymanager')->getVendorMaterials();
 	$lightings = $this->helper('inventorymanager')->getVendorLighting();
 	
+	$productInfoObject = $this->getProductInfoObject();
+	
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -24,7 +26,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<?php echo $this->getMessagesBlock()->toHtml() ?>
-						<form id="vendor-product-form" action="<?php echo $this->getUrl("inventorymanager/vendor_product/saveProeductinfo") ?>" method="POST">
+						<form id="vendor-product-form" enctype="multipart/form-data" action="<?php echo $this->getUrl("inventorymanager/vendor_product/saveProeductinfo") ?>" method="POST">
 							<div class="no-display">
 								<input type="hidden" name="file" id="uploaded_file" />
 								<input type="hidden" name="product_id" id="product_id" value="<?php echo $_product->getId() ?>" />
@@ -54,6 +56,37 @@
 								<label><?php echo $this->__("Fun Specs") ?></label>
 								<input type="text" class="required-entry form-control" name="fun_spec" value="<?php echo $this->getProductInfoFunSpec() ?>" />
 							</div>
+							
+							<div class="form-group">
+								<label><?php echo $this->__("Image") ?></label>
+								<p class="form-control-static">
+									<input type="file" name="main_image" id="main_image"  />
+								</p>
+								
+								<?php if($productInfoObject->getMainImage() != ""){ ?>
+									<p>
+										<a href="javascript:void(0);" onclick="jQuery('#main_image_model').modal('show');">
+											<img src="<?php echo $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/"); ?>" />
+										</a>
+										<br>
+										<input type="hidden" name="main_image" value="<?php echo $productInfoObject->getMainImage(); ?>" />
+										<input type="checkbox" name="remove_main_image" id="remove_main_image" value="1" />
+										<?php echo $this->__("Remove Image") ?>
+									</p>
+									<?php $imageSize = getimagesize(Mage::getBaseUrl('media') . 'productdetail/' . $productInfoObject->getMainImage()); ?>
+									<div class="modal fade bs-example-modal-lg" id="main_image_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+										<div class="modal-dialog modal-lg" style="width:<?php echo $imageSize[0]+20 ?>px !important;">
+											<div class="modal-content"">
+												<div style="padding:10px;"><a href="#" style="float:right;" onclick="jQuery('#main_image_model').modal('hide');">X</a>
+													<img src="<?php echo Mage::getBaseUrl('media') . 'productdetail/' . $productInfoObject->getMainImage(); ?>" />
+												</div>
+											</div>
+										</div>
+									</div>
+								<?php } ?>
+								
+							</div>
+							
 							<?php $_material = $this->getProductInfoMaterial(); ?>
 							<div class="form-group">
 								<label><?php echo $this->__("Material") ?></label>

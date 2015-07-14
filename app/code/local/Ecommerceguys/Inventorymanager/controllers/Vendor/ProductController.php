@@ -45,6 +45,9 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 	
 	public function saveProeductinfoAction(){
 		if($data = $this->getRequest()->getPost()){
+			
+			
+			
 			$data['description'] = trim($data['description']);
 			if($activeObject  = $this->getProductInfoModel()->getActiveObject($data['vendor_id'], $data['product_id'])){
 				// only enters in this condition if active object found
@@ -89,6 +92,23 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 				$vendorProduct->save();
 				$vendorResourceModel->addMaterial($data['material']);
 				$vendorResourceModel->addLighting($data['lighting']);
+				
+				if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
+					try {	
+						$uploader = new Varien_File_Uploader('main_image');
+		           		$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
+						$uploader->setAllowRenameFiles(false);
+						$uploader->setFilesDispersion(false);
+						$path = Mage::getBaseDir('media') . DS . "productdetail" . DS ;
+						$uploader->save($path,$vendorProduct->getId() . "_" . $_FILES['main_image']['name'] );
+					} catch (Exception $e) {
+			      
+			        }
+		  			$data['main_image'] = $uploader->getUploadedFileName();
+				}
+				$vendorProduct->setMainImage($data['main_image'])->save();
+				
+				
 				Mage::getSingleton('core/session')->addSuccess($this->__("Product Information updated successfully"));
 				
 			}catch (Exception $e){

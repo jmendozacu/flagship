@@ -31,10 +31,21 @@
 						<tbody>
 							<?php foreach ($this->getDifferences() as $key => $difference){
 								if(isset($fieldTitles[$key])){?>
+									
 									<tr>
+									<?php if($key == "main_image") { ?>
+										<td><?php echo $fieldTitles[$key] ?></td>
+										<td>
+											<img src="<?php echo $this->helper("inventorymanager")->resizeImage($productInfoObject->getData($key), 100, 100, "productdetail/"); ?>" />
+										</td>
+										<td>
+											<img src="<?php echo $this->helper("inventorymanager")->resizeImage($revisionObject->getData($key), 100, 100, "productdetail/"); ?>" />
+										</td>
+									<?php } else { ?>
 										<td><?php echo $fieldTitles[$key] ?></td>
 										<td><?php echo $productInfoObject->getData($key) ?></td>
 										<td><?php echo $revisionObject->getData($key) ?></td>
+									<?php } ?>
 									</tr>
 								<?php }
 							} ?>
