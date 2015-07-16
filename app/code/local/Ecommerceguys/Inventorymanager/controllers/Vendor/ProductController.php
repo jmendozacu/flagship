@@ -53,20 +53,20 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 			if($activeObject  = $this->getProductInfoModel()->getActiveObject($data['vendor_id'], $data['product_id'])){
 				// only enters in this condition if active object found
 				
+				if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
+					$data['main_image'] = $_FILES['main_image']['name'];
+				}
+				
 				$activeObjectData = $activeObject->getData();
 				// modify active array elements to compare with post data
 				$activeObjectData['file'] = implode(",", Mage::helper('core')->jsonDecode($activeObjectData['files'])).",";
 				$activeObjectData['description'] = trim($activeObjectData['description']);
+				
 				unset($activeObjectData['entity_id']);
 				unset($activeObjectData['created_time']);
 				unset($activeObjectData['updated_time']);
 				unset($activeObjectData['is_revision']);
 				unset($activeObjectData['files']);
-				
-				//echo "POST DATA<br/>";
-				//print_r($data);
-				//echo "OBJ DATA<br/>";
-				//print_r($activeObjectData);
 				
 				$difference = array_diff($data, $activeObjectData);
 				if(sizeof($difference) <= 0){
