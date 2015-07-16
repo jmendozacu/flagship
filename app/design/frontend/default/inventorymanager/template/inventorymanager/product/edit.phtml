@@ -21,6 +21,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading" id="main-tab" >
 				<?php echo $this->__("Product Information") ?>	
+				<a href="<?php echo $this->getUrl('inventorymanager/vendor_product/gemeratePdf', array('product_id'=>$_product->getId())) ?>" class="btn btn-warning btn-xs fright"><?php echo $this->__("Generate PDF") ?></a>
 			</div>
 			<div class="panel-body" id="main-tab-content">
 				<div class="row">
@@ -63,7 +64,7 @@
 									<input type="file" name="main_image" id="main_image"  />
 								</p>
 								
-								<?php if($productInfoObject->getMainImage() != ""){ ?>
+								<?php if($productInfoObject && $productInfoObject->getMainImage() != ""){ ?>
 									<p>
 										<a href="javascript:void(0);" onclick="jQuery('#main_image_model').modal('show');">
 											<img src="<?php echo $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/"); ?>" />

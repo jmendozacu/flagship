@@ -1,0 +1,60 @@
+<?php $products = $this->getlabels() ?>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $catalogProduct = $this->getMainProduct(); ?>
+<?php $productInfoObject = $this->getProductInfoObject(); ?>
+
+<?php
+	$imageHtml = "";
+	if($productInfoObject && $productInfoObject->getMainImage() != ""){
+		$imageHtml =  '<img src="'.$this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/").'" />';
+	}
+?>
+<div>
+	<ul>
+		<?php $iCounter = 1 ?>
+		<?php foreach ($products as $product){ ?>
+		<?php if($iCounter > 10) { break; } $iCounter++;  // place restriction to geneate lables for 300 qty ?>
+			<li style="border:1px solid #ccc;">
+				<table border="1" cellpadding="5" width="100%">
+					<tr>
+						<td>
+							<img src="<?php echo str_replace(array("index.php","index.php/"), "", Mage::getBaseUrl())	."barcode.php?text=".$product->getSerial()."&size=32"; ?>" />
+							<?php echo $imageHtml ?>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $product->getSerial() ?></td>
+					</tr>
+				</table>
+				<table border="1" cellpadding="5" width="100%">
+					<?php /* <tr>
+						<td><?php echo $this->__("Serial") ?></td>
+						<td><?php echo $product->getSerial() ?></td>
+					</tr> */ ?>
+					<tr>
+						<td><?php echo $this->__("Product") ?></td>
+						<td><?php echo $catalogProduct->getName() ?></td>
+					</tr>
+					<tr>
+						<td><?php echo $this->__("Weight") ?></td>
+						<td><?php echo $catalogProduct->getWeight() ?></td>
+					</tr>
+				</table>
+				<table border="1" cellpadding="5" width="100%">
+					<tr>
+						<td><?php echo $this->__("Height") ?></td>
+						<td><?php echo $this->__("Width") ?></td>
+						<td><?php echo $this->__("Depth") ?></td>
+					</tr>
+					<tr>
+						<td><?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches') ?></td>
+						<td><?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches') ?></td>
+						<td><?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth') ?></td>
+					</tr>
+					
+				</table>
+			</li>
+			<li style="list-style: none"><br/><br/><br/></li>
+		<?php } ?>
+	</ul>
+</div>
