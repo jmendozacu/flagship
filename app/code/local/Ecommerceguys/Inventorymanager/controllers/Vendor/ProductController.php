@@ -76,7 +76,7 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 					return $this;
 				}
 				//print_r($difference); 
-			}			
+			}
 			$this->getProductInfoModel()->setRevision($data['vendor_id'], $data['product_id']);
 			
 			$files = explode(",",$data['file']);
@@ -84,6 +84,12 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 			if(sizeof($files) > 0){
 				$jsonFiles = Mage::helper('core')->jsonEncode($files);
 				$data['files'] = $jsonFiles;
+			}
+			if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
+				unset($data['main_image']);
+			}
+			if(isset($data['remove_main_image']) &&  $data['remove_main_image'] == 1){
+				$data['main_image'] = "";
 			}
 			$vendorProduct = $this->getProductInfoModel();
 			$vendorProduct->setData($data);
