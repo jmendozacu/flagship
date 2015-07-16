@@ -1,0 +1,116 @@
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addCss"><script>mirasvit/advr.css</script></action>
+        </reference>
+    </default>
+
+    <advradmin_adminhtml_order_geo>
+        <reference name="head">
+            <action method="setTemplate"><value>mst_advr/page/head.phtml</value></action>
+            <action method="removeItem">
+                <type>js</type>
+                <name>prototype/prototype.js</name>
+            </action>
+        </reference>
+    </advradmin_adminhtml_order_geo>
+
+    <advradmin_adminhtml_order_country>
+        <reference name="head">
+            <action method="setTemplate"><value>mst_advr/page/head.phtml</value></action>
+            <action method="removeItem">
+                <type>js</type>
+                <name>prototype/prototype.js</name>
+            </action>
+        </reference>
+    </advradmin_adminhtml_order_country>
+
+    <!-- <advradmin_adminhtml_product_bestseller>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_product_bestseller" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_product_bestseller>
+
+    <advradmin_adminhtml_product_products>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_product_products" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_product_products>
+
+    <advradmin_adminhtml_product_productdetail>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_product_detail" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_product_productdetail>
+
+    <advradmin_adminhtml_product_attributedetail>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_product_attribute_detail" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_product_attributedetail>
+
+    <advradmin_adminhtml_product_attribute>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_product_attribute" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_product_attribute>
+
+    <advradmin_adminhtml_product_attributeset>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_product_attributeset" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_product_attributeset>
+
+    <advradmin_adminhtml_product_attributesetdetail>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_product_attributeset_detail" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_product_attributesetdetail>
+
+    <advradmin_adminhtml_product_grouped>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_product_grouped" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_product_grouped>
+
+    <advradmin_adminhtml_product_lowstock>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_product_lowstock" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_product_lowstock> -->
+
+    <advradmin_adminhtml_review_reviews>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_review_reviews" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_review_reviews>
+
+    <advradmin_adminhtml_customer_customers>
+        <update handle="advradmin_adminhtml" />
+
+        <reference name="content">
+            <block type="advr/adminhtml_customer_customers" name="container" as="container" />
+        </reference>
+    </advradmin_adminhtml_customer_customers>
+
+</layout>
