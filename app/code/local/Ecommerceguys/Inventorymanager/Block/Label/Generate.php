@@ -11,4 +11,13 @@ class Ecommerceguys_Inventorymanager_Block_Label_Generate extends Mage_Core_Bloc
 	public function getOrderId(){
 		return $this->getRequest()->getParam('id');
 	}
+	
+	public function getProductrInfoObject($productId){
+		$vendorProduct = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+		$vendorProduct->addFieldToFilter('is_revision', 0);
+		$vendorProduct->addFieldToFilter('product_id', $productId);
+		if($vendorProduct->count()){
+			return $vendorProduct->getFirstItem();
+		}
+	}
 }
