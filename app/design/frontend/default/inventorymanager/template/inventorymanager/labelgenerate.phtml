@@ -15,13 +15,13 @@
 			$width =  $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
 			$depth = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth');
 			
-			if($productInfoObject->getHeight() && $productInfoObject->getHeight() > 0){
+			if($productInfoObject && $productInfoObject->getHeight() && $productInfoObject->getHeight() > 0){
 				$height = $productInfoObject->getHeight();
 			}
-			if($productInfoObject->getWidth() && $productInfoObject->getWidth() > 0){
+			if($productInfoObject &&  $productInfoObject->getWidth() && $productInfoObject->getWidth() > 0){
 				$width = $productInfoObject->getWidth();
 			}
-			if($productInfoObject->getLength() && $productInfoObject->getLength() > 0){
+			if($productInfoObject && $productInfoObject->getLength() && $productInfoObject->getLength() > 0){
 				$depth = $productInfoObject->getLength();
 			}
 		?>
