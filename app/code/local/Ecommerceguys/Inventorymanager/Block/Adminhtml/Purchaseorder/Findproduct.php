@@ -13,7 +13,19 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Purchaseorder_Findproduct e
 		$productCollection = Mage::getModel('catalog/product')->getCollection();
 		$productCollection->addAttributeToSelect('sku');
 		$productCollection->addAttributeToSelect('name');
-		$productCollection->addAttributeToFilter('sku', array('like'=>$searchKeyword.'%'));
+		//$productCollection->addAttributeToFilter('sku', array('like'=>$searchKeyword.'%'));
+		$productCollection->addAttributeToFilter(
+			array(
+				array('attribute'=>'name', 'like'=>$searchKeyword.'%'),
+				array('attribute'=>'sku', 'like'=>$searchKeyword.'%')
+			)
+		);
+		
+		$vendorProducttable = Mage::getSingleton('core/resource')->getTableName('inventorymanager_vendorproduct');
+		
+		$productCollection->getSelect()->joinLeft(array('vp'=>$vendorProducttable), "e.entity_id = vp.product_id")
+			->where("vp.vendor_id = ".$postData['vendor_id']);
+		
 		return $productCollection;
 	}
 }
