@@ -71,6 +71,15 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 				->setId($this->getRequest()->getParam('id'));
 			try {
 				$model->save();
+				
+				$orderProduct = Mage::getModel('inventorymanager/product')->getCollection();
+				$orderProduct->addFieldToFilter('po_id', $model->getId());
+				$orderProduct->addFieldToFilter('product_id', array('nin' => $poProductIds));
+				foreach ($orderProduct as $orderP){
+					$orderP->delete();
+				}
+				
+				
 				$productData['po_id'] = $model->getId();
 				$tatalQty = 0;
 				foreach ($data['qty'] as $productId => $qty){
@@ -91,14 +100,9 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 					$orderProduct->setData($productData);
 					$orderProduct->save();
 				}
-				if(isset($data['id'])){
-					$orderProduct = Mage::getModel('inventorymanager/product')->getCollection();
-					$orderProduct->addFieldToFilter('po_id', $model->getId());
-					$orderProduct->addFieldToFilter('main_product_id', array('nin' => $poProductIds));
-					foreach ($orderProduct as $orderP){
-						$orderP->delete();
-					}
-				}
+				//if(isset($data['id'])){
+					
+				//}
 				$model->setOrderQty($tatalQty)->save();
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order was successfully saved'));
 				Mage::getSingleton('adminhtml/session')->setFormData(false);
