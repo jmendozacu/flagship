@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dolphin_Slideshow>
-            <active>true</active>
+            <active>false</active>
             <codePool>community</codePool>
         </Dolphin_Slideshow>
     </modules>
