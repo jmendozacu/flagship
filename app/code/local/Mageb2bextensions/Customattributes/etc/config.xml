@@ -36,7 +36,7 @@
     <adminhtml>
 		<menu>
 			<customattributes module="customattributes">
-				<title>Customer Custom Attributes</title>
+				<title>Customer Attributes</title>
 				<sort_order>71</sort_order>               
 				<children>
 					<customattributes translate="title" module="customattributes">

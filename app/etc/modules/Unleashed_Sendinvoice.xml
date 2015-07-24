@@ -10,7 +10,7 @@
 <config>
     <modules>
         <Unleashed_Sendinvoice>
-            <active>true</active>
+            <active>false</active>
             <codePool>local</codePool>
         </Unleashed_Sendinvoice>
     </modules>
