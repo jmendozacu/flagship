@@ -19,8 +19,7 @@ class Ecommerceguys_Inventorymanager_Model_Vendor extends Mage_Core_Model_Abstra
     public function authenticate($login, $password){
     	$this->loadVenderByLogin($login);
     	if(!$this->validatePassword($password)){
-    		throw Mage::exception('Mage_Core', Mage::helper('customer')->__('Invalid login or password.')
-            );
+    		return false;
     	}
     	return true;
     }
@@ -44,5 +43,19 @@ class Ecommerceguys_Inventorymanager_Model_Vendor extends Mage_Core_Model_Abstra
     public function getLighting(){
     	$verndorId = $this->getId();
     	return Mage::getResourceModel('inventorymanager/vendor')->getLighting($verndorId);
+    }
+    
+    public function authenticateAdmin($username, $password){
+    	Mage::getSingleton('core/session', array('name' => 'adminhtml'));
+    	$user = Mage::getModel('admin/user')->loadByUsername($username);
+    	$user_id = $user->getId();
+    	if($user->getId()>=1){
+    		$dbpassword = $user->getData('password');
+    		if(Mage::helper('core')->validateHash($password, $dbpassword))
+    		{
+    			return true;
+    		}
+    	}
+    	return false;
     }
 }

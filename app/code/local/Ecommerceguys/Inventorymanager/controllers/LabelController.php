@@ -10,7 +10,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function preDispatch(){
 		parent::preDispatch();
-		if (!$this->_getSession()->isLoggedIn()) {
+		if (!$this->_getSession()->isLoggedIn() && !$this->_getSession()->isAdminUser()) {
             $this->_redirect('*/vendor/login');
             $this->setFlag('', self::FLAG_NO_DISPATCH, true);
             return false;

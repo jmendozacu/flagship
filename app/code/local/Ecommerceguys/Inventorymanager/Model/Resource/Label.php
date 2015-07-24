@@ -12,12 +12,15 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	$resource = Mage::getSingleton('core/resource');
     	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_status');
     	$readConnection = $resource->getConnection('core_read');
-    	
-    	$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
-    	
+
     	$select = $readConnection->select()
-                ->from(array('status' => $tableName))
-                ->where("status.vendor_id = ?", $vendorId);
+                ->from(array('status' => $tableName));
+		
+		$vendor = Mage::getSingleton('core/session')->getVendor();
+        if($vendor && $vendor->getId()){
+        	$vendorId = $vendor->getId();
+			$select->where("status.vendor_id = ?", $vendorId);
+        }
         return $readConnection->fetchAll($select);
     }
     
@@ -55,10 +58,15 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	$resource = Mage::getSingleton('core/resource');
     	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
     	$readConnection = $resource->getConnection('core_read');
-    	$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+    	
     	$select = $readConnection->select()
-                ->from(array('location' => $tableName))
-                ->where("location.vendor_id = ?", $vendorId);
+                ->from(array('location' => $tableName));
+		
+		$vendor = Mage::getSingleton('core/session')->getVendor();
+        if($vendor && $vendor->getId()){
+			$vendorId = $vendor->getId();
+        	$select->where("location.vendor_id = ?", $vendorId);
+        }
         return $readConnection->fetchAll($select);
     }
     

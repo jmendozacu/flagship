@@ -18,7 +18,17 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
   </a>
   
 </div>
+<?php }elseif(Mage::getSingleton('inventorymanager/session')->isAdminUser()){ ?>
+	<div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> 
+  <a href="<?php echo $this->getUrl('inventorymanager/adminuser/logout') ?>" class="btn btn-danger square-btn-adjust">
+  	<?php echo $this->__("Logout") ?>
+  </a>
+  
+</div>
 <?php } ?>
+
+
+
         </nav>
 <?php
 	$currentController = $this->getRequest()->getControllerName();
@@ -68,6 +78,31 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
                 </a>
             </li>
 		</ul>           
+	</div>
+<?php }elseif(Mage::getSingleton('inventorymanager/session')->isAdminUser()){ ?>
+	<div class="sidebar-collapse">
+		<ul class="nav" id="main-menu">
+			<li class="text-center">
+				<img src="<?php echo $this->getSkinUrl("images/find_user.png") ?>" class="user-image img-responsive"/>
+				<?php /* echo $this->getLayout()->createBlock('inventorymanager/vendor_info')->setTemplate("inventorymanager/vendorinfo.phtml")->toHtml()*/ ?>
+			</li>
+			<li>
+                <a class=""  href="<?php echo $this->getUrl("inventorymanager/adminuser/vendors") ?>">
+                	<i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Products") ?>
+                </a>
+            </li>
+             <li>
+                <a class=""  href="<?php echo $this->getUrl("inventorymanager/label/find") ?>">
+                	<i class="fa fa-table fa-3x"></i> <?php echo $this->__("Send Products") ?>
+                </a>
+            </li>
+            <li>
+                <a class="" href="<?php echo $this->getUrl("inventorymanager/label/find") ?>">
+                	<i class="fa fa-desktop fa-3x"></i>
+                	<?php echo $this->__("Receive Products") ?>
+                </a>
+            </li>
+		</ul>
 	</div>
 <?php } ?>
 </nav>

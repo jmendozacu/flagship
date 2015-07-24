@@ -30,4 +30,8 @@ class Ecommerceguys_Inventorymanager_Block_Label_Edit extends Mage_Core_Block_Te
 		$labelComments->addFieldToFilter('label_id', $label->getId());
 		return $labelComments;
 	}
+	
+	public function getPurchaseOrder(){
+		return Mage::getModel('inventorymanager/purchaseorder')->load($this->gerMainProduct()->getPoId());
+	}
 }

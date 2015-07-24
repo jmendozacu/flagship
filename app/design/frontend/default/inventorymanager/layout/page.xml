@@ -41,8 +41,9 @@ Default layout, loads most of the pages
             	<action method="addItem"><type>skin_js</type><name>js/jquery.metisMenu.js</name></action>
             	<action method="addItem"><type>skin_js</type><name>js/morris/raphael-2.1.0.min.js</name></action>
             	<action method="addItem"><type>skin_js</type><name>js/morris/morris.js</name></action>
-            	<action method="addItem"><type>skin_js</type><name>js/dataTables/dataTables.bootstrap.js</name></action>
             	<action method="addItem"><type>skin_js</type><name>js/dataTables/jquery.dataTables.js</name></action>
+            	<action method="addItem"><type>skin_js</type><name>js/dataTables/dataTables.bootstrap.js</name></action>
+            	
             	<action method="addItem"><type>skin_js</type><name>js/noconfict.js</name></action>
             	<!--<action method="addItem"><type>skin_js</type><name>js/custom.js</name></action>-->
             	

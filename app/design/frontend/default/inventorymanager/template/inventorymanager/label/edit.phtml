@@ -1,10 +1,13 @@
 <?php
 	$labelObject = $this->getLabelObject();
 	$catalogProduct = $this->gerMainProduct();
+	
+	$_purchaseorder = $this->getPurchaseOrder();
+	
 	$_helper = $this->helper('catalog/output');
 	$labelComments = $this->getComments();
-	$status = Mage::helper('inventorymanager')->getOrderedProductStatusArray();
-	$locations = $this->helper('inventorymanager')->getLocations();
+	$status = Mage::helper('inventorymanager')->getOrderedProductStatusArray($_purchaseorder->getVendorId());
+	$locations = $this->helper('inventorymanager')->getLocations($_purchaseorder->getVendorId());
 ?>
 <div class="row">
 	<div class="col-md-12">
