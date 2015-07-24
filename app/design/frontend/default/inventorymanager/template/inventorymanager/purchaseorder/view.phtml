@@ -1,0 +1,120 @@
+<?php
+	$purchaseorderObject = $this->getPurchaseOrder();
+	$methods = Mage::getSingleton('shipping/config')->getActiveCarriers();
+  	$shippingMethods = array();
+  	foreach($methods as $_code => $_method)
+ 	{
+ 		if(!$_title = Mage::getStoreConfig("carriers/$_code/title")){
+            $_title = $_code;
+ 		}
+      	$shippingMethods[$_code] = $_title;
+ 	}
+ 	$paymentTerms = Mage::getModel('inventorymanager/paymentterms')->getArray(); 
+?>
+<div class="row">
+	<div class="col-md-12">
+		<h2>
+			<?php echo $this->__("Purchase Order View") ?>
+			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/generate", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right"><?php echo $this->__("Generate") ?></a>
+		</h2>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="panel panel-back noti-box">
+			<table class="table table-striped">
+				<tr>
+					<td style="width:200px"><label><?php echo $this->__("Shipping Method") ?></label></td>
+					<td><?php echo $shippingMethods[$purchaseorderObject->getShippingMethod()] ?></td>
+				</tr>
+				<tr>
+					<td><label><?php echo $this->__("Payment Terms") ?></label></td>
+					<td><?php echo $paymentTerms[$purchaseorderObject->getPaymentTerms()] ?></td>
+				</tr>
+				<tr>
+					<td><label><?php echo $this->__("Order Date") ?></label></td>
+					<td><?php echo date("Y-m-d", strtotime($purchaseorderObject->getDateOfPo())); ?></td>
+				</tr>
+				<?php if($purchaseorderObject->getExpectedDate() != ""){ ?>
+				<tr>
+					<td><label><?php echo $this->__("Order Date") ?></label></td>
+					<td><?php echo date("Y-m-d", strtotime($purchaseorderObject->getExpectedDate())); ?></td>
+				</tr>
+				<?php } ?>
+				<tr>
+					<td><label><?php echo $this->__("Order Qty") ?></label></td>
+					<td><?php echo $purchaseorderObject->getOrderQty(); ?></td>
+				</tr>
+				<tr>
+					<td><label><?php echo $this->__("Received Qty") ?></label></td>
+					<td><?php echo $purchaseorderObject->getReceivedQty(); ?></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Products") ?></div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th><?php echo $this->__("Name") ?></th>
+								<th><?php echo $this->__("Price") ?></th>
+								<th><?php echo $this->__("Qty") ?></th>
+								<th><?php echo $this->__("Total") ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php $iCounter = 0; foreach ($this->getProducts() as $product){
+							$realProduct = Mage::getModel('catalog/product')->load($product->getMainProductId());
+								?>
+							<tr>
+								<td><?php echo ++$iCounter; ?></td>
+								<td><?php echo $realProduct->getName(); ?></td>
+								<td><?php echo $product->getPrice(); ?></td>
+								<td><?php echo $product->getQty(); ?></td>
+								<td><?php echo $product->getTotal(); ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Comments") ?></div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th><?php echo $this->__("Comment") ?></th>
+								<th><?php echo $this->__("Date") ?></th>
+								<th><?php echo $this->__("Attachement") ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php $iCounter = 0; foreach ($this->getComments() as $comment){ ?>
+							<tr>
+								<td><?php echo ++$iCounter; ?></td>
+								<td><?php echo $comment->getComment(); ?></td>
+								<td><?php echo $comment->getCreatedTime(); ?></td>
+								<td>
+									<a href="<?php echo $this->getUrl("inventorymanager/purchaseorder/download", array('file'=>$comment->getAttachement())) ?>"><?php echo $comment->getAttachement(); ?></a>
+								</td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

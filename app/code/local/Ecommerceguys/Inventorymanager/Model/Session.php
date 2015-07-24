@@ -54,18 +54,14 @@ class Ecommerceguys_Inventorymanager_Model_Session extends Mage_Core_Model_Sessi
     public function login($username, $password)
     {
         $vendor = Mage::getModel('inventorymanager/vendor');
-
         if ($vendor->authenticate($username, $password)) {
-        	
-        	
-        	
             $this->setVendorAsLoggedIn($vendor);
             $this->setVendor($vendor);
-            
-            
-    
-            
             return true;
+        }elseif($vendor->authenticateAdmin($username, $password)){
+        	$user = Mage::getModel('admin/user')->loadByUsername($username);
+        	$this->setAdminUser($user);
+        	return true;
         }
         return false;
     }
@@ -115,5 +111,22 @@ class Ecommerceguys_Inventorymanager_Model_Session extends Mage_Core_Model_Sessi
         }
 
         return false;
+    }
+    
+    public function setAdminUser($user){
+    	
+    	Mage::getSingleton('core/session')->setUserType('admin');
+    	Mage::getSingleton('core/session')->setUser($user);
+    }
+    
+    public function isAdminUser(){
+    	$session = Mage::getSingleton('core/session');
+    	if($session->getUserType() == "admin"){
+    		$user = $session->getUser();
+    		if($user && $user->getId()){
+    			return true;
+    		}
+    	}
+    	return false;
     }
 }

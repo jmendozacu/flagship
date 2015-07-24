@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ecommerceguys_Inventorymanager>
-            <version>0.1.8</version>
+            <version>0.2.8</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
     <frontend>
@@ -52,6 +52,12 @@
                     <vendor_productinfo>
                     	<table>inventorymanager_vendor_productdetail</table>
                     </vendor_productinfo>
+                    <label>
+                    	<table>inventorymanager_purchaseorder_label</table>
+                    </label>
+                    <label_comment>
+                    	<table>inventorymanager_purchaseorder_label_comment</table>
+                    </label_comment>
                 </entities>
             </inventorymanager_resource>
         </models>
@@ -84,6 +90,11 @@
             <inventorymanager>
                 <class>Ecommerceguys_Inventorymanager_Block</class>
             </inventorymanager>
+            <adminhtml>
+            	<rewrite>
+            		<catalog_product_edit_tabs>Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Tabs</catalog_product_edit_tabs>
+           		</rewrite>
+            </adminhtml>
         </blocks>
     </global>
     <adminhtml>

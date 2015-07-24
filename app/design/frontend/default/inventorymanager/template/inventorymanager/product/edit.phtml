@@ -1,6 +1,12 @@
 <?php
 	$_product = $this->getCurrentProduct();
 	$_vendor = $this->getCurrentVendor();
+	
+	$materials = $this->helper('inventorymanager')->getVendorMaterials();
+	$lightings = $this->helper('inventorymanager')->getVendorLighting();
+	
+	$productInfoObject = $this->getProductInfoObject();
+	
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -15,12 +21,13 @@
 		<div class="panel panel-default">
 			<div class="panel-heading" id="main-tab" >
 				<?php echo $this->__("Product Information") ?>	
+				<a href="<?php echo $this->getUrl('inventorymanager/vendor_product/gemeratePdf', array('product_id'=>$_product->getId())) ?>" class="btn btn-warning btn-xs fright"><?php echo $this->__("Generate PDF") ?></a>
 			</div>
 			<div class="panel-body" id="main-tab-content">
 				<div class="row">
 					<div class="col-md-12">
 						<?php echo $this->getMessagesBlock()->toHtml() ?>
-						<form id="vendor-product-form" action="<?php echo $this->getUrl("inventorymanager/vendor_product/saveProeductinfo") ?>" method="POST">
+						<form id="vendor-product-form" enctype="multipart/form-data" action="<?php echo $this->getUrl("inventorymanager/vendor_product/saveProeductinfo") ?>" method="POST">
 							<div class="no-display">
 								<input type="hidden" name="file" id="uploaded_file" />
 								<input type="hidden" name="product_id" id="product_id" value="<?php echo $_product->getId() ?>" />
@@ -50,33 +57,98 @@
 								<label><?php echo $this->__("Fun Specs") ?></label>
 								<input type="text" class="required-entry form-control" name="fun_spec" value="<?php echo $this->getProductInfoFunSpec() ?>" />
 							</div>
+							
+							<div class="form-group">
+								<label><?php echo $this->__("Image") ?></label>
+								<p class="form-control-static">
+									<input type="file" name="main_image" id="main_image"  />
+								</p>
+								
+								<?php if($productInfoObject && $productInfoObject->getMainImage() != ""){ ?>
+									<p>
+										<a href="javascript:void(0);" onclick="jQuery('#main_image_model').modal('show');">
+											<img src="<?php echo $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/"); ?>" />
+										</a>
+										<br>
+										<input type="hidden" name="main_image" value="<?php echo $productInfoObject->getMainImage(); ?>" />
+										<input type="checkbox" name="remove_main_image" id="remove_main_image" value="1" />
+										<?php echo $this->__("Remove Image") ?>
+									</p>
+									<?php $imageSize = getimagesize(Mage::getBaseUrl('media') . 'productdetail/' . $productInfoObject->getMainImage()); ?>
+									<div class="modal fade bs-example-modal-lg" id="main_image_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+										<div class="modal-dialog modal-lg" style="width:<?php echo $imageSize[0]+20 ?>px !important;">
+											<div class="modal-content"">
+												<div style="padding:10px;"><a href="#" style="float:right;" onclick="jQuery('#main_image_model').modal('hide');">X</a>
+													<img src="<?php echo Mage::getBaseUrl('media') . 'productdetail/' . $productInfoObject->getMainImage(); ?>" />
+												</div>
+											</div>
+										</div>
+									</div>
+								<?php } ?>
+								
+							</div>
+							
 							<?php $_material = $this->getProductInfoMaterial(); ?>
 							<div class="form-group">
 								<label><?php echo $this->__("Material") ?></label>
-								<select class="required-entry form-control" name="material">
-									<option value="3" <?php echo $_material==3?'selected="selected"':''; ?>><?php echo $this->__("30") ?></option>
-									<option value="4" <?php echo $_material==4?'selected="selected"':''; ?>><?php echo $this->__("40") ?></option>
-									<option value="5" <?php echo $_material==5?'selected="selected"':''; ?>><?php echo $this->__("50") ?></option>
-								</select>
+								<div class="form-control-static" >
+									<div class="btn-group show-dropbox">
+											<div class="form-group input-group show-dropbox" id="status-text-div" style="float:left; margin-right:0px;">
+							  				<input type="text" class="form-control" name="material" id="new_material" value="<?php echo $_material; ?>" />
+							  			</div>
+									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button" style="z-index:999"><span class="caret"></span></button>
+									  	<ul class="dropdown-menu" id="dropdown-box-material">
+									  		<li class="add-status-li"><a href="javascript:void(0);" id="new_material_link" ><?php echo $this->__("Add New") ?></a></li>
+									  		<?php foreach ($materials as $key => $statusLabel) { ?>
+									  			<li><span class="remove-material-link">x</span><a class="material-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  		<?php } ?>
+									  	</ul>
+									</div>
+								</div>
 							</div>
 							<?php $_lighting = $this->getProductInfoLighting(); ?>
 							<div class="form-group">
 								<label><?php echo $this->__("Lighting") ?></label>
-								<select class="required-entry form-control" name="lighting">
-									<option value="1" <?php echo $_lighting==1?'selected="selected"':''; ?>><?php echo $this->__("Led 1w") ?></option>
-									<option value="2" <?php echo $_lighting==2?'selected="selected"':''; ?>><?php echo $this->__("Led 2w") ?></option>
-									<option value="3" <?php echo $_lighting==3?'selected="selected"':''; ?>><?php echo $this->__("Led 3w") ?></option>
-								</select>
+								<div class="form-control-static" >
+									<div class="btn-group show-dropbox">
+											<div class="form-group input-group show-dropbox"  style="float:left; margin-right:0px;">
+							  				<input type="text" class="form-control" name="lighting" id="new_lighting" value="<?php echo $_lighting; ?>" />
+							  			</div>
+									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button-lighting" style="z-index:999"><span class="caret"></span></button>
+									  	<ul class="dropdown-menu" id="dropdown-box-lighting">
+									  		<li class="add-status-li"><a href="javascript:void(0);" id="new_lighting_link" ><?php echo $this->__("Add New") ?></a></li>
+									  		<?php foreach ($lightings as $key => $lightingLabel) { ?>
+									  			<li><span class="remove-lighting-link">x</span><a class="lighting-options" href="javascript:void(0);"><?php echo $lightingLabel ?></a></li>
+									  		<?php } ?>
+									  	</ul>
+									</div>
+								</div>
 							</div>
-							<button class="btn btn-default" type="submit"><?php echo $this->__("Save") ?></button>
-							<button class="btn btn-primary" type="reset"><?php echo $this->__("Reset") ?></button>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-		<?php echo $this->getChildHtml("product.emage.upload") ?>	
+		<?php echo $this->getChildHtml("product.image.upload") ?>
+		<div class="panel panel-default">
+			<div>
+				<div class="panel-body">
+					<button class="btn btn-default" id="productinfo-submit-button" type="button"><?php echo $this->__("Save") ?></button>
+					<!--<button class="btn btn-primary" id="productinfo-reset-button" type="button"><?php echo $this->__("Reset") ?></button>-->
+				</div>
+			</div>
+		</div>
+		<?php echo $this->getChildHtml("product.revision.list") ?>
 	</div>
+</div>
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+    	<div class="labelpage-loader-div">
+      		<img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo $this->__("Loading...") ?>" />
+      </div>
+    </div>
+  </div>
 </div>
 <script>
 	$('main-tab').observe('click', function(){
@@ -92,4 +164,240 @@
 </script>
 <script>
 	var dataForm = new VarienForm('vendor-product-form', false);
+</script>
+<script>
+	$("productinfo-submit-button").observe("click", function(){
+		dataForm.form.submit();
+	});
+	$("productinfo-reset-button").observe("click", function(){
+		$("vendor-product-form").reset();
+		Form.reset('vendor-product-form');
+	});
+</script>
+<script>
+	// SMART DROPBOX SCRIPTS
+	// MATERIALS
+	var materials = [];
+	<?php foreach ($materials as $material){ ?>
+		materials.push("<?php echo $material; ?>");
+	<?php } ?>
+	
+	$('openbox-button').observe('click', function(){
+		$('dropdown-box-material').toggleClassName('show-dropbox');
+	});
+	
+	$('new_material').observe("keyup", function(){
+		$('dropdown-box-material').addClassName('show-dropbox');
+		$('new_material_link').innerHTML = '<?php echo $this->__("Add") ?> ' + this.value;
+	});
+	
+	$('new_material').observe("click", function(){
+		$('dropdown-box-material').addClassName('show-dropbox');
+	});
+	
+	$('new_material_link').observe('click', function(){
+		addNewMaterial();
+	});
+	
+	$$('a.material-options').each(function(e){
+		e.observe('click', function(){
+			$('new_material').value = e.innerHTML;
+			$('dropdown-box-material').toggleClassName('show-dropbox');
+		});
+	});
+	
+	function addNewMaterial(){
+		var material = $('new_material').value;
+		var currentIndex = materials.indexOf(material);
+		if(currentIndex>=0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/vendor_product/addmaterial') ?>', {
+  			method:'post',
+  			parameters: {material: material},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				var removeSpan = document.createElement("span");
+    				removeSpan.addClassName('remove-material-link');
+    				removeSpan.innerHTML = 'x';
+    				
+    				var liElement = document.createElement("li");
+    				liElement.appendChild(removeSpan);
+    				liElement.insert('<a class="material-options" href="javascript:void(0);">'+material+'</a></li>');
+    				
+    				var tempDiv = document.createElement("div");
+    				tempDiv.appendChild(liElement);
+    				
+    				$('dropdown-box-material').innerHTML = $('dropdown-box-material').innerHTML + tempDiv.innerHTML;
+    				materials.push(material);
+    				$$('a.material-options').each(function(e){
+						e.observe('click', function(){
+							$('new_material').value = e.innerHTML;
+							$('dropdown-box-material').toggleClassName('show-dropbox');
+						});
+					});
+					$('dropdown-box-material').toggleClassName('show-dropbox');
+					$('new_material_link').observe('click', function(){
+						addNewMaterial();
+					});
+					$$("span.remove-material-link").each(function(el){
+						el.observe('click', function(){
+							removeMaterialmFunction(this); 
+						});
+					});
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	$$("span.remove-material-link").each(function(e){
+		e.observe('click', function(){
+			removeMaterialmFunction(e);
+		});
+	});
+	
+	function removeMaterialmFunction(e){
+		var material = e.up('li').down('a').innerHTML;
+		var currentIndex = materials.indexOf(material);
+		if(currentIndex<0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/vendor_product/removematerial') ?>', {
+  			method:'post',
+  			parameters: {material: material},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				materials.splice(currentIndex, 1);
+    				e.up('li').remove();
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+</script>
+
+
+<script>
+	// SMART DROPBOX SCRIPTS
+	// LIGHTINGS
+	var lightings = [];
+	<?php foreach ($lightings as $lighting){ ?>
+		lightings.push("<?php echo $lighting; ?>");
+	<?php } ?>
+	
+	$('openbox-button-lighting').observe('click', function(){
+		$('dropdown-box-lighting').toggleClassName('show-dropbox');
+	});
+	
+	$('new_lighting').observe("keyup", function(){
+		$('dropdown-box-lighting').addClassName('show-dropbox');
+		$('new_lighting_link').innerHTML = '<?php echo $this->__("Add") ?> ' + this.value;
+	});
+	
+	$('new_lighting').observe("click", function(){
+		$('dropdown-box-lighting').addClassName('show-dropbox');
+	});
+	
+	$('new_lighting_link').observe('click', function(){
+		addNewLighting();
+	});
+	
+	$$('a.lighting-options').each(function(e){
+		e.observe('click', function(){
+			$('new_lighting').value = e.innerHTML;
+			$('dropdown-box-lighting').toggleClassName('show-dropbox');
+		});
+	});
+	
+	function addNewLighting(){
+		var lighting = $('new_lighting').value;
+		var currentIndex = lightings.indexOf(lighting);
+		if(currentIndex>=0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/vendor_product/addlighting') ?>', {
+  			method:'post',
+  			parameters: {lighting:lighting},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				var removeSpan = document.createElement("span");
+    				
+    				removeSpan.addClassName('remove-lighting-link');
+    				removeSpan.innerHTML = 'x';
+    				
+    				var liElement = document.createElement("li");
+    				liElement.appendChild(removeSpan);
+    				liElement.insert('<a class="lighting-options" href="javascript:void(0);">'+lighting+'</a></li>');
+    				
+    				var tempDiv = document.createElement("div");
+    				tempDiv.appendChild(liElement);
+    				
+    				$('dropdown-box-lighting').innerHTML = $('dropdown-box-lighting').innerHTML + tempDiv.innerHTML;
+    				lightings.push(lighting);
+    				$$('a.lighting-options').each(function(e){
+						e.observe('click', function(){
+							$('new_lighting').value = e.innerHTML;
+							$('dropdown-box-lighting').toggleClassName('show-dropbox');
+						});
+					});
+					$('dropdown-box-lighting').toggleClassName('show-dropbox');
+					$('new_lighting_link').observe('click', function(){
+						addNewLighting();
+					});
+					$$("span.remove-lighting-link").each(function(el){
+						el.observe('click', function(){
+							removeLightingFunction(el); 
+						});
+					});
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	$$("span.remove-lighting-link").each(function(e){
+		e.observe('click', function(){
+			removeLightingFunction(e);
+		});
+	});
+	
+	function removeLightingFunction(e){
+		var lighting = e.up('li').down('a').innerHTML;
+		var currentIndex = lightings.indexOf(lighting);
+		if(currentIndex<0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/vendor_product/removelighting') ?>', {
+  			method:'post',
+  			parameters: {lighting: lighting},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				lightings.splice(currentIndex, 1);
+    				e.up('li').remove();
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
 </script>

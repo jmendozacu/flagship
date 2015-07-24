@@ -218,9 +218,11 @@ $('product_suggestion_box').hide();
 		if(keyword == "") return ;
 		if(keyword == oldkeyword) return;
 		oldkeyword = keyword; 
+		var vendorId = $('vendor_id').value;
+		if(vendorId == "") return;
 		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_purchaseorder/findproduct") ?>', {
 			method:'post',
-			parameters: {keyword: keyword},
+			parameters: {keyword: keyword, vendor_id : vendorId}, 
   			onSuccess: function(transport) {
   				$('product_suggestion_box').show();
     			var response = transport.responseText || "no response text";

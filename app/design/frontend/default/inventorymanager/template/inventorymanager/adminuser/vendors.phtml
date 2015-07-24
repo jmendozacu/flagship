@@ -1,0 +1,49 @@
+<?php 
+	$vendors = $this->getAllVendors();
+?>
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Vendors") ?></h2>
+	</div>
+</div>
+<hr/>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+                 <?php echo $this->__("All Vendors") ?>
+            </div>
+            <div class="panel-body">
+            	<div class="table-responsive">
+            		<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+            			<thead>
+            				<tr>
+                                <th><?php echo $this->__("ID") ?></th>
+                                <th><?php echo $this->__("Name") ?></th>
+                                <th><?php echo $this->__("Email") ?></th>
+                                <th><?php echo $this->__("From") ?></th>
+                                <th><?php echo $this->__("Action") ?></th>
+                            </tr>
+            			</thead>
+            			<tbody>
+            				<?php $iCounter = 0; foreach ($vendors as $vendor){ $iCounter++; ?>
+            					<tr class="<?php echo $iCounter%2==0?"odd":"even"; ?>">
+            						<td><?php echo $vendor->getId() ?></td>
+            						<td><?php echo $vendor->getName() ?></td>
+            						<td><?php echo $vendor->getEmail() ?></td>
+            						<td><?php echo date("Y/m/d", strtotime($vendor->getCreatedTime())) ?></td>
+            						<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendorproduct', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__("View Products") ?></a></td>
+            					</tr>
+            				<?php } ?>
+            			</tbody>
+            		</table>
+            	</div>
+            </div>
+		</div>
+	</div>
+</div>
+<script>
+jQuery(document).ready(function () {
+    jQuery('#dataTables-example').dataTable();
+});
+</script>

@@ -61,10 +61,15 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
 	public function loginAction(){
 		
 		if ($this->_getSession()->isLoggedIn()) {
-		
             $this->_redirect('*/*/');
             return;
         }
+        
+        if($this->_getSession()->isAdminUser()){
+        	$this->_redirect('*/adminuser/vendors');
+            return;
+        }
+        
         $this->getResponse()->setHeader('Login-Required', 'true');
         $this->loadLayout();
         $this->_initLayoutMessages('inventorymanager/session');
@@ -85,15 +90,22 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
             $login = $this->getRequest()->getPost();
             if (!empty($login['username']) && !empty($login['password'])) {
                 try {
-                    $session->login($login['username'], $login['password']);
-                    
-                    if ($session->getVendor()->getIsJustConfirmed()) {
-                    	//print_r($session->getVendor()->getData()); exit;
-                    	Mage::getSingleton('core/session')->setVendor($session->getVendor());
-                        $this->_redirect('*/*/index');
-                        return;
-                    }else{
+                    if($session->login($login['username'], $login['password'])){
                     	
+	                    if($coreSession->getUserType() == "admin"){
+	                    	$this->_redirect('*/adminuser/vendors');
+	                    	return;
+	                        exit;
+	                    }
+	                    if ($session->getVendor()->getIsJustConfirmed()) {
+	                    	Mage::getSingleton('core/session')->setVendor($session->getVendor());
+	                        $this->_redirect('*/*/index');
+	                        return;
+	                    }else{
+	                    	
+	                    }
+                    }else{
+                    	throw Mage::exception('Mage_Core', Mage::helper('customer')->__('Invalid login or password.'));
                     }
                 } catch (Mage_Core_Exception $e) {
                     $message = $e->getMessage();

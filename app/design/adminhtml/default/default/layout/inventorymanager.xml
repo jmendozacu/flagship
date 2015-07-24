@@ -89,4 +89,32 @@
             <block type="inventorymanager/adminhtml_vendor_edit_tab_products" name="products.grid"/>
         </block>
 	</inventorymanager_adminhtml_vendor_productsgrid>
+	
+	
+	<!--<all_products>
+	    <reference name="product_tabs">
+	        <action method="addTab">
+	        	<name>label_product</name>
+	        	<block>inventorymanager/adminhtml_product_labels</block>
+	        </action>
+	    </reference>
+	</all_products>
+	
+	<adminhtml_catalog_product_new>
+	    <update handle="all_products"/>
+	</adminhtml_catalog_product_new>
+	
+	<adminhtml_catalog_product_edit>
+	    <update handle="all_products"/>
+	</adminhtml_catalog_product_edit>-->
+	
+	<!--<adminhtml_catalog_product_edit>
+        <reference name="product_tabs">
+            <action method="addTab">
+                <name>label_product</name>
+               <block>inventorymanager/adminhtml_product_labels</block>
+            </action>
+        </reference>
+    </adminhtml_catalog_product_edit>-->
+	
 </layout>
