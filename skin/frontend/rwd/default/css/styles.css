@@ -11036,3 +11036,8 @@ html[xmlns] .slides {display: block;}
 .gen-slider-pager1-pos-bottom-right .control-nav{ right:50% !important}
 ul.slides li.slide{ text-align:center !important}
 
+
+.featuresection li{ margin-bottom:15px;/* list-style:inside none circle*/}
+.featuresection li strong{ color:#000}
+.tab-container ul li{ margin-bottom:15px;/* list-style:inside none circle*/}
+.tab-container ul li strong{ color:#000}

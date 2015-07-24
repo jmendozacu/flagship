@@ -16,6 +16,7 @@
 class MDN_BackgroundTask_Block_CheckCron extends Mage_Adminhtml_Block_Widget_Form {
 
     protected function _toHtml() {
+    	return "";
         $html = '<div class="notification-global"> ';
 
         //get the latest cron execution date
