@@ -31,7 +31,7 @@
     <modules>
         <Openlabs_OpenERPConnector>
             <codePool>community</codePool>
-            <active>true</active>
+            <active>false</active>
             <depends>
                 <Mage_Api />
 		    <Mage_Catalog />
