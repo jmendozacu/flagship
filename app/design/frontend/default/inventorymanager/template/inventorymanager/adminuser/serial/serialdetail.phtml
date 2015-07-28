@@ -85,7 +85,6 @@
 									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button-location" style="z-index:999"><span class="caret"></span></button>
 									  	<ul class="dropdown-menu" id="dropdown-box-location">
 									  		<li class="add-location-li"><a href="javascript:void(0);" id="new_location_link" ><?php echo $this->__("Add New") ?></a></li>
-									  		<li class="add-location-li"><a href="javascript:void(0);" class="location-options"  ><?php echo $this->__("In Stock On Magento") ?></a></li>
 									  		<?php foreach ($locations as $key => $locationLabel) { ?>
 									  			<li><span class="remove-location-link">x</span><a class="location-options" href="javascript:void(0);"><?php echo $locationLabel ?></a></li>
 									  		<?php } ?>
@@ -233,7 +232,7 @@
 			return;
 		}
 		jQuery('.bs-example-modal-sm').modal('show');
-		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addnewstatus') ?>', {
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addnewstatus', array('_current'=>true)) ?>', {
   			method:'post',
   			parameters: {status: status},
   			onSuccess: function(transport) {
@@ -292,7 +291,7 @@
 			return;
 		}
 		jQuery('.bs-example-modal-sm').modal('show');
-		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removenewstatus') ?>', {
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removenewstatus', array('_current'=>true)) ?>', {
   			method:'post',
   			parameters: {status: status},
   			onSuccess: function(transport) {
@@ -349,7 +348,7 @@
 			return;
 		}
 		jQuery('.bs-example-modal-sm').modal('show');
-		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addlocation') ?>', {
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addlocation', array('_current'=>true)) ?>', {
   			method:'post',
   			parameters: {location:location},
   			onSuccess: function(transport) {
@@ -406,7 +405,7 @@
 			return;
 		}
 		jQuery('.bs-example-modal-sm').modal('show');
-		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removelocation') ?>', {
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removelocation', array('_current'=>true)) ?>', {
   			method:'post',
   			parameters: {location: location},
   			onSuccess: function(transport) {

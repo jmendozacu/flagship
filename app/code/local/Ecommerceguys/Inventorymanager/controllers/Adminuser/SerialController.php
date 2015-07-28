@@ -35,22 +35,23 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 				if(isset($data['remove_main_image']) && $data['remove_main_image'] == 1){
 					$model->setMainImage("");
 				}
-				$model->setIsInStock(1);
+				if($model->getIsInStock() == 0){
+					$model->setIsInStock(1);
+					$productModel = Mage::getModel('catalog/product')->load($data['main_product_id']);
+					$stocklevel = Mage::getModel('cataloginventory/stock_item')
+	                ->loadByProduct($productModel);
+	                $productQty = 0;
+	                if($stocklevel)
+	                	$productQty = $stocklevel->getQty();
+	                
+	                $productModel->setStockData(array( 
+			            'qty' => $productQty + 1,
+			            'is_in_stock' => 1,
+			            'manage_stock' => 1,
+			        )); 
+					$productModel->save();
+				}
 				$model->save();
-				
-				$productModel = Mage::getModel('catalog/product')->load($data['main_product_id']);
-				$stocklevel = Mage::getModel('cataloginventory/stock_item')
-                ->loadByProduct($productModel);
-                $productQty = 0;
-                if($stocklevel)
-                	$productQty = $stocklevel->getQty();
-                
-                $productModel->setStockData(array( 
-		            'qty' => $productQty + 1,
-		            'is_in_stock' => 1,
-		            'manage_stock' => 1,
-		        )); 
-				$productModel->save();
 				
 				if(isset($data['comment']) && trim($data['comment'])!= ""){
 					$comment = Mage::getModel('inventorymanager/label_comment');
@@ -83,11 +84,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 					}
 					$comment->setImage($data['comment_image'])->save();
 				}
-				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product label updated successfully"));
+				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product Received"));
 			}catch (Exception $e){
 				Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Something went wrong, Please try again"));
 			}
-			$this->_redirect('*/*/receivepost', array('serial_key'=>$model->getSerial()));
+			$this->_redirect('*/*/receive', array('serial_key'=>$model->getSerial()));
 		}
 	}
 }

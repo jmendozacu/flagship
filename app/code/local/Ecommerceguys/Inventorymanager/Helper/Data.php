@@ -107,4 +107,18 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 		}
 		return "";
 	}
+	
+	public function getVendorFromRequest(){
+		$request = Mage::app()->getRequest()->getParams();
+		if(isset($request['serial_key'])){
+			$serialKey = $request['serial_key'];
+			$labelObject = Mage::getModel('inventorymanager/label')->load($serialKey, 'serial');
+			if($labelObject && $labelObject->getId()){
+				$orderId = $labelObject->getOrderId();
+				$porchaseorder = Mage::getModel('inventorymanager/purchaseorder')->load($orderId);
+				if($porchaseorder && $porchaseorder->getId())
+					return $porchaseorder->getVendorId();
+			}
+		}
+	}
 }
