@@ -127,4 +127,28 @@
 			<block type="inventorymanager/user_vendorproduct" name="adminuser.vendorproduct" template="inventorymanager/adminuser/vendorproduct.phtml" ></block>
 		</reference>
 	</inventorymanager_adminuser_vendorproduct>
+	
+	<inventorymanager_adminuser_serial_findreceive>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_receive" name="adminuser.serials.receive" template="inventorymanager/adminuser/serial/receive.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_serial_findreceive>
+	
+	<inventorymanager_adminuser_serial_receive>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_receive" name="adminuser.serials.receive" template="inventorymanager/adminuser/serial/serialdetail.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_serial_receive>
 </layout>
