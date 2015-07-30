@@ -37,6 +37,9 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 	$dashboardPage = false;
 	$printendLabel = false;
 	$purchaseorderPage = false;
+	$adminuserVendors = false;
+	$receiveProduct = false;
+	$sendProduct = false;
 	if($currentController == "vendor" && $currentAction == "products"){
 		$productsPage = true;
 	}elseif($currentController == "vendor" && $currentAction == "index"){
@@ -45,6 +48,12 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 		$purchaseorderPage = true;
 	}elseif($currentController == "label" && $currentAction == "find"){
 		$printendLabel = true;
+	}elseif($currentController == "adminuser" && $currentAction == "vendors"){
+		$adminuserVendors = true;
+	}elseif($currentController == "adminuser_serial" && ($currentAction == "findreceive" || $currentAction == "receive")){
+		$receiveProduct = true;
+	}elseif($currentController == "adminuser_serial" && ($currentAction == "find" || $currentAction == "send")){
+		$sendProduct = true;
 	}
 ?>
         
@@ -87,17 +96,17 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 				<?php /* echo $this->getLayout()->createBlock('inventorymanager/vendor_info')->setTemplate("inventorymanager/vendorinfo.phtml")->toHtml()*/ ?>
 			</li>
 			<li>
-                <a class=""  href="<?php echo $this->getUrl("inventorymanager/adminuser/vendors") ?>">
+                <a class="<?php echo $adminuserVendors?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser/vendors") ?>">
                 	<i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Products") ?>
                 </a>
             </li>
              <li>
-                <a class=""  href="<?php echo $this->getUrl("inventorymanager/label/find") ?>">
+                <a class="<?php echo $sendProduct?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/find") ?>">
                 	<i class="fa fa-table fa-3x"></i> <?php echo $this->__("Send Products") ?>
                 </a>
             </li>
             <li>
-                <a class="" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/findreceive") ?>">
+                <a class="<?php echo $receiveProduct?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/findreceive") ?>">
                 	<i class="fa fa-desktop fa-3x"></i>
                 	<?php echo $this->__("Receive Products") ?>
                 </a>

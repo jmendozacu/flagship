@@ -91,4 +91,54 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 			$this->_redirect('*/*/receive', array('serial_key'=>$model->getSerial()));
 		}
 	}
+	
+	public function findAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function findpostAction(){
+		if($data = $this->getRequest()->getPost()){
+			$orderIncrementId = $data['order_id'];
+			$order = Mage::getModel('sales/order')->load($orderIncrementId, "increment_id");
+			if($order && $order->getId()){
+				$serial = $datap['serial'];
+				$serialModel = Mage::getModel('inventorymanager/label')->load($serial, "serial");
+				if($serialModel && $serialModel->getId()){
+					if($serialModel->getIsOutStock() == 1){
+						Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Product already sent"));
+						$this->_redirect('*/*/find');
+						return;
+					}
+					$purchaseorderProduct = Mage::getModel('inventorymanager/product')->load($serialModel->getProductId());
+					if($purchaseorderProduct && $purchaseorderProduct->getId()){
+						$productId = $purchaseorderProduct->getMainProductId();
+						$isOrderContainsThisProduct = false;
+						foreach ($order->getAllItems() as $item){
+							if($item->getProductId() == $productId){
+								$isOrderContainsThisProduct = true;
+								break;
+							}
+						}
+						if($isOrderContainsThisProduct){
+							$serialModel->setRealOrderId($order->getId())->setIsOutStock(1)->save();
+							Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product Sent"));
+							$this->_redirect('*/*/find');
+							return;
+						}else{
+							Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Order and serial mismatch"));
+							$this->_redirect('*/*/find');
+							return;
+						}
+					}
+				}
+				Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Serial not found"));
+				$this->_redirect('*/*/find');
+				return;
+			}
+			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Order not found"));
+			$this->_redirect('*/*/find');
+			return;
+		}
+	}
 }
