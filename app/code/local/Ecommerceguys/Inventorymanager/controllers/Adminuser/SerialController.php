@@ -99,7 +99,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 	
 	public function findpostAction(){
 		if($data = $this->getRequest()->getPost()){
-			$orderIncrementId = $data['order_id'];
+			$orderIncrementId = $data['order_number'];
 			$order = Mage::getModel('sales/order')->load($orderIncrementId, "increment_id");
 			if($order && $order->getId()){
 				$serial = $datap['serial'];
