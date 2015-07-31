@@ -8,7 +8,7 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Labels extends Mage
         $this->setId('label_product_content');
         $this->setDefaultSort('label_id');
         $this->setUseAjax(true);
-        $this->setDefaultLimit(3);
+        //$this->setDefaultLimit(3);
     }
     
     public function getTabLabel(){
