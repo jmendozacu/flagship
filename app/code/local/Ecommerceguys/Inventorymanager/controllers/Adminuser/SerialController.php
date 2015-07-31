@@ -102,7 +102,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 			$orderIncrementId = $data['order_number'];
 			$order = Mage::getModel('sales/order')->load($orderIncrementId, "increment_id");
 			if($order && $order->getId()){
-				$serial = $datap['serial'];
+				$serial = $data['serial_key'];
 				$serialModel = Mage::getModel('inventorymanager/label')->load($serial, "serial");
 				if($serialModel && $serialModel->getId()){
 					if($serialModel->getIsOutStock() == 1){

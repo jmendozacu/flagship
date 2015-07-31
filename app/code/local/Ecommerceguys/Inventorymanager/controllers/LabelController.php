@@ -37,9 +37,14 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 						'created_time'	=>	now(),
 						'updated_time'	=>	now()
 					);
+					/*echo "<pre>";
+					print_r($labelData);
+					echo "</pre>";*/
 					$label->setData($labelData)->save();
 				}
 			}
+			
+			//exit;
 		}
 		
 		$content = $this->getLayout()->createBlock('inventorymanager/label_generate')

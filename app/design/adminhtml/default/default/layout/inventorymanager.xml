@@ -116,5 +116,11 @@
             </action>
         </reference>
     </adminhtml_catalog_product_edit>-->
+    
+    <adminhtml_sales_order_view>
+        <reference name="sales_order_tabs">
+            <action method="addTab"><name>order_serials</name><block>inventorymanager/adminhtml_sales_order_view_tabs</block></action>
+        </reference>
+	</adminhtml_sales_order_view>
 	
 </layout>
