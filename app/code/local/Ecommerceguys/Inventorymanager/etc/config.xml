@@ -93,6 +93,7 @@
             <adminhtml>
             	<rewrite>
             		<catalog_product_edit_tabs>Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Tabs</catalog_product_edit_tabs>
+            		<sales_order_view_tabs>Ecommerceguys_Inventorymanager_Block_Adminhtml_Sales_Order_View_Tabs</sales_order_view_tabs>
            		</rewrite>
             </adminhtml>
         </blocks>

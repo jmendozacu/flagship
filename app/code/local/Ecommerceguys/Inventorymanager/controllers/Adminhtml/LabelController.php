@@ -19,7 +19,7 @@ class Ecommerceguys_Inventorymanager_Adminhtml_LabelController extends Mage_Admi
 		 
 		 $this->_initOrder();
         $this->getResponse()->setBody(
-            $this->getLayout()->createBlock('inventorymanager/adminhtml_sales_order_view_tabs')->toHtml()
+            $this->getLayout()->createBlock('inventorymanager/adminhtml_sales_order_view_tabs_serial')->toHtml()
         );
 	}
 	

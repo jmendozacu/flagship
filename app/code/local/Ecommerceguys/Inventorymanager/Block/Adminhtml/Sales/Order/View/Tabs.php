@@ -1,105 +1,51 @@
 <?php
-class Ecommerceguys_Inventorymanager_Block_Adminhtml_Sales_Order_View_Tabs extends Mage_Adminhtml_Block_Widget_Grid
-    implements Mage_Adminhtml_Block_Widget_Tab_Interface
+class Ecommerceguys_Inventorymanager_Block_Adminhtml_Sales_Order_View_Tabs extends Mage_Adminhtml_Block_Sales_Order_View_Tabs
 {
 
-    public function __construct()
-    {
-    	parent::__construct();
-		$this->setId('sales_order_label_grid');
-      	//$this->setDefaultSort('label_id');
-      	//$this->setDefaultDir('ASC');
-      	$this->setSaveParametersInSession(false);
-      	$this->setUseAjax(true);
-      	$this->setDefaultLimit(50);
-    }
-    
-    protected function _prepareCollection()
-	{
-		$collection = Mage::getModel('inventorymanager/label')->getCollection();
-		$collection->addFieldToFilter('real_order_id', $this->getOrder()->getId());
-		//$collection->addFieldToFilter('order_id', 12) ;
-		
-		$resource = Mage::getSingleton('core/resource');
-		$tableName = $resource->getTableName('inventorymanager_product');
-		$collection
-			->getSelect()
-			->joinLeft(
-				array('invent_prod'=>$tableName),
-				'main_table.product_id = invent_prod.product_id',
-				array('po_id','main_product_id')
-			);
-		/*echo $collection
-			->getSelect(); exit;*/
-		$this->setCollection($collection);
-		return parent::_prepareCollection();
-	}
-	
-	protected function _prepareColumns(){
-		$this->addColumn('label_id', array(
-			'header'    => Mage::helper('inventorymanager')->__('ID'),
-			'align'     =>'right',
-			'width'     => '50px',
-			'index'     => 'label_id',
-		));
-		
-		$this->addColumn('serial', array(
-			'header'    => Mage::helper('inventorymanager')->__('Serial'),
-			'align'     =>'left',
-			'index'     => 'serial',
-      	));
-      	
-      	$this->addColumn('main_product_id', array(
-			'header'    => Mage::helper('inventorymanager')->__('Product'),
-			'align'     =>'left',
-			'index'     => 'main_product_id',
-			'renderer'  => 'Ecommerceguys_Inventorymanager_Block_Adminhtml_Sales_Order_View_Tabs_Renderer_Product',
-      	));
-      	return parent::_prepareColumns();
-	}
-    
     /**
-     * Retrieve order model instance
+     * Retrieve available order
      *
      * @return Mage_Sales_Model_Order
      */
     public function getOrder()
     {
-        return Mage::registry('current_order');
+        if ($this->hasOrder()) {
+            return $this->getData('order');
+        }
+        if (Mage::registry('current_order')) {
+            return Mage::registry('current_order');
+        }
+        if (Mage::registry('order')) {
+            return Mage::registry('order');
+        }
+        Mage::throwException(Mage::helper('sales')->__('Cannot get the order instance.'));
     }
 
-    /**
-     * Retrieve source model instance
-     *
-     * @return Mage_Sales_Model_Order
-     */
-    /*public function getSource()
+    public function __construct()
     {
-        return $this->getOrder();
-    }*/
-
-
-    public function getTabLabel()
-    {
-        return Mage::helper('sales')->__('Serials');
+        parent::__construct();
+        $this->setId('sales_order_view_tabs');
+        $this->setDestElementId('sales_order_view');
+        $this->setTitle(Mage::helper('sales')->__('Order View'));
     }
+	protected function _beforeToHtml()
+    {
+    	
+    	parent::_beforeToHtml();
 
-    public function getTabTitle()
-    {
-    	return Mage::helper('sales')->__('Serials');
-    }
+    	
+		//Rajoute l'onglet pour les tasks
+        if ($this->getOrder()->getId()) {
+        	
+        	
+            $this->addTab('serials', array(
+                'label'     => Mage::helper('inventorymanager')->__('Serials'),
+                'title'     => Mage::helper('inventorymanager')->__('Serials'),
+                'url'       => $this->getUrl('inventorymanager/adminhtml_label/ordergrid', array('_current' => true)),
+                 'class'     => 'ajax',
+            ));
+        }
 
-    public function canShowTab()
-    {
-        return true;
-    }
-
-    public function isHidden()
-    {
-        return false;
-    }
-    public function getGridUrl()
-    {
-        return $this->getUrl('inventorymanager/adminhtml_label/ordergrid', array('_current' => true));
+        return parent::_beforeToHtml();
     }
 }
