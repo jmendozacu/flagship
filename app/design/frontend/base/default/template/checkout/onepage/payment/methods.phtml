@@ -43,6 +43,8 @@
 <?php else:
     foreach ($methods as $_method):
         $_code = $_method->getCode();
+        
+        if($_code == "checkmo") { continue; }
 ?>
     <dt>
     <?php if(!$oneMethod): ?>

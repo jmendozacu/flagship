@@ -2,7 +2,7 @@
    <config>
       <modules>
         <Rvtech_Barcodes>
-            <active>true</active>
+            <active>false</active>
             <codePool>local</codePool>
          </Rvtech_Barcodes>
        </modules>
