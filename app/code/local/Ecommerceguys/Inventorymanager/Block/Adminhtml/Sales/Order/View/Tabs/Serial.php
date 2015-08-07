@@ -11,14 +11,14 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Sales_Order_View_Tabs_Seria
       	//$this->setDefaultDir('ASC');
       	$this->setSaveParametersInSession(false);
       	$this->setUseAjax(true);
-      	$this->setDefaultLimit(2);
+      	//$this->setDefaultLimit(10);
     }
     
     protected function _prepareCollection()
 	{
 		$collection = Mage::getModel('inventorymanager/label')->getCollection();
-		//$collection->addFieldToFilter('real_order_id', $this->getOrder()->getId());
-		$collection->addFieldToFilter('order_id', 12) ;
+		$collection->addFieldToFilter('real_order_id', $this->getOrder()->getId());
+		//$collection->addFieldToFilter('order_id', 12) ;
 		
 		$resource = Mage::getSingleton('core/resource');
 		$tableName = $resource->getTableName('inventorymanager_product');
@@ -105,12 +105,12 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Sales_Order_View_Tabs_Seria
         return $this->getUrl('inventorymanager/adminhtml_label/ordergrid', array('_current' => true));
     }
     
-    public function getRowUrl($row)
-    {
-        return $this->getUrl('*/sales_order_invoice/view',
-            array(
-                'invoice_id'=> $row->getId()
-            )
-        );
-    }
+//    public function getRowUrl($row)
+//    {
+//        return $this->getUrl('*/sales_order_invoice/view',
+//            array(
+//                'invoice_id'=> $row->getId()
+//            )
+//        );
+//    }
 }
