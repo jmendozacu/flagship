@@ -45,6 +45,30 @@ class Ecommerceguys_Inventorymanager_PurchaseorderController extends Mage_Core_C
 	public function downloadproductpdfAction(){
 		$data = $this->getRequest()->getParams();
 		$productId = $data["product_id"];
+		$orderId = $data["order_id"];
+		
+		$labelCollection = Mage::getModel('inventorymanager/label')->getCollection();
+		$labelCollection->addFieldToFilter('order_id', $orderId);
+		if(!$labelCollection->count() || $labelCollection->count() <= 0){
+			$products = Mage::getModel('inventorymanager/product')->getCollection();
+			$products->addFieldToFilter('po_id', $orderId);
+			foreach ($products as $product){
+				for($qtyCounter = 1; $qtyCounter <= $product->getQty(); $qtyCounter++){
+					$serial = Mage::helper('inventorymanager')->getSerial();
+					$label = Mage::getModel('inventorymanager/label');
+					$labelData = array(
+						'product_id'	=>	$product->getId(),
+						'order_id'		=>	$orderId,
+						'location'		=>	1,
+						'serial'		=>	$serial,
+						'created_time'	=>	now(),
+						'updated_time'	=>	now()
+					);
+					$label->setData($labelData)->save();
+				}
+			}
+		}
+		
 		
 		$content = $this->getLayout()->createBlock('inventorymanager/purchaseorder_productpdf')
 		->setTemplate('inventorymanager/purchaseorder/productpdf.phtml')->toHtml();
