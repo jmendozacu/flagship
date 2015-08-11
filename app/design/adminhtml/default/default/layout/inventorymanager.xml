@@ -123,4 +123,18 @@
         </reference>	
 	</adminhtml_sales_order_view>-->
 	
+	<!--FOR ADD SERIALS TO SHIPMENT-->
+	<adminhtml_sales_order_shipment_new>
+		<reference name="form">
+			<action method="setTemplate"><template>inventorymanager/shipping/new.phtml</template></action>
+			<block type="inventorymanager/adminhtml_sales_shipment_create_serial" name="add_serial" template="inventorymanager/shipping/addserial.phtml"></block>
+		</reference>
+	</adminhtml_sales_order_shipment_new>
+	
+	<adminhtml_sales_order_shipment_view>
+		<reference name="form">
+			<action method="setTemplate"><template>inventorymanager/shipping/view.phtml</template></action>
+			<block type="inventorymanager/adminhtml_sales_shipment_create_serial" name="view_serial" template="inventorymanager/shipping/view_serials.phtml"></block>
+		</reference>
+	</adminhtml_sales_order_shipment_view>
 </layout>

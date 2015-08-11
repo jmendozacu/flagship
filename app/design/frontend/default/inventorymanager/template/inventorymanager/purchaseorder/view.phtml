@@ -66,6 +66,7 @@
 								<th><?php echo $this->__("Price") ?></th>
 								<th><?php echo $this->__("Qty") ?></th>
 								<th><?php echo $this->__("Total") ?></th>
+								<th><?php echo $this->__("Action") ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -78,6 +79,9 @@
 								<td><?php echo $product->getPrice(); ?></td>
 								<td><?php echo $product->getQty(); ?></td>
 								<td><?php echo $product->getTotal(); ?></td>
+								<td><a href="<?php echo $this->getUrl("inventorymanager/purchaseorder/downloadproductpdf", array("order_id"=>$purchaseorderObject->getId(), "product_id"=>$product->getId()) ) ?>">
+									<?php echo $this->__("Download PDF"); ?>
+								</a></td>
 							</tr>
 							<?php } ?>
 						</tbody>

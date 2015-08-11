@@ -1,8 +1,11 @@
-<?php $products = $this->getlabels() ?>
-<?php $_helper = $this->helper('catalog/output'); ?>
-<?php $catalogProduct = $this->getMainProduct(); ?>
-<?php $productInfoObject = $this->getProductInfoObject(); ?>
-
+<?php
+	$serials = $this->getSerials();
+	$productId = $data["product_id"];
+	$orderProduct = $this->getOrderOroduct();
+	$catalogProduct = $this->getCatalogProduct();
+	$productInfoObject = $this->getProductInfoObject();
+	$_helper = $this->helper('catalog/output');
+?>
 <?php
 	$imageHtml = "";
 	if($productInfoObject && $productInfoObject->getMainImage() != ""){
@@ -27,7 +30,7 @@
 <div>
 	<ul>
 		<?php $iCounter = 1 ?>
-		<?php foreach ($products as $product){ ?>
+		<?php foreach ($serials as $product){ ?>
 		<?php if($iCounter > 10) { break; } $iCounter++;  // place restriction to geneate lables for 300 qty ?>
 			<li style="border:1px solid #ccc;">
 				<table border="1" cellpadding="5" width="100%">

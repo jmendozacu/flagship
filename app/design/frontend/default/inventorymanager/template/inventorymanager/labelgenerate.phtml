@@ -30,12 +30,18 @@
 					<tr>
 						<td>
 							<img src="<?php echo str_replace(array("index.php","index.php/"), "", Mage::getBaseUrl())	."barcode.php?text=".$product->getSerial()."&size=32"; ?>" />
-							<span style="float:right"><?php echo $imageHtml ?></span>
+							<br/><?php echo $product->getSerial() ?>
+							<?php /* <span style="float:right"><?php echo $imageHtml ?></span> */?>
 						</td>
+						<?php if($productInfoObject && $productInfoObject->getUpc() != ""){ ?>
+						<td>
+							<img src="<?php echo str_replace(array("index.php","index.php/"), "", Mage::getBaseUrl())	."barcode.php?text=".$productInfoObject->getUpc()."&size=32"; ?>" />
+							<br/>
+							<?php echo $productInfoObject->getUpc() ?>
+						</td>
+						<?php } ?>
 					</tr>
-					<tr>
-						<td><?php echo $product->getSerial() ?></td>
-					</tr>
+					
 				</table>
 				<table border="1" cellpadding="5" width="100%">
 					<?php /* <tr>

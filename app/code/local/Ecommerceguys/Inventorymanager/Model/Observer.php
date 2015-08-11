@@ -14,4 +14,24 @@ class Ecommerceguys_Inventorymanager_Model_Observer
             ));
         }
     }
+    
+    public function saveShipmentAfter($observer){
+		$shipment = $observer->getEvent()->getShipment();
+		$order = $shipment->getOrder();
+		
+		$params = Mage::app()->getRequest()->getParams();
+		$serials = $params['serials'];
+		foreach ($serials as $serial){
+			$serialModel = Mage::getModel('inventorymanager/label')->load($serial, "serial");
+			if($serialModel && $serialModel->getId()){
+				$serialModel->addData(
+					array(
+						'shipment_id'	=>	$shipment->getId(),
+						'real_order_id'	=>	$order->getId()
+					)
+				)->save();
+			}
+		}
+		
+    }
 }

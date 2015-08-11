@@ -1,5 +1,10 @@
 <?php
 	$currentProduct = $this->getProduct();
+	$vendorProduct = $this->getVendorProduct();
+	$cost = $currentProduct->getPrice();
+	if($vendorProduct && $vendorProduct->getId()){
+		$cost = $vendorProduct->getCost();
+	}
 ?>
 <li>
 	<div class="product-content p-name">
@@ -9,7 +14,7 @@
 	<div class="product-content p-qty">
 		<input type="text" value="1" name="qty[<?php echo $currentProduct->getId() ?>]" class="input-text" onchange="countTotal(this)" />
 	</div>
-	<div class="product-content p-cost"><?php echo $currentProduct->getPrice()?$currentProduct->getPrice():0; ?>
+	<div class="product-content p-cost"><?php echo $cost ?>
 		<input type="text" value="0.0000" name="product_value[<?php echo $currentProduct->getId() ?>]" class="input-text" onchange="countTotal(this)" />
 	</div>
 	<div id="total" class="product-content p-total p-input">

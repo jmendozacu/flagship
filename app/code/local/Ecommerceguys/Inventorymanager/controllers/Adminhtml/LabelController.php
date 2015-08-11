@@ -38,4 +38,45 @@ class Ecommerceguys_Inventorymanager_Adminhtml_LabelController extends Mage_Admi
         Mage::register('current_order', $order);
         return $order;
     }
+    
+    public function assignShipmentAction(){
+    	$serial = $this->getRequest()->getParam('serial');
+    	$shipmentId  = $this->getRequest()->getParam('shipment_id');
+    	if($serial != "" && $shipmentId != ""){
+    		$orderId  = $this->getRequest()->getParam('order_id');
+    		$serialModel = Mage::getModel('inventorymanager/label')->load($serial, "serial");
+    		if($serialModel && $serialModel->getId()){
+    			
+    			try{
+	    			$serialModel->addData(
+						array(
+							'shipment_id'	=>	$shipmentId,
+							'real_order_id'	=>	$orderId
+						)
+					)->save();
+					echo $serialModel->getId();
+    			}catch (Exception $e){
+    				
+    			}
+    		}
+    	}
+    }
+    
+    public function unassignShipmentAction(){
+    	if($id = $this->getRequest()->getParam('serial_id')){
+    		$serialModel = Mage::getModel('inventorymanager/label')->load($id);
+    		if($serialModel && $serialModel->getId()){
+    			try{
+	    			$serialModel->addData(
+						array(
+							'shipment_id'	=>	0,
+							'real_order_id'	=>	0
+						)
+					)->save();
+    			}catch (Exception $e){
+    				
+    			}
+    		}
+    	}
+    }
 }

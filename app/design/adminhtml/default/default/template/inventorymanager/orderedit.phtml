@@ -104,7 +104,7 @@
 												<label for="date_of_po"><?php echo $this->__("Expted Date") ?></label>
 											</td>
 											<td class="value">
-												<input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo date("d/m/Y", strtotime($c_expectedDate)); ?>" name="expected_date" id="expected_date">
+												<input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo $c_expectedDate!=""?date('d/m/Y', strtotime($c_expectedDate)):date('d/m/Y', strtotime('+30 days')); ?>" name="expected_date" id="expected_date">
 												<img style="" title="<?php echo $this->__("Select Date") ?>" id="expected_date_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
 											</td>
 										</tr>

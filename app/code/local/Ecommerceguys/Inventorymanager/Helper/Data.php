@@ -14,6 +14,7 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 			"lighting" => $this->__("Lighting"),
 			"files" => $this->__("Drawings"),
 			"main_image" => $this->__("Main Image"),
+			"upc" => $this->__("UPC"),
 		);
 	}
 	
