@@ -63,7 +63,7 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 	public function saveAction() {
 		if ($data = $this->getRequest()->getPost()) {
 			//print_r($data); exit;
-			
+			$id = $this->getRequest()->getParam('id');
 			$poProductIds = $data['po_product'];
 			
 			$model = Mage::getModel('inventorymanager/purchaseorder');		
@@ -104,6 +104,9 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 					
 				//}
 				$model->setOrderQty($tatalQty)->save();
+				if($id == "" || $id <= 0){
+					Mage::getModel('inventorymanager/label')->generateLabels($model->getId());
+				}
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order was successfully saved'));
 				Mage::getSingleton('adminhtml/session')->setFormData(false);
 

@@ -20,7 +20,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	public function generateAction(){
 		$orderId = $this->getRequest()->getParam('id');
 		
-		$labelCollection = Mage::getModel('inventorymanager/label')->getCollection();
+		/*$labelCollection = Mage::getModel('inventorymanager/label')->getCollection();
 		$labelCollection->addFieldToFilter('order_id', $orderId);
 		if(!$labelCollection->count() || $labelCollection->count() <= 0){
 			$products = Mage::getModel('inventorymanager/product')->getCollection();
@@ -37,15 +37,12 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 						'created_time'	=>	now(),
 						'updated_time'	=>	now()
 					);
-					/*echo "<pre>";
-					print_r($labelData);
-					echo "</pre>";*/
 					$label->setData($labelData)->save();
 				}
 			}
 			
 			//exit;
-		}
+		}*/
 		
 		$content = $this->getLayout()->createBlock('inventorymanager/label_generate')
 		->setTemplate('inventorymanager/labelgenerate.phtml')->toHtml();

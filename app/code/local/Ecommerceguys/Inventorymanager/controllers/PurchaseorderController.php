@@ -47,7 +47,7 @@ class Ecommerceguys_Inventorymanager_PurchaseorderController extends Mage_Core_C
 		$productId = $data["product_id"];
 		$orderId = $data["order_id"];
 		
-		$labelCollection = Mage::getModel('inventorymanager/label')->getCollection();
+		/*$labelCollection = Mage::getModel('inventorymanager/label')->getCollection();
 		$labelCollection->addFieldToFilter('order_id', $orderId);
 		if(!$labelCollection->count() || $labelCollection->count() <= 0){
 			$products = Mage::getModel('inventorymanager/product')->getCollection();
@@ -67,7 +67,7 @@ class Ecommerceguys_Inventorymanager_PurchaseorderController extends Mage_Core_C
 					$label->setData($labelData)->save();
 				}
 			}
-		}
+		}*/
 		
 		
 		$content = $this->getLayout()->createBlock('inventorymanager/purchaseorder_productpdf')
