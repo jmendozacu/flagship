@@ -40,6 +40,16 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 		return "";
 	}
 	
+	public function getStaticStatusOptions(){
+		return array(
+			$this->__("Ready to Ship"),
+			$this->__("Shipped"),
+			$this->__("Arrived"),
+			$this->__("Ready to Sell"),
+			$this->__("Sold")
+		);
+	}
+	
 	public function getVendorMaterials(){
 		$vendor = Mage::getSingleton('core/session')->getVendor();
 		$materials = $vendor->getMaterial();

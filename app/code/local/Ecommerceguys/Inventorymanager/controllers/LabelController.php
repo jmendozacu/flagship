@@ -192,6 +192,11 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function addnewstatusAction(){
 		$status = $this->getRequest()->getParam('status');
+		$staticStatuses = Mage::helper('inventorymanager')->getStaticStatusOptions();
+		if(in_array($status, $staticStatuses)){
+			return;
+		}
+		
 		try{
 			Mage::getModel('inventorymanager/label')->setNewStatus($status);
 		}catch (Exception $e){

@@ -8,6 +8,7 @@
 	$labelComments = $this->getComments();
 	$status = Mage::helper('inventorymanager')->getOrderedProductStatusArray($_purchaseorder->getVendorId());
 	$locations = $this->helper('inventorymanager')->getLocations($_purchaseorder->getVendorId());
+	$staticStatusArray = $this->helper('inventorymanager')->getStaticStatusOptions();
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -102,6 +103,9 @@
 									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button" style="z-index:999"><span class="caret"></span></button>
 									  	<ul class="dropdown-menu" id="dropdown-box">
 									  		<li class="add-status-li"><a href="javascript:void(0);" id="new_status_link" ><?php echo $this->__("Add New") ?></a></li>
+									  		<?php foreach ($staticStatusArray as $key => $statusLabel) { ?>
+									  			<li><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  		<?php } ?>
 									  		<?php foreach ($status as $key => $statusLabel) { ?>
 									  			<li><span class="remove-status-link">x</span><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
 									  		<?php } ?>
