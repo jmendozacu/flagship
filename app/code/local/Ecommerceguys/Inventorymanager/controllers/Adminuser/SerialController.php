@@ -141,4 +141,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 			return;
 		}
 	}
+	
+	public function sentAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
 }

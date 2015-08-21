@@ -40,6 +40,8 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 	$adminuserVendors = false;
 	$receiveProduct = false;
 	$sendProduct = false;
+	$sentSerials = false;
+	$stockTab = false;
 	if($currentController == "vendor" && $currentAction == "products"){
 		$productsPage = true;
 	}elseif($currentController == "vendor" && $currentAction == "index"){
@@ -54,6 +56,12 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 		$receiveProduct = true;
 	}elseif($currentController == "adminuser_serial" && ($currentAction == "find" || $currentAction == "send")){
 		$sendProduct = true;
+	}elseif($currentController == "adminuser_serial" && $currentAction == "sent"){ 
+		$sentSerials = true;
+	}elseif($currentController == "adminuser_serial" && $currentAction == "sent"){ 
+		$sentSerials = true;
+	}elseif($currentController == "vendor_product" && $currentAction == "stockgrid"){ 
+		$stockTab = true;
 	}
 ?>
         
@@ -86,6 +94,11 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
                 	<i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Serial Number Status") ?>
                 </a>
             </li>
+            <li>
+                <a class="<?php if($stockTab) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/vendor_product/stockgrid') ?>">
+                	<i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock") ?>
+                </a>
+            </li>
 		</ul>           
 	</div>
 <?php }elseif(Mage::getSingleton('inventorymanager/session')->isAdminUser()){ ?>
@@ -109,6 +122,12 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
                 <a class="<?php echo $receiveProduct?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/findreceive") ?>">
                 	<i class="fa fa-desktop fa-3x"></i>
                 	<?php echo $this->__("Receive Products") ?>
+                </a>
+            </li>
+            <li>
+                <a class="<?php echo $sentSerials?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/sent") ?>">
+                	<i class="fa fa-desktop fa-3x"></i>
+                	<?php echo $this->__("Sent Serials") ?>
                 </a>
             </li>
 		</ul>

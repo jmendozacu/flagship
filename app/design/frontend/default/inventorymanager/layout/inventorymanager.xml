@@ -163,4 +163,22 @@
 			<block type="inventorymanager/user_serial_find" name="adminuser.serials.find" template="inventorymanager/adminuser/serial/find.phtml" ></block>
 		</reference>
 	</inventorymanager_adminuser_serial_find>
+	
+	<inventorymanager_vendor_product_stockgrid>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_product_stock" name="vendor.product.stock" template="inventorymanager/vendor/product/stockgrid.phtml" ></block>
+		</reference>
+	</inventorymanager_vendor_product_stockgrid>
+	
+	<inventorymanager_vendor_product_serialgrid>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_product_serialgrid" name="vendor.product.serials" template="inventorymanager/vendor/product/serialgrid.phtml" ></block>
+		</reference>
+	</inventorymanager_vendor_product_serialgrid>
 </layout>
