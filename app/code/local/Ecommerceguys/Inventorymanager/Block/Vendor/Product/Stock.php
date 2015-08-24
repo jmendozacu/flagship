@@ -25,4 +25,18 @@ class Ecommerceguys_Inventorymanager_Block_Vendor_Product_Stock extends Mage_Cor
 			return false;
 		}
 	}
+	
+	public function getShippedSerials($productId){
+		$orderProducts = Mage::getModel('inventorymanager/product')->getCollection();
+		$orderProducts->addFieldToFilter('main_product_id', $productId);
+		$stock = 0;
+		foreach ($orderProducts as $orderProduct){
+			$labels = Mage::getModel('inventorymanager/label')->getCollection();
+			$labels->addFieldToFilter('product_id', $orderProduct->getId());
+			$labels->addFieldToFilter('order_id', $orderProduct->getPoId());
+			$labels->addFieldToFilter('is_out_stock', 1);
+			$stock += $labels->count();
+		}
+		return $stock;
+	}
 }

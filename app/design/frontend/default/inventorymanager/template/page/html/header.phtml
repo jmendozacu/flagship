@@ -42,6 +42,7 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 	$sendProduct = false;
 	$sentSerials = false;
 	$stockTab = false;
+	$shippedProduct = false;
 	if($currentController == "vendor" && $currentAction == "products"){
 		$productsPage = true;
 	}elseif($currentController == "vendor" && $currentAction == "index"){
@@ -60,8 +61,10 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 		$sentSerials = true;
 	}elseif($currentController == "adminuser_serial" && $currentAction == "sent"){ 
 		$sentSerials = true;
-	}elseif($currentController == "vendor_product" && $currentAction == "stockgrid"){ 
+	}elseif($currentController == "adminuser_product" && ($currentAction == "stockgrid" || $currentAction == "serialgrid")){ 
 		$stockTab = true;
+	}elseif($currentController == "vendor_product" && ($currentAction == "stockgrid" || $currentAction == "serialgrid")){ 
+		$shippedProduct = true;
 	}
 ?>
         
@@ -94,11 +97,13 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
                 	<i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Serial Number Status") ?>
                 </a>
             </li>
+            
             <li>
-                <a class="<?php if($stockTab) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/vendor_product/stockgrid') ?>">
-                	<i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock") ?>
+                <a class="<?php if($shippedProduct) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/vendor_product/stockgrid') ?>">
+                	<i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Shipped Products") ?>
                 </a>
             </li>
+            
 		</ul>           
 	</div>
 <?php }elseif(Mage::getSingleton('inventorymanager/session')->isAdminUser()){ ?>
@@ -128,6 +133,11 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
                 <a class="<?php echo $sentSerials?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/sent") ?>">
                 	<i class="fa fa-desktop fa-3x"></i>
                 	<?php echo $this->__("Sent Serials") ?>
+                </a>
+            </li>
+            <li>
+                <a class="<?php if($stockTab) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/adminuser_product/stockgrid') ?>">
+                	<i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock") ?>
                 </a>
             </li>
 		</ul>

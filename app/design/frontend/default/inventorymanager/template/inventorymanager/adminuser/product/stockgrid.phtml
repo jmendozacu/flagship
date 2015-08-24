@@ -1,11 +1,8 @@
-<?php $vendorProducts = $this->getVendorProducts() ?>
-<?php $vender = $this->getCurrentVendor(); ?>
-
-
+<?php $catalogProducts = $this->getProducts() ?>
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
-			<div class="panel-heading"><?php echo $this->__("Vendor Products' Stock") ?></div>
+			<div class="panel-heading"><?php echo $this->__("Products' Stock") ?></div>
 			<div class="panel-body">
 				<div class="table-responsive">
 					<div id="dataTables-example_wrapper" class="dataTables_wrapper form-inline" role="grid">
@@ -27,14 +24,14 @@
 							<tbody>
 								<?php
 								$icounter = 0;
-								foreach ($vendorProducts as $productData){
+								foreach ($catalogProducts as $productData){
 									$product = Mage::getModel('catalog/product')->load($productData['entity_id']);
-									//$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+									$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
 								?>
-									<tr data-href="<?php echo $this->getUrl("inventorymanager/vendor_product/serialgrid", array('product_id'=>$product->getId())) ?>" class="<?php echo $icounter%2==0?"even":""; ?> gradeA clickable-row">
+									<tr data-href="<?php echo $this->getUrl("inventorymanager/adminuser_product/serialgrid", array('product_id'=>$product->getId())) ?>" class="<?php echo $icounter%2==0?"even":""; ?> gradeA clickable-row">
 										<td><?php echo $product->getName() ?></td>
 										<td><?php echo $product->getSku() ?></td>
-										<td><?php echo $this->getShippedSerials($product->getId()) ?></td>
+										<td><?php echo $stock?$stock->getQty():""; ?></td>
 									</tr>
 								<?php } ?>
 							</tbody>

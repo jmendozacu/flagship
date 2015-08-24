@@ -181,4 +181,31 @@
 			<block type="inventorymanager/vendor_product_serialgrid" name="vendor.product.serials" template="inventorymanager/vendor/product/serialgrid.phtml" ></block>
 		</reference>
 	</inventorymanager_vendor_product_serialgrid>
+	
+	<inventorymanager_adminuser_serial_sent>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_find" name="adminuser.serials.find" template="inventorymanager/adminuser/serial/find.phtml" ></block>
+		</reference> 
+	</inventorymanager_adminuser_serial_sent>
+	
+	<inventorymanager_adminuser_product_stockgrid>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_product_stockgrid" name="adminuser.serials.find" template="inventorymanager/adminuser/product/stockgrid.phtml" ></block>
+		</reference> 
+	</inventorymanager_adminuser_product_stockgrid>
+	
+	<inventorymanager_adminuser_product_serialgrid>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_product_serialgrid" name="adminuser.product.serials" template="inventorymanager/adminuser/product/serialgrid.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_product_serialgrid>
 </layout>

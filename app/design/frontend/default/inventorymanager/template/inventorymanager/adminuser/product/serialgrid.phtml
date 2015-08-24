@@ -1,11 +1,17 @@
-<?php $vendorProducts = $this->getVendorProducts() ?>
-<?php $vender = $this->getCurrentVendor(); ?>
-
-
+<?php
+	$catalogProduct = $this->getCatalogProduct();
+	$orderProducts = $this->getVendorProduct();
+?>
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $catalogProduct->getName() ?></h2>
+		<h5><?php echo $catalogProduct->getSku() ?></h5>
+	</div>
+</div>
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-default">
-			<div class="panel-heading"><?php echo $this->__("Vendor Products' Stock") ?></div>
+			<div class="panel-heading"><?php echo $this->__("Product Serials") ?></div>
 			<div class="panel-body">
 				<div class="table-responsive">
 					<div id="dataTables-example_wrapper" class="dataTables_wrapper form-inline" role="grid">
@@ -14,29 +20,29 @@
 								<tr char="row">
 									
 									<th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 353px;" aria-label="Browser: activate to sort column ascending">
-										<?php echo $this->__("Name") ?>
+										<?php echo $this->__("Serial") ?>
 									</th>
 									<th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 142px;" aria-label="Engine version: activate to sort column ascending">
-										<?php echo $this->__("SKU") ?>
+										<?php echo $this->__("Location") ?>
 									</th>
 									<th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 142px;" aria-label="Engine version: activate to sort column ascending">
-										<?php echo $this->__("STOCK") ?>
+										<?php echo $this->__("Status") ?>
 									</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php
 								$icounter = 0;
-								foreach ($vendorProducts as $productData){
-									$product = Mage::getModel('catalog/product')->load($productData['entity_id']);
-									//$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
-								?>
-									<tr data-href="<?php echo $this->getUrl("inventorymanager/vendor_product/serialgrid", array('product_id'=>$product->getId())) ?>" class="<?php echo $icounter%2==0?"even":""; ?> gradeA clickable-row">
-										<td><?php echo $product->getName() ?></td>
-										<td><?php echo $product->getSku() ?></td>
-										<td><?php echo $this->getShippedSerials($product->getId()) ?></td>
-									</tr>
-								<?php } ?>
+								foreach ($orderProducts as $orderProductObject){
+									$serials = $this->getSerials($orderProductObject->getId());
+									foreach ($serials as $serialObject){?>
+										<tr class="<?php echo $icounter%2==0?"even":""; ?> gradeA">
+											<td><?php echo $serialObject->getSerial() ?></td>
+											<td><?php echo $serialObject->getLocation() ?></td>
+											<td><?php echo $serialObject->getStatus(); ?></td>
+										</tr>
+									<?php }
+								} ?>
 							</tbody>
 						</table>
 					</div>
