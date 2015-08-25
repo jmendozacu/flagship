@@ -98,17 +98,17 @@
 								<div class="form-control-static" >
 									<div class="btn-group show-dropbox">
 											<div class="form-group input-group show-dropbox" id="status-text-div" style="float:left; margin-right:0px;">
-							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" name="status" id="new_status" value="<?php echo $labelObject->getStatus(); ?>" />
+							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" name="status" readonly id="new_status" value="<?php echo $labelObject->getStatus(); ?>" />
 							  			</div>
 									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button" style="z-index:999"><span class="caret"></span></button>
 									  	<ul class="dropdown-menu" id="dropdown-box">
-									  		<li class="add-status-li"><a href="javascript:void(0);" id="new_status_link" ><?php echo $this->__("Add New") ?></a></li>
+									  		<?php /* <li class="add-status-li"><a href="javascript:void(0);" id="new_status_link" ><?php echo $this->__("Add New") ?></a></li> */ ?>
 									  		<?php foreach ($staticStatusArray as $key => $statusLabel) { ?>
 									  			<li><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
 									  		<?php } ?>
-									  		<?php foreach ($status as $key => $statusLabel) { ?>
+									  		<?php /*foreach ($status as $key => $statusLabel) { ?>
 									  			<li><span class="remove-status-link">x</span><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
-									  		<?php } ?>
+									  		<?php }*/ ?>
 									  	</ul>
 									</div>
 								</div>
@@ -206,7 +206,8 @@
 	<?php } ?>
 
 	function statusText(val){
-		$('new_status_link').innerHTML = '<?php echo $this->__("Add") ?> ' + val;
+		
+		//$('new_status_link').innerHTML = '<?php echo $this->__("Add") ?> ' + val;
 	}
 	
 	$$('a.status-options').each(function(e){
