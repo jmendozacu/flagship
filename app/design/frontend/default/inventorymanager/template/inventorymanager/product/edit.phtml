@@ -41,21 +41,50 @@
 								<label><?php echo $this->__("Cost") ?></label>
 								<input type="text" class="required-entry validate-number form-control" name="cost" value="<?php echo $this->getProductInfoCost() ?>" />
 							</div>
-							<div class="form-group">
-								<label><?php echo $this->__("Length") ?></label>
-								<input type="text" class="required-entry form-control" name="length" id="length_field" value="<?php echo $this->getProductInfoLength(); ?>" />
-								<span id="lengh_in_mm"><?php echo $this->getProductInfoLength()>0?$this->getProductInfoLength()*25.4 . "&nbsp;" . $this->__("MM"):"";  ?></span>
+							<div class="col-md-6 ">
+								<div class="form-group">
+									<label><?php echo $this->__("Length") ?></label>
+									<div class="input-group">
+										<span class="input-group-addon">Inch</span>
+										<input type="text" class="required-entry form-control" name="length" id="length_field" value="<?php echo $this->getProductInfoLength(); ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">MM</span>
+										<input type="text" class="form-control" id="lengh_in_mm" value="<?php echo $this->getProductInfoLength()>0?$this->getProductInfoLength()*25.4:"";  ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Width") ?></label>
+									<div class="input-group">
+										<span class="input-group-addon">Inch</span>
+										<input type="text" class="required-entry form-control" name="width" id="width_field" value="<?php echo $this->getProductInfoWidth() ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">MM</span>
+										<input type="text" class="form-control" id="width_in_mm" value="<?php echo $this->getProductInfoWidth()>0?$this->getProductInfoWidth()*25.4:"";  ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Height") ?></label>
+									<div class="input-group">
+										<span class="input-group-addon">Inch</span>
+										<input type="text" class="required-entry form-control" name="height" id="height_field" value="<?php echo $this->getProductInfoHeight(); ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">MM</span>
+										<input type="text" class="form-control" id="height_in_mm" value="<?php echo $this->getProductInfoHeight()>0?$this->getProductInfoHeight()*25.4:"";  ?>" />
+									</div>
+								</div>
 							</div>
-							<div class="form-group">
-								<label><?php echo $this->__("Width") ?></label>
-								<input type="text" class="required-entry form-control" name="width" id="width_field" value="<?php echo $this->getProductInfoWidth() ?>" />
-								<span id="width_in_mm"><?php echo $this->getProductInfoWidth()>0?$this->getProductInfoWidth()*25.4 . "&nbsp;" . $this->__("MM"):"";  ?></span>
+							<div class="row">
 							</div>
-							<div class="form-group">
-								<label><?php echo $this->__("Height") ?></label>
-								<input type="text" class="required-entry form-control" name="height" id="height_field" value="<?php echo $this->getProductInfoHeight(); ?>" />
-								<span id="height_in_mm"><?php echo $this->getProductInfoHeight()>0?$this->getProductInfoHeight()*25.4 . "&nbsp;" . $this->__("MM"):"";  ?></span>
-							</div>
+							
 							<div class="form-group">
 								<label><?php echo $this->__("UPC Code") ?></label>
 								<input type="text" class="form-control" name="upc" value="<?php echo $productInfoObject?$productInfoObject->getUpc():""; ?>" />
@@ -423,33 +452,60 @@
 	$('length_field').observe('keyup', function(){
 		var val = $('length_field').value;
 		if(val == "")
-			$('lengh_in_mm').value = "";
+			$('lengh_in_mm').value = 0;
 		else{
 			var mmVal  = val * 25.4 ;
-			$('lengh_in_mm').innerHTML = mmVal.toFixed(2);
-			$('lengh_in_mm').innerHTML += ' <?php echo $this->__("MM") ?>';
+			$('lengh_in_mm').value = mmVal.toFixed(0); 
 		}
 	});
 	
 	$('width_field').observe('keyup', function(){
 		var val = $('width_field').value;
 		if(val == "")
-			$('width_in_mm').value = "";
+			$('width_in_mm').value = 0;
 		else{
 			var mmVal  = val * 25.4 ;
-			$('width_in_mm').innerHTML = mmVal.toFixed(2);
-			$('width_in_mm').innerHTML += ' <?php echo $this->__("MM") ?>';
+			$('width_in_mm').value = mmVal.toFixed(0);
 		}
 	});
 	
 	$('height_field').observe('keyup', function(){
 		var val = $('height_field').value;
 		if(val == "")
-			$('height_in_mm').value = "";
+			$('height_in_mm').value = 0;
 		else{
 			var mmVal  = val * 25.4 ;
-			$('height_in_mm').innerHTML = mmVal.toFixed(2);
-			$('height_in_mm').innerHTML += ' <?php echo $this->__("MM") ?>';
+			$('height_in_mm').value = mmVal.toFixed(0);
+		}
+	});
+	
+	$('lengh_in_mm').observe('keyup', function(){
+		var val = $('lengh_in_mm').value;
+		if(val == "")
+			$('length_field').value = 0;
+		else{
+			var mmVal  = val / 25.4 ;
+			$('length_field').value = mmVal.toFixed(0); 
+		}
+	});
+	
+	$('width_in_mm').observe('keyup', function(){
+		var val = $('width_in_mm').value;
+		if(val == "")
+			$('width_field').value = 0;
+		else{
+			var mmVal  = val / 25.4 ;
+			$('width_field').value = mmVal.toFixed(0); 
+		}
+	});
+	
+	$('height_in_mm').observe('keyup', function(){
+		var val = $('height_in_mm').value;
+		if(val == "")
+			$('height_field').value = 0;
+		else{
+			var mmVal  = val / 25.4 ;
+			$('height_field').value = mmVal.toFixed(0); 
 		}
 	});
 </script>
