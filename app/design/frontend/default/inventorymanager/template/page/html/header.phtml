@@ -1,3 +1,4 @@
+<?php if (Mage::getSingleton('inventorymanager/session')->isLoggedIn()) { ?>	
 <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
@@ -8,17 +9,27 @@
                 </button>
                 <a class="navbar-brand" href="index.html"><?php echo $this->__("Vendor Section") ?></a> 
             </div>
-            <?php if (Mage::getSingleton('inventorymanager/session')->isLoggedIn()) { ?>
-  <div style="color: white;
-padding: 15px 50px 5px 50px;
-float: right;
-font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;--> 
+            
+  <div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;--> 
   <a href="<?php echo $this->getUrl('inventorymanager/vendor/logout') ?>" class="btn btn-danger square-btn-adjust">
   	<?php echo $this->__("Logout") ?>
   </a>
   
 </div>
 <?php }elseif(Mage::getSingleton('inventorymanager/session')->isAdminUser()){ ?>
+
+<nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html"><?php echo $this->__("Agent Section") ?></a> 
+            </div>
+
+
 	<div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> 
   <a href="<?php echo $this->getUrl('inventorymanager/adminuser/logout') ?>" class="btn btn-danger square-btn-adjust">
   	<?php echo $this->__("Logout") ?>
@@ -138,6 +149,16 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
             <li>
                 <a class="<?php if($stockTab) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/adminuser_product/stockgrid') ?>">
                 	<i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock") ?>
+                </a>
+            </li>
+            <li>
+                <a class="" href="#">
+                	<i class="fa fa-edit fa-3x"></i><?php echo $this->__("Manage Vendors") ?>
+                </a>
+            </li>
+            <li>
+                <a class="" href="#">
+                	<i class="fa fa-square-o fa-3x"></i><?php echo $this->__("Purchase Orders") ?>
                 </a>
             </li>
 		</ul>
