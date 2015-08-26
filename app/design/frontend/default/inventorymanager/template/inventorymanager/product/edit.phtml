@@ -43,15 +43,18 @@
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Length") ?></label>
-								<input type="text" class="required-entry form-control" name="length" value="<?php echo $this->getProductInfoLength(); ?>" />
+								<input type="text" class="required-entry form-control" name="length" id="length_field" value="<?php echo $this->getProductInfoLength(); ?>" />
+								<span id="lengh_in_mm"><?php echo $this->getProductInfoLength()>0?$this->getProductInfoLength()*25.4 . "&nbsp;" . $this->__("MM"):"";  ?></span>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Width") ?></label>
-								<input type="text" class="required-entry form-control" name="width" value="<?php echo $this->getProductInfoWidth() ?>" />
+								<input type="text" class="required-entry form-control" name="width" id="width_field" value="<?php echo $this->getProductInfoWidth() ?>" />
+								<span id="width_in_mm"><?php echo $this->getProductInfoWidth()>0?$this->getProductInfoWidth()*25.4 . "&nbsp;" . $this->__("MM"):"";  ?></span>
 							</div>
 							<div class="form-group">
-								<label><?php echo $this->__("Hight") ?></label>
-								<input type="text" class="required-entry form-control" name="height" value="<?php echo $this->getProductInfoHeight(); ?>" />
+								<label><?php echo $this->__("Height") ?></label>
+								<input type="text" class="required-entry form-control" name="height" id="height_field" value="<?php echo $this->getProductInfoHeight(); ?>" />
+								<span id="height_in_mm"><?php echo $this->getProductInfoHeight()>0?$this->getProductInfoHeight()*25.4 . "&nbsp;" . $this->__("MM"):"";  ?></span>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("UPC Code") ?></label>
@@ -160,11 +163,11 @@
 		$('drow-tab-content').fade({from: 1,to: 0, afterFinish: function(){ $('drow-tab-content').hide(); }});
 	});
 	
-	$('drow-tab').observe('click', function(){
+	/*$('drow-tab').observe('click', function(){
 		$('main-tab-content').fade({from: 1,to: 0, afterFinish: function(){ $('main-tab-content').hide(); }});
 		$('drow-tab-content').fade({from: 0,to: 1, afterFinish: function(){ $('drow-tab-content').show(); }});
 	});
-	$('drow-tab-content').hide();
+	$('drow-tab-content').hide();*/
 </script>
 <script>
 	var dataForm = new VarienForm('vendor-product-form', false);
@@ -173,10 +176,10 @@
 	$("productinfo-submit-button").observe("click", function(){
 		dataForm.form.submit();
 	});
-	$("productinfo-reset-button").observe("click", function(){
+	/*$("productinfo-reset-button").observe("click", function(){
 		$("vendor-product-form").reset();
 		Form.reset('vendor-product-form');
-	});
+	});*/
 </script>
 <script>
 	// SMART DROPBOX SCRIPTS
@@ -404,4 +407,49 @@
   			onFailure: function() { alert('Something went wrong...');}
 		});
 	}
+</script>
+<script>
+	$('length_field').observe('keyup', function(){
+		var val = $('length_field').value;
+		if(val == "")
+			$('lengh_in_mm').value = "";
+		else{
+			var mmVal  = val * 25.4 ;
+			$('lengh_in_mm').innerHTML = mmVal.toFixed(2);
+			$('lengh_in_mm').innerHTML += ' <?php echo $this->__("MM") ?>';
+		}
+	});
+	
+	$('length_field').observe('keyup', function(){
+		var val = $('length_field').value;
+		if(val == "")
+			$('lengh_in_mm').value = "";
+		else{
+			var mmVal  = val * 25.4 ;
+			$('lengh_in_mm').innerHTML = mmVal.toFixed(2);
+			$('lengh_in_mm').innerHTML += ' <?php echo $this->__("MM") ?>';
+		}
+	});
+	
+	$('width_field').observe('keyup', function(){
+		var val = $('width_field').value;
+		if(val == "")
+			$('width_in_mm').value = "";
+		else{
+			var mmVal  = val * 25.4 ;
+			$('width_in_mm').innerHTML = mmVal.toFixed(2);
+			$('width_in_mm').innerHTML += ' <?php echo $this->__("MM") ?>';
+		}
+	});
+	
+	$('height_field').observe('keyup', function(){
+		var val = $('height_field').value;
+		if(val == "")
+			$('height_in_mm').value = "";
+		else{
+			var mmVal  = val * 25.4 ;
+			$('height_in_mm').innerHTML = mmVal.toFixed(2);
+			$('height_in_mm').innerHTML += ' <?php echo $this->__("MM") ?>';
+		}
+	});
 </script>
