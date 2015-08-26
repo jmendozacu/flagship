@@ -31,7 +31,7 @@
 									<tr data-href="<?php echo $this->getUrl("inventorymanager/adminuser_product/serialgrid", array('product_id'=>$product->getId())) ?>" class="<?php echo $icounter%2==0?"even":""; ?> gradeA clickable-row">
 										<td><?php echo $product->getName() ?></td>
 										<td><?php echo $product->getSku() ?></td>
-										<td><?php echo $stock?$stock->getQty():""; ?></td>
+										<td><?php echo $stock?(int)$stock->getQty():""; ?></td>
 									</tr>
 								<?php } ?>
 							</tbody>
