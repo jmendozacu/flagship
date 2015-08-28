@@ -32,4 +32,62 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 		$this->loadLayout();
 		$this->renderLayout();
 	}
+	public function vendorprofilesAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	public function vendoreditAction(){
+
+
+		$id     = $this->getRequest()->getParam('vendor_id');
+		$model  = Mage::getModel('inventorymanager/vendor')->load($id);
+
+		if ($model->getId() || $id == 0) {
+			$data = Mage::getSingleton('adminhtml/session')->getFormData(true);
+			if (!empty($data)) {
+				$model->setData($data);
+			}
+
+			Mage::register('vendor_data', $model);
+
+			$this->loadLayout();
+			$this->renderLayout();
+		} else {
+			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__('Vendor does not exist'));
+			$this->_redirect('inventorymanager/adminuser/vendorprofiles');
+		}
+	}
+	public function vendorsaveAction() {
+		if ($data = $this->getRequest()->getPost()) {
+			
+			$model = Mage::getModel('inventorymanager/vendor');		
+			$model->setData($data)
+				->setId($this->getRequest()->getParam('id'));
+			
+			try {
+				if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
+					$model->setCreatedTime(now())
+						->setUpdateTime(now());
+				} else {
+					$model->setUpdateTime(now());
+				}	
+				
+				$model->save();
+				
+				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor saved successfully'));
+				Mage::getSingleton('core/session')->setFormData(false);
+
+
+				$this->_redirect('inventorymanager/adminuser/vendorprofiles');
+				return;
+            } catch (Exception $e) {
+                Mage::getSingleton('core/session')->addError($e->getMessage());
+                Mage::getSingleton('core/session')->setFormData($data);
+                $this->_redirect('*/*/vendoredit', array('vendor_id' => $this->getRequest()->getParam('id')));
+                return;
+            }
+        }
+        Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__('Unable to find vendor to save'));
+        $this->_redirect('inventorymanager/adminuser/vendorprofiles');
+	}
 }

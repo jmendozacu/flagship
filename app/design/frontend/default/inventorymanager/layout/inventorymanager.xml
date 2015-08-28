@@ -115,6 +115,30 @@
 		</reference>
 	</inventorymanager_adminuser_vendors>
 	
+	<inventorymanager_adminuser_vendorprofiles>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_vendor" name="adminuser.vendorprofiles" template="inventorymanager/adminuser/vendorprofiles.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_vendorprofiles>
+
+	<inventorymanager_adminuser_vendoredit>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+		 	<block type="inventorymanager/user_vendor" name="adminuser.vendoredit" template="inventorymanager/adminuser/vendoredit.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_vendoredit>
+	
 	
 	<inventorymanager_adminuser_vendorproduct>
 		<reference name="root">
