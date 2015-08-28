@@ -1,0 +1,49 @@
+<?php $vendorData = Mage::registry('vendor_data');?>
+<?php $vendorData->getName();?>
+
+
+<form id="edit_form" action="<?php echo $this->getPostUrl($vendorData->getId())?>" method="post" enctype="multipart/form-data">
+<?php echo $this->getBlockHtml('formkey') ?>
+<div class="hor-scroll">
+	<table class="form-list" cellspacing="0">
+            <tbody>
+                <tr>
+        <td><label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label></td>
+    <td class="value">
+        <input id="name" name="<?php echo $this->__('name');?>" value="<?php echo $vendorData->getName();?>" class="required-entry input-text required-entry" type="text"> </td>
+    </tr>
+<tr>
+        <td ><label for="email"><?php echo $this->__('Vendor Email');?> <span class="required">*</span></label></td>
+    <td class="value">
+        <input id="email" name="<?php echo $this->__('email');?>" value="<?php echo $vendorData->getEmail();?>" class="required-entry validate-email input-text required-entry" type="text">            </td>
+    </tr>
+<tr>
+        <td ><label for="vendor_code"><?php echo $this->__('Vendor Code');?><span class="required">*</span></label></td>
+    <td class="value">
+        <input id="vendor_code" name="<?php echo $this->__('vendor_code');?>" value="<?php echo $vendorData->getVendorCode();?>" class="required-entry input-text required-entry" type="text">            </td>
+    </tr>
+<tr>
+        <td ><label for="username"><?php echo $this->__('Username');?><span class="required">*</span></label></td>
+    <td class="value">
+        <input id="username" name="<?php echo $this->__('username');?>" value="<?php echo $vendorData->getUsername();?>" class="required-entry input-text required-entry" type="text">            </td>
+    </tr>
+<tr>
+        <td ><label for="password"><?php echo $this->__('Passeord');?><span class="required">*</span></label></td>
+    <td class="value">
+        <input id="password" name="<?php echo $this->__('password');?>" value="<?php echo $vendorData->getPassword();?>" class="required-entry input-text required-entry" type="password"></td>
+    </tr>
+    
+    <tr>
+    	<td colspan="2">
+      		<div class="buttons-set">
+            	<button type="submit" title="<?php echo "<?php echo $this->__('Save');?>";?>" class="button"><span><span><?php echo "Save";?></span></span></button>
+        	</div>
+      	</td>
+      </tr>
+    </tbody>
+ </table>
+</div>
+
+ <script type="text/javascript">
+    editForm = new varienForm('edit_form', '');
+</script>

@@ -49,6 +49,7 @@
 	$printendLabel = false;
 	$purchaseorderPage = false;
 	$adminuserVendors = false;
+    $manageVendors = false;
 	$receiveProduct = false;
 	$sendProduct = false;
 	$sentSerials = false;
@@ -76,7 +77,9 @@
 		$stockTab = true;
 	}elseif($currentController == "vendor_product" && ($currentAction == "stockgrid" || $currentAction == "serialgrid")){ 
 		$shippedProduct = true;
-	}
+	}elseif($currentController == "adminuser" && ($currentAction == "vendorprofiles" || $currentAction == "vendoredit")){ 
+        $manageVendors = true;
+    }
 ?>
         
 <nav class="navbar-default navbar-side" role="navigation">
@@ -152,8 +155,8 @@
                 </a>
             </li>
             <li>
-                <a class="" href="#">
-                	<i class="fa fa-edit fa-3x"></i><?php echo $this->__("Manage Vendors") ?>
+               <a class="<?php echo $manageVendors?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser/vendorprofiles") ?>">
+                    <i class="fa fa-edit fa-3x"></i> <?php echo $this->__("Manage Vendors") ?>
                 </a>
             </li>
             <li>
