@@ -13,8 +13,25 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 	
 	public function receivepostAction(){
 		if($data = $this->getRequest()->getPost()){
+			$diffStatus = false;
+			$diffLocation = false;
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
+			if($data['location'] != $model->getLocation()){
+				$diffLocation = true;
+			}
+			if($data['status'] != $model->getStatus()){
+				$diffStatus = true;
+			}
+			
 			try{
+				$serialHistory = Mage::getModel('inventorymanager/label_history');
+				if($diffLocation && $diffStatus){
+					$serialHistory->addStatusAndLocation($model->getId());
+				}elseif($diffLocation){
+					$serialHistory->addLocation($model->getId());
+				}elseif ($diffStatus){
+					$serialHistory->addStatus($model->getId());
+				}
 				$model->setStatus($data['status']);
 				$model->setLocation($data['location']);
 				if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
