@@ -7,8 +7,15 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 	}
 	
 	public function receiveAction(){
-		$this->loadLayout();
-		$this->renderLayout();
+		$serialKey = trim($this->getRequest()->getParam('serial_key'));
+		$labelObject = Mage::getModel('inventorymanager/label')->load($serialKey, 'serial');
+		if($labelObject && $labelObject->getId()){
+			$this->loadLayout();
+			$this->renderLayout();
+		}else{
+			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("No Serial Found"));
+			$this->_redirect('*/*/findreceive');
+		}
 	}
 	
 	public function receivepostAction(){
