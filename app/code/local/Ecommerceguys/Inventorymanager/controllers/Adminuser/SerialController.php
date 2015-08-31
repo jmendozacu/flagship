@@ -1,4 +1,7 @@
 <?php
+
+require_once(Mage::getBaseDir()."/RocketShipIt/autoload.php");
+
 class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Core_Controller_Front_Action
 {
 	public function findreceiveAction(){
@@ -12,6 +15,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 	}
 	
 	public function receivepostAction(){
+
 		if($data = $this->getRequest()->getPost()){
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
 			try{
@@ -93,6 +97,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 	}
 	
 	public function findAction(){
+
+
+
+		//echo Mage::getBaseDir();exit;
 		$this->loadLayout();
 		$this->renderLayout();
 	}
@@ -102,6 +110,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 			$orderIncrementId = $data['order_number'];
 			$order = Mage::getModel('sales/order')->load($orderIncrementId, "increment_id");
 			if($order && $order->getId()){
+
+				
+				$this->_generatePdf($order->getId());
+
 				$serial = $data['serial_key'];
 				$serialModel = Mage::getModel('inventorymanager/label')->load($serial, "serial");
 				if($serialModel && $serialModel->getId()){
@@ -123,6 +135,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 						if($isOrderContainsThisProduct){
 							$serialModel->setRealOrderId($order->getId())->setIsOutStock(1)->save();
 							Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product Sent"));
+
+							//$this->_generatePdf($order->getId());
+							
 							$this->_redirect('*/*/find');
 							return;
 						}else{
@@ -146,4 +161,89 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 		$this->loadLayout();
 		$this->renderLayout();
 	}
+
+	protected function _generatePdf($orderId){
+
+		// If an order actually exists
+		if ($orderId) {
+
+		    //Get the order details based on the order id ($orderId)
+		    $order = Mage::getModel('sales/order')->load($orderId);
+
+		    // Get the id of the orders shipping address
+		    $shippingId = $order->getShippingAddress()->getId();
+
+		    // Get shipping address data using the id
+		    $address = Mage::getModel('sales/order_address')->load($shippingId);
+		    $addressArr = $address->getData();
+		    // Display the shipping address data array on screen
+		    $region = Mage::getModel('directory/region')->load($addressArr['region_id']);
+
+		    /*Array
+				(
+				    [entity_id] => 4671
+				    [parent_id] => 2341
+				    [customer_address_id] => 
+				    [quote_address_id] => 
+				    [region_id] => 58
+				    [customer_id] => 
+				    [fax] => 
+				    [region] => Utah
+				    [postcode] => 85432
+				    [lastname] => dsadas
+				    [street] => 2321321
+				w32131
+				    [city] => SLC
+				    [email] => dsa@sad.com
+				    [telephone] => 3234242432
+				    [country_id] => US
+				    [firstname] => dasda
+				    [address_type] => shipping
+				    [prefix] => 
+				    [middlename] => 
+				    [suffix] => 
+				    [company] => 
+				    [vat_id] => 
+				    [vat_is_valid] => 
+				    [vat_request_id] => 
+				    [vat_request_date] => 
+				    [vat_request_success] => 
+			)*/
+
+			$shipment = new \RocketShipIt\Shipment('fedex');
+
+			if(!$address->getCompany() || $address->getCompany() == ''){
+				$shipment->setParameter('toCompany','test');	
+			}else{
+				$shipment->setParameter('toCompany',$address->getCompany());
+			}
+			
+
+			$shipment->setParameter('toName',$address->getFirstname());
+			$shipment->setParameter('toPhone',$address->getTelephone());
+			$shipment->setParameter('toAddr1',$addressArr['street']);
+			$shipment->setParameter('toCity',$address->getCity());
+			$shipment->setParameter('toState',Mage::getModel('directory/region')->load($address->getRegionId())->getCode());
+
+			$shipment->setParameter('toCode',84115);
+			
+			$shipment->setParameter('length',10);
+			$shipment->setParameter('width',10);
+			$shipment->setParameter('height',10);
+			$shipment->setParameter('weight',10);
+
+			$response = $shipment->submitShipment();
+			//print_r($response);
+
+			if($response['tracking_id'] && $response['label_img']){
+				$data = base64_decode($response['label_img']);
+				header('Content-type: application/pdf');
+				header('Content-Disposition: attachment; filename='.$orderId.".pdf");
+				echo $data;
+				return;
+			}
+		}
+		return;
+
+	} 
 }
