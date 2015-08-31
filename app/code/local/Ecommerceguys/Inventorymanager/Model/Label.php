@@ -44,7 +44,7 @@ class Ecommerceguys_Inventorymanager_Model_Label extends Mage_Core_Model_Abstrac
 					$labelData = array(
 						'product_id'	=>	$product->getId(),
 						'order_id'		=>	$orderId,
-						'location'		=>	1,
+						'location'		=>	"P.O.",
 						'serial'		=>	$serial,
 						'created_time'	=>	now(),
 						'updated_time'	=>	now()
