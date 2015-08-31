@@ -60,6 +60,7 @@
 		</reference>
 		<reference name="head">
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+			<action method="addCss"><stylesheet>css/custom.css</stylesheet></action>
 		</reference>
 		<reference name="content">
 			<block type="inventorymanager/purchaseorder_view" name="purchaseorder.view" template="inventorymanager/purchaseorder/view.phtml" />
