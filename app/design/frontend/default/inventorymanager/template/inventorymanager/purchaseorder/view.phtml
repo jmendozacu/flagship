@@ -73,7 +73,7 @@
 							<?php $iCounter = 0; foreach ($this->getProducts() as $product){
 							$realProduct = Mage::getModel('catalog/product')->load($product->getMainProductId());
 								?>
-							<tr>
+							<tr id="po_product_row_<?php echo $product->getId() ?>" class="ro_product_row clickable-row">
 								<td><?php echo ++$iCounter; ?></td>
 								<td><?php echo $realProduct->getName(); ?></td>
 								<td><?php echo $product->getPrice(); ?></td>
@@ -82,6 +82,34 @@
 								<td><a href="<?php echo $this->getUrl("inventorymanager/purchaseorder/downloadproductpdf", array("order_id"=>$purchaseorderObject->getId(), "product_id"=>$product->getId()) ) ?>">
 									<?php echo $this->__("Download PDF"); ?>
 								</a></td>
+							</tr>
+							<?php $serials = $this->getSerials($product->getId()) ?>
+							<tr id="serials_po_product_row_<?php echo $product->getId() ?>" style="display:none">
+								<td colspan="6">
+									<div class="panel panel-default" >
+										<div class="panel-heading"><?php echo $this->__("Serials") ?></div>
+										<div class="panel-body">
+											<div class="table-responsive">
+												<table class="table">
+													<thead>
+														<tr>
+															<th><?php echo $this->__("Serial") ?></th>
+															<th><?php echo $this->__("Location") ?></th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php foreach ($serials as $serial){ ?>
+															<tr>
+																<td><?php echo $serial->getSerial() ?></td>
+																<td><?php echo $serial->getLocation() ?></td>
+															</tr>
+														<?php } ?>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</td>
 							</tr>
 							<?php } ?>
 						</tbody>
@@ -122,3 +150,10 @@
 		</div>
 	</div>
 </div>
+<script>
+	$$("tr.ro_product_row").each(function(e){
+		e.observe('click', function(){
+			$('serials_' + e.id).toggle();
+		});
+	});
+</script>
