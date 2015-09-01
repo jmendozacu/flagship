@@ -1,6 +1,21 @@
 <?php
 class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Core_Controller_Front_Action
 {
+	
+	protected function _getSession()
+    {
+        return Mage::getSingleton('inventorymanager/session');
+    }
+	
+	public function preDispatch(){
+		parent::preDispatch();
+		if (!$this->_getSession()->isAdminUser()) {
+            $this->_redirect('*/vendor/login');
+            $this->setFlag('', self::FLAG_NO_DISPATCH, true);
+            return false;
+        }
+	}
+	
 	public function findreceiveAction(){
 		$this->loadLayout();
 		$this->renderLayout();

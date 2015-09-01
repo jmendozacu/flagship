@@ -85,7 +85,9 @@
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
 		</reference>
 		<reference name="content">
-			<block type="inventorymanager/label_edit" name="purchaseorder.label.edit" template="inventorymanager/label/edit.phtml" />
+			<block type="inventorymanager/label_edit" name="purchaseorder.label.edit" template="inventorymanager/label/edit.phtml" >
+				<block type="inventorymanager/label_history" name="serial.history" template="inventorymanager/label/history.phtml" />
+			</block>
 		</reference>
 	</inventorymanager_label_edit>
 	

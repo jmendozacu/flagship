@@ -1,5 +1,5 @@
 <?php
-class Ecommerceguys_Inventorymanager_Block_User_Serial_History extends Mage_Core_Block_Template
+class Ecommerceguys_Inventorymanager_Block_Label_History extends Mage_Core_Block_Template
 {
 	public function getLabelId(){
 		$key = $this->getRequest()->getParam('serial_key');
@@ -20,7 +20,7 @@ class Ecommerceguys_Inventorymanager_Block_User_Serial_History extends Mage_Core
 		return $historyCollection;
 	}
 	
-	public function getUserName($userId){
+	public function getUser($userId){
 		$userVars = explode("-", $userId);
 		if(isset($userVars[1]) && $userVars[1] > 0){
 			if(isset($userVars[0]) && $userVars[0] == 1){
