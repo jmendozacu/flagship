@@ -1,20 +1,59 @@
 <?php
 class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Core_Controller_Front_Action
 {
+	
+	protected function _getSession()
+    {
+        return Mage::getSingleton('inventorymanager/session');
+    }
+	
+	public function preDispatch(){
+		parent::preDispatch();
+		if (!$this->_getSession()->isAdminUser()) {
+            $this->_redirect('*/vendor/login');
+            $this->setFlag('', self::FLAG_NO_DISPATCH, true);
+            return false;
+        }
+	}
+	
 	public function findreceiveAction(){
 		$this->loadLayout();
 		$this->renderLayout();
 	}
 	
 	public function receiveAction(){
-		$this->loadLayout();
-		$this->renderLayout();
+		$serialKey = trim($this->getRequest()->getParam('serial_key'));
+		$labelObject = Mage::getModel('inventorymanager/label')->load($serialKey, 'serial');
+		if($labelObject && $labelObject->getId()){
+			$this->loadLayout();
+			$this->renderLayout();
+		}else{
+			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("No Serial Found"));
+			$this->_redirect('*/*/findreceive');
+		}
 	}
 	
 	public function receivepostAction(){
 		if($data = $this->getRequest()->getPost()){
+			$diffStatus = false;
+			$diffLocation = false;
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
+			if($data['location'] != $model->getLocation()){
+				$diffLocation = true;
+			}
+			if($data['status'] != $model->getStatus()){
+				$diffStatus = true;
+			}
+			
 			try{
+				$serialHistory = Mage::getModel('inventorymanager/label_history');
+				if($diffLocation && $diffStatus){
+					$serialHistory->addStatusAndLocation($model->getId());
+				}elseif($diffLocation){
+					$serialHistory->addLocation($model->getId());
+				}elseif ($diffStatus){
+					$serialHistory->addStatus($model->getId());
+				}
 				$model->setStatus($data['status']);
 				$model->setLocation($data['location']);
 				if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
