@@ -20,6 +20,7 @@ class Ecommerceguys_Inventorymanager_Adminhtml_VendorController extends Mage_Adm
 	}
 	
 	public function editAction() {
+
 		$id     = $this->getRequest()->getParam('id');
 		$model  = Mage::getModel('inventorymanager/vendor')->load($id);
 
@@ -44,12 +45,15 @@ class Ecommerceguys_Inventorymanager_Adminhtml_VendorController extends Mage_Adm
 
 			$this->renderLayout();
 		} else {
+
+			
 			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('inventorymanager')->__('Item does not exist'));
 			$this->_redirect('*/*/');
 		}
 	}
 	
 	public function saveAction() {
+
 		if ($data = $this->getRequest()->getPost()) {
 			//print_r($data); exit;
 			if(isset($data['links'])){

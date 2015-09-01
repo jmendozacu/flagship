@@ -54,7 +54,9 @@
 	$sendProduct = false;
 	$sentSerials = false;
 	$stockTab = false;
+    $purchaseorder = false;
 	$shippedProduct = false;
+    
 	if($currentController == "vendor" && $currentAction == "products"){
 		$productsPage = true;
 	}elseif($currentController == "vendor" && $currentAction == "index"){
@@ -79,6 +81,9 @@
 		$shippedProduct = true;
 	}elseif($currentController == "adminuser" && ($currentAction == "vendorprofiles" || $currentAction == "vendoredit")){ 
         $manageVendors = true;
+    }
+    elseif($currentController == "adminuser" && ($currentAction == "purchaseorder" || $currentAction == "edit")){ 
+        $purchaseorder = true;
     }
 ?>
         
@@ -160,8 +165,8 @@
                 </a>
             </li>
             <li>
-                <a class="" href="#">
-                	<i class="fa fa-square-o fa-3x"></i><?php echo $this->__("Purchase Orders") ?>
+                <a class="<?php echo $purchaseorder?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/index") ?>">
+                    <i class="fa fa-square-o fa-3x"></i> <?php echo $this->__("Purchase Orders") ?>
                 </a>
             </li>
 		</ul>
