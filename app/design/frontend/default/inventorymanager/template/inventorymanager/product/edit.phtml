@@ -85,6 +85,51 @@
 							<div class="row">
 							</div>
 							
+							
+							
+							<div class="col-md-6 ">
+								<div class="form-group">
+									<label><?php echo $this->__("Box Length") ?></label>
+									<div class="input-group">
+										<span class="input-group-addon">Inch</span>
+										<input type="text" class="required-entry form-control" name="box_length" id="box_length_field" value="<?php echo $this->getProductInfoBoxLength(); ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">MM</span>
+										<input type="text" class="form-control" id="box_lengh_in_mm" value="<?php echo $this->getProductInfoBoxLength()>0?$this->getProductInfoBoxLength()*25.4:"";  ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Box Width") ?></label>
+									<div class="input-group">
+										<span class="input-group-addon">Inch</span>
+										<input type="text" class="required-entry form-control" name="box_width" id="box_width_field" value="<?php echo $this->getProductInfoBoxWidth() ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">MM</span>
+										<input type="text" class="form-control" id="box_width_in_mm" value="<?php echo $this->getProductInfoBoxWidth()>0?$this->getProductInfoBoxWidth()*25.4:"";  ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Height") ?></label>
+									<div class="input-group">
+										<span class="input-group-addon">Inch</span>
+										<input type="text" class="required-entry form-control" name="box_height" id="box_height_field" value="<?php echo $this->getProductInfoBoxHeight(); ?>" />
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">MM</span>
+										<input type="text" class="form-control" id="box_height_in_mm" value="<?php echo $this->getProductInfoBoxHeight()>0?$this->getProductInfoBoxHeight()*25.4:"";  ?>" />
+									</div>
+								</div>
+							</div>
+							<div class="row"></div>
+							
 							<div class="form-group">
 								<label><?php echo $this->__("UPC Code") ?></label>
 								<input type="text" class="form-control" name="upc" value="<?php echo $productInfoObject?$productInfoObject->getUpc():""; ?>" />
@@ -445,7 +490,6 @@
 		else{
 			var mmVal  = val * 25.4 ;
 			$('lengh_in_mm').innerHTML = mmVal.toFixed(2);
-			$('lengh_in_mm').innerHTML += ' <?php echo $this->__("MM") ?>';
 		}
 	});
 	
@@ -508,4 +552,77 @@
 			$('height_field').value = mmVal.toFixed(0); 
 		}
 	});
+	
+	// box
+	
+	$('box_length_field').observe('keyup', function(){
+		var val = $('box_length_field').value;
+		if(val == "")
+			$('box_lengh_in_mm').value = "";
+		else{
+			var mmVal  = val * 25.4 ;
+			$('box_lengh_in_mm').innerHTML = mmVal.toFixed(2);
+		}
+	});
+	
+	$('box_length_field').observe('keyup', function(){
+		var val = $('box_length_field').value;
+		if(val == "")
+			$('box_lengh_in_mm').value = 0;
+		else{
+			var mmVal  = val * 25.4 ;
+			$('box_lengh_in_mm').value = mmVal.toFixed(0); 
+		}
+	});
+	
+	$('box_width_field').observe('keyup', function(){
+		var val = $('box_width_field').value;
+		if(val == "")
+			$('box_width_in_mm').value = 0;
+		else{
+			var mmVal  = val * 25.4 ;
+			$('box_width_in_mm').value = mmVal.toFixed(0);
+		}
+	});
+	
+	$('box_height_field').observe('keyup', function(){
+		var val = $('box_height_field').value;
+		if(val == "")
+			$('box_height_in_mm').value = 0;
+		else{
+			var mmVal  = val * 25.4 ;
+			$('box_height_in_mm').value = mmVal.toFixed(0);
+		}
+	});
+	
+	$('box_lengh_in_mm').observe('keyup', function(){
+		var val = $('box_lengh_in_mm').value;
+		if(val == "")
+			$('box_length_field').value = 0;
+		else{
+			var mmVal  = val / 25.4 ;
+			$('box_length_field').value = mmVal.toFixed(0); 
+		}
+	});
+	
+	$('box_width_in_mm').observe('keyup', function(){
+		var val = $('box_width_in_mm').value;
+		if(val == "")
+			$('box_width_field').value = 0;
+		else{
+			var mmVal  = val / 25.4 ;
+			$('box_width_field').value = mmVal.toFixed(0); 
+		}
+	});
+	
+	$('box_height_in_mm').observe('keyup', function(){
+		var val = $('box_height_in_mm').value;
+		if(val == "")
+			$('box_height_field').value = 0;
+		else{
+			var mmVal  = val / 25.4 ;
+			$('box_height_field').value = mmVal.toFixed(0); 
+		}
+	});
+	
 </script>
