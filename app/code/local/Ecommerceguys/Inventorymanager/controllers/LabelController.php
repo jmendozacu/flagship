@@ -131,22 +131,22 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 			$diffLocation = false;
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
 			
-			/*if($data['location'] != $model->getLocation()){
+			if($data['location'] != $model->getLocation()){
 				$diffLocation = true;
 			}
 			if($data['status'] != $model->getStatus()){
 				$diffStatus = true;
-			}*/
+			}
 			
 			try{
-				/*$serialHistory = Mage::getModel('inventorymanager/label_history');
+				$serialHistory = Mage::getModel('inventorymanager/label_history');
 				if($diffLocation && $diffStatus){
 					$serialHistory->addStatusAndLocation($model->getId());
 				}elseif($diffLocation){
 					$serialHistory->addLocation($model->getId());
 				}elseif ($diffStatus){
 					$serialHistory->addStatus($model->getId());
-				}*/
+				}
 				$model->setStatus($data['status']);
 				$model->setLocation($data['location']);
 				if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
