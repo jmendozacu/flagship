@@ -257,4 +257,10 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 			echo Mage::helper('inventorymanager')->__("Serial object not found");
 		}
 	}
+	
+	public function printAction(){
+		$content = $this->getLayout()->createBlock('inventorymanager/purchaseorder_print')
+		->setTemplate('inventorymanager/purchaseorder/print.phtml')->toHtml();
+		echo $content;
+	}
 }

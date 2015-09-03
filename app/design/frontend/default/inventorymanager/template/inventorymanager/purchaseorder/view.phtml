@@ -17,6 +17,9 @@
 		<h2>
 			<?php echo $this->__("Purchase Order View") ?>
 			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/generate", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right"><?php echo $this->__("Generate") ?></a>
+			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/print", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right; margin-right:5px;">
+				<?php echo $this->__("Print") ?>
+			</a>
 		</h2>
 	</div>
 </div>
