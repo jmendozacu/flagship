@@ -74,7 +74,7 @@
 							<?php $iCounter = 0; foreach ($this->getProducts() as $product){
 							$realProduct = Mage::getModel('catalog/product')->load($product->getMainProductId());
 								?>
-							<tr>
+							<tr id="po_product_row_<?php echo $product->getId() ?>" class="ro_product_row clickable-row">
 								<td><?php echo ++$iCounter; ?></td>
 								<td><?php echo $realProduct->getName(); ?></td>
 								<td><?php echo $product->getPrice(); ?></td>
@@ -84,8 +84,6 @@
 									<?php echo $this->__("Download PDF"); ?>
 								</a></td>
 							</tr>
-<<<<<<< HEAD
-=======
 							<?php $serials = $this->getSerials($product->getId()) ?>
 							<tr id="serials_po_product_row_<?php echo $product->getId() ?>" style="display:none">
 								<td colspan="6">
@@ -123,7 +121,6 @@
 									</div>
 								</td>
 							</tr>
->>>>>>> de492863db6cd7f804f7da323b117b24246ce1d5
 							<?php } ?>
 						</tbody>
 					</table>
@@ -162,9 +159,6 @@
 			</div>
 		</div>
 	</div>
-<<<<<<< HEAD
-</div>
-=======
 </div>
 <!-- Small modal -->
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
@@ -201,4 +195,3 @@
 		});
 	}
 </script>
->>>>>>> de492863db6cd7f804f7da323b117b24246ce1d5
