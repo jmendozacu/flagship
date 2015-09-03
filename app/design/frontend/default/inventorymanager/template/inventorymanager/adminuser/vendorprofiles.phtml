@@ -4,6 +4,9 @@
 <div class="row">
 	<div class="col-md-12">
 		<h2><?php echo $this->__("Vendors") ?></h2>
+        <div style="float:right">
+            <button class="btn btn-warning" onclick="setLocation('<?php echo $this->getUrl("inventorymanager/adminuser/newvendor") ?>')" name="addvendors"><?php echo $this->__("Add Vendor") ?></button>
+        </div>
 	</div>
 </div>
 <hr/>
@@ -32,7 +35,7 @@
             						<td><?php echo $vendor->getName() ?></td>
             						<td><?php echo $vendor->getEmail() ?></td>
             						<td><?php echo date("Y/m/d", strtotime($vendor->getCreatedTime())) ?></td>
-            						<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendoredit', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__("Edit") ?></a></td>
+            						<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendoredit', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__("Edit ") ?></a> <?php echo $this->__('-|-')?><a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendordelete', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__(" Delete ") ?></a></td>
             					</tr>
             				<?php } ?>
             			</tbody>

@@ -178,6 +178,7 @@
 								<a class="btn btn-warning" onclick="if(dataForm.validator && dataForm.validator.validate()){ dataForm.form.submit(); }" href="javascript:void(0)"><?php echo $this->__("Update") ?></a>
 							</div>
 						</form>
+						<?php echo $this->getChildHtml('serial.history'); ?>
 					</div>
 				</div>
 			</div>

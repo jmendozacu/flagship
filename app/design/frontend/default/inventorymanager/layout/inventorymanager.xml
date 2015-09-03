@@ -1,5 +1,18 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
+
+	<inventorymanager_adminuser_purchaseorder_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+    	<reference name="content">
+            <block type="inventorymanager/user_purchaseorder" name="adminuser.purchaseorder" template='inventorymanager/adminuser/purchaseorder.phtml'/>
+        </reference>
+    </inventorymanager_adminuser_purchaseorder_index>
+
 	<inventorymanager_vendor_login>
 		<reference name="root">
 			<action method="setTemplate"><template>page/1column.phtml</template></action>
@@ -60,7 +73,6 @@
 		</reference>
 		<reference name="head">
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
-			<action method="addCss"><stylesheet>css/custom.css</stylesheet></action>
 		</reference>
 		<reference name="content">
 			<block type="inventorymanager/purchaseorder_view" name="purchaseorder.view" template="inventorymanager/purchaseorder/view.phtml" />
@@ -85,7 +97,9 @@
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
 		</reference>
 		<reference name="content">
-			<block type="inventorymanager/label_edit" name="purchaseorder.label.edit" template="inventorymanager/label/edit.phtml" />
+			<block type="inventorymanager/label_edit" name="purchaseorder.label.edit" template="inventorymanager/label/edit.phtml" >
+				<block type="inventorymanager/label_history" name="serial.history" template="inventorymanager/label/history.phtml" />
+			</block>
 		</reference>
 	</inventorymanager_label_edit>
 	
@@ -173,9 +187,7 @@
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
 		</reference>
 		<reference name="content">
-			<block type="inventorymanager/user_serial_receive" name="adminuser.serials.receive" template="inventorymanager/adminuser/serial/serialdetail.phtml" >
-				<block type="inventorymanager/user_serial_history" name="adminuser.serial.history" template="inventorymanager/adminuser/serial/history.phtml" />
-			</block>
+			<block type="inventorymanager/user_serial_receive" name="adminuser.serials.receive" template="inventorymanager/adminuser/serial/serialdetail.phtml" ></block>
 		</reference>
 	</inventorymanager_adminuser_serial_receive>
 	
@@ -235,4 +247,7 @@
 			<block type="inventorymanager/user_product_serialgrid" name="adminuser.product.serials" template="inventorymanager/adminuser/product/serialgrid.phtml" ></block>
 		</reference>
 	</inventorymanager_adminuser_product_serialgrid>
+
+	
+
 </layout>

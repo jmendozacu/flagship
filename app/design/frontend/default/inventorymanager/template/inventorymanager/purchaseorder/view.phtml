@@ -2,6 +2,7 @@
 	$purchaseorderObject = $this->getPurchaseOrder();
 	$methods = Mage::getSingleton('shipping/config')->getActiveCarriers();
   	$shippingMethods = array();
+  	$locations = $this->helper('inventorymanager')->getLocations($purchaseorderObject->getVendorId());
   	foreach($methods as $_code => $_method)
  	{
  		if(!$_title = Mage::getStoreConfig("carriers/$_code/title")){
@@ -73,7 +74,7 @@
 							<?php $iCounter = 0; foreach ($this->getProducts() as $product){
 							$realProduct = Mage::getModel('catalog/product')->load($product->getMainProductId());
 								?>
-							<tr id="po_product_row_<?php echo $product->getId() ?>" class="ro_product_row clickable-row">
+							<tr>
 								<td><?php echo ++$iCounter; ?></td>
 								<td><?php echo $realProduct->getName(); ?></td>
 								<td><?php echo $product->getPrice(); ?></td>
@@ -83,6 +84,8 @@
 									<?php echo $this->__("Download PDF"); ?>
 								</a></td>
 							</tr>
+<<<<<<< HEAD
+=======
 							<?php $serials = $this->getSerials($product->getId()) ?>
 							<tr id="serials_po_product_row_<?php echo $product->getId() ?>" style="display:none">
 								<td colspan="6">
@@ -94,14 +97,23 @@
 													<thead>
 														<tr>
 															<th><?php echo $this->__("Serial") ?></th>
-															<th><?php echo $this->__("Location") ?></th>
+															<th width="20%"><?php echo $this->__("Location") ?></th>
+															<th width="20%"><?php echo $this->__("Action") ?></th>
 														</tr>
 													</thead>
 													<tbody>
 														<?php foreach ($serials as $serial){ ?>
 															<tr>
-																<td><?php echo $serial->getSerial() ?></td>
-																<td><?php echo $serial->getLocation() ?></td>
+																<td><a href="<?php echo $this->getUrl("inventorymanager/label/edit", array('serial_key'=>$serial->getSerial())); ?>"><?php echo $serial->getSerial() ?></a></td>
+																<td>
+																	<?php /*echo $serial->getLocation()*/ ?>
+																	<select class="form-control" id="location_<?php echo $serial->getId() ?>">
+																		<?php foreach ($locations as $key => $locationLabel) { ?>
+																			<option <?php echo $serial->getLocation() == $locationLabel?"selected='selected'":""; ?>><?php echo $locationLabel ?></option>
+																		<?php } ?>
+																	</select>
+																</td>
+																<td><a class="btn btn-primary btn-sm" onclick="updateLocation(<?php echo $serial->getId() ?>)" href="javascript:void(0)"><?php echo $this->__("Update") ?></a></td>
 															</tr>
 														<?php } ?>
 													</tbody>
@@ -111,6 +123,7 @@
 									</div>
 								</td>
 							</tr>
+>>>>>>> de492863db6cd7f804f7da323b117b24246ce1d5
 							<?php } ?>
 						</tbody>
 					</table>
@@ -149,6 +162,19 @@
 			</div>
 		</div>
 	</div>
+<<<<<<< HEAD
+</div>
+=======
+</div>
+<!-- Small modal -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+    	<div class="labelpage-loader-div">
+      		<img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo $this->__("Loading...") ?>" />
+      </div>
+    </div>
+  </div>
 </div>
 <script>
 	$$("tr.ro_product_row").each(function(e){
@@ -156,4 +182,23 @@
 			$('serials_' + e.id).toggle();
 		});
 	});
+	function updateLocation(serialId){
+		jQuery('.bs-example-modal-sm').modal('show');
+		var location = $('location_' + serialId).value;
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/updatelocation') ?>', {
+			method:'get',
+			parameters: {serial_id:serialId, location:location},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			jQuery('.bs-example-modal-sm').modal('hide');
+    			if(response.length > 0)
+    				alert(response);
+  			},
+  			onFailure: function() {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+  				alert('Something went wrong...');
+  			}
+		});
+	}
 </script>
+>>>>>>> de492863db6cd7f804f7da323b117b24246ce1d5

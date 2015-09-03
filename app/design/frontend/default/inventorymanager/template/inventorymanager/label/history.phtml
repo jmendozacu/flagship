@@ -40,8 +40,8 @@
 										<td><?php echo $serialObject->getLocation() ?></td>
 										<td><?php echo $history->getStatus() ?></td>
 										<td><?php echo $serialObject->getStatus() ?></td>
-										<td><?php echo $this->getUserName($history->getUserId()); ?></td>
-									</tr>
+										<td><?php echo $this->getUser($history->getUserId()); ?></td>
+									</tr> 
 								<?php } ?>
 							</tbody>
 						</table>

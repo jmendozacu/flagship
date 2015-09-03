@@ -36,8 +36,13 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 		$this->loadLayout();
 		$this->renderLayout();
 	}
-	public function vendoreditAction(){
 
+	public function newvendorAction() {
+
+		$this->_forward('vendoredit');
+	}
+
+	public function vendoreditAction(){
 
 		$id     = $this->getRequest()->getParam('vendor_id');
 		$model  = Mage::getModel('inventorymanager/vendor')->load($id);
@@ -58,8 +63,17 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 		}
 	}
 	public function vendorsaveAction() {
+
+
+		/*echo "<pre>";
+		print_r($this->getRequest()->getPost());
+		exit;
+		*/
 		if ($data = $this->getRequest()->getPost()) {
 			
+			if(isset($data['check_list'])){
+				$products = $data['check_list']; //Save the array to your database
+			}
 			$model = Mage::getModel('inventorymanager/vendor');		
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
@@ -73,7 +87,12 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 				}	
 				
 				$model->save();
-				
+				$vendorProductResource = Mage::getResourceModel('inventorymanager/vendor_products');
+				$vendorProductResource->remove($model->getId());
+				foreach ($products as $productId){
+					$vendorProductResource->insertOne(array('product_id'=>$productId, 'vendor_id'=>$model->getId()));
+				}
+
 				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor saved successfully'));
 				Mage::getSingleton('core/session')->setFormData(false);
 
@@ -90,4 +109,25 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
         Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__('Unable to find vendor to save'));
         $this->_redirect('inventorymanager/adminuser/vendorprofiles');
 	}
+
+	public function vendordeleteAction() {
+		if( $this->getRequest()->getParam('vendor_id') > 0 ) {
+			try {
+				$model = Mage::getModel('inventorymanager/vendor');
+				 
+				$model->setId($this->getRequest()->getParam('vendor_id'))
+					->delete();
+					 
+				Mage::getSingleton('core/session')->addSuccess(Mage::helper('adminhtml')->__('Vendor was successfully deleted'));
+				$this->_redirect('inventorymanager/adminuser/vendorprofiles');
+				return;
+			} catch (Exception $e) {
+				Mage::getSingleton('core/session')->addError($e->getMessage());
+				$this->_redirect('inventorymanager/adminuser/vendorprofiles');
+				return;
+			}
+		}
+		$this->_redirect('inventorymanager/adminuser/vendorprofiles');
+	}
+    
 }
