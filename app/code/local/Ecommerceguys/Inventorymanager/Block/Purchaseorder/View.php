@@ -21,7 +21,6 @@ class Ecommerceguys_Inventorymanager_Block_Purchaseorder_View extends Mage_Core_
 		$comments->addFieldToFilter("po_id", $this->getPurchaseorderId());
 		return $comments;
 	}
-	
 	public function getSerials($productId){
 		$purchaseorderId = $this->getPurchaseorderId();
 		$serials = Mage::getModel('inventorymanager/label')->getCollection();

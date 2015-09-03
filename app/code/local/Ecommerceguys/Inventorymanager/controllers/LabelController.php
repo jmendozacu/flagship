@@ -127,17 +127,15 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function editpostAction(){
 		if($data = $this->getRequest()->getPost()){
-			$diffStatus = false;
 			$diffLocation = false;
+			$diffStatus = false;
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
-			
 			if($data['location'] != $model->getLocation()){
 				$diffLocation = true;
 			}
 			if($data['status'] != $model->getStatus()){
 				$diffStatus = true;
 			}
-			
 			try{
 				$serialHistory = Mage::getModel('inventorymanager/label_history');
 				if($diffLocation && $diffStatus){
@@ -150,7 +148,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 				$model->setStatus($data['status']);
 				$model->setLocation($data['location']);
 				if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
-					try {	
+					try {
 						$uploader = new Varien_File_Uploader('main_image');
 		           		$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
 						$uploader->setAllowRenameFiles(false);
@@ -168,7 +166,6 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 					$model->setMainImage("");
 				}
 				$model->save();
-				
 				if(isset($data['comment']) && trim($data['comment'])!= ""){
 					$comment = Mage::getModel('inventorymanager/label_comment');
 					$commentData = array(
@@ -177,7 +174,6 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 						'label_id'	=>	$model->getId()
 					);
 					$comment->setData($commentData)->save();
-					
 					if(isset($_FILES['comment_image']) && $_FILES['comment_image']['name'] != ""){
 						try {	
 							/* Starting upload */	
@@ -194,7 +190,6 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 						} catch (Exception $e) {
 				      
 				        }
-			        
 				        //this way the name is saved in DB
 			  			$data['comment_image'] = $comment->getId() . "_" .$_FILES['comment_image']['name'];
 					}
