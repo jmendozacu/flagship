@@ -149,13 +149,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 			$orderIncrementId = $data['order_number'];
 			$order = Mage::getModel('sales/order')->load($orderIncrementId, "increment_id");
 			if($order && $order->getId()){
-
-				
-				$this->_generatePdf($order->getId());
-
 				$serial = $data['serial_key'];
 				$serialModel = Mage::getModel('inventorymanager/label')->load($serial, "serial");
-				if($serialModel && $serialModel->getId()){
+				if($serialModel and $serialModel->getId()){
 					if($serialModel->getIsOutStock() == 1){
 						Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Product already sent"));
 						$this->_redirect('*/*/find');
@@ -172,10 +168,20 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 							}
 						}
 						if($isOrderContainsThisProduct){
-							$serialModel->setRealOrderId($order->getId())->setIsOutStock(1)->save();
-							Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product Sent"));
+							$return = $this->_generatePdf($order->getId());
+							if($return['tracking_id'] && $return['label_img']){
+								$serialModel->setRealOrderId($order->getId())->setIsOutStock(1)->setShippingPrice($return['charges'])->save();
+								
+								Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product Sent"));
 
-							//$this->_generatePdf($order->getId());
+								$data = base64_decode($return['label_img']);
+								header('Content-type: application/pdf');
+								header('Content-Disposition: attachment; filename=' . $order->getId() . ".pdf");
+								die($data);
+
+							}else{
+								Mage::getSingleton('core/session')->addError($return['error']);	
+							}			
 							
 							$this->_redirect('*/*/find');
 							return;
@@ -184,15 +190,21 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 							$this->_redirect('*/*/find');
 							return;
 						}
+					}else{
+						Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Product not found"));
+						$this->_redirect('*/*/find');
+						return;	
 					}
+				}else{
+					Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Serial not found"));
+					$this->_redirect('*/*/find');
+					return;
 				}
-				Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Serial not found"));
+			}else{
+				Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Order not found"));
 				$this->_redirect('*/*/find');
 				return;
 			}
-			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Order not found"));
-			$this->_redirect('*/*/find');
-			return;
 		}
 	}
 	
@@ -258,29 +270,31 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 			}
 			
 
-			$shipment->setParameter('toName',$address->getFirstname());
-			$shipment->setParameter('toPhone',$address->getTelephone());
-			$shipment->setParameter('toAddr1',$addressArr['street']);
-			$shipment->setParameter('toCity',$address->getCity());
-			$shipment->setParameter('toState',Mage::getModel('directory/region')->load($address->getRegionId())->getCode());
+			$shipment->setParameter('toName', $this->getRequest()->getPost('to_name'));
+			$shipment->setParameter('toPhone',$this->getRequest()->getPost('to_phone'));
+			$shipment->setParameter('toAddr1', $this->getRequest()->getPost('to_address'));
+			$shipment->setParameter('toCity', $this->getRequest()->getPost('city'));
+			$shipment->setParameter('toState', $this->getRequest()->getPost('state'));
 
-			$shipment->setParameter('toCode',84115);
+			$shipment->setParameter('toCode', $this->getRequest()->getPost('to_code'));
 			
-			$shipment->setParameter('length',10);
-			$shipment->setParameter('width',10);
-			$shipment->setParameter('height',10);
-			$shipment->setParameter('weight',10);
+			$shipment->setParameter('length', $this->getRequest()->getPost('length'));
+			$shipment->setParameter('width',$this->getRequest()->getPost('width'));
+			$shipment->setParameter('height',$this->getRequest()->getPost('height'));
+			$shipment->setParameter('weight',$this->getRequest()->getPost('weight'));
 
-			$response = $shipment->submitShipment();
-			//print_r($response);
+			$shipment->setParameter('service', $this->getRequest()->getPost('shipping_option'));
 
+			return $shipment->submitShipment();
+			//echo '<pre>'; print_r($response); die;
+			/*
 			if($response['tracking_id'] && $response['label_img']){
 				$data = base64_decode($response['label_img']);
 				header('Content-type: application/pdf');
 				header('Content-Disposition: attachment; filename='.$orderId.".pdf");
 				echo $data;
 				return;
-			}
+			}*/
 		}
 		return;
 

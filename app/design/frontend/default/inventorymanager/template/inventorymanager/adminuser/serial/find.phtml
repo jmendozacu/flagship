@@ -22,6 +22,83 @@
 								<input type="text" class="form-control required-entry" name="serial_key" />
 							</div>
 							<div class="form-group">
+								<label><?php echo $this->__("Shipping Option") ?></label>
+								<select class="form-control required-entry" name="shipping_option">
+									<option value="" selected="selected">Select a Option</option>
+									<option value="EUROPE_FIRST_INTERNATIONAL_PRIORITY">Europe First International Priority</option>
+									<option value="FEDEX_2_DAY">FedEx 2 Day</option>
+									<option value="FEDEX_EXPRESS_SAVER">FedEx Express Saver</option>
+									<option value="FEDEX_GROUND">FedEx Ground</option>
+									<option value="FIRST_OVERNIGHT">FedEx First Overnight</option>
+									<option value="GROUND_HOME_DELIVERY">FedEx Home Delivery (Must mark as residential)</option>
+									<option value="INTERNATIONAL_ECONOMY">FedEx International Economy</option>
+									<option value="INTERNATIONAL_FIRST">FedEx First</option>
+									<option value="INTERNATIONAL_PRIORITY">FedEx International Priority</option>
+									<option value="PRIORITY_OVERNIGHT">FedEx Priority Overnight</option>
+									<option value="SMART_POST">FedEx Smart Post</option>
+									<option value="STANDARD_OVERNIGHT">FedEx Standard Overnight</option>
+									<option value="FEDEX_FREIGHT">Fedex Freight</option>
+									<option value="FEDEX_1_DAY_FREIGHT">FedEx 1 Day Freight</option>
+									<option value="FEDEX_2_DAY_FREIGHT">FedEx 2 Day Freight</option>
+									<option value="FEDEX_3_DAY_FREIGHT">FedEX 3 Day Freight</option>
+									<option value="FEDEX_NATIONAL_FREIGHT">FedEx National Freight</option>
+									<option value="INTERNATIONAL_ECONOMY_FREIGHT">FedEx International Economy Freight</option>
+									<option value="INTERNATIONAL_PRIORITY_FREIGHT">FedEx International Priority Freight</option>
+								</select>
+							</div>
+
+
+							<div class="form-group">
+								<label><?php echo $this->__("Length") ?></label>
+								<input type="text" class="form-control required-entry" name="length" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Width") ?></label>
+								<input type="text" class="form-control required-entry" name="width" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Height") ?></label>
+								<input type="text" class="form-control required-entry" name="height" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Weight") ?></label>
+								<input type="text" class="form-control required-entry" name="weight" />
+							</div>
+
+
+							<div class="form-group">
+								<label><?php echo $this->__("Name") ?></label>
+								<input type="text" class="form-control required-entry" name="to_name" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Phone") ?></label>
+								<input type="text" class="form-control required-entry" name="to_phone" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Addreess") ?></label>
+								<input type="text" class="form-control required-entry" name="to_address" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("City") ?></label>
+								<input type="text" class="form-control required-entry" name="city" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("State") ?></label>
+								<?php $states = Mage::getModel('directory/country')->load('US')->getRegions(); ?>
+								<select class="form-control required-entry" name="state">
+									<option value="" selected="selected">Select a Option</option>
+									<?php foreach ($states as $state): ?>
+										<option value="<?php echo $state->getCode(); ?>"><?php echo $state->getName(); ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Zip Code") ?></label>
+								<input type="text" class="form-control required-entry" name="to_code" />
+							</div>
+
+
+							<div class="form-group">
 								<a class="btn btn-warning" onclick="if(dataForm.validator && dataForm.validator.validate()){ dataForm.form.submit(); }" href="#"><?php echo $this->__("Submit") ?></a>
 							</div>
 						</form>
