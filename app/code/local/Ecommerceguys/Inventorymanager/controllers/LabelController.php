@@ -248,4 +248,18 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 			Mage::log($e->getMessage());
 		}
 	}
+	
+	public function updatelocationAction(){
+		$serialId = $this->getRequest()->getParam('serial_id');
+		$serial = Mage::getModel('inventorymanager/label')->load($serialId);
+		if($serial && $serial->getId()){
+			try {
+				$serial->setLocation($this->getRequest()->getParam('location'))->save();
+			}catch (Exception $e){
+				echo Mage::helper('inventorymanager')->__("Something went wrong. Please try again");
+			}
+		}else{
+			echo Mage::helper('inventorymanager')->__("Serial object not found");
+		}
+	}
 }
