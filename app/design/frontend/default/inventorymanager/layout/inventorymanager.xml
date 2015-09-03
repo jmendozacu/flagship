@@ -73,7 +73,6 @@
 		</reference>
 		<reference name="head">
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
-			<action method="addCss"><stylesheet>css/custom.css</stylesheet></action>
 		</reference>
 		<reference name="content">
 			<block type="inventorymanager/purchaseorder_view" name="purchaseorder.view" template="inventorymanager/purchaseorder/view.phtml" />
@@ -188,9 +187,7 @@
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
 		</reference>
 		<reference name="content">
-			<block type="inventorymanager/user_serial_receive" name="adminuser.serials.receive" template="inventorymanager/adminuser/serial/serialdetail.phtml" >
-				<block type="inventorymanager/user_serial_history" name="adminuser.serial.history" template="inventorymanager/adminuser/serial/history.phtml" />
-			</block>
+			<block type="inventorymanager/user_serial_receive" name="adminuser.serials.receive" template="inventorymanager/adminuser/serial/serialdetail.phtml" ></block>
 		</reference>
 	</inventorymanager_adminuser_serial_receive>
 	

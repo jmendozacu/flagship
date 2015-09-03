@@ -81,4 +81,25 @@ class Ecommerceguys_Inventorymanager_Block_Vendor_Product_Edit extends Mage_Core
 		}
 		return false;
 	}
+	
+	public function getProductInfoBoxHeight(){
+		if($productInfoObject = $this->getProductInfoObject()){
+			return $productInfoObject->getBoxHeight();
+		}
+		return false;
+	}
+	
+	public function getProductInfoBoxWidth(){
+		if($productInfoObject = $this->getProductInfoObject()){
+			return $productInfoObject->getBoxWidth();
+		}
+		return false;
+	}
+	
+	public function getProductInfoBoxLength(){
+		if($productInfoObject = $this->getProductInfoObject()){
+			return $productInfoObject->getBoxLength();
+		}
+		return false;
+	}
 }

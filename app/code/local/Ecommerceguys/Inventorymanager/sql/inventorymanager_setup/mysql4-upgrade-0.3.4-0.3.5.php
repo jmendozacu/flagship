@@ -1,7 +1,10 @@
 <?php
 $installer = $this;
 $installer->startSetup();
-$installer->run("
-	ALTER TABLE `".$this->getTable('inventorymanager_purchaseorder_label')."` ADD COLUMN `shipping_price` float(11) NULL DEFAULT NULL;;
-");
+
+$installer->run('
+	ALTER TABLE `'.$this->getTable('inventorymanager_vendor_productdetail').'` ADD COLUMN `box_height` varchar(255) NOT NULL default "";
+	ALTER TABLE `'.$this->getTable('inventorymanager_vendor_productdetail').'` ADD COLUMN `box_width` varchar(255) NOT NULL default "";
+	ALTER TABLE `'.$this->getTable('inventorymanager_vendor_productdetail').'` ADD COLUMN `box_length` varchar(255) NOT NULL default "";
+');
 $installer->endSetup();
