@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+<config>
+    <tabs>
+        <inventorymanager module="inventorymanager" translate="label">
+            <label>Ecommerceguys Inventorymanager</label>
+            <sort_order>100</sort_order>
+        </inventorymanager>
+    </tabs>
+    <sections>
+        <inventorymanager module="inventorymanager" translate="label">
+            <label>Fedex Label</label>
+            <sort_order>200</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <tab>inventorymanager</tab>
+            <groups>
+                <label_cfg translate="label">
+                    <label>Fedex Label</label>
+                    <expanded>1</expanded>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <shipper translate="label">
+                            <label>Shipper (company name)</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                        </shipper>
+                        <address translate="label">
+                            <label>Address</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                        </address>
+                        <address2 translate="label">
+                            <label>Address2</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                        </address2>
+                        <city translate="label">
+                            <label>City</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                        </city>
+                        <state translate="label">
+                            <label>State</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                        </state>
+                        <zip_code translate="label">
+                            <label>Zip Code</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                        </zip_code>
+                        <phone translate="label">
+                            <label>Phone</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                        </phone>
+                        <phone translate="label">
+                            <label>Phone</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                        </phone>
+                        <account_number translate="label">
+                            <label>Fedex Account Number</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>9</sort_order>
+                        </account_number>
+                        <meter_number translate="label">
+                            <label>Fedex Meter Number</label>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                        </meter_number>
+                    </fields>
+                </label_cfg>
+            </groups>
+        </inventorymanager>
+    </sections>
+</config>
