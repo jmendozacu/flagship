@@ -16,9 +16,12 @@
 	<div class="col-md-12">
 		<h2>
 			<?php echo $this->__("Purchase Order View") ?>
-			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/generate", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right"><?php echo $this->__("Generate") ?></a>
+			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/generate", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right"><?php echo $this->__("Print all labels in PDF") ?></a>
 			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/print", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right; margin-right:5px;">
-				<?php echo $this->__("Print") ?>
+				<?php echo $this->__("Print all labels") ?>
+			</a>
+			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/printpo", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right; margin-right:5px;">
+				<?php echo $this->__("Print P.O") ?>
 			</a>
 		</h2>
 	</div>
@@ -28,6 +31,10 @@
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="panel panel-back noti-box">
 			<table class="table table-striped">
+				<tr>
+					<td style="width:200px"><label><?php echo $this->__("Order Number") ?></label></td>
+					<td><?php echo $purchaseorderObject->getId(); ?></td>
+				</tr>
 				<tr>
 					<td style="width:200px"><label><?php echo $this->__("Shipping Method") ?></label></td>
 					<td><?php echo $shippingMethods[$purchaseorderObject->getShippingMethod()] ?></td>
@@ -84,7 +91,7 @@
 								<td><?php echo $product->getQty(); ?></td>
 								<td><?php echo $product->getTotal(); ?></td>
 								<td><a href="<?php echo $this->getUrl("inventorymanager/purchaseorder/downloadproductpdf", array("order_id"=>$purchaseorderObject->getId(), "product_id"=>$product->getId()) ) ?>">
-									<?php echo $this->__("Download PDF"); ?>
+									<?php echo $this->__("Download Labels"); ?>
 								</a></td>
 							</tr>
 							<?php $serials = $this->getSerials($product->getId()) ?>
