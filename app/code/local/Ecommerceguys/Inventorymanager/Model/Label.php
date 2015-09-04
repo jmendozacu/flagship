@@ -45,6 +45,7 @@ class Ecommerceguys_Inventorymanager_Model_Label extends Mage_Core_Model_Abstrac
 						'product_id'	=>	$product->getId(),
 						'order_id'		=>	$orderId,
 						'location'		=>	"P.O.",
+						'status'		=>	Mage::helper('inventorymanager')->__("Processing"),
 						'serial'		=>	$serial,
 						'created_time'	=>	now(),
 						'updated_time'	=>	now()
