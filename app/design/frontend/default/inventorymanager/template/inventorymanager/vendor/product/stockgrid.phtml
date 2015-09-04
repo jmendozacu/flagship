@@ -27,6 +27,9 @@
 									<th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 142px;" aria-label="Engine version: activate to sort column ascending">
 										<?php echo $this->__("On the way") ?>
 									</th>
+									<th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 142px;" aria-label="Engine version: activate to sort column ascending">
+										<?php echo $this->__("Returned") ?>
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -43,6 +46,7 @@
 										<td><?php echo $this->getSold($product->getId()); ?></td>
 										<td><?php echo $this->getShippedSerials($product->getId()) ?></td>
 										<td><?php echo $this->getOnTheWay($product->getId()); ?></td>
+										<td>0</td>
 									</tr>
 								<?php } ?>
 							</tbody>
