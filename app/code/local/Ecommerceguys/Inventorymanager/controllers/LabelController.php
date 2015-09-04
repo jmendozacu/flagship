@@ -127,13 +127,15 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function editpostAction(){
 		if($data = $this->getRequest()->getPost()){
+			$diffLocation = false;
+			$diffStatus = false;
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
 			if($data['location'] != $model->getLocation()){
 				$diffLocation = true;
 			}
 			if($data['status'] != $model->getStatus()){
 				$diffStatus = true;
-			} 
+			}
 			try{
 				$serialHistory = Mage::getModel('inventorymanager/label_history');
 				if($diffLocation && $diffStatus){
@@ -254,5 +256,11 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		}else{
 			echo Mage::helper('inventorymanager')->__("Serial object not found");
 		}
+	}
+	
+	public function printAction(){
+		$content = $this->getLayout()->createBlock('inventorymanager/purchaseorder_print')
+		->setTemplate('inventorymanager/purchaseorder/print.phtml')->toHtml();
+		echo $content;
 	}
 }
