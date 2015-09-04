@@ -1,5 +1,5 @@
 <?php
-
+require_once(Mage::getBaseDir().'/tcpdf/tcpdf.php');
 class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends Mage_Core_Controller_Front_Action
 {
 
@@ -103,5 +103,65 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
         $this->_redirect('*/*/');
 	}
 	
-	
+	public function generatepdfAction(){
+		
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$id = $this->getRequest()->getParam('id');
+		$purchaseOrder = Mage::getModel('inventorymanager/purchaseorder')->load($id);
+		
+		$content = $this->getLayout()->createBlock('inventorymanager/user_purchaseorder_pdf')
+		->setTemplate('inventorymanager/adminuser/purchaseorder/pdf.phtml')->toHtml();
+		
+		//print_r($content); exit;
+		
+		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetAuthor('Inventory Manager');
+		$pdf->SetTitle('Inventory Manager');
+		$pdf->SetSubject('');
+		$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+		
+		// set default header data
+		$pdf->SetHeaderData('/../skin/frontend/default/theme279/images/prohoods_logo_sm.png', 0, '', '');
+		
+		// set header and footer fonts
+		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+		
+		// set default monospaced font
+		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+		
+		// set margins
+		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+		
+		// set auto page breaks
+		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+		
+		// set image scale factor
+		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+		
+		// set some language-dependent strings (optional)
+		if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+			require_once(dirname(__FILE__).'/lang/eng.php');
+			$pdf->setLanguageArray($l);
+		}
+		
+		// ---------------------------------------------------------
+		
+		// set font
+		
+		
+		// add a page
+		$pdf->AddPage();
+		$pdf->SetFont('helvetica', '', 8);
+		
+		$pdf->writeHTML($content, true, false, false, false, '');
+		$pdf->lastPage();
+
+		// ---------------------------------------------------------
+		
+		//Close and output PDF document
+		$pdf->Output('purchaseorder_'.$id.'.pdf', 'D');
+	}
 }
