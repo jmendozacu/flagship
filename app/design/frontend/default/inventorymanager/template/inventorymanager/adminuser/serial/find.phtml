@@ -15,11 +15,11 @@
 						<form action="<?php echo $this->getUrl("inventorymanager/adminuser_serial/findpost") ?>" method="POST" id="find_label">
 							<div class="form-group">
 								<label><?php echo $this->__("Enter Order Number") ?></label>
-								<input type="text" class="form-control required-entry" name="order_number" />
+								<input type="text" class="form-control" name="order_number" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Enter Serial Key") ?></label>
-								<input type="text" class="form-control required-entry" name="serial_key" />
+								<input type="text" class="form-control" name="serial_key" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Shipping Option") ?></label>
@@ -96,10 +96,10 @@
 								<label><?php echo $this->__("Zip Code") ?></label>
 								<input type="text" class="form-control required-entry" name="to_code" />
 							</div>
-
-
+							<div class="results"></div>
 							<div class="form-group">
 								<a class="btn btn-warning" onclick="if(dataForm.validator && dataForm.validator.validate()){ dataForm.form.submit(); }" href="#"><?php echo $this->__("Submit") ?></a>
+								<a class="btn btn-default" id="calculate_price" href="#"><?php echo $this->__("Calculate Price") ?></a>
 							</div>
 						</form>
 					</div>
@@ -110,4 +110,49 @@
 </div>
 <script>
 	var dataForm = new VarienForm('find_label', false);
+	jQuery(function($) {
+		jQuery('#calculate_price').on('click', function(){
+			jQuery('.results .alert').remove();
+			_error = false;
+			_validate = [
+				'select[name="shipping_option"]',
+				'input[name="length"]',
+				'input[name="width"]',
+				'input[name="height"]',
+				'input[name="weight"]',
+				'input[name="to_code"]',
+			];
+			jQuery.each(_validate, function(index, value){
+				jQuery(value).parent('div').children('.validation-advice').remove();
+				if (jQuery(value).val().length == 0){
+					jQuery(value).parent('div').append('<div style="" id="advice-required-entry-length" class="validation-advice">This is a required field.</div>');
+					_error = true;
+				}
+			});
+			if (_error === false){
+				jQuery('#calculate_price').attr('disabled', "disabled").html('Calculating please wait.');
+				$.ajax({
+                	url : "<?php echo $this->getUrl("inventorymanager/adminuser_serial/getrate") ?>",
+                	data : { 
+                		shipping_option: jQuery('select[name="shipping_option"]').val(),
+                		length: jQuery('input[name="length"]').val(),
+                		width: jQuery('input[name="width"]').val(),
+                		height: jQuery('input[name="height"]').val(),
+                		weight: jQuery('input[name="weight"]').val(),
+                		to_code: jQuery('input[name="to_code"]').val(),
+                	},
+                	type : 'POST',
+                	dataType: 'json',
+                	success : function(data) {
+                		jQuery('#calculate_price').removeAttr('disabled').html('Calculate Price');
+                    	if (typeof data.error !== 'undefined'){
+                    		jQuery('.results').append('<div class="alert alert-danger" role="alert">' + data.error + '</div>');
+                    	}else{
+                    		jQuery('.results').append('<div class="alert alert-success" role="alert">Price: $' + data.price + '</div>');
+                    	}
+                	}
+            	});	
+			}
+		});
+	});
 </script>
