@@ -102,4 +102,11 @@ class Ecommerceguys_Inventorymanager_Block_Vendor_Product_Edit extends Mage_Core
 		}
 		return false;
 	}
+	
+	public function getProductInfoWeight(){
+		if($productInfoObject = $this->getProductInfoObject()){
+			return $productInfoObject->getWeight();
+		}
+		return false;
+	}
 }
