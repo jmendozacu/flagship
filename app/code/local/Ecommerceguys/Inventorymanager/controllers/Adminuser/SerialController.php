@@ -199,6 +199,20 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 
 	protected function _generatePdf(){
 		$shipment = new \RocketShipIt\Shipment('fedex');
+
+		
+		$shipment->setParameter('shipper', Mage::getStoreConfig('inventorymanager/label_cfg/shipper',Mage::app()->getStore()));
+		$shipment->setParameter('shipPhone', Mage::getStoreConfig('inventorymanager/label_cfg/phone',Mage::app()->getStore()));
+		$shipment->setParameter('shipAddr1', Mage::getStoreConfig('inventorymanager/label_cfg/address',Mage::app()->getStore()));
+		$shipment->setParameter('shipAddr2', Mage::getStoreConfig('inventorymanager/label_cfg/address2',Mage::app()->getStore()));
+		$shipment->setParameter('shipCity', Mage::getStoreConfig('inventorymanager/label_cfg/city',Mage::app()->getStore()));
+		$shipment->setParameter('shipState', Mage::getStoreConfig('inventorymanager/label_cfg/state',Mage::app()->getStore()));
+		$shipment->setParameter('shipCode', Mage::getStoreConfig('inventorymanager/label_cfg/zip_code',Mage::app()->getStore()));
+		$shipment->setParameter('accountNumber', Mage::getStoreConfig('inventorymanager/label_cfg/account_number',Mage::app()->getStore()));
+		$shipment->setParameter('meterNumber', Mage::getStoreConfig('inventorymanager/label_cfg/meter_number',Mage::app()->getStore()));
+
+
+
 		$shipment->setParameter('toName', $this->getRequest()->getPost('to_name'));
 		$shipment->setParameter('toPhone',$this->getRequest()->getPost('to_phone'));
 		$shipment->setParameter('toAddr1', $this->getRequest()->getPost('to_address'));
@@ -216,6 +230,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 
 	protected function getrateAction(){
 		$rate = new \RocketShipIt\Rate('fedex');
+		$rate->setParameter('shipCode', Mage::getStoreConfig('inventorymanager/label_cfg/zip_code',Mage::app()->getStore()));
 		$rate->setParameter('toCode', $this->getRequest()->getPost('to_code'));
 		$rate->setParameter('length', $this->getRequest()->getPost('length'));
 		$rate->setParameter('width',$this->getRequest()->getPost('width'));
