@@ -43,6 +43,7 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 	public function getStaticStatusOptions(){
 		return array(
 			$this->__("Ready to Ship"),
+			$this->__("Processing"),
 			$this->__("Shipped"),
 			$this->__("Arrived"),
 			$this->__("Ready to Sell"),
