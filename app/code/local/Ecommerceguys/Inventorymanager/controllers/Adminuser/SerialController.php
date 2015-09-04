@@ -122,64 +122,72 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 	
 	public function findpostAction(){
 		if($data = $this->getRequest()->getPost()){
-			$orderIncrementId = $data['order_number'];
-			$order = Mage::getModel('sales/order')->load($orderIncrementId, "increment_id");
-			if($order && $order->getId()){
-				$serial = $data['serial_key'];
-				$serialModel = Mage::getModel('inventorymanager/label')->load($serial, "serial");
-				if($serialModel and $serialModel->getId()){
-					if($serialModel->getIsOutStock() == 1){
-						Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Product already sent"));
+			if ($this->getRequest()->getPost('order_number') and $this->getRequest()->getPost('serial_key')){
+				$orderIncrementId = $data['order_number'];
+				$order = Mage::getModel('sales/order')->load($orderIncrementId, "increment_id");
+				if($order && $order->getId()){
+					$serial = $data['serial_key'];
+					$serialModel = Mage::getModel('inventorymanager/label')->load($serial, "serial");
+					if($serialModel and $serialModel->getId()){
+						if($serialModel->getIsOutStock() == 1){
+							Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Product already sent"));
+							$this->_redirect('*/*/find');
+							return;
+						}
+						$purchaseorderProduct = Mage::getModel('inventorymanager/product')->load($serialModel->getProductId());
+						if($purchaseorderProduct && $purchaseorderProduct->getId()){
+							$productId = $purchaseorderProduct->getMainProductId();
+							$isOrderContainsThisProduct = false;
+							foreach ($order->getAllItems() as $item){
+								if($item->getProductId() == $productId){
+									$isOrderContainsThisProduct = true;
+									break;
+								}
+							}
+							if($isOrderContainsThisProduct){
+								$return = $this->_generatePdf();
+								if($return['tracking_id'] && $return['label_img']){
+									$serialModel->setRealOrderId($order->getId())->setIsOutStock(1)->setShippingPrice($return['charges'])->save();
+									
+									Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product Sent"));
+
+									$data = base64_decode($return['label_img']);
+									header('Content-type: application/pdf');
+									header('Content-Disposition: attachment; filename=' . $order->getId() . ".pdf");
+									die($data);
+
+								}else{
+									Mage::getSingleton('core/session')->addError($return['error']);	
+								}			
+								
+								$this->_redirect('*/*/find');
+								return;
+							}else{
+								Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Order and serial mismatch"));
+								$this->_redirect('*/*/find');
+								return;
+							}
+						}else{
+							Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Product not found"));
+							$this->_redirect('*/*/find');
+							return;	
+						}
+					}else{
+						Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Serial not found"));
 						$this->_redirect('*/*/find');
 						return;
 					}
-					$purchaseorderProduct = Mage::getModel('inventorymanager/product')->load($serialModel->getProductId());
-					if($purchaseorderProduct && $purchaseorderProduct->getId()){
-						$productId = $purchaseorderProduct->getMainProductId();
-						$isOrderContainsThisProduct = false;
-						foreach ($order->getAllItems() as $item){
-							if($item->getProductId() == $productId){
-								$isOrderContainsThisProduct = true;
-								break;
-							}
-						}
-						if($isOrderContainsThisProduct){
-							$return = $this->_generatePdf($order->getId());
-							if($return['tracking_id'] && $return['label_img']){
-								$serialModel->setRealOrderId($order->getId())->setIsOutStock(1)->setShippingPrice($return['charges'])->save();
-								
-								Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Product Sent"));
-
-								$data = base64_decode($return['label_img']);
-								header('Content-type: application/pdf');
-								header('Content-Disposition: attachment; filename=' . $order->getId() . ".pdf");
-								die($data);
-
-							}else{
-								Mage::getSingleton('core/session')->addError($return['error']);	
-							}			
-							
-							$this->_redirect('*/*/find');
-							return;
-						}else{
-							Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Order and serial mismatch"));
-							$this->_redirect('*/*/find');
-							return;
-						}
-					}else{
-						Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Product not found"));
-						$this->_redirect('*/*/find');
-						return;	
-					}
 				}else{
-					Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Serial not found"));
+					Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Order not found"));
 					$this->_redirect('*/*/find');
 					return;
 				}
 			}else{
-				Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Order not found"));
-				$this->_redirect('*/*/find');
-				return;
+				$return = $this->_generatePdf();
+				$data = base64_decode($return['label_img']);
+				header('Content-type: application/pdf');
+				header('Content-Disposition: attachment; filename=' . date('Y-m-d_H-i-s') . ".pdf");
+				die($data);
 			}
 		}
 	}
@@ -189,90 +197,42 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 		$this->renderLayout();
 	}
 
-	protected function _generatePdf($orderId){
+	protected function _generatePdf(){
+		$shipment = new \RocketShipIt\Shipment('fedex');
+		$shipment->setParameter('toName', $this->getRequest()->getPost('to_name'));
+		$shipment->setParameter('toPhone',$this->getRequest()->getPost('to_phone'));
+		$shipment->setParameter('toAddr1', $this->getRequest()->getPost('to_address'));
+		$shipment->setParameter('toCity', $this->getRequest()->getPost('city'));
+		$shipment->setParameter('toState', $this->getRequest()->getPost('state'));
+		$shipment->setParameter('toCode', $this->getRequest()->getPost('to_code'));
+		$shipment->setParameter('length', $this->getRequest()->getPost('length'));
+		$shipment->setParameter('width',$this->getRequest()->getPost('width'));
+		$shipment->setParameter('height',$this->getRequest()->getPost('height'));
+		$shipment->setParameter('weight',$this->getRequest()->getPost('weight'));
+		$shipment->setParameter('service', $this->getRequest()->getPost('shipping_option'));
+		return $shipment->submitShipment();
 
-		// If an order actually exists
-		if ($orderId) {
+	} 
 
-		    //Get the order details based on the order id ($orderId)
-		    $order = Mage::getModel('sales/order')->load($orderId);
-
-		    // Get the id of the orders shipping address
-		    $shippingId = $order->getShippingAddress()->getId();
-
-		    // Get shipping address data using the id
-		    $address = Mage::getModel('sales/order_address')->load($shippingId);
-		    $addressArr = $address->getData();
-		    // Display the shipping address data array on screen
-		    $region = Mage::getModel('directory/region')->load($addressArr['region_id']);
-
-		    /*Array
-				(
-				    [entity_id] => 4671
-				    [parent_id] => 2341
-				    [customer_address_id] => 
-				    [quote_address_id] => 
-				    [region_id] => 58
-				    [customer_id] => 
-				    [fax] => 
-				    [region] => Utah
-				    [postcode] => 85432
-				    [lastname] => dsadas
-				    [street] => 2321321
-				w32131
-				    [city] => SLC
-				    [email] => dsa@sad.com
-				    [telephone] => 3234242432
-				    [country_id] => US
-				    [firstname] => dasda
-				    [address_type] => shipping
-				    [prefix] => 
-				    [middlename] => 
-				    [suffix] => 
-				    [company] => 
-				    [vat_id] => 
-				    [vat_is_valid] => 
-				    [vat_request_id] => 
-				    [vat_request_date] => 
-				    [vat_request_success] => 
-			)*/
-
-			$shipment = new \RocketShipIt\Shipment('fedex');
-
-			if(!$address->getCompany() || $address->getCompany() == ''){
-				$shipment->setParameter('toCompany','test');	
-			}else{
-				$shipment->setParameter('toCompany',$address->getCompany());
-			}
-			
-
-			$shipment->setParameter('toName', $this->getRequest()->getPost('to_name'));
-			$shipment->setParameter('toPhone',$this->getRequest()->getPost('to_phone'));
-			$shipment->setParameter('toAddr1', $this->getRequest()->getPost('to_address'));
-			$shipment->setParameter('toCity', $this->getRequest()->getPost('city'));
-			$shipment->setParameter('toState', $this->getRequest()->getPost('state'));
-
-			$shipment->setParameter('toCode', $this->getRequest()->getPost('to_code'));
-			
-			$shipment->setParameter('length', $this->getRequest()->getPost('length'));
-			$shipment->setParameter('width',$this->getRequest()->getPost('width'));
-			$shipment->setParameter('height',$this->getRequest()->getPost('height'));
-			$shipment->setParameter('weight',$this->getRequest()->getPost('weight'));
-
-			$shipment->setParameter('service', $this->getRequest()->getPost('shipping_option'));
-
-			return $shipment->submitShipment();
-			//echo '<pre>'; print_r($response); die;
-			/*
-			if($response['tracking_id'] && $response['label_img']){
-				$data = base64_decode($response['label_img']);
-				header('Content-type: application/pdf');
-				header('Content-Disposition: attachment; filename='.$orderId.".pdf");
-				echo $data;
-				return;
-			}*/
+	protected function getrateAction(){
+		$rate = new \RocketShipIt\Rate('fedex');
+		$rate->setParameter('toCode', $this->getRequest()->getPost('to_code'));
+		$rate->setParameter('length', $this->getRequest()->getPost('length'));
+		$rate->setParameter('width',$this->getRequest()->getPost('width'));
+		$rate->setParameter('height',$this->getRequest()->getPost('height'));
+		$rate->setParameter('weight',$this->getRequest()->getPost('height'));
+		$rate->setParameter('service', $this->getRequest()->getPost('shipping_option'));
+		$result = $rate->getRate();
+		$_return = array('price' => 0);
+		if ($result['RateReply']['Notifications']['Severity'] != 'NOTE'){
+			$_return['error'] = $result['RateReply']['Notifications']['Message'];
 		}
-		return;
 
+		foreach ($result['RateReply']['RateReplyDetails']['RatedShipmentDetails'] as $rate){
+			if ($rate['ShipmentRateDetail']['RateType'] == 'PAYOR_ACCOUNT_PACKAGE'){
+				$_return['price'] = number_format($rate['ShipmentRateDetail']['TotalNetCharge']['Amount'], 2);
+			}
+		}
+		die(json_encode($_return));
 	} 
 }
