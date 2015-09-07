@@ -434,3 +434,4 @@ div.logout{
 }
 .fright { float:right; }
 .clickable-row { cursor:pointer; }
+.label-box { width:100px !important; }

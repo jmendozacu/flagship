@@ -96,7 +96,7 @@
 							</tr>
 							<?php $serials = $this->getSerials($product->getId()) ?>
 							<tr id="serials_po_product_row_<?php echo $product->getId() ?>" style="display:none">
-								<td colspan="6">
+								<td colspan="6" id="load-serials-content<?php echo $product->getId() ?>">
 									<div class="panel panel-default" >
 										<div class="panel-heading"><?php echo $this->__("Serials") ?></div>
 										<div class="panel-body">
@@ -115,11 +115,28 @@
 																<td><a href="<?php echo $this->getUrl("inventorymanager/label/edit", array('serial_key'=>$serial->getSerial())); ?>"><?php echo $serial->getSerial() ?></a></td>
 																<td>
 																	<?php /*echo $serial->getLocation()*/ ?>
-																	<select class="form-control" id="location_<?php echo $serial->getId() ?>">
+																	<?php /*<select class="form-control" id="location_<?php echo $serial->getId() ?>">
 																		<?php foreach ($locations as $key => $locationLabel) { ?>
 																			<option <?php echo $serial->getLocation() == $locationLabel?"selected='selected'":""; ?>><?php echo $locationLabel ?></option>
 																		<?php } ?>
-																	</select>
+																	</select> */ ?>
+																	<div class="form-control-static" >
+																		<div class="btn-group show-dropbox show-location-dropbox">
+																			<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
+																  				<input type="text" class="form-control label-box" onkeyup="statusText(this)" name="location" id="new_location<?php echo $serial->getId() ?>" value="<?php echo $serial->getLocation(); ?>" />
+																  			</div>
+																		  	<button type="button" class="btn btn-primary dropdown-toggle" onclick="openLocationBox(this)" style="z-index:999"><span class="caret"></span></button>
+																		  	<ul class="dropdown-menu location-box" id="dropdown-box-location<?php echo $serial->getId() ?>">
+																		  		<li class="add-location-li"><a href="javascript:addLocation(<?php echo $serial->getId() ?>,<?php echo $product->getId() ?>)"  ><?php echo $this->__("Add New") ?></a></li>
+																		  		<?php foreach ($locations as $key => $locationLabel) { ?>
+																		  			<li>
+																		  				<span class="remove-location-link" onclick="removeLocationFunction('<?php echo $locationLabel ?>',<?php echo $product->getId() ?>)">x</span>
+																		  				<a class="location-options" href="javascript:selectLocation('<?php echo $locationLabel ?>',<?php echo $serial->getId() ?>)"><?php echo $locationLabel ?></a>
+																		  			</li>
+																		  		<?php } ?>
+																		  	</ul>
+																		</div>
+																	</div>
 																</td>
 																<td><a class="btn btn-primary btn-sm" onclick="updateLocation(<?php echo $serial->getId() ?>)" href="javascript:void(0)"><?php echo $this->__("Update") ?></a></td>
 															</tr>
@@ -188,7 +205,7 @@
 	});
 	function updateLocation(serialId){
 		jQuery('.bs-example-modal-sm').modal('show');
-		var location = $('location_' + serialId).value;
+		var location = $('new_location' + serialId).value;
 		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/updatelocation') ?>', {
 			method:'get',
 			parameters: {serial_id:serialId, location:location},
@@ -202,6 +219,121 @@
   				jQuery('.bs-example-modal-sm').modal('hide');
   				alert('Something went wrong...');
   			}
+		});
+	}
+</script>
+<script>
+	var locations = [];
+	<?php foreach ($locations as $location){ ?>
+		locations.push("<?php echo $location; ?>");
+	<?php } ?>
+	function openLocationBox(obj){
+		var targetElement = obj.up('div.show-location-dropbox').down('ul.location-box');
+		var openBox = true;
+		if(targetElement.hasClassName('show-dropbox')){
+			openBox = false;
+		}
+		$$('ul.location-box').each(function(e){
+			e.removeClassName('show-dropbox');
+		});
+		if(openBox){
+			targetElement.addClassName('show-dropbox');
+		}
+	}
+	
+	function statusText(obj){
+		$('dropdown-box-location')
+		obj.up('div.show-location-dropbox').down('ul.location-box').down('li.add-location-li').down('a').innerHTML = '<?php echo $this->__("Add") ?> ' + obj.value;
+	}
+	
+	function selectLocation(location,sId){
+		
+		$('new_location' + sId).value = location;
+		$$('ul.location-box').each(function(e){
+			e.removeClassName('show-dropbox');
+		});
+	}
+
+	function addLocation(sId,pId){
+		var location = $('new_location' + sId).value;
+		var currentIndex = locations.indexOf(location);
+		if(currentIndex>=0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addlocation') ?>', {
+  			method:'post',
+  			parameters: {location:location},
+  			onSuccess: function(transport) {
+  				//jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				/*var removeSpan = document.createElement("span");
+    				
+    				removeSpan.addClassName('remove-location-link');
+    				removeSpan.innerHTML = 'x';
+    				
+    				var liElement = document.createElement("li");
+    				liElement.appendChild(removeSpan);
+    				liElement.insert('<a class="location-options" href="javascript:void(0);">'+location+'</a></li>');
+    				
+    				var tempDiv = document.createElement("div");
+    				tempDiv.appendChild(liElement);
+    				
+    				$('dropdown-box-location' + sId).innerHTML = $('dropdown-box-location' + sId).innerHTML + tempDiv.innerHTML;
+    				locations.push(location);
+    				$$('a.location-options').each(function(e){
+						e.observe('click', function(){
+							$('new_location').value = e.innerHTML;
+							$('dropdown-box-location').toggleClassName('show-dropbox');
+						});
+					});
+					$('dropdown-box-location' + sId).toggleClassName('show-dropbox');*/
+    				refrechLabels(pId);
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	function removeLocationFunction(location, pId){
+		
+		var currentIndex = locations.indexOf(location);
+		if(currentIndex<0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removelocation') ?>', {
+  			method:'post',
+  			parameters: {location: location},
+  			onSuccess: function(transport) {
+  				//jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			/*if(response != ''){
+    				alert(response);
+    			}else{*/
+    				/*locations.splice(currentIndex, 1);
+    				e.up('li').remove();*/
+    				refrechLabels(pId);
+    			//}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	function refrechLabels(pId){
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/loadserials') ?>', {
+  			method:'post',
+  			parameters: {product_id: pId, order_id:<?php echo $purchaseorderObject->getId(); ?>},
+  			onSuccess: function(transport) {
+  				//jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			$('load-serials-content' + pId).innerHTML = response;
+    			jQuery('.bs-example-modal-sm').modal('hide');
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
 		});
 	}
 </script>

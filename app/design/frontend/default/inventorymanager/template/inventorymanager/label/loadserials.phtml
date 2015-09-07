@@ -1,0 +1,48 @@
+<?php
+	$purchaseorderObject = $this->getPurchaseOrder();
+	$serials = $this->getSerials();
+	$productId = $this->getRequest()->getParam('product_id');
+	$locations = $this->helper('inventorymanager')->getLocations($purchaseorderObject->getVendorId());
+?>
+<div class="panel panel-default" >
+	<div class="panel-heading"><?php echo $this->__("Serials") ?></div>
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th><?php echo $this->__("Serial") ?></th>
+						<th width="20%"><?php echo $this->__("Location") ?></th>
+						<th width="20%"><?php echo $this->__("Action") ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($serials as $serial){ ?>
+						<tr>
+							<td><a href="<?php echo $this->getUrl("inventorymanager/label/edit", array('serial_key'=>$serial->getSerial())); ?>"><?php echo $serial->getSerial() ?></a></td>
+							<td>
+								<div class="form-control-static" >
+									<div class="btn-group show-dropbox show-location-dropbox">
+										<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
+							  				<input type="text" class="form-control label-box" onkeyup="statusText(this)" name="location" id="new_location<?php echo $serial->getId() ?>" value="<?php echo $serial->getLocation(); ?>" />
+							  			</div>
+									  	<button type="button" class="btn btn-primary dropdown-toggle" onclick="openLocationBox(this)" style="z-index:999"><span class="caret"></span></button>
+									  	<ul class="dropdown-menu location-box" id="dropdown-box-location<?php echo $serial->getId() ?>">
+									  		<li class="add-location-li"><a href="javascript:addLocation(<?php echo $serial->getId() ?>,<?php echo $productId ?>)"  ><?php echo $this->__("Add New") ?></a></li>
+									  		<?php foreach ($locations as $key => $locationLabel) { ?>
+									  			<li>
+									  				<span class="remove-location-link" onclick="removeLocationFunction(<?php echo $locationLabel ?>,<?php echo $productId ?>)">x</span>
+									  				<a class="location-options" href="javascript:selectLocation('<?php echo $locationLabel ?>',<?php echo $serial->getId() ?>)"><?php echo $locationLabel ?></a>
+									  		<?php } ?>
+									  	</ul>
+									</div>
+								</div>
+							</td>
+							<td><a class="btn btn-primary btn-sm" onclick="updateLocation(<?php echo $serial->getId() ?>)" href="javascript:void(0)"><?php echo $this->__("Update") ?></a></td>
+						</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

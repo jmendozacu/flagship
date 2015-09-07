@@ -318,4 +318,13 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		//Close and output PDF document
 		$pdf->Output('inventorymanager_'.$id.'.pdf', 'D');
 	}
+	
+	public function loadserialsAction(){
+		//$this->loadLayout();
+		//$this->reanderLayout();
+		
+		echo $this->getLayout()->createBlock('inventorymanager/label_refresh')
+		->setTemplate('inventorymanager/label/loadserials.phtml')->toHtml();
+		
+	}
 }
