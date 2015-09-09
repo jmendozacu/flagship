@@ -21,6 +21,9 @@ $purchaseorders = $this->getAllpurchaseorders();
 <div class="row">
 	<div class="col-md-12">
 		<h2><?php echo $this->__("Purchase Orders") ?></h2>
+         <div style="float:right">
+            <button class="btn btn-warning" onclick="setLocation('<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/new") ?>')" name="addvendors"><?php echo $this->__("Purchase New") ?></button>
+        </div>
 	</div>
 </div>
 <hr/>
@@ -53,13 +56,7 @@ $purchaseorders = $this->getAllpurchaseorders();
             						<td><?php echo $item->getOrderQty(); ?></td>
             						<td><?php echo $item->getReceivedQty(); ?></td>
             						<td><?php echo date("Y/m/d", strtotime($item->getDateOfPo())) ?></td>
-            						<td>
-            							<a href="<?php /* echo $this->getUrl('inventorymanager/adminuser/vendoredit', array('vendor_id'=>$item->getPoId()))*/ ?>#">
-            								<?php echo $this->__("Edit") ?>
-            							</a>
-            							&nbsp;|&nbsp;
-            							<a href="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/generatepdf", array('id'=>$item->getId())) ?>"><?php echo $this->__("Generate PDF") ?></a>
-            						</td>
+            						<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_purchaseorder/edit', array('id'=>$item->getPoId())) ?>"><?php echo $this->__("Edit") ?></a></td>
             					</tr>
             				<?php } ?>
             			</tbody>
