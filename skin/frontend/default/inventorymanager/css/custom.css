@@ -435,3 +435,7 @@ div.logout{
 .fright { float:right; }
 .clickable-row { cursor:pointer; }
 .label-box { width:100px !important; }
+.label-checkbox{ margin-top:0px !important; }
+.mass-location { width:200px !important; }
+.right-align-group { float:right; }
+.right-align-group label { padding:5px; }

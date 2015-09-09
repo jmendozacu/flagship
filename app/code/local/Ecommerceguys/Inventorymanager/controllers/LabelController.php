@@ -327,4 +327,25 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		->setTemplate('inventorymanager/label/loadserials.phtml')->toHtml();
 		
 	}
+	
+	public function masslocationAction(){
+		$params = $this->getRequest()->getParams();
+		if(isset($params['ids']) && $params['ids'] != "" && $params['location'] != ""){
+			$idsArray = explode("-", $params['ids']);
+			foreach ($idsArray as $id){
+				$serial = Mage::getModel('inventorymanager/label')->load($id);
+				if($serial && $serial->getId()){
+					$serial->setLocation($params['location']);
+					try {
+						$serial->save();
+						
+					}catch (Exception $e){
+						Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Something went wrong"));
+					}
+				}
+			}
+		}
+		Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Location updated for selected serials"));
+		$this->_redirect('*/purchaseorder/view', array("id"=>$params['order_id']));
+	}
 }

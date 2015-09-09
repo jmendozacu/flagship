@@ -32,6 +32,30 @@
 		<div class="panel panel-back noti-box">
 			<table class="table table-striped">
 				<tr>
+					
+					<td align="right">
+						<div class="right-align-group">
+							<a href="javascript:void(0)" onclick="submitMassLocations()" class="btn btn-primary btn-sm"><?php echo $this->__("Submit") ?></a>
+						</div>
+						<div class="right-align-group">
+							<select class="form-control mass-location" id="mass-location">
+								<?php foreach ($locations as $location){ ?>
+									<option><?php echo $location ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div class="right-align-group"><label><?php echo $this->__("Locations") ?></label></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="panel panel-back noti-box">
+			<table class="table table-striped">
+				<tr>
 					<td style="width:200px"><label><?php echo $this->__("Order Number") ?></label></td>
 					<td><?php echo $purchaseorderObject->getId(); ?></td>
 				</tr>
@@ -64,6 +88,7 @@
 			</table>
 		</div>
 	</div>
+
 	<div class="col-md-12">
 		<div class="panel panel-default">
 			<div class="panel-heading"><?php echo $this->__("Products") ?></div>
@@ -104,6 +129,7 @@
 												<table class="table">
 													<thead>
 														<tr>
+															<th width="4%">#</th>
 															<th><?php echo $this->__("Serial") ?></th>
 															<th width="20%"><?php echo $this->__("Location") ?></th>
 															<th width="20%"><?php echo $this->__("Action") ?></th>
@@ -112,6 +138,9 @@
 													<tbody>
 														<?php foreach ($serials as $serial){ ?>
 															<tr>
+																<td>
+																	<div class="checkbox label-checkbox"><label><input type="checkbox" class="serial-checkboxes" value="<?php echo $serial->getId(); ?>"></label></div>
+																</td>
 																<td><a href="<?php echo $this->getUrl("inventorymanager/label/edit", array('serial_key'=>$serial->getSerial())); ?>"><?php echo $serial->getSerial() ?></a></td>
 																<td>
 																	<?php /*echo $serial->getLocation()*/ ?>
@@ -138,6 +167,7 @@
 																		</div>
 																	</div>
 																</td>
+																
 																<td><a class="btn btn-primary btn-sm" onclick="updateLocation(<?php echo $serial->getId() ?>)" href="javascript:void(0)"><?php echo $this->__("Update") ?></a></td>
 															</tr>
 														<?php } ?>
@@ -335,5 +365,21 @@
   			},
   			onFailure: function() { alert('Something went wrong...');}
 		});
+	}
+	
+	function submitMassLocations(){
+		var location = $('mass-location').value;
+		var serials = "";
+		$$('.serial-checkboxes').each(function(e){
+			//alert(e.value);
+			if(e.checked){
+				serials += e.value+'-';
+			}
+		});
+		var url = "<?php echo $this->getUrl('inventorymanager/label/masslocation') ?>?ids="+serials+"&location="+location+"&order_id=<?php echo $purchaseorderObject->getId(); ?>";
+		if(serials != ""){
+			window.location.replace(url);
+		}
+		
 	}
 </script>
