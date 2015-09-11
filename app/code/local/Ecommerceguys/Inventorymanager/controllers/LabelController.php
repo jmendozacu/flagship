@@ -174,6 +174,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 						'label_id'	=>	$model->getId()
 					);
 					$comment->setData($commentData)->save();
+					$model->setIsSeen(2)->save();
 					if(isset($_FILES['comment_image']) && $_FILES['comment_image']['name'] != ""){
 						try {	
 							/* Starting upload */	
@@ -347,5 +348,19 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		}
 		Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Location updated for selected serials"));
 		$this->_redirect('*/purchaseorder/view', array("id"=>$params['order_id']));
+	}
+	
+	public function seenAction(){
+		$id = $this->getRequest()->getParam('id');
+		$label = Mage::getModel('inventorymanager/label')->load($id);
+		if($label && $label->getId()){
+			$label->setIsSeen(1);
+			try {
+				$label->save();
+				$this->_redirect("*/*/edit", array("serial_key"=> $label->getSerial()));
+			}catch (Exception $e){
+				
+			}
+		}
 	}
 }

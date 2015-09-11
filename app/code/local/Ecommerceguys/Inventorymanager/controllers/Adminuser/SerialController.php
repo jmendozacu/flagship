@@ -80,7 +80,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 						'label_id'	=>	$model->getId()
 					);
 					$comment->setData($commentData)->save();
-					
+					$model->setIsSeen(2)->save();
 					if(isset($_FILES['comment_image']) && $_FILES['comment_image']['name'] != ""){
 						try {	
 							/* Starting upload */	

@@ -116,4 +116,17 @@ class Ecommerceguys_Inventorymanager_PurchaseorderController extends Mage_Core_C
 		$pdf->lastPage();
 		$pdf->Output($productId.'_productserials.pdf', 'D');
 	}
+	
+	public function seenAction(){
+		$id = $this->getRequest()->getParam('id');
+		$purchaseorder = Mage::getModel('inventorymanager/purchaseorder')->load($id);
+		if($purchaseorder && $purchaseorder->getId()){
+			try {
+				$purchaseorder->setIsSeen(1)->save();
+				$this->_redirect("*/*/view", array("id"=>$purchaseorder->getId()));
+			}catch (Exception $e){
+				
+			}
+		}
+	}
 }

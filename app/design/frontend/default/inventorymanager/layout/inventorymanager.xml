@@ -248,6 +248,13 @@
 		</reference>
 	</inventorymanager_adminuser_product_serialgrid>
 
-	
+	<inventorymanager_notification_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_notification" name="vendor.notification" template="inventorymanager/vendor/notification.phtml" ></block>
+		</reference>
+	</inventorymanager_notification_index>
 
 </layout>

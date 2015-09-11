@@ -9,8 +9,10 @@
                 </button>
                 <a class="navbar-brand" href="index.html"><?php echo $this->__("Vendor Section") ?></a> 
             </div>
+   
+		<?php /*echo $this->getLayout()->createBlock('inventorymanager/vendor_notification')->setTemplate("inventorymanager/vendor/notification.phtml")->toHtml();*/ ?> 
             
-  <div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;--> 
+  <div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> 
   <a href="<?php echo $this->getUrl('inventorymanager/vendor/logout') ?>" class="btn btn-danger square-btn-adjust">
   	<?php echo $this->__("Logout") ?>
   </a>
@@ -56,6 +58,7 @@
 	$stockTab = false;
     $purchaseorder = false;
 	$shippedProduct = false;
+	$notification = false;
     
 	if($currentController == "vendor" && $currentAction == "products"){
 		$productsPage = true;
@@ -81,9 +84,10 @@
 		$shippedProduct = true;
 	}elseif($currentController == "adminuser" && ($currentAction == "vendorprofiles" || $currentAction == "vendoredit")){ 
         $manageVendors = true;
-    }
-    elseif($currentController == "adminuser" && ($currentAction == "purchaseorder" || $currentAction == "edit")){ 
+    }elseif($currentController == "adminuser" && ($currentAction == "purchaseorder" || $currentAction == "edit")){ 
         $purchaseorder = true;
+    }elseif($currentController == "notification" && $currentAction == "index"){ 
+        $notification = true;
     }
 ?>
         
@@ -124,7 +128,7 @@
             </li>
             
             <li>
-                <a class="" href="#">
+                <a class="<?php if($notification) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/notification/") ?>">
                 	<i class="fa fa-edit fa-3x"></i><?php echo $this->__("Notifications") ?>
                 </a>
             </li>

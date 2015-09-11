@@ -1,0 +1,34 @@
+<?php
+	$notificationOrders = $this->getOrderNotifications();
+	$notificationSerials = $this->getSerials();
+?>
+
+<div class="header-notification">
+<?php if($notificationOrders && $notificationOrders->count() > 0){ ?>
+	<ul class="">
+		<li><label><?php echo $this->__("New Order(s)") ?></label></li>
+		<?php foreach ($notificationOrders as $order){ ?>
+			<li class="inner-li">
+				<?php /*echo $this->__("New Order : ")*/ ?>
+				<a href="<?php echo $this->getUrl("inventorymanager/purchaseorder/seen", array("id"=>$order->getId())) ?>">
+					<?php echo $order->getId(); ?>
+				</a>
+			</li>
+		<?php } ?>
+	</ul>
+<?php } ?>
+<div style="clear:both"></div>
+
+<?php if($notificationSerials && $notificationSerials->count() > 0){ ?>
+	<ul class="">
+		<li><label><?php echo $this->__("New comments added to") ?></label></li>
+		<?php foreach ($notificationSerials as $serial){ ?>
+			<li class="inner-li">
+				<a href="<?php echo $this->getUrl("inventorymanager/label/seen", array("id"=>$serial->getId())) ?>">
+					<?php echo $serial->getSerial(); ?>
+				</a>
+			</li>
+		<?php } ?>
+	</ul>
+<?php } ?>
+</div>

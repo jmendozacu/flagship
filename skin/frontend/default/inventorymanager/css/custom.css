@@ -439,3 +439,6 @@ div.logout{
 .mass-location { width:200px !important; }
 .right-align-group { float:right; }
 .right-align-group label { padding:5px; }
+.header-notification { float:left; padding:10px;  }
+.header-notification ul li { list-style:none; }
+.header-notification ul li { padding:5px; border-bottom:1px solid #000; }
