@@ -47,7 +47,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		$content = $this->getLayout()->createBlock('inventorymanager/label_generate')
 		->setTemplate('inventorymanager/labelgenerate.phtml')->toHtml();
 		
-		//echo $content;
+		//echo $content; exit;
 		
 		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->SetCreator(PDF_CREATOR);
