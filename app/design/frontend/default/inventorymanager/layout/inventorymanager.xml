@@ -13,6 +13,48 @@
         </reference>
     </inventorymanager_adminuser_purchaseorder_index>
 
+	<inventorymanager_adminuser_purchaseorder_edit>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+    	<reference name="content">
+			<block type="inventorymanager/user_purchaseorder_edit" name="adminuser.purchaseorder.edit" template="inventorymanager/adminuser/purchaseorder/edit.phtml">
+				<block type="inventorymanager/user_purchaseorder_comment" name="adminuser.purchaseorder.edit.comment" template="inventorymanager/adminuser/purchaseorder/comment.phtml" />
+			</block>
+        </reference>
+    </inventorymanager_adminuser_purchaseorder_edit>
+
+	<inventorymanager_adminuser_purchaseorder_findproduct>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/adminuser/purchaseorder/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_purchaseorder_findproduct" name="adminuser.purchaseorder.findproduct" template="inventorymanager/adminuser/purchaseorder/findproduct.phtml" />
+		</reference>
+	</inventorymanager_adminuser_purchaseorder_findproduct>
+	
+	<inventorymanager_adminuser_purchaseorder_getproductinfo>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/adminuser/purchaseorder/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_purchaseorder_addproduct" name="adminuser.purchaseorder.addproduct" template="inventorymanager/adminuser/purchaseorder/addproduct.phtml" />
+		</reference>
+	</inventorymanager_adminuser_purchaseorder_getproductinfo>
+	
+	<inventorymanager_adminuser_purchaseorder_comment_refresh>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/adminuser/purchaseorder/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_purchaseorder_comment" name="adminuser.purchaseorder.comment.refresh" template="inventorymanager/adminuser/purchaseorder/comment_refresh.phtml" />
+		</reference>
+	</inventorymanager_adminuser_purchaseorder_comment_refresh>
+	
+
 	<inventorymanager_vendor_login>
 		<reference name="root">
 			<action method="setTemplate"><template>page/1column.phtml</template></action>
@@ -97,9 +139,7 @@
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
 		</reference>
 		<reference name="content">
-			<block type="inventorymanager/label_edit" name="purchaseorder.label.edit" template="inventorymanager/label/edit.phtml" >
-				<block type="inventorymanager/label_history" name="serial.history" template="inventorymanager/label/history.phtml" />
-			</block>
+			<block type="inventorymanager/label_edit" name="purchaseorder.label.edit" template="inventorymanager/label/edit.phtml" />
 		</reference>
 	</inventorymanager_label_edit>
 	
