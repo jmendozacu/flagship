@@ -35,7 +35,7 @@
             						<td><?php echo $vendor->getName() ?></td>
             						<td><?php echo $vendor->getEmail() ?></td>
             						<td><?php echo date("Y/m/d", strtotime($vendor->getCreatedTime())) ?></td>
-            						<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendoredit', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__("Edit ") ?></a> <?php echo $this->__('-|-')?><a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendordelete', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__(" Delete ") ?></a></td>
+            						<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendoredit', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__("Edit ") ?></a> <?php echo $this->__('-|-')?><a onclick='myFunction()' href="#<?php /*echo $this->getUrl('inventorymanager/adminuser/vendordelete', array('vendor_id'=>$vendor->getId())) */?>"><?php echo $this->__(" Delete ") ?></a></td>
             					</tr>
             				<?php } ?>
             			</tbody>
@@ -49,4 +49,14 @@
 jQuery(document).ready(function () {
     jQuery('#dataTables-example').dataTable();
 });
+</script>
+
+<script>
+function myFunction() {
+    var txt;
+    var r = confirm("Do you really want to delete the Vendor?");
+    if (r == true) {
+        setLocation("<?php echo $this->getUrl('inventorymanager/adminuser/vendordelete', array('vendor_id'=>$vendor->getId()))?>");
+    } 
+}
 </script>
