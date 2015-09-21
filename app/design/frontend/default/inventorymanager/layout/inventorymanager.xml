@@ -19,7 +19,6 @@
 		</reference>
 		<reference name="head">
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
-			<action method="addCss"><stylesheet>inventorymanager/css/style-purchaseorder.css</stylesheet></action>
 		</reference>
     	<reference name="content">
 			<block type="inventorymanager/user_purchaseorder_edit" name="adminuser.purchaseorder.edit" template="inventorymanager/adminuser/purchaseorder/edit.phtml">
@@ -27,20 +26,6 @@
 			</block>
         </reference>
     </inventorymanager_adminuser_purchaseorder_edit>
-    	<inventorymanager_adminuser_purchaseorder_new>
-		<reference name="root">
-			<action method="setTemplate"><template>page/1column.phtml</template></action>
-		</reference>
-		<reference name="head">
-			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
-			<action method="addCss"><stylesheet>inventorymanager/css/style-purchaseorder.css</stylesheet></action>
-		</reference>
-    	<reference name="content">
-			<block type="inventorymanager/user_purchaseorder_edit" name="adminuser.purchaseorder.edit" template="inventorymanager/adminuser/purchaseorder/edit.phtml">
-				<block type="inventorymanager/user_purchaseorder_comment" name="adminuser.purchaseorder.edit.comment" template="inventorymanager/adminuser/purchaseorder/comment.phtml" />
-			</block>
-        </reference>
-    </inventorymanager_adminuser_purchaseorder_new>
 
 	<inventorymanager_adminuser_purchaseorder_findproduct>
 		<reference name="root">
@@ -96,6 +81,16 @@
 			<block type="inventorymanager/vendor_dashboard" name="vendor.dashboard" template="inventorymanager/dashboard.phtml" />
 		</reference>
 	</inventorymanager_vendor_index>
+	
+
+	<inventorymanager_vendor_profile>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_profile" name="vendor.profile" template="inventorymanager/vendor/profile.phtml" />
+		</reference>
+	</inventorymanager_vendor_profile>
 	
 	<inventorymanager_vendor_product_edit>
 		<reference name="root">
@@ -303,6 +298,13 @@
 		</reference>
 	</inventorymanager_adminuser_product_serialgrid>
 
-	
+	<inventorymanager_notification_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_notification" name="vendor.notification" template="inventorymanager/vendor/notification.phtml" ></block>
+		</reference>
+	</inventorymanager_notification_index>
 
 </layout>

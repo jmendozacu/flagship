@@ -1,6 +1,6 @@
 <?php 
 
-class Ecommerceguys_Inventorymanager_Block_Vendor_Info extends Mage_Core_Block_Template
+class Ecommerceguys_Inventorymanager_Block_Vendor_Profile extends Mage_Core_Block_Template
 {
 	public function getCurrentVendorId(){
 		$vendor = Mage::getSingleton('core/session')->getVendor();
@@ -18,5 +18,8 @@ class Ecommerceguys_Inventorymanager_Block_Vendor_Info extends Mage_Core_Block_T
 		}else{
 			return false;
 		}
+	}
+	public function getPostUrl(){
+		return Mage::getUrl('inventorymanager/vendor/vendorsave');
 	}
 }

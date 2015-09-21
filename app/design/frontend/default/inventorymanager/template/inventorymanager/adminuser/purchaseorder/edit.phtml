@@ -20,9 +20,9 @@
     <div class="col-md-12">
         <h2>
         	<?php if($this->getCurrentOrder()):?>
-						<?php echo $this->__("Purchase Order") ?>
+						<?php echo $this->__("Edit Purchase Order") ?>
 			<?php else:?>
-						<?php echo $this->__("Purchase Order") ?>
+						<?php echo $this->__("Add Purchase Order") ?>
 			<?php endif;?>
 		</h2>
         <div style="float:right;padding-right:10px">
@@ -37,8 +37,9 @@
 		<?php endif; ?>	
     </div>
 </div>
+<hr>
 
-<?php/*
+
 
 <div class="row">
     <div class="col-md-12">
@@ -95,11 +96,46 @@
                                 <input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo $c_expectedDate!=""?date('d/m/Y', strtotime($c_expectedDate)):date('d/m/Y', strtotime('+30 days')); ?>" name="expected_date" id="expected_date">
 												<img style="" title="<?php echo $this->__("Select Date") ?>" id="expected_date_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
                             </div>
-                              
-					
+                              <div class="form-group">
+                                <label><?php echo $this->__("Add Product to purchase order") ?></label>
+                                <input style="width:300px" type="text" class="input-text" id="add_product" onkeyup="loadProducts(this.value)"  />
+								<div id="product_suggestion_box">
+                            </div>
 
                             <div class="form-group">
-                       
+                                <ul id="products_grid">
+                                	<li>
+											<div class="product-content-header p-name"><?php echo $this->__("Name") ?></div>
+											<div class="product-content-header p-qty"><?php echo $this->__("Qty") ?></div>
+											<div class="product-content-header p-cost"><?php echo $this->__("Price/Unit") ?></div>
+											<div class="product-content-header p-input"><?php echo $this->__("Total") ?></div>
+											<div class="product-content-header p-remove"><?php echo $this->__("Remove") ?></div> 
+											<div class="clear-float"></div>
+										</li>
+                                	<?php if($this->getCurrentOrder()) { ?>
+										
+										<?php foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
+										<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
+											<li>
+												<div class="product-content p-name">
+													<?php echo $productObject->getName() ?>
+													<input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
+												</div>
+												<div class="product-content p-qty">
+													<?php echo $orderProduct->getQty() ?>
+													<input type="text" value="<?php echo $orderProduct->getQty() ?>" name="qty[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
+												</div>
+												<div class="product-content p-cost">
+													<?php echo $orderProduct->getPrice() ?>
+													<input type="text" value="<?php echo $orderProduct->getPrice() ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
+												</div>
+												<div class="product-content p-input"><?php echo $orderProduct->getTotal() ?></div>
+												<div class="product-content p-remove"><a onclick="removeProduct(this)">X</a></div>
+												<div class="clear-float"></div>
+											</li>
+										<?php } ?>
+										<?php } ?>
+								</ul>
                             </div>
                             <div class="form-group">
                                 <label for="total"><?php echo $this->__("Units Ordered") ?></label>
@@ -121,136 +157,6 @@
         </div>
     </div>    
 </div>
-
-
-*/?>
-
-
-<div id="ember4133" class="ember-view orders show-order scrollable full-height row-fluid greyed">
-  <div class="span9 plus-gutter pal mbl">
-    <form id="edit_form" name="edit_form" class="ember-view card pvm form-horizontal" enctype="multipart/form-data" method="post" action="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/save") ?>">
-      <hr class="mhl mvs">
-      
-      <?php echo $this->getMessagesBlock()->toHtml() ?>
-      <div class="row-fluid dl-horizontal dl-form small phl">
-        <dl class="span4">
-          <dt><?php echo $this->__('Name')?></dt>
-          <dd>
-            <select id="vendor_id" name="vendor_id" class="required-entry select ember-view ember-select">
-				<?php foreach ($this->getVendors() as $vendorId => $vendorName): ?>
-					<option value="<?php echo $vendorId ?>" <?php echo $c_vendorId==$vendorId?"selected='seleted'":""; ?> ><?php echo $vendorName ?></option>
-				<?php endforeach; ?>
-			</select>
-          </dd>
-          <dt><?php echo $this->__('Shipping method')?></dt>
-          <dd id="ember4199" class="ember-view string help-overlay required">
-            <select id="shipping_method" name="shipping_method" class="required-entry select  ember-view ember-select">
-				<?php foreach ($this->getAllShippingMethod() as $code => $title): ?>
-					<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
-				<?php endforeach; ?>
-			</select>
-          </dd>
-             <dt><?php echo $this->__('Payment terms')?></dt>
-          <dd id="ember4199" class="ember-view string help-overlay required">
-            <select id="shipping_method" name="shipping_method" class="required-entry select  ember-view ember-select">
-				<?php foreach ($this->getAllShippingMethod() as $code => $title): ?>
-					<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
-				<?php endforeach; ?>
-			</select>
-          </dd>
-          <dt>Date of Purchase Order</dt>
-          <dd id="ember4200" class="ember-view string help-overlay required">
-            
-            <input type="text" style="width:110px !important;" class=" input-text required-entry" title="<?php echo $this->__("Date Of Purchase Order") ?>" value="<?php echo $c_dateOfPo!=""?date('d/m/Y', strtotime($c_dateOfPo)):date('d/m/Y'); ?>" id="date_of_po" name="date_of_po">
-												<img style="" title="<?php echo $this->__("Select Date") ?>" id="date_of_po_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
-          </dd>
-          <dt>Expted Date</dt>
-          <dd id="ember4200" class="ember-view string help-overlay required">
-             <input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo $c_expectedDate!=""?date('d/m/Y', strtotime($c_expectedDate)):date('d/m/Y', strtotime('+30 days')); ?>" name="expected_date" id="expected_date">
-												<img style="" title="<?php echo $this->__("Select Date") ?>" id="expected_date_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
-          </dd>
-          <dt><?php echo $this->__('Add Product to purchase order')?></dt>
-          <dd>
-          <input  type="text" class="input-text" id="add_product" onkeyup="loadProducts(this.value)"  />
-								<div id="product_suggestion_box">
-                            </div>
-
-        	</dd>
-        </dl>
-      </div>
-      <section class="tableish form-table mtm">
-        <ul id="products_grid" class="ember-view row-fluid tableish-header affix-top">
-          <li class="span1">&nbsp;</li>
-          <li class="span8"><?php echo $this->__("Item Name") ?></li>
-          <li class="span2"><?php echo $this->__("Quantity") ?></li>
-          <li class="span3"><?php echo $this->__("Price ($)") ?></li>
-          <li class="span3"><?php echo $this->__("Total") ?></li>
-        </ul>
-        	<?php if($this->getCurrentOrder()) { ?>
-				 <ul id="add-line-item" class="ember-view tableish-body tour-white">						
-			<?php foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
-			<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
-
-       
-          <li  class="ember-view order-line-item">
-            <ul  class="ember-view row-fluid">
-              <li class="span8 variant-field"> <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
-                <label class="ember-view ember-text-field ui-autocomplete-input"><?php echo $productObject->getName() ?></label>
-                  <input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
-              </li>
-              <li  class="ember-view string help-overlay control-group span2 quantity-field">
-                <div class="product-content p-qty">
-                  <?php echo $orderProduct->getQty() ?>
-                  <input type="text" value="<?php echo $orderProduct->getQty() ?>" name="qty[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
-                </div>  
-              </li>
-              <li  class="ember-view string span3 dropdown price-field help-overlay required control-group">
-                <div class="product-content p-cost">
-                  <?php echo $orderProduct->getPrice() ?>
-                  <input type="text" value="<?php echo $orderProduct->getPrice() ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
-                </div>
-              </li>
-              <li class="span2 prn">
-                <div class="product-content p-input"><?php echo $orderProduct->getTotal() ?></div>
-              </li>
-            </ul>
-            <ember.easyform.fieldsfor:ember4347>
-             
-              <div class="line-remove product-content p-remove"><a data-bindattr-4398="4398" class="button" data-ember-action="4397" title="Remove" onclick="removeProduct(this)">
-                <i class="fa fa-trash-o"></i> </a> </div>
-            </ember.easyform.fieldsfor:ember4347>
-            </li>
-        		<?php } ?>
-			<?php } ?>
-    </ul>
-      </section>
-      <section class="row-fluid pal">
-        <ul class="span4 right totals prm">
-          <li class="row-fluid"> 
-              <span class="span6"><?php echo $this->__("Units Ordered") ?></span>
-              <span id="total_qty" class="span6"></span>
-          </li> 
-          <li class="row-fluid">              
-              <span class="span6"><?php echo $this->__("Units Received") ?></span>
-              <span id="total_qty" class="span6"></span>
-          </li>
-          <li class="row-fluid"> 
-                        
-              <span class="span6"><?php echo $this->__("Total") ?></span>
-              <span id="grant_total" class="span6"></span>
-          </li>
-        </ul>
-      </section>
-  </form>
-   <form  class="ember-view card pvm form-horizontal" enctype="multipart/form-data" method="post" action="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/save") ?>">
-      <section class="row-fluid pal">
-        <div class="span8 mtm">
-          <textarea id="ember4248" class="ember-view ember-text-area" placeholder="Message to Customer" name="notes"></textarea>
-        </div>
-      </section>
-  </div>
-</div>
-</form>
 
 
 			
@@ -372,6 +278,8 @@ $('product_suggestion_box').hide();
 		countGTotal();
 		countQty();
 	}
+	
+	
 	countGTotal();
 	countQty();
 	var editForm = new varienForm('edit_form', '');

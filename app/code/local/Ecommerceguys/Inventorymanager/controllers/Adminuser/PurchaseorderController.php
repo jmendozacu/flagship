@@ -24,11 +24,13 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 	}
 	
 	public function newAction() {
-		$this->_forward('orderedit');
+
+		$this->_forward('edit');
 	}
 	
 	public function editAction() {
-		$this->_forward('orderedit');
+		$this->loadLayout();
+		$this->renderLayout();
 	}
 	
 	public function ordereditAction(){
@@ -163,5 +165,13 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		
 		//Close and output PDF document
 		$pdf->Output('purchaseorder_'.$id.'.pdf', 'D');
+	}
+	public function findproductAction(){
+		$this->loadLayout();
+       	$this->renderLayout();
+	}
+		public function getproductinfoAction(){
+		$this->loadLayout();
+       	$this->renderLayout();
 	}
 }

@@ -49,6 +49,55 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
 		$this->renderLayout();
 	}
 	
+    public function profileAction(){
+        if (!$this->_getSession()->isLoggedIn()) {
+            $this->_redirect('*/*/login');
+            return;
+        }
+        $this->loadLayout();
+        $this->renderLayout();
+    }
+
+    public function vendorsaveAction() {
+        
+
+        
+        if ($data = $this->getRequest()->getPost()) {
+            $vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+           
+            $model = Mage::getModel('inventorymanager/vendor');     
+            $model->setData($data)
+                ->setId($vendorId);
+            
+            try {
+                if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
+                    $model->setCreatedTime(now())
+                        ->setUpdateTime(now());
+                } else {
+                    $model->setUpdateTime(now());
+                }   
+                
+                $model->save();
+                
+
+                Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor saved successfully'));
+                Mage::getSingleton('core/session')->setFormData(false);
+
+
+                $this->_redirect('inventorymanager/vendor/profile');
+                return;
+            } catch (Exception $e) {
+                Mage::getSingleton('core/session')->addError($e->getMessage());
+                Mage::getSingleton('core/session')->setFormData($data);
+                $this->_redirect('*/*/profile');
+                return;
+            }
+        }
+        Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__('Unable to find vendor to save'));
+        $this->_redirect('inventorymanager/adminuser/vendorprofiles');
+    }
+
+
 	public function productsAction(){
 		if (!$this->_getSession()->isLoggedIn()) {
             $this->_redirect('*/*/login');
