@@ -59,12 +59,17 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
     }
 
     public function vendorsaveAction() {
-        
 
         
         if ($data = $this->getRequest()->getPost()) {
-            $vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
            
+           $vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+           
+           /*
+           echo "<pre>";
+            print_r($data);
+           exit;
+            */
             $model = Mage::getModel('inventorymanager/vendor');     
             $model->setData($data)
                 ->setId($vendorId);
@@ -82,8 +87,8 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
 
                 Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor saved successfully'));
                 Mage::getSingleton('core/session')->setFormData(false);
-
-
+                Mage::getSingleton('core/session')->setVendor($model);
+                //Mage::getModel('inventorymanager/session')->setVendor($model);
                 $this->_redirect('inventorymanager/vendor/profile');
                 return;
             } catch (Exception $e) {
