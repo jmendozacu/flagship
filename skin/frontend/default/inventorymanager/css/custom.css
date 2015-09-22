@@ -442,3 +442,7 @@ div.logout{
 .header-notification { float:left; padding:10px;  }
 .header-notification ul li { list-style:none; }
 .header-notification ul li { padding:5px; border-bottom:1px solid #000; }
+.calendar { z-index:9; }
+.order-product-table td input.form-control { width:65%; float:right; }
+.purchaseorder-product-result ul li { list-style:none; border-bottom:1px solid; }
+.purchaseorder-product-result ul li a { text-decoration:none;  }

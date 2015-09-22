@@ -17,8 +17,10 @@
 								<div class="order-history-form">
 									
 									<span class="field-row">
-            							<label for="status" class="normal"><?php echo $this->__("Status") ?></label><br>
-            							<select id="status" class="select" name="status">
+										<div class="row">
+                            				<div class="col-md-2">
+            									<label for="status" class="normal"><?php echo $this->__("Status") ?></label><br>
+            										<select id="status" class="select form-control" name="status">
 				                            <?php
 				                            	$purchaseorderModel = $this->getCurrentOrder();
 				                            	
@@ -29,14 +31,17 @@
 				                            	<?php echo $label ?>
 				                            </option>
 				                            <?php } ?>
-                        				</select>            
+                        				</select> 
+                        				</div>
+                        				</div>
+                        				           
             							<input type="file" style="float:right" id="send_file" name="send_file" value="">        </span>
 									<span class="field-row">
             							<label for="history_comment" class="normal"><?php echo $this->__("Comment") ?></label>
             							<textarea id="history_comment" style="height:6em; width:99%;" cols="5" rows="3" name="comment"></textarea>
         							</span>
         							<div class="f-right">
-            							<button style="" onclick="subminComment()" class="scalable save" type="submit" title="<?php echo $this->__("Submit Comment") ?>">
+            							<button style="" onclick="subminComment()" class="scalable save btn btn-primary" type="submit" title="<?php echo $this->__("Submit Comment") ?>">
             								<span><span><span><?php echo $this->__("Submit Comment") ?></span></span></span>
             							</button>
             						</div>

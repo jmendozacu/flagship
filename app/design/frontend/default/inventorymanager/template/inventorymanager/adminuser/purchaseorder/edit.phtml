@@ -47,7 +47,7 @@
             <div class="panel-heading"><?php echo $this->__("Fill below information") ?></div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                     	<form id="edit_form" name="edit_form" enctype="multipart/form-data" method="post" action="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/save") ?>">
                         <?php echo $this->getMessagesBlock()->toHtml() ?>
                         <div class="no-display">
@@ -60,7 +60,7 @@
                             <div class="form-group">
                                 
                                 <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
-                                <select id="vendor_id" name="vendor_id" class="required-entry select">
+                                <select id="vendor_id" name="vendor_id" class="required-entry select form-control">
 									<?php foreach ($this->getVendors() as $vendorId => $vendorName): ?>
 										<option value="<?php echo $vendorId ?>" <?php echo $c_vendorId==$vendorId?"selected='seleted'":""; ?> ><?php echo $vendorName ?></option>
 									<?php endforeach; ?>
@@ -69,7 +69,7 @@
 
                             <div class="form-group">
                                 <label><?php echo $this->__("Shipping Mehtod") ?></label>
-                                <select id="shipping_method" name="shipping_method" class="required-entry select">
+                                <select id="shipping_method" name="shipping_method" class="required-entry select form-control">
 									<?php foreach ($this->getAllShippingMethod() as $code => $title): ?>
 										<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
 									<?php endforeach; ?>
@@ -78,76 +78,103 @@
                             
                             <div class="form-group">
                                 <label><?php echo $this->__("Payment Terms") ?></label>
-                               	<select id="payment_terms" name="payment_terms" class="required-entry select">
+                               	<select id="payment_terms" name="payment_terms" class="required-entry select form-control">
 									<?php foreach ($this->getPaymentTerms() as $code => $title): ?>
 									<option value="<?php echo $code ?>" <?php echo $c_paymentTerms==$code?"selected='selected'":""; ?>><?php echo $title ?></option>
 									<?php endforeach; ?>
 								</select>
                             </div>
-                            
-                            <div class="form-group">
-                                <label><?php echo $this->__("Date Of Purchase Order") ?></label>
-                                <input type="text" style="width:110px !important;" class=" input-text required-entry" title="<?php echo $this->__("Date Of Purchase Order") ?>" value="<?php echo $c_dateOfPo!=""?date('d/m/Y', strtotime($c_dateOfPo)):date('d/m/Y'); ?>" id="date_of_po" name="date_of_po">
+                            <div class="row">
+								<div class="col-md-6">
+	                            	<div class="form-group">
+	                                	<label><?php echo $this->__("Date Of Purchase Order") ?></label>
+	                                	<div class="form-group input-group">
+	                                		<input type="text" class=" input-text required-entry form-control" title="<?php echo $this->__("Date Of Purchase Order") ?>" value="<?php echo $c_dateOfPo!=""?date('d/m/Y', strtotime($c_dateOfPo)):date('d/m/Y'); ?>" id="date_of_po" name="date_of_po">
+	                                		<span class="input-group-addon">
 												<img style="" title="<?php echo $this->__("Select Date") ?>" id="date_of_po_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label><?php echo $this->__("Expted Date") ?></label>
-                                <input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo $c_expectedDate!=""?date('d/m/Y', strtotime($c_expectedDate)):date('d/m/Y', strtotime('+30 days')); ?>" name="expected_date" id="expected_date">
+											</span>
+										</div>
+	                            	</div>
+									<div class="form-group">
+	                                	<label><?php echo $this->__("Expted Date") ?></label>
+	                                	<div class="form-group input-group">
+	                                		<input type="text"  class=" input-text form-control" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo $c_expectedDate!=""?date('d/m/Y', strtotime($c_expectedDate)):date('d/m/Y', strtotime('+30 days')); ?>" name="expected_date" id="expected_date">
+	                                		<span class="input-group-addon">
 												<img style="" title="<?php echo $this->__("Select Date") ?>" id="expected_date_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
-                            </div>
-                              <div class="form-group">
-                                <label><?php echo $this->__("Add Product to purchase order") ?></label>
-                                <input style="width:300px" type="text" class="input-text" id="add_product" onkeyup="loadProducts(this.value)"  />
-								<div id="product_suggestion_box">
-                            </div>
-
-                            <div class="form-group">
-                                <ul id="products_grid">
-                                	<li>
-											<div class="product-content-header p-name"><?php echo $this->__("Name") ?></div>
-											<div class="product-content-header p-qty"><?php echo $this->__("Qty") ?></div>
-											<div class="product-content-header p-cost"><?php echo $this->__("Price/Unit") ?></div>
-											<div class="product-content-header p-input"><?php echo $this->__("Total") ?></div>
-											<div class="product-content-header p-remove"><?php echo $this->__("Remove") ?></div> 
-											<div class="clear-float"></div>
-										</li>
-                                	<?php if($this->getCurrentOrder()) { ?>
-										
-										<?php foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
-										<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
-											<li>
-												<div class="product-content p-name">
-													<?php echo $productObject->getName() ?>
-													<input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
-												</div>
-												<div class="product-content p-qty">
-													<?php echo $orderProduct->getQty() ?>
-													<input type="text" value="<?php echo $orderProduct->getQty() ?>" name="qty[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
-												</div>
-												<div class="product-content p-cost">
-													<?php echo $orderProduct->getPrice() ?>
-													<input type="text" value="<?php echo $orderProduct->getPrice() ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
-												</div>
-												<div class="product-content p-input"><?php echo $orderProduct->getTotal() ?></div>
-												<div class="product-content p-remove"><a onclick="removeProduct(this)">X</a></div>
-												<div class="clear-float"></div>
-											</li>
-										<?php } ?>
-										<?php } ?>
-								</ul>
-                            </div>
-                            <div class="form-group">
-                                <label for="total"><?php echo $this->__("Units Ordered") ?></label>
-                                <span id="total_qty"></span>
-                            </div>
-                            <div class="form-group">
-                                <label for="total"><?php echo $this->__("Units Received") ?></label>
-                                <span id="total_qty"></span>
-                            </div>
-                            <div class="form-group">
-                              	<label for="total"><?php echo $this->__("Total") ?></label>
-                                <span id="grant_total"></span>
+											</span>
+										</div>
+	                            	</div>
+	                          	
+	                            	<div class="form-group">
+	                                	<label><?php echo $this->__("Add Product to purchase order") ?></label>
+	                                	<div class="form-group input-group">
+	                                		<input type="text" class="input-text form-control" id="add_product"   />
+	                                		<span class="input-group-btn">
+												<button type="button" onclick="loadProducts()" class="btn btn-default"><i class="fa fa-search"></i></button>
+											</span>
+	                                	</div>
+										<!--<div id="product_suggestion_box"></div>-->
+	                            	</div>
+                            	</div>
+							</div>
+							<div class="form-group">
+	                            <div class="table-responsive">
+	                            	<table class="table table-striped table-bordered table-hover order-product-table">
+	                            		<thead>
+	                            			<tr>
+	                            				<th><?php echo $this->__("Name") ?></th>
+	                            				<th><?php echo $this->__("Qty") ?></th>
+	                            				<th><?php echo $this->__("Price/Unit") ?></th>
+	                            				<th><?php echo $this->__("Total") ?></th>
+	                            				<th><?php echo $this->__("Remove") ?></th>
+	                            			</tr>
+	                            		</thead>
+	                            		<tbody>
+	                            			<?php if($this->getCurrentOrder()) { ?>
+		                            			<?php
+		                            				$orderedUnits = 0;
+		                            				$orderTotal = 0;
+		                            			 	foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
+		                            				<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
+		                            				<?php
+		                            					$orderTotal += $orderProduct->getTotal();
+		                            					$orderedUnits += $orderProduct->getQty();
+		                            				?>
+		                            				<tr>
+		                            					<td>
+		                            						<?php echo $productObject->getName() ?>
+															<input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
+		                            					</td>
+		                            					<td>
+		                            						<?php echo $orderProduct->getQty() ?>
+															<input type="text" value="<?php echo $orderProduct->getQty() ?>" name="qty[<?php echo $productObject->getId() ?>]" class="input-text form-control" onchange="countTotal(this)" />
+		                            					</td>
+		                            					<td>
+		                            						<?php echo $orderProduct->getPrice() ?>
+															<input type="text" value="<?php echo $orderProduct->getPrice() ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text form-control" onchange="countTotal(this)" />
+		                            					</td>
+		                            					<td><?php echo $orderProduct->getTotal(); ?></td>
+		                            					<td align="center" valign="bottom"><a class="btn btn-danger" onclick="removeProduct(this)">X</a></td>
+		                            				</tr>
+		                            			<?php }?>
+	                            			<?php }?>
+	                            		</tbody>
+	                            		<tfoot>
+	                            			<tr>
+	                            				<td colspan="3" align="right"><b><?php echo $this->__("Units Ordered") ?></b></td>
+	                            				<td colspan="2" align="right"><span id="total_qty"><?php echo $orderedUnits ?></span></td>
+	                            			</tr>
+	                            			<tr>
+	                            				<td colspan="3" align="right"><b><?php echo $this->__("Units Received") ?></b></td>
+	                            				<td colspan="2" align="right"><span id="total_qty_received"></span></td>
+	                            			</tr>
+	                            			<tr>
+	                            				<td colspan="3" align="right"><b><?php echo $this->__("Total") ?></b></td>
+	                            				<td colspan="2" align="right"><span id="grant_total"><?php echo number_format($orderTotal, 2); ?></span></td>
+	                            			</tr>
+	                            		</tfoot>
+	                            	</table>
+	                            </div>
                             </div>
                         </form>
                             <?php echo $this->getChildHtml('adminuser.purchaseorder.edit.comment') ?>
@@ -157,8 +184,30 @@
         </div>
     </div>    
 </div>
-
-
+<!-- Small modal -->
+<div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+    	<div class="productsuggestions" id="">
+      		
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade bs-example-modal-sm">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><?php echo $this->__("Resulted Products") ?></h4>
+      </div>
+      <div class="modal-body purchaseorder-product-result" id="product_suggestion_box">
+        
+      </div>
+     
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 			
 	
 
@@ -168,6 +217,7 @@
 
 <script type="text/javascript">
     editForm = new varienForm('edit_form','');
+    
 </script>
 
 <script type="text/javascript">// <![CDATA[
@@ -194,8 +244,9 @@ Calendar.setup({
 var oldkeyword = "";
 var lis = $('products_grid').childElements();
 if(lis.length<=1) {$('products_grid').hide();  }
-$('product_suggestion_box').hide();
-	function loadProducts(keyword){
+//$('product_suggestion_box').hide();
+	function loadProducts(){
+		var keyword = $('add_product').value;
 		if(keyword == "") return ;
 		if(keyword == oldkeyword) return;
 		oldkeyword = keyword; 
@@ -205,8 +256,9 @@ $('product_suggestion_box').hide();
 			method:'post',
 			parameters: {keyword: keyword, vendor_id : vendorId}, 
   			onSuccess: function(transport) {
-  				$('product_suggestion_box').show();
+  			//	$('product_suggestion_box').show();
     			var response = transport.responseText || "no response text";
+    			jQuery('.bs-example-modal-sm').modal('show');
     			$('product_suggestion_box').innerHTML = response;
   			},
   			onFailure: function() { alert('Something went wrong...'); }
@@ -235,8 +287,8 @@ $('product_suggestion_box').hide();
 	}
 	
 	function addProduct(pid){
-		$('product_suggestion_box').hide();
-		
+		//$('product_suggestion_box').hide();
+		jQuery('.bs-example-modal-sm').modal('hide');
 		
 		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminuser_purchaseorder/getproductinfo") ?>', {
 			method:'post',
@@ -282,5 +334,5 @@ $('product_suggestion_box').hide();
 	
 	countGTotal();
 	countQty();
-	var editForm = new varienForm('edit_form', '');
+	
 </script>
