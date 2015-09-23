@@ -100,7 +100,15 @@
            		</rewrite>
             </adminhtml>
         </blocks>
-        
+        <template>
+			<email>
+				<purchaseorder_email module="inventorynamager">
+					<label>Purchase Order Email</label>
+					<file>purchaseorder_email.html</file>
+					<type>html</type>
+				</purchaseorder_email>
+			</email>
+		</template>
     </global>
     <adminhtml>
         <layout>

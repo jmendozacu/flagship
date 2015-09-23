@@ -135,4 +135,17 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 			}
 		}
 	}
+	
+	public function sendNewOrderEmail($orderId){
+		$order = Mage::getModel('inventorymanager/purchaseorder')->load($orderId);
+		if($order && $order->getId()){
+			$vendor = Mage::getModel('inventorymanager/vendor')->load($order->getVendorId());
+			$emailTemplate  = Mage::getModel('core/email_template')->loadDefault('purchaseorder_email');
+			$variables = array();
+			$variables['username'] = $vendor->getUsername();
+			$variables['login_link'] = $this->getUrl('inventorymanager/vendor/login');
+			$processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
+			$emailTemplate->send('john@someemail.com','John Doe', $emailTemplateVariables);
+		}
+	}
 }
