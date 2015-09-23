@@ -13,16 +13,19 @@
         $height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');
         $width = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
         $depth = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth');
+        $weight = $_helper->productAttribute($catalogProduct, $catalogProduct->getWeight(), 'weight');
 
         $boxWidth = 0;
         $boxHeight = 0;
         $boxLength = 0;
+        $boxWeight = 0;
 
         if ($productInfoObject && $productInfoObject->getId()) {
 
             $boxWidth = $productInfoObject->getBoxWidth();
             $boxHeight = $productInfoObject->getBoxHeight();
             $boxLength = $productInfoObject->getBoxLength();
+            $boxWeight = $productInfoObject->getBoxWeight();
 
             if ($productInfoObject->getHeight() && $productInfoObject->getHeight() > 0) {
                 $height = $productInfoObject->getHeight();
@@ -32,6 +35,9 @@
             }
             if ($productInfoObject->getLength() && $productInfoObject->getLength() > 0) {
                 $depth = $productInfoObject->getLength();
+            }
+            if ($productInfoObject->getWeight() && $productInfoObject->getWeight() > 0) {
+                $weight = $productInfoObject->getWeight();
             }
         }
         ?>
@@ -87,9 +93,20 @@
                                 <td><?php echo $this->__("Product") ?></td>
                                 <td><?php echo $catalogProduct->getName() ?></td>
                             </tr>
+						</table>
+                        <table border="1" cellpadding="5" width="100%">
                             <tr>
-                                <td><?php echo $this->__("Weight") ?></td>
-                                <td><?php echo $catalogProduct->getWeight() ?></td>
+                            	<td width="30%"><?php echo $this->__("Weight(kg)") ?></td>
+                            	<td width="20%"><?php echo $weight ?></td>
+                            	<td width="30%"><?php echo $this->__("Box Weight(kg)") ?></td>
+                            	<td width="20%"><?php echo $boxWeight ?></td>
+                            	
+                            </tr>
+                            <tr>
+                                <td width="30%"><?php echo $this->__("Weight(lbs)") ?></td>
+                                <td width="20%"><?php echo number_format($weight*2.20462,2) ?></td>
+                                <td width="30%"><?php echo $this->__("Box Weight(lbs)") ?></td>
+                                <td width="20%"><?php echo number_format($boxWeight*2.20462,2) ?></td>
                             </tr>
                         </table>
                         <table border="1" cellpadding="5" width="100%">
