@@ -138,14 +138,31 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 	
 	public function sendNewOrderEmail($orderId){
 		$order = Mage::getModel('inventorymanager/purchaseorder')->load($orderId);
+		
 		if($order && $order->getId()){
+			
+			
+			
 			$vendor = Mage::getModel('inventorymanager/vendor')->load($order->getVendorId());
 			$emailTemplate  = Mage::getModel('core/email_template')->loadDefault('purchaseorder_email');
 			$variables = array();
 			$variables['username'] = $vendor->getUsername();
-			$variables['login_link'] = $this->getUrl('inventorymanager/vendor/login');
-			$processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
-			$emailTemplate->send('john@someemail.com','John Doe', $emailTemplateVariables);
+			$variables['login_link'] = Mage::getUrl('inventorymanager/vendor/login');
+			$processedTemplate = $emailTemplate->getProcessedTemplate($variables);
+			
+			$senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
+			$senderName = Mage::getStoreConfig('trans_email/ident_general/name');
+			
+			$emailTemplate->setSenderName($senderName);
+			$emailTemplate->setSenderEmail($senderEmail);
+			$emailTemplate->setTemplateSubject($this->__("New Purchase Order"));
+			
+			try {
+				$emailTemplate->send($vendor->getEmail(),$vendor->getFirstname() . " " . $vendor->getlastname(), $variables);
+			}catch (Exception $e){
+				echo $e->getMessage();
+			}
+			echo "223"; exit;
 		}
 	}
 }
