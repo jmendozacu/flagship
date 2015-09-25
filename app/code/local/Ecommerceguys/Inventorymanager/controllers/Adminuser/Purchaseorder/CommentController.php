@@ -7,9 +7,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_Purchaseorder_CommentController e
 	}
 	
 	public function postAction(){
-
-		
 		if($data = $this->getRequest()->getPost()){
+			if(isset($data['po_id']) && $data['po_id'] > 0){
+				Mage::getSingleton('core/session')->addError(Mage::helper("inventorymanager")->__("No purchase order found"));
+				$this->_redirect('*/adminuser_purchaseorder/edit');
+				return false;
+			}
 			if(isset($_FILES['send_file']['name']) && $_FILES['send_file']['name'] != '') {
 				try {	
 					$uploader = new Varien_File_Uploader('send_file');
@@ -58,5 +61,23 @@ class Ecommerceguys_Inventorymanager_Adminuser_Purchaseorder_CommentController e
 				
 			}
 		}
+	}
+	
+	public function downloadAction(){
+		
+		if($id = $this->getRequest()->getParam('id')){
+			$comment = Mage::getModel('inventorymanager/comment')->load($id);
+			try{
+				$file_url = Mage::getBaseUrl('media')."purchaseorder_comments/" . $comment->getAttachement();
+				header('Content-Type: application/octet-stream');
+				header("Content-Transfer-Encoding: Binary"); 
+				header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\""); 
+				readfile($file_url); 
+			}catch (Exception $e){
+				
+			}
+		}
+		
+		
 	}
 }

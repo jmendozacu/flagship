@@ -1,7 +1,14 @@
+<?php $products = $this->getMatchingProduct(); ?>
+
 <ul>
-	<?php foreach ($this->getMatchingProduct() as $product){ ?>
-		<li>
-			<a onclick="addProduct(<?php echo $product->getId() ?>)"><?php echo $product->getName(); ?></a>
+<?php if($products->count() > 0){ ?>
+	<?php foreach ($products as $product){ ?>
+		<li  onclick="addProduct(<?php echo $product->getId() ?>, this)">
+			<a><?php echo $product->getName(); ?></a>
 		</li>
 	<?php } ?>
+
+<?php }else{ ?>
+	<li><?php echo $this->__("No matching product found for this vendor") ?></li>
+<?php } ?>
 </ul>

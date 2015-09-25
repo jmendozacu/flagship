@@ -47,43 +47,46 @@
             <div class="panel-heading"><?php echo $this->__("Fill below information") ?></div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                     	<form id="edit_form" name="edit_form" enctype="multipart/form-data" method="post" action="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/save") ?>">
                         <?php echo $this->getMessagesBlock()->toHtml() ?>
-                        <div class="no-display">
-							<input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key" />
-							<?php if($this->getCurrentOrder()): ?>
-								<input type="hidden" value="<?php echo $currentPurchaseOrder->getId() ?>" name="id" />
-							<?php endif; ?>
-							<input type="hidden" value="" id="save_back" name="back" />
-						</div>
-                            <div class="form-group">
-                                
-                                <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
-                                <select id="vendor_id" name="vendor_id" class="required-entry select form-control">
-									<?php foreach ($this->getVendors() as $vendorId => $vendorName): ?>
-										<option value="<?php echo $vendorId ?>" <?php echo $c_vendorId==$vendorId?"selected='seleted'":""; ?> ><?php echo $vendorName ?></option>
-									<?php endforeach; ?>
-								</select>
-                            </div>
-
-                            <div class="form-group">
-                                <label><?php echo $this->__("Shipping Mehtod") ?></label>
-                                <select id="shipping_method" name="shipping_method" class="required-entry select form-control">
-									<?php foreach ($this->getAllShippingMethod() as $code => $title): ?>
-										<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
-									<?php endforeach; ?>
-								</select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label><?php echo $this->__("Payment Terms") ?></label>
-                               	<select id="payment_terms" name="payment_terms" class="required-entry select form-control">
-									<?php foreach ($this->getPaymentTerms() as $code => $title): ?>
-									<option value="<?php echo $code ?>" <?php echo $c_paymentTerms==$code?"selected='selected'":""; ?>><?php echo $title ?></option>
-									<?php endforeach; ?>
-								</select>
-                            </div>
+	                        <div class="no-display">
+								<input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key" />
+								<?php if($this->getCurrentOrder()): ?>
+									<input type="hidden" value="<?php echo $currentPurchaseOrder->getId() ?>" name="id" />
+								<?php endif; ?>
+								<input type="hidden" value="" id="save_back" name="back" />
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+		                            <div class="form-group">
+		                                <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
+		                                <select id="vendor_id" name="vendor_id" class="required-entry select form-control">
+											<?php foreach ($this->getVendors() as $vendorId => $vendorName): ?>
+												<option value="<?php echo $vendorId ?>" <?php echo $c_vendorId==$vendorId?"selected='seleted'":""; ?> ><?php echo $vendorName ?></option>
+											<?php endforeach; ?>
+										</select>
+		                            </div>
+		
+		                            <div class="form-group">
+		                                <label><?php echo $this->__("Shipping Mehtod") ?></label>
+		                                <select id="shipping_method" name="shipping_method" class="required-entry select form-control">
+											<?php foreach ($this->getAllShippingMethod() as $code => $title): ?>
+												<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
+											<?php endforeach; ?>
+										</select>
+		                            </div>
+		                            
+		                            <div class="form-group">
+		                                <label><?php echo $this->__("Payment Terms") ?></label>
+		                               	<select id="payment_terms" name="payment_terms" class="required-entry select form-control">
+											<?php foreach ($this->getPaymentTerms() as $code => $title): ?>
+											<option value="<?php echo $code ?>" <?php echo $c_paymentTerms==$code?"selected='selected'":""; ?>><?php echo $title ?></option>
+											<?php endforeach; ?>
+										</select>
+		                            </div>
+		                        </div>
+	                        </div>
                             <div class="row">
 								<div class="col-md-6">
 	                            	<div class="form-group">
@@ -129,7 +132,7 @@
 	                            				<th><?php echo $this->__("Remove") ?></th>
 	                            			</tr>
 	                            		</thead>
-	                            		<tbody>
+	                            		<tbody id="products_grid">
 	                            			<?php if($this->getCurrentOrder()) { ?>
 		                            			<?php
 		                            				$orderedUnits = 0;
@@ -140,20 +143,20 @@
 		                            					$orderTotal += $orderProduct->getTotal();
 		                            					$orderedUnits += $orderProduct->getQty();
 		                            				?>
-		                            				<tr>
+		                            				<tr class="order-row">
 		                            					<td>
 		                            						<?php echo $productObject->getName() ?>
-															<input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
+															<input type="hidden" class="order_product_hidden_input" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
 		                            					</td>
 		                            					<td>
 		                            						<?php echo $orderProduct->getQty() ?>
-															<input type="text" value="<?php echo $orderProduct->getQty() ?>" name="qty[<?php echo $productObject->getId() ?>]" class="input-text form-control" onchange="countTotal(this)" />
+															<input type="text" value="<?php echo $orderProduct->getQty() ?>" name="qty[<?php echo $productObject->getId() ?>]" class="input-text input-qty form-control" onchange="countTotal()" />
 		                            					</td>
 		                            					<td>
 		                            						<?php echo $orderProduct->getPrice() ?>
-															<input type="text" value="<?php echo $orderProduct->getPrice() ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text form-control" onchange="countTotal(this)" />
+															<input type="text" value="<?php echo $orderProduct->getPrice() ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text input-price form-control" onchange="countTotal()" />
 		                            					</td>
-		                            					<td><?php echo $orderProduct->getTotal(); ?></td>
+		                            					<td class="row-total p-input"><?php echo $orderProduct->getTotal(); ?></td>
 		                            					<td align="center" valign="bottom"><a class="btn btn-danger" onclick="removeProduct(this)">X</a></td>
 		                            				</tr>
 		                            			<?php }?>
@@ -177,33 +180,31 @@
 	                            </div>
                             </div>
                         </form>
-                            <?php echo $this->getChildHtml('adminuser.purchaseorder.edit.comment') ?>
                     </div>
                 </div>
+                <div class="row">
+					<div class="col-md-12">
+                    	<?php echo $this->getChildHtml('adminuser.purchaseorder.edit.comment') ?>
+                    </dir>
+             	</div>
             </div>
         </div>
     </div>    
 </div>
 <!-- Small modal -->
-<div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-    	<div class="productsuggestions" id="">
-      		
-      </div>
-    </div>
-  </div>
-</div>
 <div class="modal fade bs-example-modal-sm">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" onclick="jQuery('.bs-example-modal-sm').modal('hide');" ><span>&times;</span></button>
         <h4 class="modal-title"><?php echo $this->__("Resulted Products") ?></h4>
       </div>
       <div class="modal-body purchaseorder-product-result" id="product_suggestion_box">
         
       </div>
+      <div class="labelpage-loader-div" id="loading-div">
+      		<img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo $this->__("Loading...") ?>" />
+      	</div>
      
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -241,66 +242,53 @@ Calendar.setup({
 <script>
 
 
-var oldkeyword = "";
-var lis = $('products_grid').childElements();
-if(lis.length<=1) {$('products_grid').hide();  }
-//$('product_suggestion_box').hide();
+
 	function loadProducts(){
 		var keyword = $('add_product').value;
 		if(keyword == "") return ;
-		if(keyword == oldkeyword) return;
-		oldkeyword = keyword; 
 		var vendorId = $('vendor_id').value;
 		if(vendorId == "") return;
+		jQuery('.bs-example-modal-sm').modal('show');
+		$('loading-div').show();
+		$('product_suggestion_box').hide();
 		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminuser_purchaseorder/findproduct") ?>', {
 			method:'post',
 			parameters: {keyword: keyword, vendor_id : vendorId}, 
   			onSuccess: function(transport) {
   			//	$('product_suggestion_box').show();
     			var response = transport.responseText || "no response text";
-    			jQuery('.bs-example-modal-sm').modal('show');
+    			$('loading-div').hide();
+    			$('product_suggestion_box').show();
     			$('product_suggestion_box').innerHTML = response;
   			},
   			onFailure: function() { alert('Something went wrong...'); }
 		});
 	}
 	
-	function countGTotal(){
-		var total = 0;
-		$$('div.p-input').each(function(e){
-			if(e.innerHTML > 0)
-				total += parseFloat(e.innerHTML);
-		});
-		$('grant_total').innerHTML = total.toFixed(4);;
-	}
 	
-	function countQty(){
-		var totalQty = 0;
-		$$('div.p-qty').each(function(e){
-			if(e.innerHTML > 0)
-				totalQty += parseFloat(e.innerHTML);
-			if(e.down('input') != 'undefined' && e.down('input')){
-				totalQty += parseFloat(e.down('input').value);
+	function addProduct(pid,ele){
+		var canRun = true;
+		$$('.order_product_hidden_input').each(function(e){
+			if(e.value == pid){
+				var innerText = ele.down('a').innerHTML;
+				ele.innerHTML = '<a>'+innerText+'</a> - <?php echo $this->__("Product already exist") ?>';
+				canRun = false;
+				throw $break;
 			}
 		});
-		$('total_qty').innerHTML = totalQty;
-	}
-	
-	function addProduct(pid){
+		if(!canRun){ return false; }
 		//$('product_suggestion_box').hide();
-		jQuery('.bs-example-modal-sm').modal('hide');
+		$('loading-div').show();
+		$('product_suggestion_box').hide();
 		
 		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminuser_purchaseorder/getproductinfo") ?>', {
 			method:'post',
 			parameters: {product_id: pid},
   			onSuccess: function(transport) {
     			var response = transport.responseText || "no response text";
+    			jQuery('.bs-example-modal-sm').modal('hide');
     			$('products_grid').insert(response);
-    			var lis = $('products_grid').childElements();
-    			
-    				$('products_grid').show();
     			countTotal();
-				countQty();
   			},
   			onFailure: function() { alert('Something went wrong...'); }
 		});
@@ -308,31 +296,27 @@ if(lis.length<=1) {$('products_grid').hide();  }
 	
 	
 	function countTotal(element){
-		if(element.up('div').className == "product-content p-qty"){
-			var val2 = element.up('li').down('div.p-cost').down('input').value;
-		}else{
-			var val2 = element.up('li').down('div.p-qty').down('input').value;
-		}
-		total = val2 * element.value;
-		
-		total = total.toFixed(4);
-		element.up('li').down('div.p-total').innerHTML = total;
-		countGTotal();
-		countQty();
+		var finalQty = 0;
+		var finalTotal = 0;
+		$$('.order-row').each(function(e){
+			var rowQty = e.down('.input-qty').value;
+			var rowPrice = e.down('.input-price').value;
+			var rowTotal = rowPrice * rowQty;
+			e.down('.row-total').innerHTML = Number(rowTotal).toFixed(2);
+			finalQty += parseInt(rowQty);
+			finalTotal += parseInt(rowTotal);
+		});
+		$('grant_total').innerHTML = Number(finalTotal).toFixed(2);
+		$('total_qty').innerHTML = finalQty;
 	}
 	
 	function removeProduct(element){
-		element.up('li').remove();
-		var lis = $('products_grid').childElements();
-		if(lis.length == 1){
-			$('products_grid').hide();
-		}
-		countGTotal();
-		countQty();
+		element.up('tr').remove();
+		countTotal();
 	}
+	countTotal();
 	
-	
-	countGTotal();
-	countQty();
+	//countGTotal();
+	//countQty();
 	
 </script>
