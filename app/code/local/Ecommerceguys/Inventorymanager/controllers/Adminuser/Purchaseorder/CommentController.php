@@ -8,7 +8,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_Purchaseorder_CommentController e
 	
 	public function postAction(){
 		if($data = $this->getRequest()->getPost()){
-			if(isset($data['po_id']) && $data['po_id'] > 0){
+			if(!isset($data['po_id']) || $data['po_id'] < 0){
 				Mage::getSingleton('core/session')->addError(Mage::helper("inventorymanager")->__("No purchase order found"));
 				$this->_redirect('*/adminuser_purchaseorder/edit');
 				return false;
