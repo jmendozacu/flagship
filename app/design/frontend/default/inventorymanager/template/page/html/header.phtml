@@ -46,6 +46,7 @@
 <?php
 	$currentController = $this->getRequest()->getControllerName();
 	$currentAction = $this->getRequest()->getActionName();
+	$orderStatuses = Mage::getModel('inventorymanager/status')->getValues();
 	$productsPage = false;
 	$dashboardPage = false;
 	$printendLabel = false;
@@ -179,7 +180,21 @@
                     <i class="fa fa-square-o fa-3x"></i> <?php echo $this->__("Purchase Orders") ?>
                 </a>
             </li>
+            
+            <li>
+				<a href="#"><i class="fa fa-sitemap fa-3x"></i><?php echo $this->__("Order Status") ?><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level" id="status-nav">
+                	<?php foreach ($orderStatuses as $key => $status){ ?>
+                		<li><a href="<?php echo $this->getUrl('inventorymanager/adminuser_purchaseorder/showbystatus', array('status'=>$key)) ?>"><?php echo $status ?></a></li>
+                	<?php } ?>
+                </ul>
+			</li>
+            
+            
 		</ul>
 	</div>
 <?php } ?>
 </nav>
+<script>
+	 jQuery('#main-menu').metisMenu();
+</script>

@@ -170,7 +170,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$this->loadLayout();
        	$this->renderLayout();
 	}
-		public function getproductinfoAction(){
+	public function getproductinfoAction(){
+		$this->loadLayout();
+       	$this->renderLayout();
+	}
+	
+	public function showbystatusAction(){
 		$this->loadLayout();
        	$this->renderLayout();
 	}
