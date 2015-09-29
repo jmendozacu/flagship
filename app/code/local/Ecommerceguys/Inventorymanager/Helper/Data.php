@@ -162,7 +162,6 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 			}catch (Exception $e){
 				echo $e->getMessage();
 			}
-			echo "223"; exit;
 		}
 	}
 }

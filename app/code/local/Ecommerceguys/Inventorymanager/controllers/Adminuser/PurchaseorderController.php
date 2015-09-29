@@ -44,7 +44,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 			$id = $this->getRequest()->getParam('id');
 			$poProductIds = $data['po_product'];
 			
-			//$data['expected_date'] = date("Y");
+			$data['date_of_po'] = date("Y-m-d", strtotime($data['date_of_po']));
+			$data['expected_date'] = date("Y-m-d", strtotime($data['expected_date']));
 			
 			$model = Mage::getModel('inventorymanager/purchaseorder');		
 			$model->setData($data)
