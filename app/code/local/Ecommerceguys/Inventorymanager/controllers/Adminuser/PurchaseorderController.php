@@ -179,4 +179,25 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$this->loadLayout();
        	$this->renderLayout();
 	}
+	
+	public function deleteAction(){
+		$id = $this->getRequest()->getParam('id', 0);
+		$purchaseorderObject = Mage::getModel('inventorymanager/purchaseorder')->load($id);
+		if($purchaseorderObject && $purchaseorderObject->getId()){
+			try {
+				$purchaseorderObject->delete();
+				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order has been deleted'));
+				$this->_redirect('inventorymanager/adminuser_purchaseorder/');
+				return $this;
+			}catch (Exception $e){
+				Mage::log($e);
+				Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+				$this->_redirect('inventorymanager/adminuser_purchaseorder/');
+				return $this;
+			}
+		}
+		Mage::getSingleton('adminhtml/session')->addError(Mage::helper('inventorymanager')->__("Something went wrong"));
+		$this->_redirect('inventorymanager/adminuser_purchaseorder/');
+		return $this;
+	}
 }
