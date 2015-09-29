@@ -66,6 +66,10 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 			$id = $this->getRequest()->getParam('id');
 			$poProductIds = $data['po_product'];
 			
+			
+			$data['date_of_po'] = date("Y-m-d", strtotime($data['date_of_po']));
+			$data['expected_date'] = date("Y-m-d", strtotime($data['expected_date']));
+			
 			$model = Mage::getModel('inventorymanager/purchaseorder');		
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
@@ -163,7 +167,24 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 	}
 	
 	public function deleteAction(){
-		
+		$id = $this->getRequest()->getParam('id', 0);
+		$purchaseorderObject = Mage::getModel('inventorymanager/purchaseorder')->load($id);
+		if($purchaseorderObject && $purchaseorderObject->getId()){
+			try {
+				$purchaseorderObject->delete();
+				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order has been deleted'));
+				$this->_redirect('inventorymanager/adminhtml_purchaseorder/');
+				return $this;
+			}catch (Exception $e){
+				Mage::log($e);
+				Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+				$this->_redirect('inventorymanager/adminhtml_purchaseorder/');
+				return $this;
+			}
+		}
+		Mage::getSingleton('adminhtml/session')->addError(Mage::helper('inventorymanager')->__("Something went wrong"));
+		$this->_redirect('inventorymanager/adminhtml_purchaseorder/');
+		return $this;
 	}
 	
 	public function massDeleteAction(){

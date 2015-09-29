@@ -107,6 +107,11 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Purchaseorder_Grid extends 
                         'caption'   => Mage::helper('inventorymanager')->__('Edit'),
                         'url'       => array('base'=> '*/*/edit'),
                         'field'     => 'id'
+                    ),
+                     array(
+                        'caption'   => Mage::helper('inventorymanager')->__('Delete'),
+                        'url'       => array('base'=> '*/*/delete'),
+                        'field'     => 'id'
                     )
                 ),
                 'filter'    => false,

@@ -15,10 +15,10 @@
 		<input type="text" value="1" name="qty[<?php echo $currentProduct->getId() ?>]" class="input-text" onchange="countTotal(this)" />
 	</div>
 	<div class="product-content p-cost"><?php echo $cost ?>
-		<input type="text" value="0.0000" name="product_value[<?php echo $currentProduct->getId() ?>]" class="input-text" onchange="countTotal(this)" />
+		<input type="text" value="<?php echo $cost ?>" name="product_value[<?php echo $currentProduct->getId() ?>]" class="input-text" onchange="countTotal(this)" />
 	</div>
 	<div id="total" class="product-content p-total p-input">
-		0.0000
+		<?php echo $cost ?>
 	</div>
 	<div class="product-content p-remove"> <a onclick="removeProduct(this)" >X</a> </div>
 	<div class="clear-float"></div>
