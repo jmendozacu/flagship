@@ -65,17 +65,31 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 			//print_r($data); exit;
 			$id = $this->getRequest()->getParam('id');
 			$poProductIds = $data['po_product'];
-			
-			
-			$data['date_of_po'] = date("Y-m-d", strtotime($data['date_of_po']));
-			$data['expected_date'] = date("Y-m-d", strtotime($data['expected_date']));
-			
+
+			/* BELLOW LOGIC USE TO CHANGE DATE FORMAT - TRIED WITH strtotime BUT WON'T WORK */
+			$orderDate = explode("/", $data['date_of_po']);
+			if(isset($orderDate[2]))
+				$data['date_of_po'] = $orderDate[2]."-"; 
+			if(isset($orderDate[1]))
+				$data['date_of_po'] .= $orderDate[1]."-"; 
+			if(isset($orderDate[0]))
+				$data['date_of_po'] .= $orderDate[0];
+				
+			$expectedDate = explode("/", $data['expected_date']);
+			if(isset($expectedDate[2]))
+				$data['expected_date'] = $expectedDate[2]."-"; 
+			if(isset($expectedDate[1]))
+				$data['expected_date'] .= $expectedDate[1]."-"; 
+			if(isset($expectedDate[0]))
+				$data['expected_date'] .= $expectedDate[0];
+			/***/
+
+				
 			$model = Mage::getModel('inventorymanager/purchaseorder');		
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
 			try {
 				$model->save();
-				
 				$orderProduct = Mage::getModel('inventorymanager/product')->getCollection();
 				$orderProduct->addFieldToFilter('po_id', $model->getId());
 				$orderProduct->addFieldToFilter('product_id', array('nin' => $poProductIds));
