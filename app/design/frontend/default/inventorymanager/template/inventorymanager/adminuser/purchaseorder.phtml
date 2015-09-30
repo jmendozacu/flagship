@@ -44,7 +44,7 @@ $methods = Mage::getSingleton('shipping/config')->getActiveCarriers();
             </div>
             <div class="panel-body">
             	<div class="table-responsive">
-            		<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+            		<table class="table table-striped table-bordered pagination-sm table-hover" id="dataTables-orders">
             			<thead>
             				<tr>
                                 <th><?php echo $this->__("ID") ?></th>
@@ -86,9 +86,10 @@ $methods = Mage::getSingleton('shipping/config')->getActiveCarriers();
 /*jQuery(document).ready(function () {
     jQuery('#dataTables-example').dataTable();
 });*/
+
 jQuery(document).ready(function () {
-        jQuery('#dataTables-example').dataTable({
-        	"aaSorting": [[0, 'desc']]
-        });
-    });
+	jQuery('#dataTables-orders').dataTable({
+    	"aaSorting": [[0, 'desc']]
+	});
+});
 </script>
