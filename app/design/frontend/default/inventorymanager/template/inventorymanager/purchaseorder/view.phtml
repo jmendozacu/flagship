@@ -17,9 +17,9 @@
 		<h2>
 			<?php echo $this->__("Purchase Order View") ?>
 			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/generate", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right"><?php echo $this->__("Print all labels in PDF") ?></a>
-			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/print", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right; margin-right:5px;">
+		<?php /*	<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/print", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right; margin-right:5px;">
 				<?php echo $this->__("Print all labels") ?>
-			</a>
+			</a> */ ?>
 			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/printpo", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right; margin-right:5px;">
 				<?php echo $this->__("Print P.O") ?>
 			</a>
