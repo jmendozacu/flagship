@@ -1,5 +1,14 @@
 <?php 
 $purchaseorders = $this->getAllpurchaseorders();
+$methods = Mage::getSingleton('shipping/config')->getActiveCarriers();
+	  $shippingMethods = array();
+	  foreach($methods as $_code => $_method)
+	 	{
+	 		if(!$_title = Mage::getStoreConfig("carriers/$_code/title")){
+	            $_title = $_code;
+	 		}
+	      	$shippingMethods[$_code] = $_title;
+	 	}
 /*
 
 [0] => Array
@@ -22,7 +31,7 @@ $purchaseorders = $this->getAllpurchaseorders();
 	<div class="col-md-12">
 		<h2><?php echo $this->__("Purchase Orders") ?></h2>
          <div style="float:right">
-            <button class="btn btn-warning" onclick="setLocation('<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/new") ?>')" name="addvendors"><?php echo $this->__("Purchase New") ?></button>
+            <button class="btn btn-warning" onclick="setLocation('<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/new") ?>')" name="addvendors"><?php echo $this->__("create new P.O") ?></button>
         </div>
 	</div>
 </div>
@@ -52,7 +61,7 @@ $purchaseorders = $this->getAllpurchaseorders();
             					<tr class="<?php echo $iCounter%2==0?"odd":"even"; ?>">
             						<td><?php echo $item->getPoId() ?></td>
             						<td><?php echo $this->getVendorname($item->getVendorId()) ?></td>
-            						<td><?php echo $item->getShippingMethod(); ?></td>
+            						<td><?php echo isset($shippingMethods[$item->getShippingMethod()])?$shippingMethods[$item->getShippingMethod()]:$item->getShippingMethod(); ?></td>
             						<td><?php echo $item->getOrderQty(); ?></td>
             						<td><?php echo $item->getReceivedQty(); ?></td>
             						<td><?php echo date("Y/m/d", strtotime($item->getDateOfPo())) ?></td>
@@ -74,7 +83,12 @@ $purchaseorders = $this->getAllpurchaseorders();
 	</div>
 </div>
 <script>
-jQuery(document).ready(function () {
+/*jQuery(document).ready(function () {
     jQuery('#dataTables-example').dataTable();
-});
+});*/
+jQuery(document).ready(function () {
+        jQuery('#dataTables-example').dataTable({
+        	"aaSorting": [[0, 'desc']]
+        });
+    });
 </script>

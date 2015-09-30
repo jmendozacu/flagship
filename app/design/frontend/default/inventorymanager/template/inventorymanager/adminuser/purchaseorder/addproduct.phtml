@@ -5,6 +5,8 @@
 	if($vendorProduct && $vendorProduct->getId()){
 		$cost = $vendorProduct->getCost();
 	}
+	$cost = number_format($cost,2);
+	$cost = str_replace(",", "", $cost);
 ?>
 <tr class="order-row">
 	<td>
@@ -16,7 +18,7 @@
 	</td>
 	<td>
 		
-		<input type="text" value="0.0000" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text input-price form-control" onchange="countTotal()" />
+		<input type="text" value="<?php echo $cost ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text input-price form-control" onchange="countTotal()" />
 	</td>
 	<td class="row-total p-input"></td>
 	<td align="center" valign="bottom"><a class="btn btn-danger" onclick="removeProduct(this)">X</a></td>

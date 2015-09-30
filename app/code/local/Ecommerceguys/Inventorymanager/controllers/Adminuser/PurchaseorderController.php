@@ -129,9 +129,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$id = $this->getRequest()->getParam('id');
 		$purchaseOrder = Mage::getModel('inventorymanager/purchaseorder')->load($id);
 		
-		$content = $this->getLayout()->createBlock('inventorymanager/user_purchaseorder_pdf')
-		->setTemplate('inventorymanager/adminuser/purchaseorder/pdf.phtml')->toHtml();
-		
+		/*$content = $this->getLayout()->createBlock('inventorymanager/user_purchaseorder_pdf')
+		->setTemplate('inventorymanager/adminuser/purchaseorder/pdf.phtml')->toHtml();*/
+		$content = $this->getLayout()->createBlock('inventorymanager/user_purchaseorder_productpdf')
+		->setTemplate('inventorymanager/adminuser/purchaseorder/productpdf.phtml')->toHtml();
 		//print_r($content); exit;
 		
 		$pdf->SetCreator(PDF_CREATOR);
