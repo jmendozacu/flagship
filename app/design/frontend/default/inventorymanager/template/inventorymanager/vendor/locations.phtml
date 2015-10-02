@@ -1,0 +1,59 @@
+<?php
+	$locations = $this->getLocations();
+?>
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Locations") ?></h2>
+		<h5><?php echo $this->__("Manage Serial Locations") ?></h5>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="panel-heading"><?php echo $this->__("Locations Grid") ?></div>
+				<div class="panel-body">
+					<div class="table-responsive">
+						<div id="dataTables-example_wrapper" class="dataTables_wrapper form-inline" role="grid">
+							<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+								<thead>
+									<tr>
+										<td><?php echo $this->__("Location") ?></td>
+										<td><?php echo $this->__("Action") ?></td>
+									</tr>
+								</thead>
+								<?php foreach ($locations as $location){ ?>
+									<tr>
+										<td><?php echo $location['location'] ?></td>
+										<td><a href="<?php echo $this->getUrl("inventorymanager/vendor/deleteLocation", array('location'=>$location['location'])) ?>" class="btn btn-danger btn-sm"><?php echo $this->__("Remove") ?> </a></td>
+									</tr>
+								<?php } ?>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Add new location") ?></div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-5">
+						<form action="<?php echo $this->getUrl("inventorymanager/vendor/saveLocation") ?>" method="POST" id="location-form">
+							<div class="form-group">
+								<label><?php echo $this->__("Location") ?></label>
+								<input type="text" class="form-control" name="location" />
+							</div>
+							<button class="btn btn-primary" type="submit"><?php echo $this->__("Submit") ?></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

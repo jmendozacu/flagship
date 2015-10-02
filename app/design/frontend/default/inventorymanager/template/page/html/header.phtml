@@ -60,6 +60,7 @@
     $purchaseorder = false;
 	$shippedProduct = false;
 	$notification = false;
+	$manageLabels = false;
     
 	if($currentController == "vendor" && $currentAction == "products"){
 		$productsPage = true;
@@ -89,6 +90,8 @@
         $purchaseorder = true;
     }elseif($currentController == "notification" && $currentAction == "index"){ 
         $notification = true;
+    }elseif($currentController == "vendor" && $currentAction == "locations"){ 
+        $manageLabels = true;
     }
 ?>
         
@@ -131,6 +134,13 @@
             <li>
                 <a class="<?php if($notification) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/notification/") ?>">
                 	<i class="fa fa-edit fa-3x"></i><?php echo $this->__("Notifications") ?>
+                </a>
+            </li>
+            
+            
+            <li>
+                <a class="<?php if($manageLabels) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/vendor/locations") ?>">
+                	<i class="fa fa-edit fa-3x"></i><?php echo $this->__("Manage Locations") ?>
                 </a>
             </li>
             
