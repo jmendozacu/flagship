@@ -65,6 +65,7 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 			//print_r($data); exit;
 			$id = $this->getRequest()->getParam('id');
 			$poProductIds = $data['po_product'];
+			$mainProducts = $data['main_product'];
 
 			/* BELLOW LOGIC USE TO CHANGE DATE FORMAT - TRIED WITH strtotime BUT WON'T WORK */
 			$orderDate = explode("/", $data['date_of_po']);
@@ -85,6 +86,9 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 			/***/
 
 				
+			//print_r($poProductIds); exit;
+			
+			
 			$model = Mage::getModel('inventorymanager/purchaseorder');		
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
@@ -97,34 +101,57 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 					$orderP->delete();
 				}
 				
-				
-				$productData['po_id'] = $model->getId();
 				$tatalQty = 0;
-				foreach ($data['qty'] as $productId => $qty){
-					if(!in_array($productId, $poProductIds)){ continue; }
-					$tatalQty+=$qty;
-					$productData['qty'] = $qty;
-					$productData['main_product_id'] = $productId;
-					$productData['price'] = $data['product_value'][$productId];
-					$productData['total'] = $productData['qty'] * $productData['price'];
-					$orderProduct = Mage::getModel('inventorymanager/product');
-					$existOrderProductColl = Mage::getModel('inventorymanager/product')->getCollection();
-					$existOrderProductColl->addFieldToFilter('po_id', $model->getId());
-					$existOrderProductColl->addFieldToFilter('main_product_id', $productId);
-					if($existOrderProductColl->count() > 0){
-						$existOrderProductObject = $existOrderProductColl->getFirstItem();
-						$orderProduct->setId($existOrderProductObject->getId());
+				
+				foreach ($poProductIds as $orderProductId){
+					$orderProductObject = Mage::getModel('inventorymanager/product')->load($orderProductId);
+					if(isset($data['qty'][$orderProductObject->getMainProductId()])){
+						$productData['qty'] = $data['qty'][$orderProductObject->getMainProductId()];
+						if(isset($data['product_value'][$orderProductObject->getMainProductId()])){
+							$productData['price'] = $data['product_value'][$orderProductObject->getMainProductId()];
+							$orderProductObject->addData($productData);
+							//print_r($productData);
+							$tatalQty += $productData['qty'];
+							try {
+								$orderProductObject->save();
+							}catch (Exception $e){
+								
+							}
+						}
+					}
+				}
+				
+				$productData = array();
+				$productData['po_id'] = $model->getId();
+				
+				foreach ($data['qty'] as $productId => $qty){					
+					if(in_array($productId, $mainProducts)){ 
+						continue;
+					}else{
+						$tatalQty+=$qty;
+						$productData['qty'] = $qty;
+						$productData['main_product_id'] = $productId;
+						$productData['price'] = $data['product_value'][$productId];
+						$productData['total'] = $productData['qty'] * $productData['price'];
+					
+						$orderProduct = Mage::getModel('inventorymanager/product');
+						$existOrderProductColl = Mage::getModel('inventorymanager/product')->getCollection();
+						$existOrderProductColl->addFieldToFilter('po_id', $model->getId());
+						$existOrderProductColl->addFieldToFilter('main_product_id', $productId);
+						if($existOrderProductColl->count() > 0){
+							$existOrderProductObject = $existOrderProductColl->getFirstItem();
+							$orderProduct->setId($existOrderProductObject->getId());
+						}
 					}
 					$orderProduct->setData($productData);
 					$orderProduct->save();
 				}
-				//if(isset($data['id'])){
-					
-				//}
+								
 				$model->setOrderQty($tatalQty)->save();
+				Mage::getModel('inventorymanager/label')->updateLabels($model->getId());
 				
 				if($id == "" || $id <= 0){
-					Mage::getModel('inventorymanager/label')->generateLabels($model->getId());
+					//Mage::getModel('inventorymanager/label')->generateLabels($model->getId());
 					Mage::helper('inventorymanager')->sendNewOrderEmail($model->getId());
 				}
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order was successfully saved'));

@@ -145,6 +145,7 @@
 																<div class="product-content p-name">
 																	<?php echo $productObject->getName() ?>
 																	<input type="hidden" name="po_product[]" value="<?php echo $orderProduct->getId() ?>" />
+																	<input type="hidden" name="main_product[]" value="<?php echo $productObject->getId() ?>" />
 																</div>
 																<div class="product-content p-qty">
 																	<?php echo $orderProduct->getQty() ?>
