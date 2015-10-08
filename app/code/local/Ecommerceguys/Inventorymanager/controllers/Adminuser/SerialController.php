@@ -32,6 +32,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 	public function receivepostAction(){
 
 		if($data = $this->getRequest()->getPost()){
+			
+			//print_r($data); exit;
+			
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
 			try{
 				$model->setStatus($data['status']);
@@ -70,6 +73,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 			        )); 
 					$productModel->save();
 				}
+				
+				if(isset($data['is_shipped']) && $data['is_shipped'] == 1){
+					$model->setStatus("Shipped");
+				}
+				
 				$model->save();
 				
 				if(isset($data['comment']) && trim($data['comment'])!= ""){

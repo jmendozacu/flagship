@@ -1,6 +1,9 @@
 <?php
+	$_helper = $this->helper('catalog/output');
 	$labelObject = $this->getLabelObject();
 	$catalogProduct = $this->gerMainProduct();
+	
+	$productInfoObject = $this->getVendorProduct();
 	
 	$_purchaseorder = $this->getPurchaseOrder();
 	
@@ -9,6 +12,37 @@
 	$status = Mage::helper('inventorymanager')->getOrderedProductStatusArray($_purchaseorder->getVendorId());
 	$locations = $this->helper('inventorymanager')->getLocations($_purchaseorder->getVendorId());
 	$staticStatusArray = $this->helper('inventorymanager')->getStaticStatusOptions();
+	
+	$height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');
+    $width = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
+    $depth = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth');
+    $weight = $_helper->productAttribute($catalogProduct, $catalogProduct->getWeight(), 'weight');
+
+    $boxWidth = 0;
+    $boxHeight = 0;
+    $boxLength = 0;
+    $boxWeight = 0;
+
+    if ($productInfoObject && $productInfoObject->getId()) {
+
+        $boxWidth = $productInfoObject->getBoxWidth();
+        $boxHeight = $productInfoObject->getBoxHeight();
+        $boxLength = $productInfoObject->getBoxLength();
+        $boxWeight = $productInfoObject->getBoxWeight();
+
+        if ($productInfoObject->getHeight() && $productInfoObject->getHeight() > 0) {
+            $height = $productInfoObject->getHeight();
+        }
+        if ($productInfoObject->getWidth() && $productInfoObject->getWidth() > 0) {
+            $width = $productInfoObject->getWidth();
+        }
+        if ($productInfoObject->getLength() && $productInfoObject->getLength() > 0) {
+            $depth = $productInfoObject->getLength();
+        }
+        if ($productInfoObject->getWeight() && $productInfoObject->getWeight() > 0) {
+            $weight = $productInfoObject->getWeight();
+        }
+    }
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -34,19 +68,19 @@
 							<div class="form-group">
 								<label><?php echo $this->__("Height") ?></label>
 								<p class="form-control-static">
-									<?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches') ?>
+									<?php echo $height ?>
 								</p>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Width") ?></label>
 								<p class="form-control-static">
-									<?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches') ?>
+									<?php echo $width ?>
 								</p>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Depth") ?></label>
 								<p class="form-control-static">
-									<?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth') ?>
+									<?php echo $depth ?>
 								</p>
 							</div>
 							<div class="form-group">
@@ -75,6 +109,13 @@
 										</div>
 									</div>
 								<?php } ?>
+							</div>
+							<div class="form-group">
+								<div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="is_shipped" value="1"><?php echo $this->__("Shipped") ?>
+                                    </label>
+                                </div>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Location") ?></label>

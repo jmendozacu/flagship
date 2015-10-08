@@ -165,6 +165,11 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 				if(isset($data['remove_main_image']) && $data['remove_main_image'] == 1){
 					$model->setMainImage("");
 				}
+				
+				if(isset($data['is_shipped']) && $data['is_shipped'] == 1){
+					$model->setStatus("Shipped");
+				}
+				
 				$model->save();
 				if(isset($data['comment']) && trim($data['comment'])!= ""){
 					$comment = Mage::getModel('inventorymanager/label_comment');
