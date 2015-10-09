@@ -183,12 +183,12 @@
                     <?php echo $this->__("Receive Products") ?>
                 </a>
             </li>
-            <?php /* <li>
+            <?php /*<li>
                 <a class="<?php echo $sentSerials?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/sent") ?>">
                     <i class="fa fa-desktop fa-3x"></i>
                     <?php echo $this->__("Send Serials") ?>
                 </a>
-            </li>*/ ?>
+            </li>*/?>
             <li>
                 <a class="<?php if($stockTab) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/adminuser_product/stockgrid') ?>">
                     <i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock") ?>
@@ -212,9 +212,7 @@
                         <li><a href="<?php echo $this->getUrl('inventorymanager/adminuser_purchaseorder/showbystatus', array('status'=>$key)) ?>"><?php echo $status ?></a></li>
                     <?php } ?>
                 </ul>
-            </li>
-            
-            
+            </li>          
         </ul>
     </div>
 <?php } ?>

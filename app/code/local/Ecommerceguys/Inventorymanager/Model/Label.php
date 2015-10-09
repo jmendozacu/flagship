@@ -55,4 +55,37 @@ class Ecommerceguys_Inventorymanager_Model_Label extends Mage_Core_Model_Abstrac
 			}
 		}
     }
+    
+    public function updateLabels($orderId){
+    	$products = Mage::getModel('inventorymanager/product')->getCollection();
+		$products->addFieldToFilter('po_id', $orderId);
+		
+		foreach ($products as $product){
+			$productQty = $product->getQty();
+			$productLabels = Mage::getModel('inventorymanager/label')->getCollection();
+			$productLabels->addFieldToFilter('product_id', $product->getId());
+			$productLabels->addFieldToFilter('order_id', $orderId);
+			if($productLabels->count() == $productQty){
+				continue;
+			}elseif($productLabels->count() < $productQty){
+				$pendingLabels = $productQty - $productLabels->count();
+				while ($pendingLabels > 0){
+					$pendingLabels--;
+					$serial = Mage::helper('inventorymanager')->getSerial();
+					$label = Mage::getModel('inventorymanager/label');
+					$labelData = array(
+						'product_id'	=>	$product->getId(),
+						'order_id'		=>	$orderId,
+						'location'		=>	"P.O.",
+						'status'		=>	Mage::helper('inventorymanager')->__("Processing"),
+						'serial'		=>	$serial,
+						'created_time'	=>	now(),
+						'updated_time'	=>	now()
+					);
+					$label->setData($labelData)->save();
+				}
+			}
+		}
+    }
+    
 }

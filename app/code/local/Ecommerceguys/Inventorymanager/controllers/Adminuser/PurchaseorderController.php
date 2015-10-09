@@ -43,6 +43,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 			//print_r($data); exit;
 			$id = $this->getRequest()->getParam('id');
 			$poProductIds = $data['po_product'];
+			$mainProducts = $data['main_product'];
 			
 			/* BELLOW LOGIC USE TO CHANGE DATE FORMAT - TRIED WITH strtotime BUT WON'T WORK */
 			$orderDate = explode("/", $data['date_of_po']);
@@ -76,10 +77,29 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 				}
 				
 				
-				$productData['po_id'] = $model->getId();
 				$tatalQty = 0;
+				
+				foreach ($poProductIds as $orderProductId){
+					$orderProductObject = Mage::getModel('inventorymanager/product')->load($orderProductId);
+					if(isset($data['qty'][$orderProductObject->getMainProductId()])){
+						$productData['qty'] = $data['qty'][$orderProductObject->getMainProductId()];
+						if(isset($data['product_value'][$orderProductObject->getMainProductId()])){
+							$productData['price'] = $data['product_value'][$orderProductObject->getMainProductId()];
+							$orderProductObject->addData($productData);
+							$tatalQty += $productData['qty'];
+							try {
+								$orderProductObject->save();
+							}catch (Exception $e){
+								
+							}
+						}
+					}
+				}
+				
+				
+				$productData['po_id'] = $model->getId();
 				foreach ($data['qty'] as $productId => $qty){
-					if(!in_array($productId, $poProductIds)){ continue; }
+					if(in_array($productId, $mainProducts)){ continue; }
 					$tatalQty+=$qty;
 					$productData['qty'] = $qty;
 					$productData['main_product_id'] = $productId;
@@ -100,8 +120,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 					
 				//}
 				$model->setOrderQty($tatalQty)->save();
+				Mage::getModel('inventorymanager/label')->updateLabels($model->getId());
 				if($id == "" || $id <= 0){
-					Mage::getModel('inventorymanager/label')->generateLabels($model->getId());
+					//Mage::getModel('inventorymanager/label')->generateLabels($model->getId());
+					Mage::helper('inventorymanager')->sendNewOrderEmail($model->getId());
 				}
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order was successfully saved'));
 				Mage::getSingleton('adminhtml/session')->setFormData(false);

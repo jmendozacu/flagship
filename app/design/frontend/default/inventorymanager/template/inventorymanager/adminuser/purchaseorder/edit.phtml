@@ -38,9 +38,6 @@
     </div>
 </div>
 <hr>
-
-
-
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
@@ -147,7 +144,7 @@
 		                            					<td>
 		                            						<?php echo $productObject->getName() ?>
 															<input type="hidden" class="" name="po_product[]" value="<?php echo $orderProduct->getId() ?>" />
-															<input type="hidden" class="order_product_hidden_input"  value="<?php echo $productObject->getId() ?>" />
+															<input type="hidden" class="order_product_hidden_input" name="main_product[]"  value="<?php echo $productObject->getId() ?>" />
 		                            					</td>
 		                            					<td>
 		                            						<?php echo $orderProduct->getQty() ?>

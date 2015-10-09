@@ -31,6 +31,20 @@ class Ecommerceguys_Inventorymanager_Block_User_Serial_Receive extends Mage_Core
 	}
 	
 	public function getPurchaseOrder(){
-		return Mage::getModel('inventorymanager/purchaseorder')->load($this->gerMainProduct()->getPoId());
+		return Mage::getModel('inventorymanager/purchaseorder')->load($this->getOrderProduct()->getPoId());
+	}
+	
+	public function getVendorProduct(){
+		$order = $this->getPurchaseOrder();
+		$mainProduct = $this->gerMainProduct();
+		$vendorId = $order->getVendorId();
+		
+		$inventorymanagerProducts = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+		$inventorymanagerProducts->addFieldToFilter('vendor_id', $vendorId);
+		$inventorymanagerProducts->addFieldToFilter('product_id', $mainProduct->getId());
+		if($inventorymanagerProducts->count()){
+			return $inventorymanagerProducts->getFirstitem();
+		}
+		return false;
 	}
 }
