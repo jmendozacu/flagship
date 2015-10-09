@@ -94,10 +94,12 @@
         $manageLabels = true;
     }elseif($currentController == "vendor" && ($currentAction == "profile")){ 
         $vendorprofile = true;
-    }elseif($currentController == "vendor" && ($currentAction == "employer")){ 
+    }elseif($currentController == "vendor_employer" && ($currentAction == "employer" || $currentAction == "new" || $currentAction == "edit" || $currentAction == "index")){ 
         $vendoremployer = true;
     }
+
 ?>
+       
         
 <nav class="navbar-default navbar-side" role="navigation">
 <?php if (Mage::getSingleton('inventorymanager/session')->isLoggedIn()) { ?>
@@ -118,7 +120,7 @@
                 </a>
             </li>
             <li>
-                <a class="<?php if($vendorprofile) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor_employer") ?>">
+                <a class="<?php if($vendoremployer) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor_employer") ?>">
                     <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Employer") ?>
                 </a>
             </li>

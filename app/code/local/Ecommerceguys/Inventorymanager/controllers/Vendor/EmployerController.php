@@ -50,16 +50,13 @@ class Ecommerceguys_Inventorymanager_Vendor_EmployerController extends Mage_Core
 		}
 	}
 	public function saveAction() {
-		/*
-		echo "<pre>";
-		print_r($this->getRequest()->getPost());
-		exit;
-		*/
+		
+		
 		if ($data = $this->getRequest()->getPost()) {
 			
-			$model = Mage::getModel('inventorymanager/vendor');		
+			$model = Mage::getModel('inventorymanager/vendor');
 			$model->setData($data)
-				->setParentId($this->getRequest()->getParam('id'));
+				->setId($this->getRequest()->getParam('id'));
 			
 			try {
 				if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
@@ -73,17 +70,37 @@ class Ecommerceguys_Inventorymanager_Vendor_EmployerController extends Mage_Core
 				Mage::getSingleton('core/session')->setFormData(false);
 
 
-				$this->_redirect('inventorymanager/vendor/employer');
+				$this->_redirect('inventorymanager/vendor_employer');
 				return;
             } catch (Exception $e) {
                 Mage::getSingleton('core/session')->addError($e->getMessage());
                 Mage::getSingleton('core/session')->setFormData($data);
-                $this->_redirect('*/*/employeredit', array('vendor_id' => $this->getRequest()->getParam('id')));
+                $this->_redirect('*/*/edit', array('vendor_id' => $this->getRequest()->getParam('id')));
                 return;
             }
         }
         Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__('Unable to find vendor to save'));
-        $this->_redirect('inventorymanager/vendor/employer');
+        $this->_redirect('inventorymanager/vendor_employer');
+	}
+
+		public function deleteAction() {
+		if( $this->getRequest()->getParam('vendor_id') > 0 ) {
+			try {
+				$model = Mage::getModel('inventorymanager/vendor');
+				 
+				$model->setId($this->getRequest()->getParam('vendor_id'))
+					->delete();
+					 
+				Mage::getSingleton('core/session')->addSuccess(Mage::helper('adminhtml')->__('Employer was successfully deleted'));
+				$this->_redirect('inventorymanager/vendor_employer');
+				return;
+			} catch (Exception $e) {
+				Mage::getSingleton('core/session')->addError($e->getMessage());
+				$this->_redirect('inventorymanager/vendor_employer');
+				return;
+			}
+		}
+		$this->_redirect('inventorymanager/vendor_employer');
 	}
 
 

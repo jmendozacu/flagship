@@ -1,8 +1,12 @@
-<?php echo "rtesd";exit;$vendorData = Mage::registry('vendor_employer_data');?>
-<?php $vendorData->getName();?>
+<?php $vendorData = Mage::registry('vendor_employer_data');
 
-<form id="edit_form" name='edit_form' action="<?php echo $this->getPostUrl($vendorData->getId())?>" method="post" enctype="multipart/form-data">
+?>
 
+<form id="edit_form" name='edit_form' action="<?php echo $this->getPostUrl($vendorData->getVendorId())?>" method="post" enctype="multipart/form-data">
+
+<?php if(!$vendorData->getId()): ?>
+<input id="parent_id" name="<?php echo $this->__('parent_id');?>" value="<?php echo $this->getCurrentVendor()->getId();?>" class="required-entry form-control" type="hidden"/>
+<?php endif;?>
 <div class="row">
     <div class="col-md-12">
         <h2><?php echo $this->__("Vendor") ?></h2>
@@ -43,7 +47,7 @@
                             </div>
                             
                             <div class="form-group">
-                                <label><?php echo $this->__("Passeord") ?></label>
+                                <label><?php echo $this->__("Password") ?></label>
                                 <input id="password" name="<?php echo $this->__('password');?>" value="<?php echo $vendorData->getPassword();?>" class="form-control required-entry" type="password" style="width:300px" />
                             </div>
                             
