@@ -120,28 +120,41 @@
 									<?php echo $this->__("Download Labels"); ?>
 								</a></td>
 							</tr>
-							<?php $serials = $this->getSerials($product->getId()) ?>
-							<tr id="serials_po_product_row_<?php echo $product->getId() ?>" style="display:none">
+							<?php $serials = $this->getSerials($product->getId());
+							if($serials && $serials->count()>0){
+							$firstSerials = $serials->getFirstItem();
+							 ?>
+							<tr id="serials_po_product_row_<?php echo $product->getId() ?>" style="display:none" class="product-serial-content" productid="<?php echo $product->getId() ?>">
 								<td colspan="6" id="load-serials-content<?php echo $product->getId() ?>">
-								
 									<div class="row">
 										<div class="col-md-12 col-sm-12 col-xs-12">
 											<div class="panel panel-back noti-box">
 												<table class="table table-striped">
 													<tr>
-														
-														<td align="right">
-															<div class="right-align-group">
+														<td align="right bult-locations">
+															<div class="right-align-group" style="padding:3px;">
 																<a href="javascript:void(0)" onclick="submitMassLocations(<?php echo $product->getId() ?>)" class="btn btn-primary btn-sm"><?php echo $this->__("Submit") ?></a>
 															</div>
 															<div class="right-align-group">
-																<select class="form-control mass-location" id="mass-location">
-																	<?php foreach ($locations as $location){ ?>
-																		<option><?php echo $location ?></option>
-																	<?php } ?>
-																</select>
+																<div class="form-control-static" >
+																	<div class="btn-group show-dropbox show-location-dropbox">
+																		<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
+															  				<input type="text" class="form-control label-box" onkeyup="statusText(this)" name="location" id="new_location_bulk<?php echo $product->getId() ?>" value="" />
+															  			</div>
+																	  	<button type="button" class="btn btn-primary dropdown-toggle" onclick="openLocationBox(this)" style="z-index:999"><span class="caret"></span></button>
+																	  	<ul class="dropdown-menu location-box" id="dropdown-box-location_bulk<?php echo $product->getId() ?>">
+																	  		<li class="add-location-li"><a href="javascript:addLocation('_bulk<?php echo $product->getId() ?>', <?php echo $product->getId() ?>)"  ><?php echo $this->__("Add New") ?></a></li>
+																	  		<?php foreach ($locations as $key => $locationLabel) { ?>
+																	  			<li>
+																	  				<span class="remove-location-link" onclick="removeLocationFunction('<?php echo $locationLabel ?>',<?php echo $product->getId() ?>)">x</span>
+																	  				<a class="location-options" href="javascript:selectLocation('<?php echo $locationLabel ?>','_bulk<?php echo $product->getId() ?>')"><?php echo $locationLabel ?></a>
+																	  			</li>
+																	  		<?php } ?>
+																	  	</ul>
+																	</div>
+																</div>
 															</div>
-															<div class="right-align-group"><label><?php echo $this->__("Bulk location change") ?></label></div>
+															<div class="right-align-group" ><label><?php echo $this->__("Bulk location change") ?></label></div>
 														</td>
 													</tr>
 												</table>
@@ -206,6 +219,7 @@
 								</td>
 							</tr>
 							<?php } ?>
+							<?php } ?>
 						</tbody>
 					</table>
 				</div>
@@ -244,6 +258,7 @@
 		</div>
 	</div>
 </div>
+<button onclick="refreshAllContent()" type="button">TEST</button>
 <!-- Small modal -->
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
   <div class="modal-dialog modal-sm">
@@ -255,6 +270,16 @@
   </div>
 </div>
 <script>
+
+	function refreshAllContent(cpId){
+		$$('tr.product-serial-content').each(function(e){
+			var pId = e.readAttribute('productid');
+			refrechLabels(pId);
+		});
+		
+	}
+
+
 	$$("tr.ro_product_row").each(function(e){
 		e.observe('click', function(){
 			$('serials_' + e.id).toggle();
@@ -327,28 +352,8 @@
     			if(response != ''){
     				alert(response);
     			}else{
-    				/*var removeSpan = document.createElement("span");
-    				
-    				removeSpan.addClassName('remove-location-link');
-    				removeSpan.innerHTML = 'x';
-    				
-    				var liElement = document.createElement("li");
-    				liElement.appendChild(removeSpan);
-    				liElement.insert('<a class="location-options" href="javascript:void(0);">'+location+'</a></li>');
-    				
-    				var tempDiv = document.createElement("div");
-    				tempDiv.appendChild(liElement);
-    				
-    				$('dropdown-box-location' + sId).innerHTML = $('dropdown-box-location' + sId).innerHTML + tempDiv.innerHTML;
     				locations.push(location);
-    				$$('a.location-options').each(function(e){
-						e.observe('click', function(){
-							$('new_location').value = e.innerHTML;
-							$('dropdown-box-location').toggleClassName('show-dropbox');
-						});
-					});
-					$('dropdown-box-location' + sId).toggleClassName('show-dropbox');*/
-    				refrechLabels(pId);
+    				refreshAllContent(pId);
     			}
   			},
   			onFailure: function() { alert('Something went wrong...');}
@@ -371,9 +376,9 @@
     			/*if(response != ''){
     				alert(response);
     			}else{*/
-    				/*locations.splice(currentIndex, 1);
-    				e.up('li').remove();*/
-    				refrechLabels(pId);
+    				locations.splice(currentIndex, 1);
+    				/*e.up('li').remove();*/
+    				refreshAllContent(pId);
     			//}
   			},
   			onFailure: function() { alert('Something went wrong...');}
@@ -395,7 +400,7 @@
 	}
 	
 	function submitMassLocations(pid){
-		var location = $('mass-location').value;
+		var location = $('new_location_bulk' + pid).value;
 		var serials = "";
 		$$('.serial-checkboxes-'+pid).each(function(e){
 			//alert(e.value);

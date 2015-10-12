@@ -446,3 +446,4 @@ div.logout{
 .order-product-table td input.form-control { width:65%; float:right; }
 .purchaseorder-product-result ul li { list-style:none; border-bottom:1px solid; padding:5px; cursor:pointer; }
 .purchaseorder-product-result ul li a { text-decoration:none;  }
+.bult-locations ul.dropdown-menu li a { text-align:left; }
