@@ -1,0 +1,89 @@
+<?php $vendorData = Mage::registry('vendor_employer_data');
+
+?>
+
+<form id="edit_form" name='edit_form' action="<?php echo $this->getPostUrl($vendorData->getVendorId())?>" method="post" enctype="multipart/form-data">
+
+<?php if(!$vendorData->getId()): ?>
+<input id="parent_id" name="<?php echo $this->__('parent_id');?>" value="<?php echo $this->getCurrentVendor()->getId();?>" class="required-entry form-control" type="hidden"/>
+<?php endif;?>
+<div class="row">
+    <div class="col-md-12">
+        <h2><?php echo $this->__("Vendor") ?></h2>
+        <div style="float:right;padding-right:10px">
+             <button type="submit" title="<?php echo "<?php echo $this->__('Save');?>";?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $this->__("Vendor Information") ?></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php echo $this->getMessagesBlock()->toHtml() ?>
+                            <div class="form-group">
+                                
+                                <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
+                                <input id="name" name="<?php echo $this->__('name');?>" value="<?php echo $vendorData->getName();?>" class="required-entry form-control" type="text" style="width:300px" />
+                            </div>
+
+                            <div class="form-group">
+                                <label><?php echo $this->__("Vendor Email") ?></label>
+                                <input id="email" name="<?php echo $this->__('email');?>" value="<?php echo $vendorData->getEmail();?>" class="form-control  required-entry validate-email required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Vendor Code") ?></label>
+                                <input id="vendor_code" name="<?php echo $this->__('vendor_code');?>" value="<?php echo $vendorData->getVendorCode();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Username") ?></label>
+                                <input id="username" name="<?php echo $this->__('username');?>" value="<?php echo $vendorData->getUsername();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Password") ?></label>
+                                <input id="password" name="<?php echo $this->__('password');?>" value="<?php echo $vendorData->getPassword();?>" class="form-control required-entry" type="password" style="width:300px" />
+                            </div>
+                            
+                           <?php /* <div class="form-group">
+                                <button type="submit" title="<?php echo "<?php echo $this->__('Save');?>";?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+                            </div>
+                            */?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+</form>
+ <script type="text/javascript">
+    editForm = new varienForm('edit_form','');
+</script>
+
+ <script type="text/javascript">
+
+    jQuery(document).ready(function () {
+/*
+    jQuery("#check-all").change(function(){    
+           var chk = jQuery("#check_list");
+           if(this.checked) {
+                 for (i = 0; i < chk.length; i++)
+                    {chk[i].checked = true ;}                  
+            }else{
+                for (i = 0; i < chk.length; i++)
+                    {chk[i].checked = false ;}
+            }
+        });
+*/
+        jQuery('#dataTables-example').dataTable();
+    });
+
+</script>
+
+

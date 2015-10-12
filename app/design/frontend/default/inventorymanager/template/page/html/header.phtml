@@ -94,8 +94,12 @@
         $manageLabels = true;
     }elseif($currentController == "vendor" && ($currentAction == "profile")){ 
         $vendorprofile = true;
+    }elseif($currentController == "vendor_employer" && ($currentAction == "employer" || $currentAction == "new" || $currentAction == "edit" || $currentAction == "index")){ 
+        $vendoremployer = true;
     }
+
 ?>
+       
         
 <nav class="navbar-default navbar-side" role="navigation">
 <?php if (Mage::getSingleton('inventorymanager/session')->isLoggedIn()) { ?>
@@ -113,6 +117,11 @@
              <li>
                 <a class="<?php if($vendorprofile) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/profile") ?>">
                     <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Profile") ?>
+                </a>
+            </li>
+            <li>
+                <a class="<?php if($vendoremployer) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor_employer") ?>">
+                    <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Employer") ?>
                 </a>
             </li>
             <li>
@@ -176,12 +185,12 @@
                     <?php echo $this->__("Receive Products") ?>
                 </a>
             </li>
-            <?php /* <li>
+            <?php /*<li>
                 <a class="<?php echo $sentSerials?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/sent") ?>">
                     <i class="fa fa-desktop fa-3x"></i>
                     <?php echo $this->__("Send Serials") ?>
                 </a>
-            </li>*/ ?>
+            </li>*/?>
             <li>
                 <a class="<?php if($stockTab) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/adminuser_product/stockgrid') ?>">
                     <i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock") ?>
@@ -205,9 +214,7 @@
                         <li><a href="<?php echo $this->getUrl('inventorymanager/adminuser_purchaseorder/showbystatus', array('status'=>$key)) ?>"><?php echo $status ?></a></li>
                     <?php } ?>
                 </ul>
-            </li>
-            
-            
+            </li>          
         </ul>
     </div>
 <?php } ?>

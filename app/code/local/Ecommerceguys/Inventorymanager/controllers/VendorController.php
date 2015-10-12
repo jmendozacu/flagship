@@ -102,7 +102,6 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
         $this->_redirect('inventorymanager/adminuser/vendorprofiles');
     }
 
-
 	public function productsAction(){
 		if (!$this->_getSession()->isLoggedIn()) {
             $this->_redirect('*/*/login');
