@@ -257,5 +257,39 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 			}
 		}
 		die(json_encode($_return));
-	} 
+	}
+	
+	public function locationsAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function addLocationAction(){
+		$params = $this->getRequest()->getParams();
+		$session = $this->_getSession();
+		if(isset($params['location']) && $params['location'] != ""){
+			Mage::getResourceModel('inventorymanager/label')->addLocationFromAgent(array('vendor_id'=>0, 'location'=>$params['location']));
+			$session->addSuccess(Mage::helper('inventorymanager')->__("Location added."));
+			$this->_redirect("inventorymanager/adminuser_serial/locations");
+			return $this;
+		}
+		$session->addError(Mage::helper('inventorymanager')->__("Invalid data"));
+		$this->_redirect("inventorymanager/adminuser_serial/locations");
+		return $this;
+	}
+	
+	public function removeLocationAction(){
+		$data = $this->getRequest()->getParams();
+		$session = $this->_getSession();
+		if(isset($data['location']) && $data['location'] != ""){
+			$labelResource = Mage::getResourceModel('inventorymanager/label');
+			$labelResource->removeLocationFromAgent($data['location']);
+			$session->addSuccess(Mage::helper('inventorymanager')->__("Location removed."));
+			$this->_redirect("inventorymanager/adminuser_serial/locations");
+			return $this;
+		}
+		$session->addError(Mage::helper('inventorymanager')->__("Invalid data"));
+		$this->_redirect("inventorymanager/adminuser_serial/locations");
+		return $this;
+	}
 }

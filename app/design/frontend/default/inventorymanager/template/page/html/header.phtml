@@ -61,6 +61,7 @@
     $shippedProduct = false;
     $notification = false;
     $manageLabels = false;
+    $adminuserLocations = false;
     
     if($currentController == "vendor" && $currentAction == "products"){
         $productsPage = true;
@@ -96,6 +97,8 @@
         $vendorprofile = true;
     }elseif($currentController == "vendor_employer" && ($currentAction == "employer" || $currentAction == "new" || $currentAction == "edit" || $currentAction == "index")){ 
         $vendoremployer = true;
+    }elseif($currentController == "adminuser_serial" && ($currentAction == "locations")){ 
+        $adminuserLocations = true;
     }
 
 ?>
@@ -204,6 +207,12 @@
             <li>
                 <a class="<?php echo $purchaseorder?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/index") ?>">
                     <i class="fa fa-square-o fa-3x"></i> <?php echo $this->__("Purchase Orders") ?>
+                </a>
+            </li>
+            
+            <li>
+                <a class="<?php echo $adminuserLocations?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/locations") ?>">
+                    <i class="fa fa-square-o fa-3x"></i> <?php echo $this->__("Manage Locations") ?>
                 </a>
             </li>
             

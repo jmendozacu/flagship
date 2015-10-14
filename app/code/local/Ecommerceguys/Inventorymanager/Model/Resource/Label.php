@@ -136,4 +136,39 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
 	    	}
     	}
     }
+    
+    public function getLocationsForAgent(){
+    	$resource = Mage::getSingleton('core/resource');
+    	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
+    	$readConnection = $resource->getConnection('core_read');
+    	
+    	$select = $readConnection->select()
+                ->from(array('location' => $tableName));
+		$vendor = 0;
+        $select->where("location.vendor_id = ?", $vendorId);
+    	return $readConnection->fetchAll($select);
+    }
+    
+    public function addLocationFromAgent($data){
+    	$resource = Mage::getSingleton('core/resource');
+    	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
+    	$writeConnection = $resource->getConnection('core_write');
+    	try {
+    		$writeConnection->insert($tableName, $data);
+    	}catch (Exception $e){
+    		Mage::log($e->getMessage());
+    	}
+    }
+    
+    public function removeLocationFromAgent($location){
+    	$resource = Mage::getSingleton('core/resource');
+    	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
+    	$writeConnection = $resource->getConnection('core_write');
+    	$whereCondition = $writeConnection->quoteInto('vendor_id=? AND location = "'.$location.'"', 0);
+    	try {
+    		$writeConnection->delete($tableName, $whereCondition);
+    	}catch (Exception $e){
+    		Mage::log($e->getMessage());
+    	}
+    }
 }

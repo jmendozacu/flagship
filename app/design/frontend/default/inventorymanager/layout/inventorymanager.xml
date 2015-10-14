@@ -361,5 +361,17 @@
 			<block type="inventorymanager/vendor_locations" name="vendor.locations" template="inventorymanager/vendor/locations.phtml" />
 		</reference>
 	</inventorymanager_vendor_locations>
+	
+	<inventorymanager_adminuser_serial_locations>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_locations" name="all.locations" template="inventorymanager/adminuser/serial/locations.phtml" />
+		</reference>
+	</inventorymanager_adminuser_serial_locations>
 
 </layout>
