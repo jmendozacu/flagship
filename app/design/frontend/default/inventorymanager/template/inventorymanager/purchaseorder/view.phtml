@@ -258,7 +258,6 @@
 		</div>
 	</div>
 </div>
-<button onclick="refreshAllContent()" type="button">TEST</button>
 <!-- Small modal -->
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
   <div class="modal-dialog modal-sm">
@@ -338,6 +337,9 @@
 
 	function addLocation(sId,pId){
 		var location = $('new_location' + sId).value;
+		if(location == ""){
+			return;
+		}
 		var currentIndex = locations.indexOf(location);
 		if(currentIndex>=0){
 			return;
