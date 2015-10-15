@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ecommerceguys_Inventorymanager>
-            <version>0.4.2</version>
+            <version>0.4.3</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
     <frontend>
@@ -61,6 +61,9 @@
                     <label_history>
                     	<table>inventorymanager_purchaseorder_label_history</table>
                     </label_history>
+                    <vendor_deletedlocation>
+                    	<table>inventorymanager_vendor_deleted_location</table>
+                    </vendor_deletedlocation>
                 </entities>
             </inventorymanager_resource>
         </models>

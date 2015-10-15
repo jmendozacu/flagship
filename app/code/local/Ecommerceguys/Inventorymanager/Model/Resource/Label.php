@@ -78,17 +78,34 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	
     	$select = $readConnection->select()
                 ->from(array('location' => $tableName));
-		
-		$vendor = Mage::getSingleton('core/session')->getVendor();
+    	
+    	$vendor = Mage::getSingleton('core/session')->getVendor();
         if($vendor && $vendor->getId()){
 			$vendorId = $vendor->getId();
         }else{
     		$vendorId = Mage::helper('inventorymanager')->getVendorFromRequest();
     	}
     	if($vendorId > 0){
-        	$select->where("location.vendor_id = ?", $vendorId);
+        	$select->where("location.vendor_id = ? OR location.vendor_id = 0", $vendorId);
     	}
-    	return $readConnection->fetchAll($select);
+    	
+    	$deletedLocationArray = array();
+    	if($vendorId > 0){
+	    	$deletedLocations = Mage::getModel('inventorymanager/vendor_deletedlocation')->getCollection();
+	    	$deletedLocations->addFieldToFilter('vendor_id', $vendorId);
+	    	foreach ($deletedLocations as $dLocation){
+	    		$deletedLocationArray[] = $dLocation->getLocation();
+	    	}
+    	}
+    	
+    	$currentLocations = $readConnection->fetchAll($select);
+    	$locationsToDisplay = array();
+    	foreach ($currentLocations as $cl){
+    		if(!in_array($cl['location'], $deletedLocationArray)){
+    			$locationsToDisplay[] = $cl;
+    		}
+    	}
+    	return $locationsToDisplay;
     }
     
     public function addLocation($location){
@@ -121,12 +138,39 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
     	$writeConnection = $resource->getConnection('core_write');
     	
+    	$select = $writeConnection->select('*')
+                ->from(array('location' => $tableName))
+                ->where("location.location = '$location'");
+        
+    	$locationDetail = $writeConnection->fetchOne($select);
+    	
     	$vendor = Mage::getSingleton('core/session')->getVendor();
     	if($vendor && $vendor->getId()){
     		$vendorId = $vendor->getId();
     	}else{
     		$vendorId = Mage::helper('inventorymanager')->getVendorFromRequest();
     	}
+    	
+    	if($vendorId > 0 && $locationDetail == 0){
+    		
+    		$deletedLocationCollection = Mage::getModel('inventorymanager/vendor_deletedlocation')->getCollection();
+    		$deletedLocationCollection->addFieldToFilter('location', $location);
+    		$deletedLocationCollection->addFieldToFilter('vendor_id', $vendorId);
+    		
+    		if($deletedLocationCollection && $deletedLocationCollection->count() == 0){
+	    		$deletedLocationModel = Mage::getModel('inventorymanager/vendor_deletedlocation');
+	    		$deletedLocationModel->setVendorId($vendorId);
+	    		$deletedLocationModel->setLocation($location);
+	    		try{
+	    			$deletedLocationModel->save();
+	    		}catch (Exception $e){
+	    			Mage::log($e);
+	    			Mage::throwException($e->getMessage());
+	    		}
+    		}
+    		return $this;
+    	}
+    	
     	if($vendorId > 0){
 	    	$whereCondition = $writeConnection->quoteInto('vendor_id=? AND location = "'.$location.'"', $vendorId);
 	    	try {
