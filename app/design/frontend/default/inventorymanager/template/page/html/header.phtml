@@ -9,9 +9,9 @@
                 </button>
                 <?php if (Mage::getSingleton('inventorymanager/session')->isEmployer()): ?>    
                 <a class="navbar-brand" style='font-size:25px' href="index.html"><?php echo $this->__("Employer Section") ?></a>
-            <?php elseif:?>
+                <?php else:?>
                 <a class="navbar-brand" href="index.html"><?php echo $this->__("Vendor Section") ?></a>
-            <?php endif;?>
+                <?php endif;?>
             </div>
    
         <?php /*echo $this->getLayout()->createBlock('inventorymanager/vendor_notification')->setTemplate("inventorymanager/vendor/notification.phtml")->toHtml();*/ ?> 
