@@ -176,6 +176,7 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
         $this->_redirect('*/*/login');
 	}
 	
+    
 	public function logoutAction(){
 		$this->_getSession()->logout()
             ->renewSession();
