@@ -8,7 +8,9 @@
                     <span class="icon-bar"></span>
                 </button>
                 <?php if (Mage::getSingleton('inventorymanager/session')->isEmployer()): ?>    
-                <a class="navbar-brand" style='font-size:25px' href="index.html"><?php echo $this->__("Employer Section") ?></a> 
+                <a class="navbar-brand" style='font-size:25px' href="index.html"><?php echo $this->__("Employer Section") ?></a>
+            <?php elseif:?>
+                <a class="navbar-brand" href="index.html"><?php echo $this->__("Vendor Section") ?></a>
             <?php endif;?>
             </div>
    
