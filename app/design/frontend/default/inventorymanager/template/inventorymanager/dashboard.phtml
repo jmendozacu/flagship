@@ -1,7 +1,10 @@
 <div class="row">
                     <div class="col-md-12">
-                        <h2>Admin Dashboard</h2>
-                        <h5>Welcome Jhon Deo , Love to see you back. </h5>
+                         <?php if (Mage::getSingleton('inventorymanager/session')->isEmployer()): ?> 
+                            <h2>Employee Dashboard</h2>
+                        <?php else:?>
+                            <h2>Vendor Dashboard</h2>
+                        <?php endif;?>
                     </div>
                 </div>
                 <!-- /. ROW  -->

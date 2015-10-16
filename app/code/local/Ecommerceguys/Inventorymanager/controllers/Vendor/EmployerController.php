@@ -3,6 +3,20 @@
 class Ecommerceguys_Inventorymanager_Vendor_EmployerController extends Mage_Core_Controller_Front_Action
 {
 	
+	public function preDispatch(){
+
+		parent::preDispatch();
+		if (!$this->_getSession()->isLoggedIn()) {
+            $this->_redirect('*/vendor/login');
+            $this->setFlag('', self::FLAG_NO_DISPATCH, true);
+            return false;
+        }
+        if($this->_getSession()->isEmployer()){
+        	$this->_redirect('inventorymanager/vendor');
+        	return;
+        }
+
+	}
 	protected function _getSession()
     {
         return Mage::getSingleton('inventorymanager/session');
@@ -65,7 +79,7 @@ class Ecommerceguys_Inventorymanager_Vendor_EmployerController extends Mage_Core
 				} else {
 					$model->setUpdateTime(now());
 				}	
-				
+				$model->setIsEmployer(1);
 				$model->save();
 				Mage::getSingleton('core/session')->setFormData(false);
 

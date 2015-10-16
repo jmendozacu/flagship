@@ -2,6 +2,7 @@
 <?php $vendorData->getName();?>
 <?php $vendorProducts = $this->getVendorProducts($vendorData->getId());?>
 
+
 <form id="edit_form" name='edit_form' action="<?php echo $this->getPostUrl($vendorData->getId())?>" method="post" enctype="multipart/form-data">
 
 <div class="row">
@@ -44,7 +45,7 @@
                             </div>
                             
                             <div class="form-group">
-                                <label><?php echo $this->__("Passeord") ?></label>
+                                <label><?php echo $this->__("Password") ?></label>
                                 <input id="password" name="<?php echo $this->__('password');?>" value="<?php echo $vendorData->getPassword();?>" class="form-control required-entry" type="password" style="width:300px" />
                             </div>
                             
