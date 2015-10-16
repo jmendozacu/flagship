@@ -63,6 +63,9 @@ class Ecommerceguys_Inventorymanager_Adminhtml_PurchaseorderController extends M
 	public function saveAction() {
 		if ($data = $this->getRequest()->getPost()) {
 			//print_r($data); exit;
+			
+			$data['status']	= "processing"; // DEFAULT STATUS
+			
 			$id = $this->getRequest()->getParam('id');
 			$poProductIds = $data['po_product'];
 			$mainProducts = $data['main_product'];

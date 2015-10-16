@@ -44,7 +44,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 			$id = $this->getRequest()->getParam('id');
 			$poProductIds = $data['po_product'];
 			$mainProducts = $data['main_product'];
-			
+			$data['status']	= "processing"; // DEFAULT STATUS
 			/* BELLOW LOGIC USE TO CHANGE DATE FORMAT - TRIED WITH strtotime BUT WON'T WORK */
 			$orderDate = explode("/", $data['date_of_po']);
 			if(isset($orderDate[2]))
