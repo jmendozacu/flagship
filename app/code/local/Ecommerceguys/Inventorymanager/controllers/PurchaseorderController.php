@@ -129,4 +129,9 @@ class Ecommerceguys_Inventorymanager_PurchaseorderController extends Mage_Core_C
 			}
 		}
 	}
+	
+	public function showbystatusAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
 }

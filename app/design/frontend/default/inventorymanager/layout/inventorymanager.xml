@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
 
+	<inventorymanager>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+	</inventorymanager>
+
 	<inventorymanager_adminuser_purchaseorder_index>
 		<reference name="root">
 			<action method="setTemplate"><template>page/1column.phtml</template></action>
@@ -373,5 +382,17 @@
 			<block type="inventorymanager/user_serial_locations" name="all.locations" template="inventorymanager/adminuser/serial/locations.phtml" />
 		</reference>
 	</inventorymanager_adminuser_serial_locations>
+	
+	<inventorymanager_purchaseorder_showbystatus>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/purchaseorder_bystatus" name="ordersbystatus" template="inventorymanager/purchaseorder/grid.phtml" />
+		</reference>
+	</inventorymanager_purchaseorder_showbystatus>
 
 </layout>
