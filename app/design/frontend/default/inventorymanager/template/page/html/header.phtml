@@ -8,7 +8,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <?php if (Mage::getSingleton('inventorymanager/session')->isEmployer()): ?>    
-                <a class="navbar-brand" style='font-size:25px' href="index.html"><?php echo $this->__("Employer Section") ?></a>
+                <a class="navbar-brand" style='font-size:25px' href="index.html"><?php echo $this->__("Employee Section") ?></a>
                 <?php else:?>
                 <a class="navbar-brand" href="index.html"><?php echo $this->__("Vendor Section") ?></a>
                 <?php endif;?>
@@ -129,7 +129,7 @@
             <?php if (!Mage::getSingleton('inventorymanager/session')->isEmployer()): ?>
                 <li>
                     <a class="<?php if($vendoremployer) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor_employer") ?>">
-                        <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Employer") ?>
+                        <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Employee") ?>
                     </a>
                 </li>
             <?php endif;?>
