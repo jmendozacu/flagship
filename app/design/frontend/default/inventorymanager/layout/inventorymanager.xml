@@ -394,5 +394,15 @@
 			<block type="inventorymanager/purchaseorder_bystatus" name="ordersbystatus" template="inventorymanager/purchaseorder/grid.phtml" />
 		</reference>
 	</inventorymanager_purchaseorder_showbystatus>
+	
+	
+	<inventorymanager_adminuser_notification_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_notification" name="vendor.notification" template="inventorymanager/adminuser/notification.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_notification_index>
 
 </layout>
