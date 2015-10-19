@@ -20,14 +20,15 @@
 							<div class="form-control-static" >
 								<div class="btn-group show-dropbox show-location-dropbox">
 									<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
-						  				<input type="text" class="form-control label-box" onkeyup="statusText(this)" name="location" id="new_location_bulk<?php echo $productId ?>" value="" />
+						  				<!--<input type="text" class="form-control label-box" onkeyup="statusText(this)" name="location" id="new_location_bulk<?php echo $productId ?>" value="" />-->
+						  				<input readonly type="text" class="form-control label-box" name="location" id="new_location_bulk<?php echo $productId ?>" value="" />
 						  			</div>
 								  	<button type="button" class="btn btn-primary dropdown-toggle" onclick="openLocationBox(this)" style="z-index:999"><span class="caret"></span></button>
 								  	<ul class="dropdown-menu location-box" id="dropdown-box-location_bulk<?php echo $productId ?>">
-								  		<li class="add-location-li"><a href="javascript:addLocation('_bulk<?php echo $productId ?>', <?php echo $productId ?>)"  ><?php echo $this->__("Add New") ?></a></li>
+								  		<!--<li class="add-location-li"><a href="javascript:addLocation('_bulk<?php echo $productId ?>', <?php echo $productId ?>)"  ><?php echo $this->__("Add New") ?></a></li>-->
 								  		<?php foreach ($locations as $key => $locationLabel) { ?>
 								  			<li>
-								  				<span class="remove-location-link" onclick="removeLocationFunction('<?php echo $locationLabel ?>',<?php echo $productId ?>)">x</span>
+								  				<!--<span class="remove-location-link" onclick="removeLocationFunction('<?php echo $locationLabel ?>',<?php echo $productId ?>)">x</span>-->
 								  				<a class="location-options" href="javascript:selectLocation('<?php echo $locationLabel ?>','_bulk<?php echo $productId ?>')"><?php echo $locationLabel ?></a>
 								  			</li>
 								  		<?php } ?>
@@ -71,14 +72,15 @@
 								<div class="form-control-static" >
 									<div class="btn-group show-dropbox show-location-dropbox">
 										<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
-							  				<input type="text" class="form-control label-box" onkeyup="statusText(this)" name="location" id="new_location<?php echo $serial->getId() ?>" value="<?php echo $serial->getLocation(); ?>" />
+							  				<!--<input type="text" class="form-control label-box" onkeyup="statusText(this)" name="location" id="new_location<?php echo $serial->getId() ?>" value="<?php echo $serial->getLocation(); ?>" />-->
+							  				<input readonly type="text" class="form-control label-box" name="location" id="new_location<?php echo $serial->getId() ?>" value="<?php echo $serial->getLocation(); ?>" />
 							  			</div>
 									  	<button type="button" class="btn btn-primary dropdown-toggle" onclick="openLocationBox(this)" style="z-index:999"><span class="caret"></span></button>
 									  	<ul class="dropdown-menu location-box" id="dropdown-box-location<?php echo $serial->getId() ?>">
-									  		<li class="add-location-li"><a href="javascript:addLocation(<?php echo $serial->getId() ?>,<?php echo $productId ?>)"  ><?php echo $this->__("Add New") ?></a></li>
+									  		<!--<li class="add-location-li"><a href="javascript:addLocation(<?php echo $serial->getId() ?>,<?php echo $productId ?>)"  ><?php echo $this->__("Add New") ?></a></li>-->
 									  		<?php foreach ($locations as $key => $locationLabel) { ?>
 									  			<li>
-									  				<span class="remove-location-link" onclick="removeLocationFunction('<?php echo $locationLabel ?>',<?php echo $productId ?>)">x</span>
+									  				<!--<span class="remove-location-link" onclick="removeLocationFunction('<?php echo $locationLabel ?>',<?php echo $productId ?>)">x</span>-->
 									  				<a class="location-options" href="javascript:selectLocation('<?php echo $locationLabel ?>',<?php echo $serial->getId() ?>)"><?php echo $locationLabel ?></a>
 									  		<?php } ?>
 									  	</ul>

@@ -116,14 +116,18 @@
 								<div class="form-control-static" >
 									<div class="btn-group show-dropbox">
 											<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
-							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" name="location" id="new_location" value="<?php echo $labelObject->getLocation(); ?>" />
+							  				<!--<input type="text" class="form-control" onkeyup="statusText(this.value)" name="location" id="new_location" value="<?php echo $labelObject->getLocation(); ?>" />-->
+							  				<input type="text" class="form-control" readonly name="location" id="new_location" value="<?php echo $labelObject->getLocation(); ?>" />
 							  			</div>
 									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button-location" style="z-index:999"><span class="caret"></span></button>
 									  	<ul class="dropdown-menu" id="dropdown-box-location">
-									  		<li class="add-location-li"><a href="javascript:void(0);" id="new_location_link" ><?php echo $this->__("Add New") ?></a></li>
+									  		<!--<li class="add-location-li"><a href="javascript:void(0);" id="new_location_link" ><?php echo $this->__("Add New") ?></a></li>-->
 									  		<?php /* <li class="add-location-li"><a href="javascript:void(0);" class="location-options"  ><?php echo $this->__("In Stock On Magento") ?></a></li> */ ?>
 									  		<?php foreach ($locations as $key => $locationLabel) { ?>
-									  			<li><span class="remove-location-link">x</span><a class="location-options" href="javascript:void(0);"><?php echo $locationLabel ?></a></li>
+									  			<li>
+									  				<!--<span class="remove-location-link">x</span>-->
+									  				<a class="location-options" href="javascript:void(0);"><?php echo $locationLabel ?></a>
+									  			</li>
 									  		<?php } ?>
 									  	</ul>
 									</div>
@@ -360,27 +364,24 @@
 <script>
 	// SMART DROPBOX SCRIPTS
 	// locations
+	/*
 	var locations = [];
 	<?php foreach ($locations as $location){ ?>
 		locations.push("<?php echo $location; ?>");
 	<?php } ?>
 	
-	$('openbox-button-location').observe('click', function(){
-		$('dropdown-box-location').toggleClassName('show-dropbox');
-	});
+	
 	
 	$('new_location').observe("keyup", function(){
 		$('dropdown-box-location').addClassName('show-dropbox');
 		$('new_location_link').innerHTML = '<?php echo $this->__("Add") ?> ' + this.value;
 	});
 	
-	$('new_location').observe("click", function(){
-		$('dropdown-box-location').addClassName('show-dropbox');
-	});
 	
-	$('new_location_link').observe('click', function(){
+	
+	/*$('new_location_link').observe('click', function(){
 		addNewLocation();
-	});
+	});*/
 	
 	$$('a.location-options').each(function(e){
 		e.observe('click', function(){
@@ -388,7 +389,7 @@
 			$('dropdown-box-location').toggleClassName('show-dropbox');
 		});
 	});
-	
+	/*
 	function addNewLocation(){
 		var location = $('new_location').value;
 		var currentIndex = locations.indexOf(location);
@@ -440,12 +441,12 @@
 		});
 	}
 	
-	$$("span.remove-location-link").each(function(e){
+	/*$$("span.remove-location-link").each(function(e){
 		e.observe('click', function(){
 			removeLocationFunction(e);
 		});
-	});
-	
+	});*/
+	/*
 	function removeLocationFunction(e){
 		var location = e.up('li').down('a').innerHTML;
 		var currentIndex = locations.indexOf(location);
@@ -468,5 +469,11 @@
   			},
   			onFailure: function() { alert('Something went wrong...');}
 		});
-	}
+	}*/
+	$('openbox-button-location').observe('click', function(){
+		$('dropdown-box-location').toggleClassName('show-dropbox');
+	});
+	$('new_location').observe("click", function(){
+		$('dropdown-box-location').addClassName('show-dropbox');
+	});
 </script>

@@ -86,26 +86,27 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     		$vendorId = Mage::helper('inventorymanager')->getVendorFromRequest();
     	}
     	if($vendorId > 0){
-        	$select->where("location.vendor_id = ? OR location.vendor_id = 0", $vendorId);
+        	//$select->where("location.vendor_id = ? OR location.vendor_id = 0", $vendorId);
+        	$select->where("location.vendor_id = ? ", 0); 
     	}
     	
-    	$deletedLocationArray = array();
+    	/*$deletedLocationArray = array();
     	if($vendorId > 0){
 	    	$deletedLocations = Mage::getModel('inventorymanager/vendor_deletedlocation')->getCollection();
 	    	$deletedLocations->addFieldToFilter('vendor_id', $vendorId);
 	    	foreach ($deletedLocations as $dLocation){
 	    		$deletedLocationArray[] = $dLocation->getLocation();
 	    	}
-    	}
+    	}*/
     	
-    	$currentLocations = $readConnection->fetchAll($select);
-    	$locationsToDisplay = array();
+    	return  $readConnection->fetchAll($select);
+    	/*$locationsToDisplay = array();
     	foreach ($currentLocations as $cl){
     		if(!in_array($cl['location'], $deletedLocationArray)){
     			$locationsToDisplay[] = $cl;
     		}
     	}
-    	return $locationsToDisplay;
+    	return $locationsToDisplay;*/
     }
     
     public function addLocation($location){
