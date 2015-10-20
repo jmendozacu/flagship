@@ -164,4 +164,16 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 			}
 		}
 	}
+	
+	public function getAgentLocations(){
+		$locations = Mage::getResourceModel('inventorymanager/label')->getLocationsForAgent();
+		$agentLocations = array();
+		foreach ($locations as $location){
+			if(isset($location['location'])){
+				$agentLocations[] = $location['location'];
+			}
+		}
+		$agentLocations = array_filter($agentLocations);
+		return $agentLocations;
+	}
 }

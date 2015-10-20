@@ -3,7 +3,7 @@ class Ecommerceguys_Inventorymanager_Block_User_Serial_Locations extends Mage_Co
 {
 	public function getLocations(){
 		$resourceLabel = Mage::getResourceModel('inventorymanager/label');
-		$locations = $resourceLabel->getLocationsForAgent();
+		$locations = $resourceLabel->getAllLocation();
 		return $locations;
 	}
 }

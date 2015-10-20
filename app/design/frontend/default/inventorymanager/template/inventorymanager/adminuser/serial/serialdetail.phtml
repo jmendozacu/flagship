@@ -10,7 +10,8 @@
 	$_helper = $this->helper('catalog/output');
 	$labelComments = $this->getComments();
 	$status = Mage::helper('inventorymanager')->getOrderedProductStatusArray($_purchaseorder->getVendorId());
-	$locations = $this->helper('inventorymanager')->getLocations($_purchaseorder->getVendorId());
+	$locations = $this->helper('inventorymanager')->getAgentLocations();
+	
 	$staticStatusArray = $this->helper('inventorymanager')->getStaticStatusOptions();
 	
 	$height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');

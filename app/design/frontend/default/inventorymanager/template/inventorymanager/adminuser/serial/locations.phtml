@@ -21,12 +21,14 @@
 								<thead>
 									<tr>
 										<td><?php echo $this->__("Location") ?></td>
+										<td><?php echo $this->__("Area") ?></td>
 										<td><?php echo $this->__("Action") ?></td>
 									</tr>
 								</thead>
 								<?php foreach ($locations as $location){ ?>
 									<tr>
 										<td><?php echo $location['location'] ?></td>
+										<td><?php echo $location['visible_area']==2?"VENDOR":"AGENT"; ?></td>
 										<td><a href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/removeLocation", array('location'=>$location['location'])) ?>" class="btn btn-danger btn-sm"><?php echo $this->__("Remove") ?> </a></td>
 									</tr>
 								<?php } ?>
@@ -51,7 +53,21 @@
 						<form action="<?php echo $this->getUrl("inventorymanager/adminuser_serial/addLocation") ?>" method="POST" id="location-form">
 							<div class="form-group">
 								<label><?php echo $this->__("Location") ?></label>
-								<input type="text" class="form-control" name="location" />
+								<input type="text" class="form-control required-entry" name="location" />
+							</div>
+							
+							<div class="form-group">
+								<label><?php echo $this->__("Visible Area") ?></label>
+								<div class="radio">
+                                    <label>
+                                        <input type="radio" value="1" class="validate-one-required-by-name" name="visible_area"> <?php echo $this->__("For Agent") ?>
+                                    </label>
+                                </div>
+								<div class="radio">
+                                    <label>
+                                        <input type="radio" value="2" class="validate-one-required-by-name" name="visible_area"> <?php echo $this->__("For Vendor") ?>
+                                    </label>
+                                </div>
 							</div>
 							<button class="btn btn-primary" type="submit"><?php echo $this->__("Submit") ?></button>
 						</form>
@@ -61,3 +77,8 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+//<![CDATA[
+    var theForm = new VarienForm('location-form', false);
+//]]>   
+</script>

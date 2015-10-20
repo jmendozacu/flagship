@@ -87,7 +87,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	}
     	if($vendorId > 0){
         	//$select->where("location.vendor_id = ? OR location.vendor_id = 0", $vendorId);
-        	$select->where("location.vendor_id = ? ", 0); 
+        	$select->where("location.vendor_id = ? AND location.visible_area = 2", 0); 
     	}
     	
     	/*$deletedLocationArray = array();
@@ -99,11 +99,13 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
 	    	}
     	}*/
     	
-    	return  $readConnection->fetchAll($select);
-    	/*$locationsToDisplay = array();
+    	return $readConnection->fetchAll($select);
+    	
+    	/*$currentLocations =  $readConnection->fetchAll($select);
+    	$locationsToDisplay = array();
     	foreach ($currentLocations as $cl){
-    		if(!in_array($cl['location'], $deletedLocationArray)){
-    			$locationsToDisplay[] = $cl;
+    		if(isset($cl['location'])){
+    			$locationsToDisplay[] = $cl['location'];
     		}
     	}
     	return $locationsToDisplay;*/
@@ -190,11 +192,13 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	$select = $readConnection->select()
                 ->from(array('location' => $tableName));
 		$vendor = 0;
-        $select->where("location.vendor_id = ?", $vendorId);
+        //$select->where("location.vendor_id = ? AND location.visible_area != '2'", $vendor);
+        $select->where("location.vendor_id = ?", $vendor);
     	return $readConnection->fetchAll($select);
     }
     
     public function addLocationFromAgent($data){
+    	$data['vendor_id'] = 0;
     	$resource = Mage::getSingleton('core/resource');
     	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
     	$writeConnection = $resource->getConnection('core_write');
@@ -215,5 +219,17 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	}catch (Exception $e){
     		Mage::log($e->getMessage());
     	}
+    }
+    
+    public function getAllLocation(){
+    	$resource = Mage::getSingleton('core/resource');
+    	$tableName = $resource->getTableName('inventorymanager_purchaseorder_label_location');
+    	$readConnection = $resource->getConnection('core_read');
+    	
+    	$select = $readConnection->select()
+                ->from(array('location' => $tableName));
+		$vendor = 0;
+        $select->where("location.vendor_id = ? ", $vendorId);
+    	return $readConnection->fetchAll($select);
     }
 }

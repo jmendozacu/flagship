@@ -268,7 +268,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 		$params = $this->getRequest()->getParams();
 		$session = $this->_getSession();
 		if(isset($params['location']) && $params['location'] != ""){
-			Mage::getResourceModel('inventorymanager/label')->addLocationFromAgent(array('vendor_id'=>0, 'location'=>$params['location']));
+			Mage::getResourceModel('inventorymanager/label')->addLocationFromAgent($params);
 			$session->addSuccess(Mage::helper('inventorymanager')->__("Location added."));
 			$this->_redirect("inventorymanager/adminuser_serial/locations");
 			return $this;
