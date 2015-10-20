@@ -39,7 +39,7 @@ class Ecommerceguys_Inventorymanager_Model_Label extends Mage_Core_Model_Abstrac
 			$products->addFieldToFilter('po_id', $orderId);
 			foreach ($products as $product){
 				for($qtyCounter = 1; $qtyCounter <= $product->getQty(); $qtyCounter++){
-					$serial = Mage::helper('inventorymanager')->getSerial();
+					$serial = Mage::helper('inventorymanager')->getSerial($orderId);
 					$label = Mage::getModel('inventorymanager/label');
 					$labelData = array(
 						'product_id'	=>	$product->getId(),
@@ -71,7 +71,7 @@ class Ecommerceguys_Inventorymanager_Model_Label extends Mage_Core_Model_Abstrac
 				$pendingLabels = $productQty - $productLabels->count();
 				while ($pendingLabels > 0){
 					$pendingLabels--;
-					$serial = Mage::helper('inventorymanager')->getSerial();
+					$serial = Mage::helper('inventorymanager')->getSerial($orderId);
 					$label = Mage::getModel('inventorymanager/label');
 					$labelData = array(
 						'product_id'	=>	$product->getId(),

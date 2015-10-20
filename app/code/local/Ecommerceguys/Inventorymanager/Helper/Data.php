@@ -20,14 +20,17 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 		);
 	}
 	
-	public function getSerial(){
-		 $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-		 $random_string_length = 14;
+	public function getSerial($orderId=0){
+		 $characters = '0123456789';
+		 $random_string_length = 4;
 		 $string = '';
 		 for ($i = 0; $i < $random_string_length; $i++) {
 		      $string .= $characters[rand(0, strlen($characters) - 1)];
 		 }
-		 return $string;
+		 
+		 $serialKey = date('Y-m')."-".$orderId."-".$string;
+		 
+		 return $serialKey;
 	}
 	
 	public function getOrderedProductStatusArray(){
