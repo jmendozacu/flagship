@@ -1,17 +1,22 @@
-<?php $vendorData = Mage::registry('vendor_employer_data');
+<?php $employee = $this->getCurrentEmployee();
 
 ?>
 
-<form id="edit_form" name='edit_form' action="<?php echo $this->getPostUrl($vendorData->getVendorId())?>" method="post" enctype="multipart/form-data">
+<form id="edit_form" name='edit_form' action="<?php echo $this->getUrl("inventorymanager/vendor_employer/save") ?>" method="post" enctype="multipart/form-data">
 
-<?php if(!$vendorData->getId()): ?>
-<input id="parent_id" name="<?php echo $this->__('parent_id');?>" value="<?php echo $this->getCurrentVendor()->getId();?>" class="required-entry form-control" type="hidden"/>
+<?php if($employee && $employee->getId()): ?>
+<input name="id" value="<?php echo $employee->getId();?>" type="hidden"/>
 <?php endif;?>
 <div class="row">
     <div class="col-md-12">
         <h2><?php echo $this->__("Employee") ?></h2>
         <div style="float:right;padding-right:10px">
-             <button type="submit" title="<?php echo "<?php echo $this->__('Save');?>";?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+             <button type="submit" title="<?php echo $this->__('Save');?>" class="btn btn-warning" ><span><span><?php echo $this->__("Save");?></span></span></button>
+             <?php if($employee && $employee->getId()){ ?>
+             <button type="button" title="<?php echo $this->__('Generate Badge');?>" class="btn btn-primary" onclick="setLocation('<?php echo $this->getUrl('inventorymanager/vendor_employer/generatebadge', array('id'=>$employee->getId())) ?>')" >
+             	<span><span><?php echo $this->__("Generate Badge");?></span></span>
+             </button>
+             <?php } ?>
         </div>
     </div>
 </div>
@@ -26,29 +31,75 @@
                     <div class="col-md-12">
                         <?php echo $this->getMessagesBlock()->toHtml() ?>
                             <div class="form-group">
-                                
                                 <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
-                                <input id="name" name="<?php echo $this->__('name');?>" value="<?php echo $vendorData->getName();?>" class="required-entry form-control" type="text" style="width:300px" />
-                            </div>
-
-                            <div class="form-group">
-                                <label><?php echo $this->__("Vendor Email") ?></label>
-                                <input id="email" name="<?php echo $this->__('email');?>" value="<?php echo $vendorData->getEmail();?>" class="form-control  required-entry validate-email required-entry" type="text" style="width:300px" />
+                                <input id="name" name="name" value="<?php echo $employee?$employee->getName():"";?>" class="required-entry form-control" type="text" style="width:300px" />
                             </div>
                             
                             <div class="form-group">
+                                <label for="name"><?php echo $this->__('Title');?><span class="required">*</span></label>
+                                <input id="title" name="title" value="<?php echo $employee?$employee->getTitle():"";?>" class="required-entry form-control" type="text" style="width:300px" />
+                            </div>
+                            
+
+                            <div class="form-group">
+                                <label><?php echo $this->__("Vendor Email") ?></label>
+                                <input id="email" name="email" value="<?php echo $employee?$employee->getEmail():"";?>" class="form-control  required-entry validate-email required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                            	<label><?php echo $this->__("Logo") ?></label>
+								<input type="file" name="logo">
+								<?php if($employee && $employee->getId() && $employee->getLogo() != ""){ ?>
+									<div class="checkbox">
+										<img src="<?php echo Mage::helper('inventorymanager')->resizeImage($employee->getLogo(), 139, 139, "inventorymanager/employee/"); ?>" alt="<?php echo $this->__("Employee Logo") ?>" />
+									</div>
+								<?php } ?>
+								<div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="remove_logo"><?php echo $this->__("Remove Logo") ?>
+                                    </label>
+                                </div>
+							</div>
+							
+							<div class="form-group">
+                            	<label><?php echo $this->__("Image") ?></label>
+								<input type="file" name="photo">
+								<?php if($employee && $employee->getId() && $employee->getPhoto() != ""){ ?>
+									<div class="checkbox">
+										<img src="<?php echo Mage::helper('inventorymanager')->resizeImage($employee->getPhoto(), 139, 139, "inventorymanager/employee/"); ?>" alt="<?php echo $this->__("Employee Photo") ?>" />
+									</div>
+								<?php } ?>
+								<div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="remove_photo"><?php echo $this->__("Remove Photo") ?>
+                                    </label>
+                                </div>
+							</div>
+                            
+							<?php /* 
+                            <div class="form-group">
                                 <label><?php echo $this->__("Vendor Code") ?></label>
-                                <input id="vendor_code" name="<?php echo $this->__('vendor_code');?>" value="<?php echo $vendorData->getVendorCode();?>" class="form-control required-entry" type="text" style="width:300px" />
+                                <input id="vendor_code" name="vendor_code" value="<?php echo $employee?$employee->getVendorCode():"";?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            */ ?>                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Barcode ID") ?></label>
+                                <input id="barcode_id" name="barcode_id" value="<?php echo $employee?$employee->getBarcodeId():"";?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Employee ID") ?></label>
+                                <input id="employee_display_id" name="employee_display_id" value="<?php echo $employee?$employee->getEmployeeDisplayId():"";?>" class="form-control required-entry" type="text" style="width:300px" />
                             </div>
                             
                             <div class="form-group">
                                 <label><?php echo $this->__("Username") ?></label>
-                                <input id="username" name="<?php echo $this->__('username');?>" value="<?php echo $vendorData->getUsername();?>" class="form-control required-entry" type="text" style="width:300px" />
+                                <input id="username" name="username" value="<?php echo $employee?$employee->getUsername():"";?>" class="form-control required-entry" type="text" style="width:300px" />
                             </div>
                             
                             <div class="form-group">
                                 <label><?php echo $this->__("Password") ?></label>
-                                <input id="password" name="<?php echo $this->__('password');?>" value="<?php echo $vendorData->getPassword();?>" class="form-control required-entry" type="password" style="width:300px" />
+                                <input id="password" name="password" value="<?php echo $employee?$employee->getPassword():"";?>" class="form-control required-entry" type="password" style="width:300px" />
                             </div>
                             
                            <?php /* <div class="form-group">
@@ -63,7 +114,7 @@
 </div>
 </form>
  <script type="text/javascript">
-    editForm = new varienForm('edit_form','');
+    editForm = new VarienForm('edit_form','');
 </script>
 
  <script type="text/javascript">

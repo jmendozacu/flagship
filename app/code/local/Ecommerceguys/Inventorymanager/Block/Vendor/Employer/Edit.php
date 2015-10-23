@@ -10,12 +10,17 @@ class Ecommerceguys_Inventorymanager_Block_Vendor_Employer_Edit extends Mage_Cor
 	}
 
 	public function getCurrentVendor(){
-		$vendor = Mage::getSingleton('core/session')->getVendor();
-		if($vendor && $vendor->getId()){
-			return $vendor;
-		}else{
-			return false;
+		
+	}
+	
+	public function getCurrentEmployee(){
+		$id = $this->getRequest()->getParam('id', 0);
+		$employee = Mage::getModel('inventorymanager/vendor_employee')->load($id);
+		if(!$employee || !$employee->getId()){
+			$data = Mage::getSingleton('core/session')->getFormData();
+			$employee->setData($data);
 		}
+		return $employee;
 	}
 	public function getPostUrl($id){
 		return Mage::getUrl('inventorymanager/vendor_employer/save',array("id"=>$id));

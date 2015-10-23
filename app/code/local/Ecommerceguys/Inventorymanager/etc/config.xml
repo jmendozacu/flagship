@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ecommerceguys_Inventorymanager>
-            <version>0.4.5</version>
+            <version>0.4.6</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
     <frontend>
@@ -64,6 +64,9 @@
                     <vendor_deletedlocation>
                     	<table>inventorymanager_vendor_deleted_location</table>
                     </vendor_deletedlocation>
+                    <vendor_employee>
+                    	<table>inventorymanager_vendor_employee</table>
+                    </vendor_employee>
                 </entities>
             </inventorymanager_resource>
         </models>

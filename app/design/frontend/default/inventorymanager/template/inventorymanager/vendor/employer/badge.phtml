@@ -1,0 +1,43 @@
+<?php $employee = $this->getCurrentEmployee(); ?>
+<table width="400" border="1">
+	<tr>
+		<td>
+			<table width="100%" cellpadding="5" cellspacing="5">
+				<tr>
+					<td align="center">
+						<br/>
+						<img src="<?php echo $this->getSkinUrl("images/prohoods_logo_sm.png") ?>" />
+					</td>
+				</tr>
+				 <tr>
+				 	<td align="center">
+				 		<h1>PROHOODS</h1>
+				 	</td>
+				 </tr>
+				 <tr>
+				 	<td align="center"> <img src="<?php echo Mage::getBaseUrl('media') . "inventorymanager/employee/" .$employee->getPhoto(); ?>" width="300"  /></td>
+				 </tr>
+				 <tr>
+				 	<td align="center">
+				 		<h1><?php echo $employee->getName() ?></h1>
+				 	</td>
+				 </tr>
+				 <tr>
+				 	<td align="center">
+				 		<h1><?php echo $employee->getTitle() ?></h1>
+				 	</td>
+				 </tr>
+				 <tr>
+				 	<td align="center">
+				 		<img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $employee->getBarcodeId() . "&size=32"; ?>" />
+				 	</td>
+				 </tr>
+				  <tr>
+				 	<td align="center">
+				 		<h2><?php echo $employee->getEmployeeDisplayId() ?></h2>
+				 	</td>
+				 </tr>
+			</table>
+		</td>
+	</tr>
+</table>

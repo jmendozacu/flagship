@@ -1,7 +1,7 @@
 <?php 
 
 
-    $vendors = $this->getAllVendors();
+    $employees = $this->getEmployees();
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -31,13 +31,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $iCounter = 0; foreach ($vendors as $vendor){ $iCounter++; ?>
+                            <?php $iCounter = 0; foreach ($employees as $employee){ $iCounter++; ?>
                                 <tr class="<?php echo $iCounter%2==0?"odd":"even"; ?>">
-                                    <td><?php echo $vendor->getId() ?></td>
-                                    <td><?php echo $vendor->getName() ?></td>
-                                    <td><?php echo $vendor->getEmail() ?></td>
-                                    <td><?php echo date("Y/m/d", strtotime($vendor->getCreatedTime())) ?></td>
-                                    <td><a href="<?php echo $this->getUrl('inventorymanager/vendor_employer/edit', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__("Edit") ?></a> <?php echo $this->__('-|-')?><a href="<?php echo $this->getUrl('inventorymanager/vendor_employer/delete', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__(" Delete ") ?></a></td>
+                                    <td><?php echo $employee->getId() ?></td>
+                                    <td><?php echo $employee->getName() ?></td>
+                                    <td><?php echo $employee->getEmail() ?></td>
+                                    <td><?php echo date("Y/m/d", strtotime($employee->getCreatedTime())) ?></td>
+                                    <td><a href="<?php echo $this->getUrl('inventorymanager/vendor_employer/edit', array('id'=>$employee->getId())) ?>"><?php echo $this->__("Edit") ?></a> <?php echo $this->__('-|-')?><a href="<?php echo $this->getUrl('inventorymanager/vendor_employer/delete', array('id'=>$employee->getId())) ?>"><?php echo $this->__(" Delete ") ?></a></td>
                                 </tr>
                             <?php } ?>
                         </tbody>
