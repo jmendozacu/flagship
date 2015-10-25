@@ -404,5 +404,29 @@
 			<block type="inventorymanager/user_notification" name="vendor.notification" template="inventorymanager/adminuser/notification.phtml" ></block>
 		</reference>
 	</inventorymanager_adminuser_notification_index>
+	
+	<inventorymanager_help_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/help_index" name="help" template="inventorymanager/help/index.phtml" />
+		</reference>
+	</inventorymanager_help_index>
+	
+	<inventorymanager_help_view>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/help_view" name="help.view" template="inventorymanager/help/view.phtml" />
+		</reference>
+	</inventorymanager_help_view>
 
 </layout>

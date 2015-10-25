@@ -1,0 +1,29 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Help Videos") ?></div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th><?php echo $this->__("Help Topic") ?></th>
+								<th width="20%"><?php echo $this->__("Action") ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><?php echo $this->__("Help video of vendor product") ?></td>
+								<td><a href="<?php echo $this->getUrl("inventorymanager/help/view", array('path'=>'products-prohoods.m4v')) ?>"><?php echo $this->__("view") ?></a></td>
+							</tr>
+							<tr>
+								<td><?php echo $this->__("Help video Vendor Profile") ?></td>
+								<td><a href="<?php echo $this->getUrl("inventorymanager/help/view", array('path'=>'profile-vendor.m4v')) ?>"><?php echo $this->__("view") ?></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

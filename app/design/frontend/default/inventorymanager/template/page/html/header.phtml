@@ -67,6 +67,7 @@
     $manageLabels = false;
     $adminuserLocations = false;
     $adminuserNotification = false;
+    $help = false;
     
     if($currentController == "vendor" && $currentAction == "products"){
         $productsPage = true;
@@ -106,6 +107,8 @@
         $adminuserLocations = true;
     }elseif($currentController == "adminuser_notification" && ($currentAction == "index")){ 
         $adminuserNotification = true;
+    }elseif($currentController == "help" && ($currentAction == "index")){ 
+        $help = true;
     }
 
 ?>
@@ -162,6 +165,12 @@
             <li>
                 <a class="<?php if($notification) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/notification/") ?>">
                     <i class="fa fa-edit fa-3x"></i><?php echo $this->__("Notifications") ?>
+                </a>
+            </li>
+            
+            <li>
+                <a class="<?php if($help) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/help/") ?>">
+                    <i class="fa fa-desktop fa-3x"></i><?php echo $this->__("Help") ?>
                 </a>
             </li>
             
