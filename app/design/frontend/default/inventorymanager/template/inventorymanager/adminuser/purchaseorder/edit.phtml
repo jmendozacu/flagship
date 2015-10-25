@@ -58,7 +58,7 @@
 								<div class="col-md-6">
 		                            <div class="form-group">
 		                                <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
-		                                <select id="vendor_id" name="vendor_id" class="required-entry select form-control">
+		                                <select id="vendor_id" name="vendor_id" onchange="loadProducts();" class="required-entry select form-control">
 											<?php foreach ($this->getVendors() as $vendorId => $vendorName): ?>
 												<option value="<?php echo $vendorId ?>" <?php echo $c_vendorId==$vendorId?"selected='seleted'":""; ?> ><?php echo $vendorName ?></option>
 											<?php endforeach; ?>
@@ -107,11 +107,14 @@
 	                          	
 	                            	<div class="form-group">
 	                                	<label><?php echo $this->__("Add Product to purchase order") ?></label>
-	                                	<div class="form-group input-group">
-	                                		<input type="text" class="input-text form-control" id="add_product"   />
+	                                	<div class="form-group input-group" id="vendor_product_load">
+	                                		<select class="form-control">
+                                                
+                                            </select>
+	                                		<!--<input type="text" class="input-text form-control" id="add_product"   />
 	                                		<span class="input-group-btn">
 												<button type="button" onclick="loadProducts()" class="btn btn-default"><i class="fa fa-search"></i></button>
-											</span>
+											</span>-->
 	                                	</div>
 										<!--<div id="product_suggestion_box"></div>-->
 	                            	</div>
@@ -193,10 +196,10 @@
 <div class="modal fade bs-example-modal-sm">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" onclick="jQuery('.bs-example-modal-sm').modal('hide');" ><span>&times;</span></button>
-        <h4 class="modal-title"><?php echo $this->__("Resulted Products") ?></h4>
-      </div>
+      <!--<div class="modal-header">-->
+        <!--<button type="button" class="close" onclick="jQuery('.bs-example-modal-sm').modal('hide');" ><span>&times;</span></button>-->
+        <!--<h4 class="modal-title"><?php echo $this->__("Resulted Products") ?></h4>-->
+      <!--</div>-->
       <div class="modal-body purchaseorder-product-result" id="product_suggestion_box">
         
       </div>
@@ -215,7 +218,7 @@
 
 
 <script type="text/javascript">
-    editForm = new varienForm('edit_form','');
+    editForm = new VarienForm('edit_form','');
     
 </script>
 
@@ -242,40 +245,40 @@ Calendar.setup({
 
 
 	function loadProducts(){
-		var keyword = $('add_product').value;
-		if(keyword == "") return ;
+		//var keyword = $('add_product').value;
+		//if(keyword == "") return ;
 		var vendorId = $('vendor_id').value;
 		if(vendorId == "") return;
-		jQuery('.bs-example-modal-sm').modal('show');
-		$('loading-div').show();
-		$('product_suggestion_box').hide();
+		//jQuery('.bs-example-modal-sm').modal('show');
+		//$('loading-div').show();
+		//$('product_suggestion_box').hide();
 		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminuser_purchaseorder/findproduct") ?>', {
 			method:'post',
-			parameters: {keyword: keyword, vendor_id : vendorId}, 
+			parameters: { vendor_id : vendorId}, 
   			onSuccess: function(transport) {
   			//	$('product_suggestion_box').show();
     			var response = transport.responseText || "no response text";
-    			$('loading-div').hide();
-    			$('product_suggestion_box').show();
-    			$('product_suggestion_box').innerHTML = response;
+    			//$('loading-div').hide();
+    			//$('product_suggestion_box').show();
+    			$('vendor_product_load').innerHTML = response;
   			},
   			onFailure: function() { alert('Something went wrong...'); }
 		});
 	}
+	loadProducts();
 	
 	
-	function addProduct(pid,ele){
+	function addProduct(pid,productName){
 		var canRun = true;
 		$$('.order_product_hidden_input').each(function(e){
 			if(e.value == pid){
-				var innerText = ele.down('a').innerHTML;
-				ele.innerHTML = '<a>'+innerText+'</a> - <?php echo $this->__("Product already exist") ?>';
+				alert(productName+' - <?php echo $this->__("Product already exist") ?>');
 				canRun = false;
 				throw $break;
 			}
 		});
 		if(!canRun){ return false; }
-		//$('product_suggestion_box').hide();
+		jQuery('.bs-example-modal-sm').modal('show');
 		$('loading-div').show();
 		$('product_suggestion_box').hide();
 		

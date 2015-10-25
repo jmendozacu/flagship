@@ -4,22 +4,22 @@ class Ecommerceguys_Inventorymanager_Block_User_Purchaseorder_Findproduct extend
 {
 	public function getMatchingProduct(){
 		$postData = $this->getRequest()->getPost();
-		$searchKeyword = "";
+		/*$searchKeyword = "";
 		if(isset($postData['keyword']) && $postData['keyword'] != ""){
 			$searchKeyword = $postData['keyword'];
 		}else{
 			return null;
-		}
+		}*/
 		$productCollection = Mage::getModel('catalog/product')->getCollection();
 		$productCollection->addAttributeToSelect('sku');
 		$productCollection->addAttributeToSelect('name');
 		//$productCollection->addAttributeToFilter('sku', array('like'=>$searchKeyword.'%'));
-		$productCollection->addAttributeToFilter(
+		/*$productCollection->addAttributeToFilter(
 			array(
 				array('attribute'=>'name', 'like'=>$searchKeyword.'%'),
 				array('attribute'=>'sku', 'like'=>$searchKeyword.'%')
 			)
-		);
+		);*/
 		
 		$vendorProducttable = Mage::getSingleton('core/resource')->getTableName('inventorymanager_vendorproduct');
 		
