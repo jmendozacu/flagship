@@ -155,7 +155,7 @@
                     <i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Serial Number Status") ?>
                 </a>
             </li>
-            
+            <?php /* 
             <li>
                 <a class="<?php if($shippedProduct) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/vendor_product/stockgrid') ?>">
                     <i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock in US") ?>
@@ -166,7 +166,7 @@
                 <a class="<?php if($notification) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/notification/") ?>">
                     <i class="fa fa-edit fa-3x"></i><?php echo $this->__("Notifications") ?>
                 </a>
-            </li>
+            </li> */ ?>
             
             <li>
                 <a class="<?php if($help) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/help/") ?>">
@@ -181,7 +181,7 @@
                 </a>
             </li>
             */ ?>
-            
+            <?php /*
             <li>
                 <a href="#"><i class="fa fa-sitemap fa-3x"></i><?php echo $this->__("Order Status") ?><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level" id="status-nav">
@@ -189,7 +189,7 @@
                         <li><a href="<?php echo $this->getUrl('inventorymanager/purchaseorder/showbystatus', array('status'=>$key)) ?>"><?php echo $status ?></a></li>
                     <?php } ?>
                 </ul>
-            </li>
+            </li> **/ ?>
             
         </ul>           
     </div>
