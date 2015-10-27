@@ -20,16 +20,24 @@ class Ecommerceguys_Inventorymanager_Model_Vendor extends Mage_Core_Model_Abstra
     	
     	$this->loadVenderByLogin($login);
     	if(!$this->validatePassword($password)){
+    		
+    		$employee = Mage::getModel('inventorymanager/vendor_employee')->load($login, "username");
+    		if($employee && $employee->getId()){
+    			if($employee->getPassword() ===  $password){
+    				$this->load($employee->getParentId());
+    				return true;
+    			}
+    		}
     		return false;
     	}
     	
-    	if($this->getParentId() > 0){
+    	/*if($this->getParentId() > 0){
     		$parentVendor = Mage::getModel('inventorymanager/vendor')->load($this->getParentId());
     		if($parentVendor && $parentVendor->getId()){
     			 $this->load($parentVendor->getId());
     			 return true;
     		}
-    	}
+    	}*/
     	//$this->load($vendor->getId());
     	return true;
     }
