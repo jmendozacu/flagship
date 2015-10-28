@@ -292,4 +292,49 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 		$this->_redirect("inventorymanager/adminuser_serial/locations");
 		return $this;
 	}
+	
+	public function findorderAction(){
+		$orderId = $this->getRequest()->getParam('order_id');
+		$orderObject =  Mage::getModel('sales/order')->loadByIncrementId($orderId);
+		
+		if($orderObject && $orderObject->getId()){
+			$address = $orderObject->getShippingAddress();
+			
+			$data = array();
+			$data['name'] = $address->getName();
+			$data['phone'] = $address->getTelephone();
+			$data['address'] = $address->getStreet();
+			$data['city'] = $address->getCity();
+			$data['zipcode'] = $address->getPostcode();
+			echo Mage::helper('core')->jsonEncode($data);
+		}
+	}
+	
+	public function finddetailsAction(){
+		$serialKey = $this->getRequest()->getParam('serial_key');
+		$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
+		if($serialObject && $serialObject->getId()){
+			$orderProduct = Mage::getModel('inventorymanager/product')->load($serialObject->getProductId());
+			$purchaseorder = Mage::getModel('inventorymanager/purchaseorder')->load($serialObject->getOrderId());
+			$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+			$productInfoCollection->addFieldToFilter('vendor_id', $purchaseorder->getVendorId());
+			$productInfoCollection->addFieldToFilter('product_id', $orderProduct->getMainProductId());
+			if($productInfoCollection && $productInfoCollection->count() > 0){
+				$productInfoObject = $productInfoCollection->getFirstItem();
+				if($productInfoObject && $productInfoObject->getId()){
+					
+					//print_r($productInfoObject); exit;
+					
+					$data = array();
+					$data['length']	= $productInfoObject->getLength();
+					$data['width'] = $productInfoObject->getWidth();
+					$data['height'] = $productInfoObject->getHeight();
+					$data['weight']	= $productInfoObject->getWeight();
+					echo Mage::helper('core')->jsonEncode($data);
+				}
+			}
+			
+			
+		}
+	}
 }

@@ -1,4 +1,4 @@
-<div class="row">
+	<div class="row">
 	<div class="col-md-12">
 		<h2><?php echo $this->__("Send a product") ?></h2>
 	</div>
@@ -15,11 +15,11 @@
 						<form action="<?php echo $this->getUrl("inventorymanager/adminuser_serial/findpost") ?>" method="POST" id="find_label">
 							<div class="form-group">
 								<label><?php echo $this->__("Enter Order Number") ?></label>
-								<input type="text" class="form-control" name="order_number" />
+								<input type="text" class="form-control" id="order_number" name="order_number" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Enter Serial Key") ?></label>
-								<input type="text" class="form-control" name="serial_key" />
+								<input type="text" class="form-control" id="serial_key" name="serial_key" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Shipping Option") ?></label>
@@ -50,37 +50,37 @@
 
 							<div class="form-group">
 								<label><?php echo $this->__("Length") ?></label>
-								<input type="text" class="form-control required-entry" name="length" />
+								<input type="text" class="form-control required-entry" name="length" id="length" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Width") ?></label>
-								<input type="text" class="form-control required-entry" name="width" />
+								<input type="text" class="form-control required-entry" name="width" id="width" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Height") ?></label>
-								<input type="text" class="form-control required-entry" name="height" />
+								<input type="text" class="form-control required-entry" name="height" id="height" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Weight") ?></label>
-								<input type="text" class="form-control required-entry" name="weight" />
+								<input type="text" class="form-control required-entry" name="weight" id="weight" />
 							</div>
 
 
 							<div class="form-group">
 								<label><?php echo $this->__("Name") ?></label>
-								<input type="text" class="form-control required-entry" name="to_name" />
+								<input type="text" class="form-control required-entry" id="vendor_name" name="to_name" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Phone") ?></label>
-								<input type="text" class="form-control required-entry" name="to_phone" />
+								<input type="text" class="form-control required-entry" id="vendor_phone" name="to_phone" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Addreess") ?></label>
-								<input type="text" class="form-control required-entry" name="to_address" />
+								<input type="text" class="form-control required-entry" id="vendor_address" name="to_address" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("City") ?></label>
-								<input type="text" class="form-control required-entry" name="city" />
+								<input type="text" class="form-control required-entry" id="vendor_city" name="city" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("State") ?></label>
@@ -94,7 +94,7 @@
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Zip Code") ?></label>
-								<input type="text" class="form-control required-entry" name="to_code" />
+								<input type="text" class="form-control required-entry" id="vendor_zipcode" name="to_code" />
 							</div>
 							<div class="results"></div>
 							<div class="form-group">
@@ -153,6 +153,51 @@
                 	}
             	});	
 			}
+		});
+	});
+</script>
+<script>
+	$('order_number').observe('keyup', function(){
+		var ordernumber = this.value;
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_serial/findorder', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {order_id: ordernumber},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			if(response != ''){
+    				var obj = JSON.parse(response);
+    				$('vendor_name').value = obj.name;
+    				$('vendor_phone').value = obj.phone;
+    				$('vendor_address').value = obj.address;
+    				$('vendor_city').value = obj.city;
+    				$('vendor_zipcode').value = obj.zipcode;
+    			}else{
+    				
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	});
+	
+	$('serial_key').observe('keyup', function(){
+		var serrialKey = this.value;
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_serial/finddetails', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {serial_key: serrialKey},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			if(response != ''){
+    				var obj = JSON.parse(response);
+    				$('height').value = obj.height;
+    				$('width').value = obj.width;
+    				$('length').value = obj.length;
+    				$('weight').value = obj.weight;
+    				
+    			}else{
+    				
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
 		});
 	});
 </script>
