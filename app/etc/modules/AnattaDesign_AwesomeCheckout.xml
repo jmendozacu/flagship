@@ -3,7 +3,8 @@
 <config>
 	<modules>
 		<AnattaDesign_AwesomeCheckout>
-			<active>true</active>
+			<active>false</active>
+			<active>false</active>
 			<codePool>local</codePool>
 			<depends>
 				<Mage_Core />

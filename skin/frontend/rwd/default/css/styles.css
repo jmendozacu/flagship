@@ -3241,7 +3241,7 @@ body {
 .page-header-container .store-language-container {
   float: right;
   max-width: 35%;
-  padding: 13px 15px 10px 10px;
+  padding:18px 0 10px 10px;
 }
 .page-header-container .store-language-container label {
   display: none;
@@ -3278,10 +3278,10 @@ body {
   min-width: 100px;
   min-height: 44px;
   text-align: center;
-  padding: 10px;
+  padding: 10px 0px;
 }
 .logo img {
-  max-width: 100%;
+ /* max-width: 100%;*/
 }
 .logo .small {
   display: block;
@@ -4028,7 +4028,7 @@ li.level1 a{ padding:3px 0}
 }
 .footer .links {
   float: left;
-  width: 17%;
+  width: 25%;
   padding: 0 30px 0 0;
   margin-bottom: 30px;
 }
@@ -4155,12 +4155,13 @@ li.level1 a{ padding:3px 0}
   display: none;
 }
 .footer address {
-  
+float:left;
+   
   text-align: center;
-  width: 100%;
+ 
   font-size: 11px;
-  margin-top: 30px;
-  padding: 30px 0;
+  margin-right: 30px;
+ 
 }
 @media only screen and (max-width: 1199px) {
   .footer .links {
@@ -10679,7 +10680,7 @@ div.calendar table td.button {
 .satisfaction-category .categorysection ul li h2{ margin:0; padding:0; color:#2373c8; font-weight:normal; font-size:17px; text-transform:uppercase}
 .satisfaction-category .categorysection ul li h3{ margin:0; padding:0; color:#000; font-weight:bold; font-size:15px;text-transform:uppercase  }
 .satisfaction-category .categorysection ul li .catthumb{ margin:4px 0 0 0; padding:0 }
-.f_sosialmedia{ float:right; width:250px;}
+.f_sosialmedia{ float:left; width:250px;}
 .h_sosialmedia{  float: right;
     margin-right: 10px;
     margin-top: 8px; }
@@ -10718,7 +10719,7 @@ ul#tabs li a.selected { background-image:url(../images/TAB_ACTIVE.jpg); backgrou
 div.tabContent { padding: 0.5em; background-color: #fff; }
 div.tabContent.hide { display: none; }
 .category-products li{ list-style:none}	
-.footer-container	{background-image:url(../images/f_bg.jpg); background-position:top center; }
+.footer-container	{/*background-image:url(../images/f_bg.jpg); background-position:top center; */  background-color: #353535;}
 	 
 /* common ends*/
 @media only screen and (min-width: 1000px) {
@@ -10735,7 +10736,8 @@ div.tabContent.hide { display: none; }
 }
 .logo{ padding-top:20px; min-height:inherit}
 .nav-primary a{ line-height:17px;}
-.innerwrapper{ margin:0 auto; width:1140px;}
+.innerwrapper{ margin:25px auto; width:1140px;}
+.cms-index-index .innerwrapper{ margin:0px auto !important; width:1140px;}
 .category-products{ float:left; width:100%}
 .page-header-container{ min-height:115px}
 #header-nav{ top:68px}
@@ -11041,3 +11043,45 @@ ul.slides li.slide{ text-align:center !important}
 .featuresection li strong{ color:#000}
 .tab-container ul li{ margin-bottom:15px;/* list-style:inside none circle*/}
 .tab-container ul li strong{ color:#000}
+.options-list span.regular-price { color:red !important;  text-decoration: line-through !important;}
+.options-list .price-notice{ color:green !important;  }
+
+
+
+
+ 
+
+
+.priceboxinner{ float:left}
+.pricebox{}
+
+.priceboxinner #retail_price  {border:solid #3399cc 1px; color: #000; float: left; margin-right: 0px;   border-radius:3px 0 0 3px; margin:10px 0; }
+.priceboxinner #selling_price {color: green; float:left;  border:solid #3399cc 1px; border-left:0; border-radius:0px 3px 3px 0px; margin:10px 0}
+.priceboxinner  span.price{ padding:0px 0px 10px 7px ; float:left}
+.priceboxinner h2{ font-size:14px; font-weight:bold; color:#3399cc; padding:6px 6px 0px 6px;  }
+.directcross span {    color: red !important;    padding-right: 15px !important; text-decoration:line-through !important}
+#retail_price span.price{ margin-right:10px;}
+
+.phonenumber span{  background-color: rgba(0, 0, 0, 0.2);
+    background-image: url("../images/phone.png");
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    border-radius: 3px;
+    color: #000;
+    float: right;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 23px;
+    font-weight: bold;
+    margin-right: 0;
+    padding: 5px 12px 5px 42px;}
+	.paymentoptions{ float:right}
+	.copy_payment_social{ border-top: 1px solid #444444;
+    float: left;
+    font-weight: normal !important;
+    margin-top: 12px;
+    padding: 16px 0  6px 0;
+    width: 100%;}
+	.footer h3{color:#3399cc; font-weight:bold}
+	.footer {color:#9a9a9a !important; text-transform:capitalize; font-size:14px !important; font-family:Arial, Helvetica, sans-serif}
+	.footer a{color:#9a9a9a !important; text-transform:capitalize; font-size:14px !important; font-family:Arial, Helvetica, sans-serif}
+	.helpsupport { text-transform:capitalize}
