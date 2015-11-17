@@ -153,7 +153,22 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 								}
 							}
 							if($isOrderContainsThisProduct){
-								$return = $this->_generatePdf();
+								
+								$shippingAddress = $order->getShippingAddress();
+								
+								
+								
+								//$return = $this->_generatePdf();
+								
+								
+								$response = Mage::getResourceModel('inventorymanager/api_fedex')->getResponse();
+								
+								print_r($response);
+								
+								
+								exit;
+								
+								
 								if($return['tracking_id'] && $return['label_img']){
 									$serialModel->setRealOrderId($order->getId())->setIsOutStock(1)->setShippingPrice($return['charges'])->save();
 									

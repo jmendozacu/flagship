@@ -179,4 +179,8 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 		$agentLocations = array_filter($agentLocations);
 		return $agentLocations;
 	}
+	
+	public function wsdlPath(){
+		return Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true ) . "fedex/";
+	}
 }
