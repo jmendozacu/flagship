@@ -23,13 +23,18 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 	
 	public function getProperty($key){
 		
-		if($var == 'shipaccount') Return '510087925'; 
-	    if($var == 'billaccount') Return '510087925'; 
-	    if($var == 'dutyaccount') Return '510087020'; 
-	    if($var == 'freightaccount') Return '510087020';  
-	    if($var == 'trackaccount') Return '510087925'; 
+		
+		
+		if($var == 'key') Return Mage::getStoreConfig('inventorymanager/fedex_config/key');
+	    if($var == 'password') Return Mage::getStoreConfig('inventorymanager/fedex_config/password'); 
+		
+		if($var == 'shipaccount') Return Mage::getStoreConfig('inventorymanager/fedex_config/shipaccount');
+	    if($var == 'billaccount') Return Mage::getStoreConfig('inventorymanager/fedex_config/shipaccount');
+	    if($var == 'dutyaccount') Return Mage::getStoreConfig('inventorymanager/fedex_config/freightaccount');
+	    if($var == 'freightaccount') Return Mage::getStoreConfig('inventorymanager/fedex_config/freightaccount');
+	    if($var == 'trackaccount') Return Mage::getStoreConfig('inventorymanager/fedex_config/shipaccount');
 	
-	    if($var == 'meter') Return '118694498';
+	    if($var == 'meter') Return Mage::getStoreConfig('inventorymanager/fedex_config/meter_number');
 	    
 	     if($var == 'recipient'){ 
 	     	
@@ -52,7 +57,9 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 	    	);
 		}
 	    
-	    if($var == 'freightbilling') Return array(
+	    if($var == 'freightbilling'){ /*Return 
+	    
+	    array(
 	        'Contact'=>array(
 	            'ContactId' => 'freight1',
 	            'PersonName' => 'Big Shipper',
@@ -70,14 +77,17 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 	            'PostalCode' => '72601-6353',
 	            'CountryCode' => 'US'
 	            )
-	    );
-	    
-		
+	    );*/
+	    	$shipper = Mage::getStoreConfig('inventorymanager/fedex_config/shipper_address');
+			$shipperAddress = (array)json_decode($shipper); 
+			$shipperAddress['Contact'] = (array)$shipperAddress['Contact'];
+			$shipperAddress['Address'] = (array)$shipperAddress['Address'];
+			return $shipperAddress;
+	    }
 		return parent::getProperty($key);
 	}
 	
 	public function getResponse($serialId = 0, $orderId){
-		
 		
 		$serialObject = Mage::getModel('inventorymanager/label')->load($serialId);
      	$order = Mage::getModel('sales/order')->load($orderId);
