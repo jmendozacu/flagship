@@ -154,19 +154,44 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 							}
 							if($isOrderContainsThisProduct){
 								
-								$shippingAddress = $order->getShippingAddress();
+								//$shippingAddress = $order->getShippingAddress();
 								
 								
 								
 								//$return = $this->_generatePdf();
 								
 								
-								$response = Mage::getResourceModel('inventorymanager/api_fedex')->getResponse();
+								$response = Mage::getResourceModel('inventorymanager/api_fedex')->getResponse($serialModel->getId(), $order->getId());
 								
-								print_r($response);
+								$zipname = Mage::getBaseDir().'\\media\\fedex\\'.$serialModel->getId() . '-shippingdoc.zip';
+								$zip = new ZipArchive;
+								$zip->open($zipname, ZipArchive::CREATE);
+								//foreach ($files as $file) {
+								
+								$download_file1 = file_get_contents(Mage::getBaseDir().'\\media\\fedex\\billoflanding\\' . $serialModel->getId() . "-BillOfLading.pdf");
+								$zip->addFromString($serialModel->getId() . "-BillOfLading.pdf",$download_file1);
 								
 								
-								exit;
+								$download_file2 = file_get_contents(Mage::getBaseDir().'\\media\\fedex\\shippinglabels\\' . $serialModel->getId() . "-ShippingLabel.pdf");
+								$zip->addFromString($serialModel->getId() . "-ShippingLabel.pdf",$download_file2);
+								
+								//$zip->addFile();
+								//$zip->addFile(Mage::getBaseDir().'\\media\\fedex\\billoflanding\\' . $serialModel->getId() . "-ShippingLabel.pdf");
+								//}
+								$zip->close();
+								
+								//print_r($response);
+								//header('Content-type: application/pdf');
+								//header('Content-Disposition: attachment; filename=' . $serialModel->getId() . "-BillOfLading.pdf");
+								//header('Content-Disposition: attachment; filename=' . $serialModel->getId() . "-ShippingLabel.pdf");
+								
+								header('Content-Type: application/zip');
+								header('Content-disposition: attachment; filename='.$serialModel->getId() . '-shippingdoc.zip');
+								header('Content-Length: ' . filesize($zipname));
+								readfile($zipname);
+								
+								die();
+								//exit;
 								
 								
 								if($return['tracking_id'] && $return['label_img']){

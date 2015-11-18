@@ -3,25 +3,152 @@
 class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceguys_Inventorymanager_Model_Fedexcommon
 {
 	public $path_to_wsdl;
+	public $shippingLabel;
+	public $bol;
 	
 	public function __construct(){
+		
 		$this->path_to_wsdl = Mage::helper('inventorymanager')->wsdlPath() . "ShipService_v17.wsdl";
 		ini_set('soap.wsdl_cache_enabled',0);
 		ini_set('soap.wsdl_cache_ttl',0);
-		define('SHIP_LABEL', 'BillOfLading.pdf');  // PDF label file.
-		define('ADDRESS_LABEL', 'AddressLabel.pdf');  // PDF label file.
+		//define('SHIP_LABEL', Mage::getBaseDir().'/media/fedex/billoflanding'.'BillOfLading.pdf');  // PDF label file.
+		//define('ADDRESS_LABEL', 'AddressLabel.pdf');  // PDF label file.
+		
+		
+		
 
 		ini_set("soap.wsdl_cache_enabled", "0");
 
 	}
 	
 	public function getProperty($key){
+		
+		if($var == 'shipaccount') Return '510087925'; 
+	    if($var == 'billaccount') Return '510087925'; 
+	    if($var == 'dutyaccount') Return '510087020'; 
+	    if($var == 'freightaccount') Return '510087020';  
+	    if($var == 'trackaccount') Return '510087925'; 
+	
+	    if($var == 'meter') Return '118694498';
+	    
+	     if($var == 'recipient'){ 
+	     	
+	     
+	     	
+	     	return array(
+		        'Contact' => array(
+		            'PersonName' => 'Recipient Name',
+		            'CompanyName' => 'Recipient Company Name',
+		            'PhoneNumber' => '1234567890'
+		        ),
+		        'Address' => array(
+		            'StreetLines' => array('Address Line 1'),
+		            'City' => 'Herndon',
+		            'StateOrProvinceCode' => 'VA',
+		            'PostalCode' => '20171',
+		            'CountryCode' => 'US',
+		            'Residential' => 1
+		        )
+	    	);
+		}
+	    
+	    if($var == 'freightbilling') Return array(
+	        'Contact'=>array(
+	            'ContactId' => 'freight1',
+	            'PersonName' => 'Big Shipper',
+	            'Title' => 'Manager',
+	            'CompanyName' => 'Freight Shipper Co',
+	            'PhoneNumber' => '1234567890'
+	        ),
+	        'Address'=>array(
+	            'StreetLines'=>array(
+	                '1202 Chalet Ln', 
+	                'Do Not Delete - Test Account'
+	            ),
+	            'City' =>'Harrison',
+	            'StateOrProvinceCode' => 'AR',
+	            'PostalCode' => '72601-6353',
+	            'CountryCode' => 'US'
+	            )
+	    );
+	    
+		
 		return parent::getProperty($key);
 	}
 	
-	public function getResponse(){
+	public function getResponse($serialId = 0, $orderId){
 		
+		
+		$serialObject = Mage::getModel('inventorymanager/label')->load($serialId);
+     	$order = Mage::getModel('sales/order')->load($orderId);
+     	
+     	$shippingAddress = $order->getShippingAddress();
+     	$region = Mage::getModel('directory/region')->load($shippingAddress->getRegionId);
+     	
+     	$regionVal = $shippingAddress->getRegion();
+     	if($region && $region->getId()){
+     		$regionVal = $region->getCode();
+     	}
+     	
+     	$length = 0; $width = 0; $height = 0; $weight = 0;
+     	$boxLength = 0; $boxWidth = 0; $boxHeight = 0; $boxWeight = 0;
+     	if($serialObject && $serialObject->getId()){
+			$orderProduct = Mage::getModel('inventorymanager/product')->load($serialObject->getProductId());
+			$purchaseorder = Mage::getModel('inventorymanager/purchaseorder')->load($serialObject->getOrderId());
+			$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+			$productInfoCollection->addFieldToFilter('vendor_id', $purchaseorder->getVendorId());
+			$productInfoCollection->addFieldToFilter('product_id', $orderProduct->getMainProductId());
+			if($productInfoCollection && $productInfoCollection->count() > 0){
+				$productInfoObject = $productInfoCollection->getFirstItem();
+				if($productInfoObject && $productInfoObject->getId()){
+					
+					$catalogproduct = Mage::getModel('catalog/product')->load($productInfoObject->getProductId());
+					
+					//print_r($productInfoObject); exit;
+					
+					
+					$length	= $productInfoObject->getLength();
+					$width = $productInfoObject->getWidth();
+					$height = $productInfoObject->getHeight();
+					$weight	= $productInfoObject->getWeight();
+					
+					
+					$boxLength = $productInfoObject->getBoxLength();
+					$boxWidth = $productInfoObject->getBoxWidth();
+					$boxHeight = $productInfoObject->getBoxHeight();
+					$boxWeight = $productInfoObject->getBoxWeight();
+				}
+			}
+			
+			
+		}
+     	
+     	
+		//echo "<pre>";	     	
+		//print_r($shippingAddress->getData()); exit;
+	     	
+		$recipient	= array(
+			'Contact' => array(
+		            'PersonName' => $shippingAddress->getFirstname() . $shippingAddress->getLastname(),
+		            'CompanyName' => $shippingAddress->getCompany(),
+		            'PhoneNumber' => $shippingAddress->getTelephone()
+		        ),
+		        'Address' => array(
+		            'StreetLines' => $shippingAddress->getStreet(),
+		            'City' => $shippingAddress->getCity(),
+		            'StateOrProvinceCode' => $regionVal,
+		            'PostalCode' => $shippingAddress->getPostcode(),
+		            'CountryCode' => $shippingAddress->getCountryId(),
+		            'Residential' => 1
+		        )
+		);
+	     	
 		//echo $this->path_to_wsdl; exit;
+		
+		$this->shippingLabel = Mage::getBaseDir().'\\media\\fedex\\shippinglabels\\'.$serialId.'-ShippingLabel.pdf';
+		
+		
+		$this->bol = Mage::getBaseDir().'\\media\\fedex\\billoflanding\\'.$serialId.'-BillOfLading.pdf';
 		
 		$client = new SoapClient($this->path_to_wsdl, array('trace' => 1));
 		$request['WebAuthenticationDetail'] = array(
@@ -51,7 +178,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 			'ServiceType' => 'FEDEX_FREIGHT_ECONOMY', 
 			'PackagingType' => 'YOUR_PACKAGING', 
 			'Shipper' => $this->getProperty('freightbilling'),
-			'Recipient' => $this->addRecipient(),
+			'Recipient' => $recipient,
 			'ShippingChargesPayment' => $this->addShippingChargesPayment(),
 			'FreightShipmentDetail' => array(
 				'FedExFreightAccountNumber' => $this->getProperty('freightaccount'),
@@ -65,7 +192,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 				'CollectTermsType' => 'STANDARD',
 				'DeclaredValuePerUnit' => array(
 					'Currency' => 'USD',
-					'Amount' => 50
+					'Amount' => $catalogproduct->getFinalPrice()
 				),
 				'LiabilityCoverageDetail' => array(
 					'CoverageType' => 'NEW',
@@ -74,35 +201,35 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 						'Amount' => '50'
 					)
 				),
-				'TotalHandlingUnits' => 15,
+				'TotalHandlingUnits' => 1,
 				'ClientDiscountPercent' => 0,
 				'PalletWeight' => array(
 					'Units' => 'LB',
 					'Value' => 20
 				),
 				'ShipmentDimensions' => array(
-					'Length' => 60,
-					'Width' => 40,
-					'Height' => 50,
+					'Length' => $length,
+					'Width' => $width,
+					'Height' => $height,
 					'Units' => 'IN'
 				),
 				'LineItems' => array(
 					'FreightClass' => 'CLASS_050',
 					'ClassProvidedByCustomer' => false,
-					'HandlingUnits' => 15,
+					'HandlingUnits' => 1,
 					'Packaging' => 'PALLET',
 					'Pieces' => 1,
 					'BillOfLaddingNumber' => 'BOL_12345',
 					'PurchaseOrderNumber' => 'PO_12345',
-					'Description' => 'Heavy Stuff',
+					'Description' => $catalogproduct->getName(),
 					'Weight' => array(
-						'Value' => 500.0,
+						'Value' => $weight,
 						'Units' => 'LB'
 					),
 					'Dimensions' => array(
-						'Length' => 60,
-						'Width' => 40,
-						'Height' => 50,
+						'Length' => $boxLength ,
+						'Width' => $boxWidth ,
+						'Height' => $boxHeight ,
 						'Units' => 'IN'
 					),
 					'Volume' => array(
@@ -123,7 +250,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 			}
 			$response = $client->processShipment($request); // FedEx web service invocation  
 		    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
-		    	$this->printSuccess($client, $response);
+		    	//$this->printSuccess($client, $response);
 		        // Create PNG or PDF label
 		        // Set LabelSpecification.ImageType to 'PNG' for generating a PNG label
 
@@ -131,25 +258,27 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 		    	foreach($shippingDocuments as $key => $value){
 		    		$type = $value->Type;
 		    		if($type == "OUTBOUND_LABEL"){
-		    			$bol = $value->Parts->Image;
-		    			$fp = fopen(SHIP_LABEL, 'wb');
+		    			$bol =$value->Parts->Image;
+		    			
+		    			$fp = fopen($this->bol, 'wb');
 		    			fwrite($fp, $bol);
 		        		fclose($fp);
-		        		echo '<a href="./'.SHIP_LABEL.'">'.SHIP_LABEL.'</a> was generated.<br/>';
+		        		//echo '<a href="'.$this->bol.'">BILL OF LANDING</a> was generated.<br/>';
 		    		}else if($type == "FREIGHT_ADDRESS_LABEL"){
 		    			$addressLabel = $value->Parts->Image;
-		    			$fp1 = fopen(ADDRESS_LABEL, 'wb');   
+
+		    			$fp1 = fopen($this->shippingLabel, 'wb');   
 		        		fwrite($fp1, $addressLabel);
 		        		fclose($fp1);
-		        		echo '<a href="./'.ADDRESS_LABEL.'">'.ADDRESS_LABEL.'</a> was generated.<br/>'; 
+		        		//echo '<a href="'.$this->shippingLabel.'">Label</a> was generated.<br/>'; 
 		    		}
 		    	}
 		    }else{
-		        printError($client, $response);
+		        $this->printError($client, $response);
 		    }
 			Mage::log($client,nill, "fedex.log");    // Write to log file
 		} catch (SoapFault $exception) {
-		    printFault($exception, $client);
+		    $this->printFault($exception, $client);
 		}
 	}
 	
