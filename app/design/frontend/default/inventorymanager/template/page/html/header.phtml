@@ -256,6 +256,16 @@
                     <?php } ?>
                 </ul>
             </li>
+            <li>
+            	<a href="#"><i class="fa fa-sitemap fa-3x"></i><?php echo $this->__("Ship Manager") ?><span class="fa arrow"></span></a>
+            	<ul class="nav nav-second-level">
+            		<li><a href="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/") ?>"><?php echo $this->__("Ship") ?></a></li>
+            		<li><a><?php echo $this->__("History") ?></a></li>
+            		<li><a><?php echo $this->__("Schedule pickup") ?></a></li>
+            		<li><a><?php echo $this->__("Track") ?></a></li>
+            		<li><a><?php echo $this->__("Settings") ?></a></li>
+            	</ul>
+            </li>
         </ul>
     </div>
 <?php } ?>
