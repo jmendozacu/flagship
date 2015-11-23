@@ -447,3 +447,4 @@ div.logout{
 .purchaseorder-product-result ul li { list-style:none; border-bottom:1px solid; padding:5px; cursor:pointer; }
 .purchaseorder-product-result ul li a { text-decoration:none;  }
 .bult-locations ul.dropdown-menu li a { text-align:left; }
+.shipmanager-send-button { padding-top:15px; }

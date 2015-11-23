@@ -340,12 +340,17 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 		if($orderObject && $orderObject->getId()){
 			$address = $orderObject->getShippingAddress();
 			
+			
+			
 			$data = array();
 			$data['name'] = $address->getName();
 			$data['phone'] = $address->getTelephone();
 			$data['address'] = $address->getStreet();
 			$data['city'] = $address->getCity();
 			$data['zipcode'] = $address->getPostcode();
+			$data['country'] = $address->getCountryId();
+			$data['region'] = $address->getRegion();
+			$data['region_id'] = $address->getRegionId();
 			echo Mage::helper('core')->jsonEncode($data);
 		}
 	}

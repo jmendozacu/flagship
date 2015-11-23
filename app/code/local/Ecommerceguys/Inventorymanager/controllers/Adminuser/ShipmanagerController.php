@@ -5,4 +5,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$this->loadLayout();
 		$this->renderLayout();
 	}
+	
+	public function saveAction(){
+		$data = $this->getRequest()->getParams();
+		echo "<pre>";
+		print_r($data);
+	}
 }
