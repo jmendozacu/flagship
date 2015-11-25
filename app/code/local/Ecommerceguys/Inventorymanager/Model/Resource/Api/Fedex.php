@@ -9,8 +9,8 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 	public function __construct(){
 		
 		$this->path_to_wsdl = Mage::helper('inventorymanager')->wsdlPath() . "ShipService_v17.wsdl";
-		ini_set('soap.wsdl_cache_enabled',0);
-		ini_set('soap.wsdl_cache_ttl',0);
+		ini_set('soap.wsdl_cache_enabled', 0);
+		ini_set('soap.wsdl_cache_ttl', 0);
 		//define('SHIP_LABEL', Mage::getBaseDir().'/media/fedex/billoflanding'.'BillOfLading.pdf');  // PDF label file.
 		//define('ADDRESS_LABEL', 'AddressLabel.pdf');  // PDF label file.
 		
