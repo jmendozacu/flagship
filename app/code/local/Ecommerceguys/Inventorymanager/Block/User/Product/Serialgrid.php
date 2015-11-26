@@ -40,4 +40,21 @@ class Ecommerceguys_Inventorymanager_Block_User_Product_Serialgrid extends Mage_
 		$productId = $this->getRequest()->getParam('product_id');
 		return Mage::getModel('catalog/product')->load($productId);
 	}
+	
+	public function getSerialsByCatalogProduct(){
+		$productId = $this->getRequest()->getParam('product_id');
+		$orderProducts = Mage::getModel('inventorymanager/product')->getCollection();
+		$orderProducts->addFieldToFilter('main_product_id', $productId);
+		$orderProductArray = array();
+		foreach ($orderProducts as $orderP){
+			$orderProductArray[] = $orderP->getId();
+		}
+		if(sizeof($orderProductArray) > 0){
+			$serials = Mage::getModel('inventorymanager/label')->getCollection();
+			$serials->addFieldToFilter('product_id', array('in'=>$orderProductArray));
+			$serials->addFieldToFilter('is_in_stock', 1);
+			return $serials;
+		}
+		return false;
+	}
 }

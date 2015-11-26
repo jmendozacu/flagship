@@ -241,4 +241,43 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$this->_redirect('inventorymanager/adminuser_purchaseorder/');
 		return $this;
 	}
+	
+	public function receiveAction(){
+		$orderId = $this->getRequest()->getParam('id');
+		$orderObject = Mage::getModel('inventorymanager/purchaseorder')->load($orderId);
+		
+		$serials = Mage::getModel('inventorymanager/label')->getCollection();
+		$serials->addFieldToFilter('order_id', $orderObject->getId());
+		$serials->addFieldToFilter('is_in_stock', array('neq'=>1));
+		foreach ($serials as $serial){
+			$orderProduct = Mage::getModel('inventorymanager/product')->load($serial->getProductId());
+			if($orderProduct && $orderProduct->getId()){
+				$catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
+				
+				/*if($catalogProduct && $catalogProduct->getId()){
+					echo "<br/> PRODUCT FOUND " . $catalogProduct->getId();
+				}else{
+					echo "<br/> PRODUCT NOT FOUND " . $serial->getId();
+				}
+				continue;*/
+				$stocklevel = Mage::getModel('cataloginventory/stock_item')->loadByProduct($catalogProduct);
+                
+				$productQty = 0;
+                if($stocklevel){
+                	$productQty = $stocklevel->getQty();
+                }
+                
+                $catalogProduct->setStockData(array( 
+		            'qty' => $productQty + 1,
+		            'is_in_stock' => 1,
+		            'manage_stock' => 1,
+		        ));
+				$catalogProduct->save();
+				$serial->setIsInStock(1)->save();
+			}
+		}
+
+		Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order Received. Products stock updated.'));
+		$this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+	}
 }

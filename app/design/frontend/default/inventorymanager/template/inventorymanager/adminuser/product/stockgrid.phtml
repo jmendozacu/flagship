@@ -18,6 +18,9 @@
 									<th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 142px;" aria-label="Engine version: activate to sort column ascending">
 										<?php echo $this->__("STOCK") ?>
 									</th>
+									<th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 142px;" aria-label="Engine version: activate to sort column ascending">
+										<?php echo $this->__("SERIAL COUNT") ?>
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -25,12 +28,16 @@
 								$icounter = 0;
 								foreach ($catalogProducts as $productData){
 									$product = Mage::getModel('catalog/product')->load($productData['entity_id']);
+									
+									$serialCount = $this->getSerialCount($product);
+									
 									$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
 								?>
 									<tr data-href="<?php echo $this->getUrl("inventorymanager/adminuser_product/serialgrid", array('product_id'=>$product->getId())) ?>" class="<?php echo $icounter%2==0?"even":""; ?> gradeA clickable-row">
 										<td><?php echo $product->getName() ?></td>
 										<td><?php echo $product->getSku() ?></td>
 										<td><?php echo $stock?(int)$stock->getQty():""; ?></td>
+										<td><?php echo $serialCount ?></td>
 									</tr>
 								<?php } ?>
 							</tbody>

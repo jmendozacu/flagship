@@ -32,7 +32,7 @@
 							</thead>
 							<tbody>
 								<?php
-								$icounter = 0;
+								/*$icounter = 0;
 								foreach ($orderProducts as $orderProductObject){
 									$serials = $this->getSerials($orderProductObject->getId());
 									foreach ($serials as $serialObject){?>
@@ -42,7 +42,16 @@
 											<td><?php echo $serialObject->getStatus(); ?></td>
 										</tr>
 									<?php }
-								} ?>
+								}*/ ?>
+								<?php if($serials = $this->getSerialsByCatalogProduct()){ ?>
+									<?php foreach ($serials as $serialObject){ ?>
+										<tr class="<?php echo $icounter%2==0?"even":""; ?> gradeA">
+											<td><?php echo $serialObject->getSerial() ?></td>
+											<td><?php echo $serialObject->getLocation() ?></td>
+											<td><?php echo $serialObject->getStatus(); ?></td>
+										</tr>
+									<?php } ?>
+								<?php } ?>
 							</tbody>
 						</table>
 					</div>

@@ -34,12 +34,20 @@
 						<span><span><span><?php echo $this->__("Download PDF") ?></span></span></span>
 					</button>
 				</div>
+				
+				<div style="float:right;padding-right:10px">
+					<button style="" onclick="setLocation('<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/receive", array('id'=>$this->getCurrentOrder()->getId()) ) ?>');" class="btn btn-warning" type="button" title="<?php echo $this->__("Receive P.O") ?>">
+						<span><span><span><?php echo $this->__("Receive P.O") ?></span></span></span>
+					</button>
+				</div>
+				
 		<?php endif; ?>	
     </div>
 </div>
 <hr>
 <div class="row">
     <div class="col-md-12">
+    	<?php echo $this->getMessagesBlock()->toHtml(); ?>
         <div class="panel panel-default">
             <div class="panel-heading"><?php echo $this->__("Fill below information") ?></div>
             <div class="panel-body">
