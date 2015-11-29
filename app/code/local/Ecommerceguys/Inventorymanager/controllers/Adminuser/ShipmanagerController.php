@@ -10,9 +10,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$data = $this->getRequest()->getParams();
 		
 		
-		/*echo "<pre>";
+		echo "<pre>";
 		print_r($data);
-		exit;*/
+		
 		
 		$realOrderId = $data['order_id'];
 		$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
@@ -26,7 +26,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$senderAddress['Contact']['ContactId'] = "fright1";
 		$senderAddress['Contact']['PersonName'] = $data['contact_name'];
 		$senderAddress['Contact']['Title'] = $data['contact_name'];
-		$senderAddress['Contact']['CompanyName'] = $data['contact_name'];
+		$senderAddress['Contact']['CompanyName'] = $data['company'];
 		$senderAddress['Contact']['PhoneNumber'] = $data['phone'];
 		$senderAddress['Contact']['email'] = $data['email'];
 
@@ -81,7 +81,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 	        $error .= "* Sorry ZIP creation failed at this time";
 	    }
 		
-		
+		$totalWeight = 0;
 		foreach ($data['serial_key'] as $key => $serialKey){
 			$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
 			
@@ -230,6 +230,83 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				
 				
 				
+				
+				//echo "<pre>";
+				
+				//print_r($response); exit;
+				
+				
+				
+				$historyObject = Mage::getModel('inventorymanager/shipmanager');
+				$historyItem = Mage::getModel('inventorymanager/shipmanager_item');
+				$historySender = Mage::getModel('inventorymanager/shipmanager_sender');
+				$historyReceiver = Mage::getModel('inventorymanager/shipmanager_receiver');
+				
+				
+				$historyData = array(
+					'transaction_detail'	=>	$response->TransactionDetail->CustomerTransactionId,
+					'job_id'				=>	$response->JobId,
+					'tracking_number'		=>	$response->CompletedShipmentDetail->CarrierCode,
+					'careercode' 			=>	$response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber,
+					'service_type'			=>	$response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType,
+					'weight'				=>	$weight,
+					'quoted_value'			=>	$response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount,
+					'shipping_date'			=>	date('Y-m-d'),
+					'created_time'			=>	date('Y-m-d'),
+				);
+				try{
+					$historyObject->setData($historyData)->save();
+				}catch (Exception $e){
+					Mage::log($e->getMessage());
+				}
+				
+				$historyItemData = array(
+					'history_id'		=>	$historyObject->getId(),
+					'serial'			=>	$serialKey,
+					'width'				=>	$width,
+					'height'			=>	$height,
+					'length'			=>	$length,
+					'created_time'			=>	date('Y-m-d'),
+				);
+				
+				$senderAddressData = array(
+					'history_id'		=>	$historyObject->getId(),
+					'company'			=>	$data['company'],
+					'phone'				=>	$data['phone'],
+					'contact_name'		=>	$data['contact_name'],
+					'address1'			=>	$data['address'],
+					'address2'			=>	$data['address2'],
+					'city'				=>	$data['city'],
+					'postcode'			=>	$data['postalcode'],
+					'state'				=>	$data['state'],
+					'order_id'			=>	$data['order_id'],
+					'country'			=>	$data['country_id'],
+					'email'				=>	$data['email'],
+					'created_time'		=>	date('Y-m-d'),
+				);
+				
+				$receiverAddressData = array(
+					'history_id'		=>	$historyObject->getId(),
+					'company'			=>	$data['receiver']['company'],
+					'phone'				=>	$data['receiver']['phone'],
+					'contact_name'		=>	$data['receiver']['contact_name'],
+					'address1'			=>	$data['receiver']['address'],
+					'address2'			=>	$data['receiver']['address2'],
+					'city'				=>	$data['receiver']['city'],
+					'postcode'			=>	$data['receiver']['postalcode'],
+					'state'				=>	$data['receiver']['state'],
+					'country'			=>	$data['receiver']['country_id'],
+					'email'				=>	$data['receiver']['email'],
+				);
+				
+				try {
+					$historyItem->setData($historyItemData)->save();
+					$historySender->setData($senderAddressData)->save();
+					$historyReceiver->setData($receiverAddressData)->save();
+				}catch (Exception $e){
+					Mage::log($e->getMessage());
+				}
+				
 			    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
 			    	//$this->printSuccess($client, $response);
 			        // Create PNG or PDF label
@@ -291,5 +368,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		
 	}
 	
-	
+	public function historyAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
 }

@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ecommerceguys_Inventorymanager>
-            <version>0.4.6</version>
+            <version>0.4.7</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
     <frontend>
@@ -67,6 +67,18 @@
                     <vendor_employee>
                     	<table>inventorymanager_vendor_employee</table>
                     </vendor_employee>
+                    <shipmanager>
+                    	<table>inventorymanager_shipmanager_history</table>
+                    </shipmanager>
+                    <shipmanager_item>
+                    	<table>inventorymanager_shipmanager_history_item</table>
+                    </shipmanager_item>
+                    <shipmanager_sender>
+                    	<table>inventorymanager_shipmanager_history_senderaddress</table>
+                    </shipmanager_sender>
+                    <shipmanager_receiver>
+                    	<table>inventorymanager_shipmanager_history_receiveraddress</table>
+                    </shipmanager_receiver>
                 </entities>
             </inventorymanager_resource>
         </models>
