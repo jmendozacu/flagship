@@ -371,9 +371,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 					//print_r($productInfoObject); exit;
 					
 					$data = array();
-					$data['length']	= $productInfoObject->getLength();
-					$data['width'] = $productInfoObject->getWidth();
-					$data['height'] = $productInfoObject->getHeight();
+					$data['length']	= $productInfoObject->getBoxLength()!=""?$productInfoObject->getBoxLength():$productInfoObject->getLength();
+					$data['width'] = $productInfoObject->getBoxWidth()!=""?$productInfoObject->getBoxWidth():$productInfoObject->getWidth();
+					$data['height'] = $productInfoObject->getBoxHeight()!=""?$productInfoObject->getBoxHeight():$productInfoObject->getHeight();
 					$data['weight']	= $productInfoObject->getWeight();
 					echo Mage::helper('core')->jsonEncode($data);
 				}

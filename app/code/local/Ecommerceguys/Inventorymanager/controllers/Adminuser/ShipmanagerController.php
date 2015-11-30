@@ -75,11 +75,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			'Minor' => '0'
 		);
 		
-		$zip = new ZipArchive();
+		/*$zip = new ZipArchive();
 	    $zip_name = "zipfile.zip";
 	    if($zip->open($zip_name, ZIPARCHIVE::CREATE)!==TRUE){
 	        $error .= "* Sorry ZIP creation failed at this time";
-	    }
+	    }*/
 		
 		$totalWeight = 0;
 		foreach ($data['serial_key'] as $key => $serialKey){
@@ -183,9 +183,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						'Value' => 20
 					),
 					'ShipmentDimensions' => array(
-						'Length' => $length,
-						'Width' => $width,
-						'Height' => $height,
+						'Length' => $boxLength,
+						'Width' => $boxWidth,
+						'Height' => $boxHeight,
 						'Units' => 'IN'
 					),
 					'LineItems' => array(
@@ -322,7 +322,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			    			fwrite($fp, $bolImage);
 			        		fclose($fp);
 			        		
-			        		$zip->addFromString(basename($serialId.'-BillOfLading.pdf'),$bolImage);
+			        	//	$zip->addFromString(basename($serialId.'-BillOfLading.pdf'),$bolImage);
 			        		
 			        		//echo '<a href="'.$this->bol.'">BILL OF LANDING</a> was generated.<br/>';
 			    		}else if($type == "FREIGHT_ADDRESS_LABEL"){
@@ -332,7 +332,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			        		fwrite($fp1, $addressLabel);
 			        		fclose($fp1);
 			        		
-			        		$zip->addFromString(basename($serialId.'-ShippingLabel.pdf'),$addressLabel);
+			        		//$zip->addFromString(basename($serialId.'-ShippingLabel.pdf'),$addressLabel);
 			        		//echo '<a href="'.$this->shippingLabel.'">Label</a> was generated.<br/>'; 
 			    		}
 			    	}
@@ -352,10 +352,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			
 		}
 		
-		$zip->close();
+		//$zip->close();
 				    
 				        // force to download the zip
-        header("Pragma: public");
+        /*header("Pragma: public");
         header("Expires: 0");
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         header("Cache-Control: private",false);
@@ -363,7 +363,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
         header('Content-Disposition: attachment; filename="'.$zip_name.'"');
         readfile($zip_name);
         // remove zip file from temp path
-        unlink($zip_name);
+        unlink($zip_name);*/
+        
+        $this->loadLayout();
+        $this->renderLayout();
 		
 		
 	}
