@@ -68,6 +68,7 @@
     $adminuserLocations = false;
     $adminuserNotification = false;
     $help = false;
+    $shipmanager = false;
     
     if($currentController == "vendor" && $currentAction == "products"){
         $productsPage = true;
@@ -109,6 +110,8 @@
         $adminuserNotification = true;
     }elseif($currentController == "help" && ($currentAction == "index")){ 
         $help = true;
+    }elseif ($currentController == "adminuser_shipmanager"){
+    	$shipmanager = true;
     }
 
 ?>
@@ -256,9 +259,9 @@
                     <?php } ?>
                 </ul>
             </li>
-            <li>
+            <li class="<?php echo $shipmanager?"active":""; ?>">
             	<a href="#"><i class="fa fa-sitemap fa-3x"></i><?php echo $this->__("Ship Manager") ?><span class="fa arrow"></span></a>
-            	<ul class="nav nav-second-level">
+            	<ul class="nav nav-second-level" id="shipmanager_nav">
             		<li><a href="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/") ?>"><?php echo $this->__("Ship") ?></a></li>
             		<li><a href="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/history") ?>"><?php echo $this->__("History") ?></a></li>
             		<li><a><?php echo $this->__("Schedule pickup") ?></a></li>

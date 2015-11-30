@@ -20,12 +20,22 @@
 								<td><?php echo $this->__("Weight"); ?></td>
 								<td><?php echo $this->__("Quoted Value"); ?></td>
 								<td><?php echo $this->__("Date"); ?></td>
+								<td><?php echo $this->__("Bill Of Lading"); ?></td>
+								<td><?php echo $this->__("Shipping Label"); ?></td>
 							</tr>
 						</thead>
 						<?php $historyCollection = $this->getHistory(); ?>
 						<?php if($historyCollection && $historyCollection->count()){ ?>
 							<tbody>
 							<?php foreach ($historyCollection as $historyObject){ ?>
+							<?php
+								$historyItem = Mage::getModel('inventorymanager/shipmanager_item')->load($historyObject->getId(), "history_id");
+								$serial = $historyItem->getSerial();
+								$serialObject = Mage::getModel('inventorymanager/label')->load($serial, 'serial');
+								$serialId = $serialObject->getId();
+								$shippingLabel = Mage::getBaseDir().'\\media\\fedex\\shippinglabels\\'.$serialId.'-ShippingLabel.pdf';
+								$bol = Mage::getBaseDir().'\\media\\fedex\\billoflanding\\'.$serialId.'-BillOfLading.pdf';
+							?>
 								<tr>
 									<td><?php echo $historyObject->getId() 	?></td>
 									<td><?php echo $historyObject->getTransactionDetail() ?></td>
@@ -34,6 +44,8 @@
 									<td><?php echo $historyObject->getWeight() ?></td>
 									<td><?php echo $historyObject->getQuotedValue() ?></td>
 									<td><?php echo $historyObject->getShippingDate() ?></td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialId.'-BillOfLading.pdf'; ?> </td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialId.'-ShippingLabel.pdf'; ?> </td>
 								</tr>
 							<?php } ?>
 							</tbody>

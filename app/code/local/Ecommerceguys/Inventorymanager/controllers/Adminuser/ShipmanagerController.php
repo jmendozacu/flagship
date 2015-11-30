@@ -10,8 +10,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$data = $this->getRequest()->getParams();
 		
 		
-		echo "<pre>";
-		print_r($data);
+		//echo "<pre>";
+		//print_r($data);
 		
 		
 		$realOrderId = $data['order_id'];
@@ -371,5 +371,33 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 	public function historyAction(){
 		$this->loadLayout();
 		$this->renderLayout();
+	}
+	
+	public function downloadAction(){
+			header("Content-Type: application/octet-stream");
+			
+			$area = $this->getRequest()->getParam('area');
+			$fileName = $this->getRequest()->getParam('filename');
+			$fileN = $fileName;
+			if($area == "bol"){
+				$fileName = 'billoflanding\\'. $fileName;
+			}else{
+				$fileName = 'shippinglabels\\'. $fileName;
+			}
+				
+			$file = Mage::getBaseDir().'\\media\\fedex\\' . $fileName;
+			header("Content-Disposition: attachment; filename=" . urlencode($fileN));   
+			header("Content-Type: application/octet-stream");
+			header("Content-Type: application/download");
+			header("Content-Description: File Transfer");            
+			header("Content-Length: " . filesize($file));
+			flush(); // this doesn't really matter.
+			$fp = fopen($file, "r");
+			while (!feof($fp))
+			{
+			    echo fread($fp, 65536);
+			    flush(); // this is essential for large downloads
+			} 
+			fclose($fp); 
 	}
 }
