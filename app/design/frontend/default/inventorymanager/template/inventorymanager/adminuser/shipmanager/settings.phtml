@@ -1,0 +1,44 @@
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Shipmanager Settings") ?></h2>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<form method="POST" action="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/saveSettings") ?>">
+				<div class="panel-heading"><?php echo $this->__("Fedex Shipping Configuration") ?></div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label><?php echo $this->__("Ship Account") ?></label>
+						<input type="text" class="form-control" name="ship_account" value="<?php echo $this->getShipAccount(); ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Fright Account") ?></label>
+						<input type="text" class="form-control" name="fright_account" value="<?php echo $this->getFrightAccount(); ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Meter Number") ?></label>
+						<input type="text" class="form-control" name="meter_number" value="<?php echo $this->getMeterNumber(); ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Key") ?></label>
+						<input type="text" class="form-control" name="key" value="<?php echo $this->getKey(); ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Password") ?></label>
+						<input type="text" class="form-control" name="password" value="<?php echo $this->getFedexPassword(); ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Shipper Address (JSON format)") ?></label>
+						<textarea rows="3" class="form-control" name="shipper_address"><?php echo $this->getShipperAddress(); ?></textarea>
+					</div>
+					<div class="form-group shipmanager-send-button">
+						<button type="submit" class="btn btn-primary"><?php echo $this->__("Save") ?></button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
