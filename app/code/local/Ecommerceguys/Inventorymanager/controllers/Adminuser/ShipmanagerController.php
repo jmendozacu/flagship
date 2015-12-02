@@ -411,6 +411,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 	
 	public function saveSettingsAction(){
 		$data = $this->getRequest()->getParams();
+		$address = json_encode($data['address']);
+		//print_r($address); exit;
 		
 		$shipmanagerConfig = Mage::getModel('inventorymanager/shipmanager_config');
 		
@@ -420,7 +422,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$shipmanagerConfig->saveConfig('inventorymanager/fedex_config/meter_number', $data['meter_number']);
 		$shipmanagerConfig->saveConfig('inventorymanager/fedex_config/key', $data['key']);
 		$shipmanagerConfig->saveConfig('inventorymanager/fedex_config/password', $data['password']);
-		$shipmanagerConfig->saveConfig('inventorymanager/fedex_config/shipper_address', $data['shipper_address']);
+		$shipmanagerConfig->saveConfig('inventorymanager/fedex_config/shipper_address', $address);
 		$this->_redirect('inventorymanager/adminuser_shipmanager/setting');
 		}catch (Exception $e){
 			echo $e->getMessage();
