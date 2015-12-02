@@ -108,6 +108,29 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						echo "</pre>";*/
 						
 						
+						if($catalogproduct->getIsInStock() == 1){
+							//$model->setIsInStock(1);
+							//$productModel = Mage::getModel('catalog/product')->load($data['main_product_id']);
+							$stocklevel = Mage::getModel('cataloginventory/stock_item')
+				            ->loadByProduct($catalogproduct);
+				            $productQty = 0;
+				            if($stocklevel)
+				            	$productQty = $stocklevel->getQty();
+				            
+				            $catalogproduct->setStockData(array( 
+					            'qty' => $productQty - 1,
+					            'is_in_stock' => 1,
+					            'manage_stock' => 1,
+					        )); 
+					        if($productQty > 2){
+					        	$catalogproduct->setIsInStock(0);
+					        }
+							$catalogproduct->save();
+							
+							
+						}
+						
+						
 						$length	= $productInfoObject->getLength();
 						$width = $productInfoObject->getWidth();
 						$height = $productInfoObject->getHeight();

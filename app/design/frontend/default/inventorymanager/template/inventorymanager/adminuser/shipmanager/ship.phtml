@@ -329,7 +329,7 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
     			if(response != ''){
     				var obj = JSON.parse(response);
     				$('receiver_company').value = obj.name;
-    				$('receiver_email').value = obj.name;
+    				$('receiver_email').value = obj.email;
     				$('receiver_contact_name').value = obj.name;
     				$('receiver_phone').value = obj.phone;
     				$('receiver_address').value = obj.address;

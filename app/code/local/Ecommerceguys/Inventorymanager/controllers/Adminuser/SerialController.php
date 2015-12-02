@@ -344,6 +344,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 			
 			$data = array();
 			$data['name'] = $address->getName();
+			$data['email'] = $orderObject->getCustomerEmail();
 			$data['phone'] = $address->getTelephone();
 			$data['address'] = $address->getStreet();
 			$data['city'] = $address->getCity();
