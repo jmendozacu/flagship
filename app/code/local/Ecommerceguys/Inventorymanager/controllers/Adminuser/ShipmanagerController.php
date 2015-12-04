@@ -452,4 +452,71 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			exit;
 		}
 	}
+	
+	public function findorderAction(){
+		$orderId = $this->getRequest()->getParam('order_id');
+		$from = $this->getRequest()->getParam('from');
+		
+		if($from == "2"){
+			$resource	= Mage::getSingleton('core/resource');
+			$conn 		= $resource->getConnection('oscomm_read');
+			$results 	= $conn->query('SELECT * FROM orders WHERE orders_id = ' . $orderId);
+			// 2012965
+			$row = $results->fetch();
+				//print_r($row);
+				
+			$countryId = '';
+			$countryCollection = Mage::getModel('directory/country')->getCollection();
+			foreach ($countryCollection as $country) {
+			    if ($row['delivery_country'] == $country->getName()) {
+			        $countryId = $country->getCountryId();
+			        break;
+			    }
+			}
+			
+			$regionCode = "";
+			if($countryId != ""){
+				$regionCollection = Mage::getModel('directory/region_api')->items($countryId);
+	    		foreach ($regionCollection as $regionObject){
+	    			//print_r($regionObject); exit;
+	    			if($regionObject['name'] == $row['delivery_state']){
+	    				$regionCode = $regionObject['region_id'];
+	    			}
+	    		}
+			}				
+			$data = array();
+			$data['name'] = $row['customers_name']!=""?$row['customers_name']:"";
+			$data['email'] = $row['customers_email_address']!=""?$row['customers_email_address']:"";
+			$data['phone'] = $row['customers_telephone']!=""?$row['customers_telephone']:"";
+			$data['address'] = $row['delivery_street_address']!=""?$row['delivery_street_address']:"";
+			$data['city'] = $row['delivery_city']!=""?$row['delivery_city']:"";
+			$data['zipcode'] = $row['delivery_postcode']!=""?$row['delivery_postcode']:"";
+			$data['country'] = $countryId;
+			$data['region'] = $row['delivery_state']!=""?$row['delivery_state']:"";
+			$data['region_id'] = $regionCode;
+			echo Mage::helper('core')->jsonEncode($data);
+			exit;
+			
+		}
+		
+		$orderObject =  Mage::getModel('sales/order')->loadByIncrementId($orderId);
+		
+		if($orderObject && $orderObject->getId()){
+			$address = $orderObject->getShippingAddress();
+			
+			
+			
+			$data = array();
+			$data['name'] = $address->getName();
+			$data['email'] = $orderObject->getCustomerEmail();
+			$data['phone'] = $address->getTelephone();
+			$data['address'] = $address->getStreet();
+			$data['city'] = $address->getCity();
+			$data['zipcode'] = $address->getPostcode();
+			$data['country'] = $address->getCountryId();
+			$data['region'] = $address->getRegion();
+			$data['region_id'] = $address->getRegionId();
+			echo Mage::helper('core')->jsonEncode($data);
+		}
+	}
 }

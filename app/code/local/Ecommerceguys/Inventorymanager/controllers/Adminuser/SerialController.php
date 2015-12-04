@@ -156,8 +156,13 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 								
 								//$shippingAddress = $order->getShippingAddress();
 								
-								
-								
+								$purchaseOrderObject = Mage::getModel('inventorymanager/purchaseorder')->load($serialModel->getOrderId());
+								$receivedQty = $purchaseOrderObject->getReceivedQty();
+								if($receivedQty == ""){
+									$receivedQty = 0;
+								}
+								$purchaseOrderObject->setReceivedQty($receivedQty+1)->save();
+								$serialModel->setStatus("Received")->save();
 								//$return = $this->_generatePdf();
 								
 								

@@ -249,6 +249,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$serials = Mage::getModel('inventorymanager/label')->getCollection();
 		$serials->addFieldToFilter('order_id', $orderObject->getId());
 		$serials->addFieldToFilter('is_in_stock', array('neq'=>1));
+		$receivedSerials = 0;
 		foreach ($serials as $serial){
 			$orderProduct = Mage::getModel('inventorymanager/product')->load($serial->getProductId());
 			if($orderProduct && $orderProduct->getId()){
@@ -261,7 +262,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 				}
 				continue;*/
 				$stocklevel = Mage::getModel('cataloginventory/stock_item')->loadByProduct($catalogProduct);
-                
+                $receivedSerials++;
 				$productQty = 0;
                 if($stocklevel){
                 	$productQty = $stocklevel->getQty();
@@ -273,9 +274,17 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		            'manage_stock' => 1,
 		        ));
 				$catalogProduct->save();
+				$serial->setStatus("Received");
 				$serial->setIsInStock(1)->save();
 			}
 		}
+		$orderReceivedQty = $orderObject->getReceivedQty();
+		if($orderReceivedQty == ""){
+			$orderReceivedQty = 0;
+		}
+		$orderReceivedQty += $receivedSerials;
+		$orderObject->setReceivedQty($orderReceivedQty)
+			->setStatus('received')->save();
 
 		Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order Received. Products stock updated.'));
 		$this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
