@@ -251,6 +251,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$serials->addFieldToFilter('is_in_stock', array('neq'=>1));
 		$receivedSerials = 0;
 		foreach ($serials as $serial){
+			//echo $serial->getSerial() . "<br/>";
 			$orderProduct = Mage::getModel('inventorymanager/product')->load($serial->getProductId());
 			if($orderProduct && $orderProduct->getId()){
 				$catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
@@ -283,6 +284,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 			$orderReceivedQty = 0;
 		}
 		$orderReceivedQty += $receivedSerials;
+		
+		//echo $orderReceivedQty; exit;
+		
 		$orderObject->setReceivedQty($orderReceivedQty)
 			->setStatus('received')->save();
 
