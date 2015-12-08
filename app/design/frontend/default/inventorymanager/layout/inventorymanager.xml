@@ -311,6 +311,9 @@
 		</reference>
 	</inventorymanager_vendor_product_serialgrid>
 	
+	
+	
+	
 	<inventorymanager_adminuser_serial_sent>
 		<reference name="root">
 			<action method="setTemplate"><template>page/1column.phtml</template></action>
@@ -338,6 +341,16 @@
 		</reference>
 	</inventorymanager_adminuser_product_serialgrid>
 
+	
+	<inventorymanager_adminuser_product_refreshserials>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/adminuser/purchaseorder/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_product_serialgrid" name="vendor.product.serials" template="inventorymanager/adminuser/product/refreshserials.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_product_refreshserials>
+	
 	<inventorymanager_notification_index>
 		<reference name="root">
 			<action method="setTemplate"><template>page/1column.phtml</template></action>
