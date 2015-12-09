@@ -55,8 +55,10 @@
 											  				<input type="text" class="form-control new_location" name="location" id="" value="<?php echo $serialObject->getLocation(); ?>" />
 											  			</div>
 													  	<button type="button" class="btn btn-primary dropdown-toggle openbox-button-location" id="" style="z-index:999"><span class="caret"></span></button>
+													  	<input type="hidden" class="serial_id_hidden_box" value="<?php echo $serialObject->getId(); ?>" />
 													  	<ul class="dropdown-menu" id="dropdown-box-location">
 													  		<li class="add-location-li new_location_link"><a href="javascript:void(0);" class="add-new-status-link" id="" ><?php echo $this->__("Add New") ?></a></li>
+													  		
 													  		<?php foreach ($locations as $key => $locationLabel) { ?>
 													  			<li><span class="remove-location-link">x</span><a class="location-options" href="javascript:void(0);"><?php echo $locationLabel ?></a></li>
 													  		<?php } ?>
@@ -124,10 +126,34 @@ var locations = [];
 			});
 		});
 		
+		$$('a.location-options').each(function(e){
+			e.observe('click', function(){
+				var serialId = this.up('div.show-dropbox').down('input.serial_id_hidden_box').value;
+				this.up('div.show-dropbox').down('input.new_location').value = this.innerHTML;
+				this.up('div.form-control-static').down('ul').removeClassName('show-dropbox');
+				selectLocation(serialId, this.innerHTML);
+			});
+		});
 		
 		jQuery('#dataTables-example').dataTable();
 		jQuery(".clickable-row").click(function() {
 		    window.document.location = jQuery(this).data("href");
+		});
+	}
+	
+	
+	function selectLocation(serialId, location){
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_product/selectLocation', array('_current'=>true)) ?>', {
+			method:'get',
+			parameters: {location: location, serial_id:serialId},
+		  	onSuccess: function(transport) {
+		    	var response = transport.responseText;
+		    	jQuery('.bs-example-modal-sm').modal('hide');
+		    		
+		    			    		
+		  	},
+			onFailure: function() { alert('Something went wrong...'); }
 		});
 	}
 	

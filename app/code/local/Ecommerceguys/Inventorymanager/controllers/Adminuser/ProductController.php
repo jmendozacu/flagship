@@ -34,4 +34,17 @@ class Ecommerceguys_Inventorymanager_Adminuser_ProductController extends Mage_Co
 			echo $e->getMessage();
 		}
 	}
+	
+	public function selectLocationAction(){
+		$serialId = $this->getRequest()->getParam('serial_id');
+		$location = $this->getRequest()->getParam('location');
+		
+		$serial = Mage::getModel('inventorymanager/label')->load($serialId);
+		$serial->setLocation($location);
+		try {
+			$serial->save();
+		}catch (Exception $e){
+			echo $e->getMessage();
+		}
+	}
 }
