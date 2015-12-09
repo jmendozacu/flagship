@@ -9,3 +9,4 @@
 /sitemaps
 sitemaps/
 .gitignore
+/blog/wp-config.php
