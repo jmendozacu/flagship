@@ -274,4 +274,14 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 		$this->loadLayout();
 		$this->renderLayout();
 	}
+	
+	
+	public function massproductsAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function exportproductsAction(){
+		
+	}
 }
