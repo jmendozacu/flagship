@@ -3,11 +3,48 @@
 	$catalogProduct = $this->gerMainProduct();
 	
 	$_purchaseorder = $this->getPurchaseOrder();
+	$productInfoObject = $this->getVendorInfoObject();
+	
+	//print_r($productInfoObject->getData());
 	
 	$_helper = $this->helper('catalog/output');
 	$labelComments = $this->getComments();
 	$status = Mage::helper('inventorymanager')->getOrderedProductStatusArray($_purchaseorder->getVendorId());
 	$locations = $this->helper('inventorymanager')->getLocations($_purchaseorder->getVendorId());
+	$staticStatusArray = $this->helper('inventorymanager')->getStaticStatusOptions();
+	
+	$height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');
+    $width = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
+    $depth = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth');
+    $weight = $_helper->productAttribute($catalogProduct, $catalogProduct->getWeight(), 'weight');
+
+    $boxWidth = 0;
+    $boxHeight = 0;
+    $boxLength = 0;
+    $boxWeight = 0;
+
+    if ($productInfoObject && $productInfoObject->getId()) {
+
+        $boxWidth = $productInfoObject->getBoxWidth();
+        $boxHeight = $productInfoObject->getBoxHeight();
+        $boxLength = $productInfoObject->getBoxLength();
+        $boxWeight = $productInfoObject->getBoxWeight();
+
+        if ($productInfoObject->getHeight() && $productInfoObject->getHeight() > 0) {
+            $height = $productInfoObject->getHeight();
+        }
+        if ($productInfoObject->getWidth() && $productInfoObject->getWidth() > 0) {
+            $width = $productInfoObject->getWidth();
+        }
+        if ($productInfoObject->getLength() && $productInfoObject->getLength() > 0) {
+            $depth = $productInfoObject->getLength();
+        }
+        if ($productInfoObject->getWeight() && $productInfoObject->getWeight() > 0) {
+            $weight = $productInfoObject->getWeight();
+        }
+    }
+	
+	
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -32,19 +69,19 @@
 							<div class="form-group">
 								<label><?php echo $this->__("Height") ?></label>
 								<p class="form-control-static">
-									<?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches') ?>
+									<?php echo $height; ?>
 								</p>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Width") ?></label>
 								<p class="form-control-static">
-									<?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches') ?>
+									<?php echo $width ?>
 								</p>
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Depth") ?></label>
 								<p class="form-control-static">
-									<?php echo $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth') ?>
+									<?php echo $depth ?>
 								</p>
 							</div>
 							<div class="form-group">
@@ -79,14 +116,18 @@
 								<div class="form-control-static" >
 									<div class="btn-group show-dropbox">
 											<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
-							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" name="location" id="new_location" value="<?php echo $labelObject->getLocation(); ?>" />
+							  				<!--<input type="text" class="form-control" onkeyup="statusText(this.value)" name="location" id="new_location" value="<?php echo $labelObject->getLocation(); ?>" />-->
+							  				<input type="text" class="form-control" readonly name="location" id="new_location" value="<?php echo $labelObject->getLocation(); ?>" />
 							  			</div>
 									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button-location" style="z-index:999"><span class="caret"></span></button>
 									  	<ul class="dropdown-menu" id="dropdown-box-location">
-									  		<li class="add-location-li"><a href="javascript:void(0);" id="new_location_link" ><?php echo $this->__("Add New") ?></a></li>
-									  		<li class="add-location-li"><a href="javascript:void(0);" class="location-options"  ><?php echo $this->__("In Stock On Magento") ?></a></li>
+									  		<!--<li class="add-location-li"><a href="javascript:void(0);" id="new_location_link" ><?php echo $this->__("Add New") ?></a></li>-->
+									  		<?php /* <li class="add-location-li"><a href="javascript:void(0);" class="location-options"  ><?php echo $this->__("In Stock On Magento") ?></a></li> */ ?>
 									  		<?php foreach ($locations as $key => $locationLabel) { ?>
-									  			<li><span class="remove-location-link">x</span><a class="location-options" href="javascript:void(0);"><?php echo $locationLabel ?></a></li>
+									  			<li>
+									  				<!--<span class="remove-location-link">x</span>-->
+									  				<a class="location-options" href="javascript:void(0);"><?php echo $locationLabel ?></a>
+									  			</li>
 									  		<?php } ?>
 									  	</ul>
 									</div>
@@ -97,19 +138,28 @@
 								<div class="form-control-static" >
 									<div class="btn-group show-dropbox">
 											<div class="form-group input-group show-dropbox" id="status-text-div" style="float:left; margin-right:0px;">
-							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" name="status" id="new_status" value="<?php echo $labelObject->getStatus(); ?>" />
+							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" name="status" readonly id="new_status" value="<?php echo $labelObject->getStatus(); ?>" />
 							  			</div>
 									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button" style="z-index:999"><span class="caret"></span></button>
 									  	<ul class="dropdown-menu" id="dropdown-box">
-									  		<li class="add-status-li"><a href="javascript:void(0);" id="new_status_link" ><?php echo $this->__("Add New") ?></a></li>
-									  		<?php foreach ($status as $key => $statusLabel) { ?>
-									  			<li><span class="remove-status-link">x</span><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  		<?php /* <li class="add-status-li"><a href="javascript:void(0);" id="new_status_link" ><?php echo $this->__("Add New") ?></a></li> */ ?>
+									  		<?php foreach ($staticStatusArray as $key => $statusLabel) { ?>
+									  			<li><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
 									  		<?php } ?>
+									  		<?php /*foreach ($status as $key => $statusLabel) { ?>
+									  			<li><span class="remove-status-link">x</span><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  		<?php }*/ ?>
 									  	</ul>
 									</div>
 								</div>
 							</div>
-							
+							<div class="form-group">
+								<div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="is_shipped" value="1"><?php echo $this->__("Shipped") ?>
+                                    </label>
+                                </div>
+							</div>
 							<div class="row">
 								<div class="col-md-12 col-sm-12">
 									<div class="panel panel-primary">
@@ -174,6 +224,7 @@
 								<a class="btn btn-warning" onclick="if(dataForm.validator && dataForm.validator.validate()){ dataForm.form.submit(); }" href="javascript:void(0)"><?php echo $this->__("Update") ?></a>
 							</div>
 						</form>
+						<?php echo $this->getChildHtml('serial.history'); ?>
 					</div>
 				</div>
 			</div>
@@ -202,7 +253,8 @@
 	<?php } ?>
 
 	function statusText(val){
-		$('new_status_link').innerHTML = '<?php echo $this->__("Add") ?> ' + val;
+		
+		//$('new_status_link').innerHTML = '<?php echo $this->__("Add") ?> ' + val;
 	}
 	
 	$$('a.status-options').each(function(e){
@@ -312,27 +364,24 @@
 <script>
 	// SMART DROPBOX SCRIPTS
 	// locations
+	/*
 	var locations = [];
 	<?php foreach ($locations as $location){ ?>
 		locations.push("<?php echo $location; ?>");
 	<?php } ?>
 	
-	$('openbox-button-location').observe('click', function(){
-		$('dropdown-box-location').toggleClassName('show-dropbox');
-	});
+	
 	
 	$('new_location').observe("keyup", function(){
 		$('dropdown-box-location').addClassName('show-dropbox');
 		$('new_location_link').innerHTML = '<?php echo $this->__("Add") ?> ' + this.value;
 	});
 	
-	$('new_location').observe("click", function(){
-		$('dropdown-box-location').addClassName('show-dropbox');
-	});
 	
-	$('new_location_link').observe('click', function(){
+	
+	/*$('new_location_link').observe('click', function(){
 		addNewLocation();
-	});
+	});*/
 	
 	$$('a.location-options').each(function(e){
 		e.observe('click', function(){
@@ -340,7 +389,7 @@
 			$('dropdown-box-location').toggleClassName('show-dropbox');
 		});
 	});
-	
+	/*
 	function addNewLocation(){
 		var location = $('new_location').value;
 		var currentIndex = locations.indexOf(location);
@@ -392,12 +441,12 @@
 		});
 	}
 	
-	$$("span.remove-location-link").each(function(e){
+	/*$$("span.remove-location-link").each(function(e){
 		e.observe('click', function(){
 			removeLocationFunction(e);
 		});
-	});
-	
+	});*/
+	/*
 	function removeLocationFunction(e){
 		var location = e.up('li').down('a').innerHTML;
 		var currentIndex = locations.indexOf(location);
@@ -420,5 +469,11 @@
   			},
   			onFailure: function() { alert('Something went wrong...');}
 		});
-	}
+	}*/
+	$('openbox-button-location').observe('click', function(){
+		$('dropdown-box-location').toggleClassName('show-dropbox');
+	});
+	$('new_location').observe("click", function(){
+		$('dropdown-box-location').addClassName('show-dropbox');
+	});
 </script>

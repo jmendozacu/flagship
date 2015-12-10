@@ -1,0 +1,158 @@
+<?php $vendorData = $this->getCurrentVendor();?>
+<?php /* echo "<pre>".print_r($vendorData);exit;?>
+<?php $vendorData->getName(); */?>
+
+<form id="edit_form_1" name='edit_form' action="<?php echo $this->getPostUrl()?>" method="post" enctype="multipart/form-data">
+
+<div class="row">
+    <div class="col-md-12">
+        <?php if (Mage::getSingleton('inventorymanager/session')->isEmployer()): ?> 
+            <h2><?php echo $this->__("Employee") ?></h2>
+        <?php else:?>
+            <h2><?php echo $this->__("Vendor") ?></h2>
+        <?php endif;?>
+        <div style="float:right;padding-right:10px">
+             <button type="submit" title="<?php echo "<?php echo $this->__('Save');?>";?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            
+            <?php if (Mage::getSingleton('inventorymanager/session')->isEmployer()): ?> 
+                <div class="panel-heading"><?php echo $this->__("Employee Information") ?></div>
+            <?php else:?>
+                <div class="panel-heading"><?php echo $this->__("Vendor Information") ?></div>
+            <?php endif;?>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php echo $this->getMessagesBlock()->toHtml() ?>
+                            <div class="form-group">
+                                
+                                <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
+                                <input id="name" name="<?php echo $this->__('name');?>" value="<?php echo $vendorData->getName();?>" class="required-entry form-control" type="text" style="width:300px" />
+                            </div>
+
+                            <div class="form-group">
+                                <label><?php echo $this->__("Vendor Email") ?><span class="required">*</span></label>
+                                <input id="email" name="<?php echo $this->__('email');?>" value="<?php echo $vendorData->getEmail();?>" class="form-control  required-entry validate-email required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Vendor Code") ?><span class="required">*</span></label>
+                                <input id="vendor_code" name="<?php echo $this->__('vendor_code');?>" value="<?php echo $vendorData->getVendorCode();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            
+
+
+
+                              <div class="form-group">
+                                <label><?php echo $this->__("Company Name") ?><span class="required">*</span></label>
+                                <input id="username" name="company_name" value="<?php echo $vendorData->getCompanyName();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                              <div class="form-group">
+                                <label><?php echo $this->__("Company Phone") ?><span class="required">*</span></label>
+                                <input id="username" name="company_phone" value="<?php echo $vendorData->getCompanyPhone();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                              <div class="form-group">
+                                <label><?php echo $this->__("Telephone Extension") ?><span class="required">*</span></label>
+                                <input id="username" name="telephone_extension" value="<?php echo $vendorData->getTelephoneExtension();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            <div class="form-group">
+                                <label><?php echo $this->__("Street Address") ?><span class="required">*</span></label>
+                                <input id="username" name="street_address" value="<?php echo $vendorData->getStreetAddress();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            <div class="form-group">
+                                <label><?php echo $this->__("City") ?><span class="required">*</span></label>
+                                <input id="username" name="city" value="<?php echo $vendorData->getCity();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            <div class="form-group">
+                                <label><?php echo $this->__("State") ?><span class="required">*</span></label>
+                                <input id="username" name="state" value="<?php echo $vendorData->getState();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            <div class="form-group">
+                                <label><?php echo $this->__("Main Rep Name") ?><span class="required">*</span></label>
+                                <input id="username" name="main_rep_name" value="<?php echo $vendorData->getMainRepName();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            <div class="form-group">
+                                <label><?php echo $this->__("Industry") ?><span class="required">*</span></label>
+                                <input id="username" name="industry" value="<?php echo $vendorData->getIndustry();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            <div class="form-group">
+                                <label><?php echo $this->__("Number of employees") ?><span class="required">*</span></label>
+                                <input id="username" name="number_of_employees" value="<?php echo $vendorData->getNumberOfEmployees();?>" class="form-control required-entry validate-digits" type="text" style="width:300px" />
+                            </div>
+                            <div class="form-group">
+                                <label><?php echo $this->__("Username") ?><span class="required">*</span></label>
+                                <input id="username" name="<?php echo $this->__('username');?>" value="<?php echo $vendorData->getUsername();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Password") ?><span class="required">*</span></label>
+                                <input id="password" name="<?php echo $this->__('password');?>" value="<?php echo $vendorData->getPassword();?>" class="form-control required-entry validate-password" type="password" style="width:300px" />
+                            </div>
+                            <div class="form-group">
+                                <label><?php echo $this->__("Confirm Password") ?><span class="required">*</span></label>
+                                <input type="password" name="confirmation" title="<?php echo $this->__('Confirm Password') ?>" value="<?php echo $vendorData->getPassword();?>" id="confirmation" class="form-control required-entry validate-cpassword" style="width:300px" />
+                            </div>
+
+
+                            <?php /*
+                              <li class="fields">
+                    <div class="field">
+                        <label for="password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="password" id="password" title="<?php echo $this->__('Password') ?>" value="<?php echo $vendorData->getPassword();?>" class="input-text required-entry validate-password" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="confirmation" class="required"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
+                        <div class="input-box">
+                            <input type="password" name="confirmation" title="<?php echo $this->__('Confirm Password') ?>" value="<?php echo $vendorData->getPassword();?>" id="confirmation" class="input-text required-entry validate-cpassword" />
+                        </div>
+                    </div>
+                </li>
+                    */?>
+
+
+                           <?php /* <div class="form-group">
+                                <button type="submit" title="<?php echo "<?php echo $this->__('Save');?>";?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+                            </div>
+                            */?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+</form>
+ <script type="text/javascript">
+    editForm = new VarienForm('edit_form_1');
+</script>
+
+ <script type="text/javascript">
+
+    jQuery(document).ready(function () {
+/*
+    jQuery("#check-all").change(function(){    
+           var chk = jQuery("#check_list");
+           if(this.checked) {
+                 for (i = 0; i < chk.length; i++)
+                    {chk[i].checked = true ;}                  
+            }else{
+                for (i = 0; i < chk.length; i++)
+                    {chk[i].checked = false ;}
+            }
+        });
+*/
+        jQuery('#dataTables-example').dataTable();
+    });
+
+</script>
+
+

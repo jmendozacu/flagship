@@ -20,7 +20,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	public function generateAction(){
 		$orderId = $this->getRequest()->getParam('id');
 		
-		$labelCollection = Mage::getModel('inventorymanager/label')->getCollection();
+		/*$labelCollection = Mage::getModel('inventorymanager/label')->getCollection();
 		$labelCollection->addFieldToFilter('order_id', $orderId);
 		if(!$labelCollection->count() || $labelCollection->count() <= 0){
 			$products = Mage::getModel('inventorymanager/product')->getCollection();
@@ -40,12 +40,14 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 					$label->setData($labelData)->save();
 				}
 			}
-		}
+			
+			//exit;
+		}*/
 		
 		$content = $this->getLayout()->createBlock('inventorymanager/label_generate')
 		->setTemplate('inventorymanager/labelgenerate.phtml')->toHtml();
 		
-		//echo $content;
+		//echo $content; exit;
 		
 		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->SetCreator(PDF_CREATOR);
@@ -125,12 +127,28 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function editpostAction(){
 		if($data = $this->getRequest()->getPost()){
+			$diffLocation = false;
+			$diffStatus = false;
 			$model = Mage::getModel('inventorymanager/label')->load($data['label_id']);
+			if($data['location'] != $model->getLocation()){
+				$diffLocation = true;
+			}
+			if($data['status'] != $model->getStatus()){
+				$diffStatus = true;
+			}
 			try{
+				$serialHistory = Mage::getModel('inventorymanager/label_history');
+				if($diffLocation && $diffStatus){
+					$serialHistory->addStatusAndLocation($model->getId());
+				}elseif($diffLocation){
+					$serialHistory->addLocation($model->getId());
+				}elseif ($diffStatus){
+					$serialHistory->addStatus($model->getId());
+				}
 				$model->setStatus($data['status']);
 				$model->setLocation($data['location']);
 				if(isset($_FILES['main_image']) && $_FILES['main_image']['name'] != ""){
-					try {	
+					try {
 						$uploader = new Varien_File_Uploader('main_image');
 		           		$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
 						$uploader->setAllowRenameFiles(false);
@@ -147,8 +165,12 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 				if(isset($data['remove_main_image']) && $data['remove_main_image'] == 1){
 					$model->setMainImage("");
 				}
-				$model->save();
 				
+				if(isset($data['is_shipped']) && $data['is_shipped'] == 1){
+					$model->setStatus("Shipped");
+				}
+				
+				$model->save();
 				if(isset($data['comment']) && trim($data['comment'])!= ""){
 					$comment = Mage::getModel('inventorymanager/label_comment');
 					$commentData = array(
@@ -157,7 +179,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 						'label_id'	=>	$model->getId()
 					);
 					$comment->setData($commentData)->save();
-					
+					$model->setIsSeen(2)->save();
 					if(isset($_FILES['comment_image']) && $_FILES['comment_image']['name'] != ""){
 						try {	
 							/* Starting upload */	
@@ -174,7 +196,6 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 						} catch (Exception $e) {
 				      
 				        }
-			        
 				        //this way the name is saved in DB
 			  			$data['comment_image'] = $comment->getId() . "_" .$_FILES['comment_image']['name'];
 					}
@@ -190,6 +211,11 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function addnewstatusAction(){
 		$status = $this->getRequest()->getParam('status');
+		$staticStatuses = Mage::helper('inventorymanager')->getStaticStatusOptions();
+		if(in_array($status, $staticStatuses)){
+			return;
+		}
+		
 		try{
 			Mage::getModel('inventorymanager/label')->setNewStatus($status);
 		}catch (Exception $e){
@@ -221,6 +247,125 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 			Mage::getResourceModel('inventorymanager/label')->removeLocation($location);
 		}catch (Exception $e){
 			Mage::log($e->getMessage());
+		}
+	}
+	
+	public function updatelocationAction(){
+		$serialId = $this->getRequest()->getParam('serial_id');
+		$serial = Mage::getModel('inventorymanager/label')->load($serialId);
+		if($serial && $serial->getId()){
+			try {
+				$serial->setLocation($this->getRequest()->getParam('location'))->save();
+			}catch (Exception $e){
+				echo Mage::helper('inventorymanager')->__("Something went wrong. Please try again");
+			}
+		}else{
+			echo Mage::helper('inventorymanager')->__("Serial object not found");
+		}
+	}
+	
+	public function printAction(){
+		$content = $this->getLayout()->createBlock('inventorymanager/purchaseorder_print')
+		->setTemplate('inventorymanager/purchaseorder/print.phtml')->toHtml();
+		echo $content;
+	}
+	
+	public function printpoAction(){
+		
+		$id = $this->getRequest()->getParam('id');
+		
+		$content = $this->getLayout()->createBlock('inventorymanager/purchaseorder_printpo')
+		->setTemplate('inventorymanager/purchaseorder/printpo.phtml')->toHtml();
+		
+		
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetAuthor('Inventory Manager');
+		$pdf->SetTitle('Inventory Manager');
+		$pdf->SetSubject('');
+		$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+		
+		// set default header data
+		$pdf->SetHeaderData('/../skin/frontend/default/theme279/images/prohoods_logo_sm.png', 0, '', '');
+		
+		// set header and footer fonts
+		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+		
+		// set default monospaced font
+		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+		
+		// set margins
+		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+		
+		// set auto page breaks
+		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+		
+		// set image scale factor
+		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+		
+		// set some language-dependent strings (optional)
+		if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+			require_once(dirname(__FILE__).'/lang/eng.php');
+			$pdf->setLanguageArray($l);
+		}
+		// ---------------------------------------------------------
+		// set font
+		// add a page
+		$pdf->AddPage();
+		$pdf->SetFont('helvetica', '', 8);
+		
+		$pdf->writeHTML($content, true, false, false, false, '');
+		$pdf->lastPage();
+
+		// ---------------------------------------------------------
+		//Close and output PDF document
+		$pdf->Output('inventorymanager_'.$id.'.pdf', 'D');
+	}
+	
+	public function loadserialsAction(){
+		//$this->loadLayout();
+		//$this->reanderLayout();
+		
+		echo $this->getLayout()->createBlock('inventorymanager/label_refresh')
+		->setTemplate('inventorymanager/label/loadserials.phtml')->toHtml();
+		
+	}
+	
+	public function masslocationAction(){
+		$params = $this->getRequest()->getParams();
+		if(isset($params['ids']) && $params['ids'] != "" && $params['location'] != ""){
+			$idsArray = explode("-", $params['ids']);
+			foreach ($idsArray as $id){
+				$serial = Mage::getModel('inventorymanager/label')->load($id);
+				if($serial && $serial->getId()){
+					$serial->setLocation($params['location']);
+					try {
+						$serial->save();
+						
+					}catch (Exception $e){
+						Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Something went wrong"));
+					}
+				}
+			}
+		}
+		Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Location updated for selected serials"));
+		$this->_redirect('*/purchaseorder/view', array("id"=>$params['order_id']));
+	}
+	
+	public function seenAction(){
+		$id = $this->getRequest()->getParam('id');
+		$label = Mage::getModel('inventorymanager/label')->load($id);
+		if($label && $label->getId()){
+			$label->setIsSeen(1);
+			try {
+				$label->save();
+				$this->_redirect("*/*/edit", array("serial_key"=> $label->getSerial()));
+			}catch (Exception $e){
+				
+			}
 		}
 	}
 }

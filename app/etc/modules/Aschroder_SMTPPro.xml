@@ -1,1 +1,9 @@
-../../../.modman/Magento-SMTP-Pro-Email-Extension/app/etc/modules/Aschroder_SMTPPro.xml
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Aschroder_SMTPPro>
+            <active>true</active>
+           <codePool>local</codePool>
+       </Aschroder_SMTPPro>
+    </modules>
+</config>

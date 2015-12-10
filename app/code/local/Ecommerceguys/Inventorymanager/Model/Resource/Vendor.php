@@ -111,4 +111,17 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     		Mage::log($e->getMessage());
     	}
     }
+    
+    public function getAllProducts(){
+    	$resourceObject = $this->getResourceObject();
+    	$productTable = $resourceObject->getTableName('catalog_product_entity');
+    	$vendorProductTable = $resourceObject->getTableName('inventorymanager_vendorproduct');
+    	$connection = $resourceObject->getConnection('core_read');
+    	$select = $connection->select()
+                ->from(array("e"=>$productTable))
+                ->join(array("vp"=>$vendorProductTable), "e.entity_id = vp.product_id",array('vendor_id'))
+                ->group('entity_id');
+         
+    	return $connection->fetchAll($select);
+    }
 }

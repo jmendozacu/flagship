@@ -1,0 +1,7 @@
+<ul>
+	<?php foreach ($this->getMatchingProduct() as $product){ ?>
+		<li>
+			<a onclick="addProduct(<?php echo $product->getId() ?>)"><?php echo $product->getName(); ?></a>
+		</li>
+	<?php } ?>
+</ul>

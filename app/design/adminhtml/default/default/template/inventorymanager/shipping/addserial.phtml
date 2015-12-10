@@ -1,0 +1,32 @@
+<div class="grid">
+	<table class="data" cellspacing="0">
+		<thead>
+			<tr class="headings">
+				<th><?php echo $this->__("Serial") ?></th>
+				<th><?php echo $this->__("Action") ?></th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<td class="a-center last" style="padding:8px;" colspan="2">
+					<button style="" onclick="addSerial()" class="scalable " type="button" >
+						<span><span><span><?php echo $this->__("Add Serial") ?></span></span></span>
+					</button>
+				</td>
+			</tr>
+		</tfoot>
+		<tbody id="inventorymanager_serials">
+		</tbody>
+	</table>
+	
+	
+</div>
+
+<script>
+	function addSerial(){
+		$('inventorymanager_serials').insert('<tr><td><input type="text" name="serials[]" class="input-text" /> </td><td><a href="javascript:void(0)" onclick="delete_row(this)"><?php echo $this->__("Delete") ?></a></td></tr>');
+	}
+	function delete_row(row){
+		row.up('tr').remove();
+	}
+</script>

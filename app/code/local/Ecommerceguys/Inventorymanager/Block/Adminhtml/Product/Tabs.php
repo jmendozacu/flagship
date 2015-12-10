@@ -7,7 +7,7 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Tabs extends Mage_A
     	$setId = $product->getAttributeSetId();
     	if ($setId) {
     		 $this->addTab('labeled', array(
-                'label'     => Mage::helper('catalog')->__('labeled'),
+                'label'     => Mage::helper('catalog')->__('Product Labels'),
                 'url'       => $this->getUrl('inventorymanager/adminhtml_label/grid', array('_current' => true)),
                 'class'     => 'ajax',
             ));

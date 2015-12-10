@@ -1,0 +1,79 @@
+<?php
+	$purchaseorder = $this->getOrderObject();
+	$vendor = $this->getVendor();
+	$paymentTerms = Mage::getModel('inventorymanager/paymentterms')->getArray();
+	$products = $this->getOrderProducts();
+	
+	//print_r($purchaseorder->getData());
+?>
+<div>
+	<h1><?php echo $this->__("Purchase Order") ?></h1>
+	<br/>
+	<table width="40%" border="1" cellpadding="5">
+		<tr>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Order ID") ?></td>
+			<td><?php echo $purchaseorder->getId() ?></td>
+		</tr>
+		<tr>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Vendor") ?></td>
+			<td><?php echo $vendor->getName() ?></td>
+		</tr>
+		<tr>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Shipping Method") ?></td>
+			<td><?php echo $purchaseorder->getShippingMethod(); ?></td>
+		</tr>
+		<tr>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Payment Terms") ?></td>
+			<td><?php echo isset($paymentTerms[$purchaseorder->getPaymentTerms()])?$paymentTerms[$purchaseorder->getPaymentTerms()]:""; ?></td>
+		</tr>
+		<tr>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Purchase Order Date") ?></td>
+			<td><?php echo date("Y-m-d", strtotime($purchaseorder->getDateOfPo())); ?></td>
+		</tr>
+		<?php if($purchaseorder->getExpectedDate() != ""){ ?>
+		<tr>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Order Date") ?></td>
+			<td><?php echo date("Y-m-d", strtotime($purchaseorder->getExpectedDate())); ?></td>
+		</tr>
+		<?php } ?>
+	</table>
+	<br/>
+	<h1><?php echo $this->__("Order Products") ?></h1>
+	<table width="80%" border="1" cellpadding="5">
+		<tr>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Name") ?></td>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Qty") ?></td>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Unit Cost") ?></td>
+			<td bgcolor="#EBE9F5"><?php echo $this->__("Total") ?></td>
+		</tr>
+		<?php
+		$total = 0;
+		$totalQty = 0;
+		foreach ($products as $product){ 
+			$total += $product->getTotal();
+			$totalQty += $product->getQty();
+		?>
+		<?php $catalogProduct = Mage::getModel('catalog/product')->load($product->getMainProductId()) ?>
+			<tr>
+				<td><?php echo $catalogProduct->getName() ?></td>
+				<td align="right"><?php echo $product->getQty() ?></td>
+				<td align="right"><?php echo $product->getPrice() ?></td>
+				<td align="right"><?php echo $product->getTotal() ?></td>
+			</tr>
+		<?php } ?>
+		<tr>
+			<td>&nbsp;</td>
+			<td align="right"><?php echo $totalQty ?></td>
+			<td align="right" bgcolor="#EBE9F5"><?php echo $this->__("Total") ?></td>
+			<td align="right"><?php echo $total ?></td>
+		</tr>
+	</table>
+</div>
+<div>
+	<table width="80%">
+		<tr>
+			<td align="right"><span><?php echo $this->__("Thank You") ?></span></td>
+		</tr>
+	</table>
+	
+</div>

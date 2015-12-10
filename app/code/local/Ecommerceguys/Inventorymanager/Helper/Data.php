@@ -14,17 +14,23 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 			"lighting" => $this->__("Lighting"),
 			"files" => $this->__("Drawings"),
 			"main_image" => $this->__("Main Image"),
+			"upc" => $this->__("UPC"),
+			"weight" => $this->__("Weight"),
+			"box_weight" => $this->__("Box Weight"),
 		);
 	}
 	
-	public function getSerial(){
-		 $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-		 $random_string_length = 14;
+	public function getSerial($orderId=0){
+		 $characters = '0123456789';
+		 $random_string_length = 4;
 		 $string = '';
 		 for ($i = 0; $i < $random_string_length; $i++) {
 		      $string .= $characters[rand(0, strlen($characters) - 1)];
 		 }
-		 return $string;
+		 
+		 $serialKey = date('Y-m')."-".$orderId."-".$string;
+		 
+		 return $serialKey;
 	}
 	
 	public function getOrderedProductStatusArray(){
@@ -37,6 +43,17 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 		if(isset($value['status']))
 			return $value['status'];
 		return "";
+	}
+	
+	public function getStaticStatusOptions(){
+		return array(
+			$this->__("Ready to Ship"),
+			$this->__("Processing"),
+			$this->__("Shipped"),
+			$this->__("Arrived"),
+			$this->__("Ready to Sell"),
+			$this->__("Sold")
+		);
 	}
 	
 	public function getVendorMaterials(){
@@ -106,5 +123,64 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 			return $value['location'];
 		}
 		return "";
+	}
+	
+	public function getVendorFromRequest(){
+		$request = Mage::app()->getRequest()->getParams();
+		if(isset($request['serial_key'])){
+			$serialKey = $request['serial_key'];
+			$labelObject = Mage::getModel('inventorymanager/label')->load($serialKey, 'serial');
+			if($labelObject && $labelObject->getId()){
+				$orderId = $labelObject->getOrderId();
+				$porchaseorder = Mage::getModel('inventorymanager/purchaseorder')->load($orderId);
+				if($porchaseorder && $porchaseorder->getId())
+					return $porchaseorder->getVendorId();
+			}
+		}
+	}
+	
+	public function sendNewOrderEmail($orderId){
+		$order = Mage::getModel('inventorymanager/purchaseorder')->load($orderId);
+		
+		if($order && $order->getId()){
+			
+			
+			
+			$vendor = Mage::getModel('inventorymanager/vendor')->load($order->getVendorId());
+			$emailTemplate  = Mage::getModel('core/email_template')->loadDefault('purchaseorder_email');
+			$variables = array();
+			$variables['username'] = $vendor->getUsername();
+			$variables['login_link'] = Mage::getUrl('inventorymanager/vendor/login');
+			$processedTemplate = $emailTemplate->getProcessedTemplate($variables);
+			
+			$senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
+			$senderName = Mage::getStoreConfig('trans_email/ident_general/name');
+			
+			$emailTemplate->setSenderName($senderName);
+			$emailTemplate->setSenderEmail($senderEmail);
+			$emailTemplate->setTemplateSubject($this->__("New Purchase Order"));
+			
+			try {
+				$emailTemplate->send($vendor->getEmail(),$vendor->getFirstname() . " " . $vendor->getlastname(), $variables);
+			}catch (Exception $e){
+				echo $e->getMessage();
+			}
+		}
+	}
+	
+	public function getAgentLocations(){
+		$locations = Mage::getResourceModel('inventorymanager/label')->getLocationsForAgent();
+		$agentLocations = array();
+		foreach ($locations as $location){
+			if(isset($location['location'])){
+				$agentLocations[] = $location['location'];
+			}
+		}
+		$agentLocations = array_filter($agentLocations);
+		return $agentLocations;
+	}
+	
+	public function wsdlPath(){
+		return Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true ) . "fedex/";
 	}
 }

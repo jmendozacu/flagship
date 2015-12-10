@@ -264,4 +264,14 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 		//Close and output PDF document
 		$pdf->Output($productId.'_orderlabel.pdf', 'D');
 	}
+	
+	public function stockgridAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function serialgridAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
 }

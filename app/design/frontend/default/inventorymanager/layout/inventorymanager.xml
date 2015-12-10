@@ -1,5 +1,74 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
+
+	<inventorymanager>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+	</inventorymanager>
+
+	<inventorymanager_adminuser_purchaseorder_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+    	<reference name="content">
+            <block type="inventorymanager/user_purchaseorder" name="adminuser.purchaseorder" template='inventorymanager/adminuser/purchaseorder.phtml'/>
+        </reference>
+    </inventorymanager_adminuser_purchaseorder_index>
+
+	<inventorymanager_adminuser_purchaseorder_edit>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params/><!--<if/><condition>can_load_calendar_js</condition>--></action>
+			<action method="addItem"><type>js</type><name>calendar/calendar.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+			<action method="addItem"><type>js</type><name>calendar/lang/calendar-en.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+			<action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+			<block type="core/html_calendar" name="head.calendar" template="page/js/calendar.phtml" />
+		</reference>
+    	<reference name="content">
+			<block type="inventorymanager/user_purchaseorder_edit" name="adminuser.purchaseorder.edit" template="inventorymanager/adminuser/purchaseorder/edit.phtml">
+				<block type="inventorymanager/user_purchaseorder_comment" name="adminuser.purchaseorder.edit.comment" template="inventorymanager/adminuser/purchaseorder/comment.phtml" />
+			</block>
+        </reference>
+    </inventorymanager_adminuser_purchaseorder_edit>
+
+	<inventorymanager_adminuser_purchaseorder_findproduct>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/adminuser/purchaseorder/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_purchaseorder_findproduct" name="adminuser.purchaseorder.findproduct" template="inventorymanager/adminuser/purchaseorder/findproduct.phtml" />
+		</reference>
+	</inventorymanager_adminuser_purchaseorder_findproduct>
+	
+	<inventorymanager_adminuser_purchaseorder_getproductinfo>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/adminuser/purchaseorder/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_purchaseorder_addproduct" name="adminuser.purchaseorder.addproduct" template="inventorymanager/adminuser/purchaseorder/addproduct.phtml" />
+		</reference>
+	</inventorymanager_adminuser_purchaseorder_getproductinfo>
+	
+	<inventorymanager_adminuser_purchaseorder_comment_refresh>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/adminuser/purchaseorder/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_purchaseorder_comment" name="adminuser.purchaseorder.comment.refresh" template="inventorymanager/adminuser/purchaseorder/comment_refresh.phtml" />
+		</reference>
+	</inventorymanager_adminuser_purchaseorder_comment_refresh>
+	
+
 	<inventorymanager_vendor_login>
 		<reference name="root">
 			<action method="setTemplate"><template>page/1column.phtml</template></action>
@@ -26,6 +95,16 @@
 			<block type="inventorymanager/vendor_dashboard" name="vendor.dashboard" template="inventorymanager/dashboard.phtml" />
 		</reference>
 	</inventorymanager_vendor_index>
+	
+
+	<inventorymanager_vendor_profile>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_profile" name="vendor.profile" template="inventorymanager/vendor/profile.phtml" />
+		</reference>
+	</inventorymanager_vendor_profile>
 	
 	<inventorymanager_vendor_product_edit>
 		<reference name="root">
@@ -97,11 +176,37 @@
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
 		</reference>
 		<reference name="content">
-			<block type="inventorymanager/vendor_product_revision" name="vendor.product.revision" template="inventorymanager/product/revision.phtml" >
-				
+			<block type="inventorymanager/vendor_product_revision" name="vendor.product.revision" template="inventorymanager/product/revision.phtml">
 			</block>
 		</reference>
 	</inventorymanager_vendor_product_showrevision> 
+	
+
+
+	<inventorymanager_vendor_employer_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_employer" name="vendor.employer" template="inventorymanager/vendor/employers.phtml"/>
+		</reference>
+	</inventorymanager_vendor_employer_index>
+	
+
+	<inventorymanager_vendor_employer_edit>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_employer_edit" name="vendor.employer.edit" template="inventorymanager/vendor/employer/edit.phtml" ></block>
+		</reference>
+	</inventorymanager_vendor_employer_edit>
 	
 	<inventorymanager_adminuser_vendors>
 		<reference name="root">
@@ -115,6 +220,30 @@
 		</reference>
 	</inventorymanager_adminuser_vendors>
 	
+	<inventorymanager_adminuser_vendorprofiles>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_vendor" name="adminuser.vendorprofiles" template="inventorymanager/adminuser/vendorprofiles.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_vendorprofiles>
+
+	<inventorymanager_adminuser_vendoredit>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+		 	<block type="inventorymanager/user_vendor" name="adminuser.vendoredit" template="inventorymanager/adminuser/vendoredit.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_vendoredit>
+	
 	
 	<inventorymanager_adminuser_vendorproduct>
 		<reference name="root">
@@ -127,4 +256,237 @@
 			<block type="inventorymanager/user_vendorproduct" name="adminuser.vendorproduct" template="inventorymanager/adminuser/vendorproduct.phtml" ></block>
 		</reference>
 	</inventorymanager_adminuser_vendorproduct>
+	
+	<inventorymanager_adminuser_serial_findreceive>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_receive" name="adminuser.serials.receive" template="inventorymanager/adminuser/serial/receive.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_serial_findreceive>
+	
+	<inventorymanager_adminuser_serial_receive>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_receive" name="adminuser.serials.receive" template="inventorymanager/adminuser/serial/serialdetail.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_serial_receive>
+	
+	<inventorymanager_adminuser_serial_find>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_find" name="adminuser.serials.find" template="inventorymanager/adminuser/serial/find.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_serial_find>
+	
+	<inventorymanager_vendor_product_stockgrid>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_product_stock" name="vendor.product.stock" template="inventorymanager/vendor/product/stockgrid.phtml" ></block>
+		</reference>
+	</inventorymanager_vendor_product_stockgrid>
+	
+	<inventorymanager_vendor_product_serialgrid>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_product_serialgrid" name="vendor.product.serials" template="inventorymanager/vendor/product/serialgrid.phtml" ></block>
+		</reference>
+	</inventorymanager_vendor_product_serialgrid>
+	
+	
+	
+	
+	<inventorymanager_adminuser_serial_sent>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_find" name="adminuser.serials.find" template="inventorymanager/adminuser/serial/find.phtml" ></block>
+		</reference> 
+	</inventorymanager_adminuser_serial_sent>
+	
+	<inventorymanager_adminuser_product_stockgrid>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_product_stockgrid" name="adminuser.serials.find" template="inventorymanager/adminuser/product/stockgrid.phtml" ></block>
+		</reference> 
+	</inventorymanager_adminuser_product_stockgrid>
+	
+	<inventorymanager_adminuser_product_serialgrid>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_product_serialgrid" name="adminuser.product.serials" template="inventorymanager/adminuser/product/serialgrid.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_product_serialgrid>
+
+	
+	<inventorymanager_adminuser_product_refreshserials>
+		<reference name="root">
+			<action method="setTemplate"><template>inventorymanager/adminuser/purchaseorder/empty.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_product_serialgrid" name="vendor.product.serials" template="inventorymanager/adminuser/product/refreshserials.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_product_refreshserials>
+	
+	<inventorymanager_notification_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_notification" name="vendor.notification" template="inventorymanager/vendor/notification.phtml" ></block>
+		</reference>
+	</inventorymanager_notification_index>
+	
+	<inventorymanager_adminuser_purchaseorder_showbystatus>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_purchaseorder_bystatus" name="adminuser.purchaseorder.bystatus" template="inventorymanager/adminuser/purchaseorder/orderbystatus.phtml" />
+		</reference>
+	</inventorymanager_adminuser_purchaseorder_showbystatus>
+	
+	<inventorymanager_vendor_locations>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/vendor_locations" name="vendor.locations" template="inventorymanager/vendor/locations.phtml" />
+		</reference>
+	</inventorymanager_vendor_locations>
+	
+	<inventorymanager_adminuser_serial_locations>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_locations" name="all.locations" template="inventorymanager/adminuser/serial/locations.phtml" />
+		</reference>
+	</inventorymanager_adminuser_serial_locations>
+	
+	<inventorymanager_purchaseorder_showbystatus>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/purchaseorder_bystatus" name="ordersbystatus" template="inventorymanager/purchaseorder/grid.phtml" />
+		</reference>
+	</inventorymanager_purchaseorder_showbystatus>
+	
+	
+	<inventorymanager_adminuser_notification_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_notification" name="vendor.notification" template="inventorymanager/adminuser/notification.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_notification_index>
+	
+	<inventorymanager_help_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/help_index" name="help" template="inventorymanager/help/index.phtml" />
+		</reference>
+	</inventorymanager_help_index>
+	
+	<inventorymanager_help_view>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/help_view" name="help.view" template="inventorymanager/help/view.phtml" />
+		</reference>
+	</inventorymanager_help_view>
+	
+	<inventorymanager_adminuser_shipmanager_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_shipmanager_ship" name="adminuser.sitemanager.ship" template="inventorymanager/adminuser/shipmanager/ship.phtml" />
+		</reference>
+	</inventorymanager_adminuser_shipmanager_index>
+	
+	<inventorymanager_adminuser_shipmanager_history>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_shipmanager_history" name="adminuser.sitemanager.history" template="inventorymanager/adminuser/shipmanager/history.phtml" />
+		</reference>
+	</inventorymanager_adminuser_shipmanager_history>
+	
+	<inventorymanager_adminuser_shipmanager_save>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="core/template" name="adminuser.sitemanager.history" template="inventorymanager/adminuser/shipmanager/show.phtml" />
+		</reference>
+	</inventorymanager_adminuser_shipmanager_save>
+	
+	<inventorymanager_adminuser_shipmanager_setting>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_shipmanager_settings" name="adminuser.sitemanager.settings" template="inventorymanager/adminuser/shipmanager/settings.phtml" />
+		</reference>
+	</inventorymanager_adminuser_shipmanager_setting>
 </layout>

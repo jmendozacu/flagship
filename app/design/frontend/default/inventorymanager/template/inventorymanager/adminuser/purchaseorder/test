@@ -1,0 +1,517 @@
+<?php
+	$c_vendorId = "";
+	$c_shippingMethod = "";
+	$c_paymentTerms = "";
+	$c_dateOfPo = "";
+	$c_expectedDate = "";
+	if($currentPurchaseOrder = $this->getCurrentOrder()){
+		$c_vendorId = $currentPurchaseOrder->getVendorId();
+		$c_shippingMethod = $currentPurchaseOrder->getShippingMethod();
+		$c_paymentTerms = $currentPurchaseOrder->getPaymentTerms();
+		$c_dateOfPo = $currentPurchaseOrder->getDateOfPo();
+		$c_expectedDate = $currentPurchaseOrder->getExpectedDate();
+	}
+?>
+
+
+<!-- New design start -->
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>
+        	<?php if($this->getCurrentOrder()):?>
+						<?php echo $this->__("Edit Purchase Order") ?>
+			<?php else:?>
+						<?php echo $this->__("Add Purchase Order") ?>
+			<?php endif;?>
+		</h2>
+        <div style="float:right;padding-right:10px">
+             <button type="button" onclick='document.getElementById("edit_form").submit();' title="<?php echo "<?php echo $this->__('Save');?>";?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+        </div>
+        <?php if($this->getCurrentOrder()): ?>
+				<div style="float:right;padding-right:10px">
+					<button style="" onclick="setLocation('<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/generatePdf", array('id'=>$this->getCurrentOrder()->getId()) ) ?>');" class="btn btn-warning" type="button" title="<?php echo $this->__("Download PDF") ?>">
+						<span><span><span><?php echo $this->__("Download PDF") ?></span></span></span>
+					</button>
+				</div>
+		<?php endif; ?>	
+    </div>
+</div>
+<hr>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $this->__("Fill below information") ?></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                    	<form id="edit_form" name="edit_form" enctype="multipart/form-data" method="post" action="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/save") ?>">
+                        <?php echo $this->getMessagesBlock()->toHtml() ?>
+                        <div class="no-display">
+							<input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key" />
+							<?php if($this->getCurrentOrder()): ?>
+								<input type="hidden" value="<?php echo $currentPurchaseOrder->getId() ?>" name="id" />
+							<?php endif; ?>
+							<input type="hidden" value="" id="save_back" name="back" />
+						</div>
+                            <div class="form-group">
+                                
+                                <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
+                                <select id="vendor_id" name="vendor_id" class="required-entry select">
+									<?php foreach ($this->getVendors() as $vendorId => $vendorName): ?>
+										<option value="<?php echo $vendorId ?>" <?php echo $c_vendorId==$vendorId?"selected='seleted'":""; ?> ><?php echo $vendorName ?></option>
+									<?php endforeach; ?>
+								</select>
+                            </div>
+
+                            <div class="form-group">
+                                <label><?php echo $this->__("Shipping Mehtod") ?></label>
+                                <select id="shipping_method" name="shipping_method" class="required-entry select">
+									<?php foreach ($this->getAllShippingMethod() as $code => $title): ?>
+										<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
+									<?php endforeach; ?>
+								</select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Payment Terms") ?></label>
+                               	<select id="payment_terms" name="payment_terms" class="required-entry select">
+									<?php foreach ($this->getPaymentTerms() as $code => $title): ?>
+									<option value="<?php echo $code ?>" <?php echo $c_paymentTerms==$code?"selected='selected'":""; ?>><?php echo $title ?></option>
+									<?php endforeach; ?>
+								</select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Date Of Purchase Order") ?></label>
+                                <input type="text" style="width:110px !important;" class=" input-text required-entry" title="<?php echo $this->__("Date Of Purchase Order") ?>" value="<?php echo $c_dateOfPo!=""?date('d/m/Y', strtotime($c_dateOfPo)):date('d/m/Y'); ?>" id="date_of_po" name="date_of_po">
+												<img style="" title="<?php echo $this->__("Select Date") ?>" id="date_of_po_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Expted Date") ?></label>
+                                <input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo $c_expectedDate!=""?date('d/m/Y', strtotime($c_expectedDate)):date('d/m/Y', strtotime('+30 days')); ?>" name="expected_date" id="expected_date">
+												<img style="" title="<?php echo $this->__("Select Date") ?>" id="expected_date_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
+                            </div>
+                              
+							<?php /*
+                              <div class="form-group">
+                                <label><?php echo $this->__("Add Product to purchase order") ?></label>
+                                <input style="width:300px" type="text" class="input-text" id="add_product" onkeyup="loadProducts(this.value)"  />
+								<div id="product_suggestion_box">
+                            </div>
+                            */?>
+
+                            <div class="form-group">
+                                <ul id="products_grid">
+                                	<li>
+											<div class="product-content-header p-name"><?php echo $this->__("Name") ?></div>
+											<div class="product-content-header p-qty"><?php echo $this->__("Qty") ?></div>
+											<div class="product-content-header p-cost"><?php echo $this->__("Price/Unit") ?></div>
+											<div class="product-content-header p-input"><?php echo $this->__("Total") ?></div>
+											<div class="product-content-header p-remove"><?php echo $this->__("Remove") ?></div> 
+											<div class="clear-float"></div>
+										</li>
+                                	<?php if($this->getCurrentOrder()) { ?>
+										
+										<?php foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
+										<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
+											<li>
+												<div class="product-content p-name">
+													<?php echo $productObject->getName() ?>
+													<input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
+												</div>
+												<div class="product-content p-qty">
+													<?php echo $orderProduct->getQty() ?>
+													<input type="text" value="<?php echo $orderProduct->getQty() ?>" name="qty[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
+												</div>
+												<div class="product-content p-cost">
+													<?php echo $orderProduct->getPrice() ?>
+													<input type="text" value="<?php echo $orderProduct->getPrice() ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
+												</div>
+												<div class="product-content p-input"><?php echo $orderProduct->getTotal() ?></div>
+												<div class="product-content p-remove"><a onclick="removeProduct(this)">X</a></div>
+												<div class="clear-float"></div>
+											</li>
+										<?php } ?>
+										<?php } ?>
+								</ul>
+                            </div>
+                            <div class="form-group">
+                                <label for="total"><?php echo $this->__("Units Ordered") ?></label>
+                                <span id="total_qty"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="total"><?php echo $this->__("Units Received") ?></label>
+                                <span id="total_qty"></span>
+                            </div>
+                            <div class="form-group">
+                              	<label for="total"><?php echo $this->__("Total") ?></label>
+                                <span id="grant_total"></span>
+                            </div>
+                        </form>
+                            <?php echo $this->getChildHtml('adminuser.purchaseorder.edit.comment') ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+
+
+
+
+<div id="ember4133" class="ember-view orders show-order scrollable full-height row-fluid greyed">
+  <div class="span9 plus-gutter pal mbl">
+    <form id="ember4186" class="ember-view card pvm form-horizontal" novalidate="novalidate">
+      <div id="company-select-area" class="row-fluid order-header">
+        <div id="ember4193" class="ember-view">
+          <div class="span8">
+            <div class="onboarding-1 tour-white rounded floated">
+              <div id="ember4301" class="ember-view string left man help-overlay required control-group">
+                <div class="error-wrapper">
+                  <div class="selectize-control ember-view single plugin-continue_editing">
+                    <div class="selectize-dropdown single ember-view plugin-continue_editing" style="display: none; width: 210px; top: 28px; left: 0px;">
+                      <div class="selectize-dropdown-content">
+                        <div class="option active" data-selectable="" data-value="5175175">Henry Salt (DEMO)</div>
+                        <div class="option" data-selectable="" data-value="5175174">TradeGecko (DEMO)</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+		 </div>
+          </div>
+          <dl id="ember4292" class="ember-view dl-horizontal dl-form small editable-number span4 mvn not-editing">
+            <dd id="ember4310" class="ember-view string control-group">
+              <div class="error-wrapper">
+                
+            </div>
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <hr class="mhl mvs">
+      <div class="row-fluid dl-horizontal dl-form small phl">
+        <dl class="span4">
+          <dt><?php echo $this->__('Name')?></dt>
+          <dd>
+            <select id="vendor_id" name="vendor_id" class="required-entry select ember-view ember-select">
+				<?php foreach ($this->getVendors() as $vendorId => $vendorName): ?>
+					<option value="<?php echo $vendorId ?>" <?php echo $c_vendorId==$vendorId?"selected='seleted'":""; ?> ><?php echo $vendorName ?></option>
+				<?php endforeach; ?>
+			</select>
+          </dd>
+          <dt><?php echo $this->__('Shipping method')?></dt>
+          <dd id="ember4199" class="ember-view string help-overlay required">
+            <select id="shipping_method" name="shipping_method" class="required-entry select  ember-view ember-select">
+				<?php foreach ($this->getAllShippingMethod() as $code => $title): ?>
+					<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
+				<?php endforeach; ?>
+			</select>
+          </dd>
+             <dt><?php echo $this->__('Payment terms')?></dt>
+          <dd id="ember4199" class="ember-view string help-overlay required">
+            <select id="shipping_method" name="shipping_method" class="required-entry select  ember-view ember-select">
+				<?php foreach ($this->getAllShippingMethod() as $code => $title): ?>
+					<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
+				<?php endforeach; ?>
+			</select>
+          </dd>
+          <dt>Date of Purchase Order</dt>
+          <dd id="ember4200" class="ember-view string help-overlay required">
+            
+            <input type="text" style="width:110px !important;" class=" input-text required-entry" title="<?php echo $this->__("Date Of Purchase Order") ?>" value="<?php echo $c_dateOfPo!=""?date('d/m/Y', strtotime($c_dateOfPo)):date('d/m/Y'); ?>" id="date_of_po" name="date_of_po">
+												<img style="" title="<?php echo $this->__("Select Date") ?>" id="date_of_po_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
+          </dd>
+          <dt>Expted Date</dt>
+          <dd id="ember4200" class="ember-view string help-overlay required">
+             <input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo $c_expectedDate!=""?date('d/m/Y', strtotime($c_expectedDate)):date('d/m/Y', strtotime('+30 days')); ?>" name="expected_date" id="expected_date">
+												<img style="" title="<?php echo $this->__("Select Date") ?>" id="expected_date_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
+          </dd>
+          <dt><?php echo $this->__('Add Product to purchase order')?></dt>
+          <dd>
+          <input  type="text" class="input-text" id="add_product" onkeyup="loadProducts(this.value)"  />
+								<div id="product_suggestion_box">
+                            </div>
+
+        	</dd>
+        </dl>
+      </div>
+      <section class="tableish form-table mtm">
+
+ 		<ul id="products_grid">
+                                	<li>
+											<div class="product-content-header p-name"><?php echo $this->__("Name") ?></div>
+											<div class="product-content-header p-qty"><?php echo $this->__("Qty") ?></div>
+											<div class="product-content-header p-cost"><?php echo $this->__("Price/Unit") ?></div>
+											<div class="product-content-header p-input"><?php echo $this->__("Total") ?></div>
+											<div class="product-content-header p-remove"><?php echo $this->__("Remove") ?></div> 
+											<div class="clear-float"></div>
+										</li>
+
+        <ul id="ember4223" class="ember-view row-fluid tableish-header affix-top">
+          <li class="span1">&nbsp;</li>
+          <li class="span8"><?php echo $this->__("Item Name") ?></li>
+          <li class="span2"><?php echo $this->__("Quantity") ?></li>
+          <li class="span3"><?php echo $this->__("Price ($)") ?></li>
+          <li class="span3"><?php echo $this->__("Total") ?></li>
+        </ul>
+        	<?php if($this->getCurrentOrder()) { ?>
+										
+			<?php foreach ($this->getCurrentOrderProducts() as $orderProduct){ ?>
+			<?php $productObject = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId()); ?>
+
+        <ul id="add-line-item" class="ember-view tableish-body tour-white">
+          <li id="ember4345" class="ember-view order-line-item">
+            <ul id="ember4347" class="ember-view row-fluid">
+
+
+			<li>
+				<div class="product-content p-name">
+					<?php echo $productObject->getName() ?>
+					<input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
+				</div>
+				<div class="product-content p-qty">
+					<?php echo $orderProduct->getQty() ?>
+					<input type="text" value="<?php echo $orderProduct->getQty() ?>" name="qty[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
+				</div>
+				<div class="product-content p-cost">
+					<?php echo $orderProduct->getPrice() ?>
+					<input type="text" value="<?php echo $orderProduct->getPrice() ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text" onchange="countTotal(this)" />
+				</div>
+				<div class="product-content p-input"><?php echo $orderProduct->getTotal() ?></div>
+				<div class="product-content p-remove"><a onclick="removeProduct(this)">X</a></div>
+				<div class="clear-float"></div>
+			</li>
+
+
+              <li class="span1"></li>
+              <li class="span8 variant-field"> <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+                <input type="text" id="ember4358" class="ember-view ember-text-field ui-autocomplete-input" placeholder="Start typing SKU or name..." autocomplete="off">
+                <i class="fa fa-spinner fa-spin hide"></i> </li>
+              <li id="ember4348" class="ember-view string help-overlay control-group span2 quantity-field">
+                <div class="error-wrapper">
+                  <input type="number" id="ember4361" class="ember-view ember-text-field" placeholder="Qty" max="999999999">
+                </div>
+              </li>
+              <li class="span3"> <span class="pull-left"></span> </li>
+              <li id="ember4350" class="ember-view string span3 dropdown price-field help-overlay required control-group">
+                <div class="error-wrapper">
+                  <input type="number" id="ember4366" class="ember-view ember-text-field input-dropdown" placeholder="Price" max="999999999" step="any">
+                  <ul class="dropdown-menu">
+                  </ul>
+                </div>
+              </li>
+              <li class="span2 prn">
+                <input type="number" id="ember4369" class="ember-view ember-text-field percent" placeholder="0" max="100" min="0" step="1">
+              </li>
+              <li id="ember4370" class="ember-view string span2 dropdown tax-type-field prn help-overlay control-group">
+                <div class="error-wrapper">
+                  <input type="number" id="ember4377" class="ember-view ember-text-field input-dropdown percent" placeholder="Tax" max="999999999" rel="tooltip" data-original-title="Sales Tax" data-placement="left">
+                  <ul class="dropdown-menu">
+                    <li> <a tabindex="-1" data-bindattr-4379="4379" title="Tax Exempt" data-ember-action="4378" href="#"> <span class="left no-width">0%</span>
+                      <h6 class="tright padded">Tax Exempt</h6>
+                      </a> </li>
+                    <li> <a tabindex="-1" data-bindattr-4386="4386" title="Sales Tax" data-ember-action="4385" href="#"> <span class="left no-width">15%</span>
+                      <h6 class="tright padded">Sales Tax</h6>
+                      </a> </li>
+                    <li> <a tabindex="-1" data-bindattr-4390="4390" title="Purchases Tax" data-ember-action="4389" href="#"> <span class="left no-width">15%</span>
+                      <h6 class="tright padded">Purchases Tax</h6>
+                      </a> </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="span3"> <span id="ember4351" class="ember-view">0.00</span> </li>
+            </ul>
+            <ember.easyform.fieldsfor:ember4347>
+              <div class="line-remove"> <a data-bindattr-4398="4398" class="button" data-ember-action="4397" title="Remove" href="#"> <i class="fa fa-trash-o"></i> </a> </div>
+            </ember.easyform.fieldsfor:ember4347>
+          </li>
+        </ul>
+        		<?php } ?>
+			<?php } ?>
+      </section>
+      <section class="row-fluid pal">
+        <div class="span8 mtm">
+          <textarea id="ember4248" class="ember-view ember-text-area" placeholder="Message to Customer" name="notes"></textarea>
+        </div>
+        <ul class="span4 right totals prm">
+          <li class="row-fluid"> <span class="span6">Total Units</span> <span class="span6">0</span> </li>
+          <li class="row-fluid"> <span class="span6">Subtotal</span> <span class="span6"><span id="ember4250" class="ember-view">$0.00</span></span> </li>
+          <li class="row-fluid total"> <span class="span6">Total</span> <span class="span6"><span id="ember4254" class="ember-view">$0.00</span></span> </li>
+        </ul>
+      </section>
+      <div id="ember4268" class="ember-view">
+        <hr class="mhl mvs mtm">
+        <section class="row-fluid phl ptl for-tags">
+          <div id="field-tags" class="ember-view field">
+            <div class="selectize-control ember-view ember-text-field mbm multi plugin-remove_button">
+              <div class="selectize-dropdown multi ember-view ember-text-field mbm plugin-remove_button" style="display: none; width: 210px; top: 36px; left: 0px;">
+                <div class="selectize-dropdown-content"></div>
+              </div>
+            </div>
+            <div class="error">
+              <div class="error-message"> </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div id="ember4275" class="ember-view fixed-btm-padding pbn">
+        <!--   <div data-bindattr-4419="4419" class="fixed-btm-actions span9 plus-gutter orders">
+                  <div class="actions">
+                    <div class="right"> <a data-bindattr-4422="4422" class="button" data-ember-action="4421" href="#"> Cancel </a>
+                      <button data-ember-action="4425" data-bindattr-4424="4424" class="button" type="button"> Save Quote </button>
+                      <button data-bindattr-4420="4420" class="button button_primary" type="submit"> Create </button>
+                    </div>
+                  </div>
+                </div>-->
+      </div>
+    </form>
+    <ember.easyform.form:ember4186></ember.easyform.form:ember4186>
+  </div>
+  <aside class="span3 order-sidebar item-list">
+    <div class="card">
+      <div id="ember4436" class="ember-view progress-bar is-not-empty">
+        <div data-bindattr-4444="4444" style="width: 100%; background-color: rgb(123,218,61);" class="bar"></div>
+      </div>
+      <div class="item single">
+        <div class="subheader"> <span id="ember4443" class="ember-view status right capitalize" style="color: rgb(123,199,74);"> draft </span> New Order </div>
+      </div>
+    </div>
+  </aside>
+  <ul class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all variant-autocomplete" id="ui-id-1" tabindex="0" style="display: none; top: 47px;">
+  </ul>
+</div>
+
+
+
+			
+	
+
+
+<!-- New design end -->
+
+
+<script type="text/javascript">
+    editForm = new varienForm('edit_form','');
+</script>
+
+<script type="text/javascript">// <![CDATA[
+Calendar.setup({
+    inputField : 'date_of_po',
+    ifFormat : '%m/%d/%Y',
+    button : 'date_of_po_trig',
+    align : 'Bl',
+    singleClick : true
+});
+
+Calendar.setup({
+    inputField : 'expected_date',
+    ifFormat : '%m/%d/%Y',
+    button : 'expected_date_trig',
+    align : 'Bl',
+    singleClick : true
+});
+// ]]>
+</script>
+<script>
+
+
+var oldkeyword = "";
+var lis = $('products_grid').childElements();
+if(lis.length<=1) {$('products_grid').hide();  }
+$('product_suggestion_box').hide();
+	function loadProducts(keyword){
+		if(keyword == "") return ;
+		if(keyword == oldkeyword) return;
+		oldkeyword = keyword; 
+		var vendorId = $('vendor_id').value;
+		if(vendorId == "") return;
+		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminuser_purchaseorder/findproduct") ?>', {
+			method:'post',
+			parameters: {keyword: keyword, vendor_id : vendorId}, 
+  			onSuccess: function(transport) {
+  				$('product_suggestion_box').show();
+    			var response = transport.responseText || "no response text";
+    			$('product_suggestion_box').innerHTML = response;
+  			},
+  			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	function countGTotal(){
+		var total = 0;
+		$$('div.p-input').each(function(e){
+			if(e.innerHTML > 0)
+				total += parseFloat(e.innerHTML);
+		});
+		$('grant_total').innerHTML = total.toFixed(4);;
+	}
+	
+	function countQty(){
+		var totalQty = 0;
+		$$('div.p-qty').each(function(e){
+			if(e.innerHTML > 0)
+				totalQty += parseFloat(e.innerHTML);
+			if(e.down('input') != 'undefined' && e.down('input')){
+				totalQty += parseFloat(e.down('input').value);
+			}
+		});
+		$('total_qty').innerHTML = totalQty;
+	}
+	
+	function addProduct(pid){
+		$('product_suggestion_box').hide();
+		
+		
+		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminuser_purchaseorder/getproductinfo") ?>', {
+			method:'post',
+			parameters: {product_id: pid},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText || "no response text";
+    			$('products_grid').insert(response);
+    			var lis = $('products_grid').childElements();
+    			
+    				$('products_grid').show();
+    			countTotal();
+				countQty();
+  			},
+  			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	
+	function countTotal(element){
+		if(element.up('div').className == "product-content p-qty"){
+			var val2 = element.up('li').down('div.p-cost').down('input').value;
+		}else{
+			var val2 = element.up('li').down('div.p-qty').down('input').value;
+		}
+		total = val2 * element.value;
+		
+		total = total.toFixed(4);
+		element.up('li').down('div.p-total').innerHTML = total;
+		countGTotal();
+		countQty();
+	}
+	
+	function removeProduct(element){
+		element.up('li').remove();
+		var lis = $('products_grid').childElements();
+		if(lis.length == 1){
+			$('products_grid').hide();
+		}
+		countGTotal();
+		countQty();
+	}
+	countGTotal();
+	countQty();
+	var editForm = new varienForm('edit_form', '');
+</script>
+
+
