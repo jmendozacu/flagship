@@ -115,12 +115,12 @@
 					<vendor module="inventorymanager">
 						<title>Manage Vendors</title>
 						<sort_order>0</sort_order>
-						<action>inventorymanager/adminhtml_vendor</action>
+						<action>inventorymanageradmin/adminhtml_vendor</action>
 					</vendor>
 					<purchaseorder module="inventorymanager">
 						<title>Purchase Order</title>
 						<sort_order>1</sort_order>
-						<action>inventorymanager/adminhtml_purchaseorder</action>
+						<action>inventorymanageradmin/adminhtml_purchaseorder</action>
 					</purchaseorder>
 				</children>
 			</inventorymanager>
@@ -169,7 +169,7 @@
                 <use>admin</use>
                 <args>
                     <module>Ecommerceguys_Inventorymanager</module>
-                    <frontName>inventorymanager</frontName>
+                    <frontName>inventorymanageradmin</frontName>
                 </args>
             </inventorymanager>
         </routers>
