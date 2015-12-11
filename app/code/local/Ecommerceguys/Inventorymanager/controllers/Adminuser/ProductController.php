@@ -10,4 +10,41 @@ class Ecommerceguys_Inventorymanager_Adminuser_ProductController extends Mage_Co
 		$this->loadLayout();
 		$this->renderLayout();
 	}
+	
+	public function refreshserialsAction(){
+		
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function addlocationAction(){
+		$location = $this->getRequest()->getParam('location');
+		try {
+			$labelResourceModel = Mage::getResourceModel('inventorymanager/label')->addLocationFromAgent(array("location"=>$location));
+		}catch (Exception $e){
+			echo $e->getMessage();
+		}
+	}
+	
+	public function removelocationAction(){
+		$location = $this->getRequest()->getParam('location');
+		try {
+			$labelResourceModel = Mage::getResourceModel('inventorymanager/label')->removeLocationFromAgent($location);
+		}catch (Exception $e){
+			echo $e->getMessage();
+		}
+	}
+	
+	public function selectLocationAction(){
+		$serialId = $this->getRequest()->getParam('serial_id');
+		$location = $this->getRequest()->getParam('location');
+		
+		$serial = Mage::getModel('inventorymanager/label')->load($serialId);
+		$serial->setLocation($location);
+		try {
+			$serial->save();
+		}catch (Exception $e){
+			echo $e->getMessage();
+		}
+	}
 }

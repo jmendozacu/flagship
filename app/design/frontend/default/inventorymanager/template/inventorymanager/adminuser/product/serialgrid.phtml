@@ -1,6 +1,7 @@
 <?php
 	$catalogProduct = $this->getCatalogProduct();
 	$orderProducts = $this->getVendorProduct();
+	$locations = $this->helper('inventorymanager')->getAgentLocations();
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -30,9 +31,9 @@
 									</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="serials_list">
 								<?php
-								$icounter = 0;
+								/*$icounter = 0;
 								foreach ($orderProducts as $orderProductObject){
 									$serials = $this->getSerials($orderProductObject->getId());
 									foreach ($serials as $serialObject){?>
@@ -42,7 +43,33 @@
 											<td><?php echo $serialObject->getStatus(); ?></td>
 										</tr>
 									<?php }
-								} ?>
+								}*/ ?>
+								<?php if($serials = $this->getSerialsByCatalogProduct()){ ?>
+									<?php foreach ($serials as $serialObject){ ?>
+										<tr class="<?php echo $icounter%2==0?"even":""; ?> gradeA">
+											<td><?php echo $serialObject->getSerial() ?></td>
+											<td>
+												<div class="form-control-static" >
+													<div class="btn-group show-dropbox">
+														<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px; width:60%">
+											  				<input type="text" class="form-control new_location" name="location" id="" value="<?php echo $serialObject->getLocation(); ?>" />
+											  			</div>
+													  	<button type="button" class="btn btn-primary dropdown-toggle openbox-button-location" id="" style="z-index:999"><span class="caret"></span></button>
+													  	<input type="hidden" class="serial_id_hidden_box" value="<?php echo $serialObject->getId(); ?>" />
+													  	<ul class="dropdown-menu" id="dropdown-box-location">
+													  		<li class="add-location-li new_location_link"><a href="javascript:void(0);" class="add-new-status-link" id="" ><?php echo $this->__("Add New") ?></a></li>
+													  		
+													  		<?php foreach ($locations as $key => $locationLabel) { ?>
+													  			<li><span class="remove-location-link">x</span><a class="location-options" href="javascript:void(0);"><?php echo $locationLabel ?></a></li>
+													  		<?php } ?>
+													  	</ul>
+													</div>
+												</div>	
+											</td>
+											<td><?php echo $serialObject->getStatus(); ?></td>
+										</tr>
+									<?php } ?>
+								<?php } ?>
 							</tbody>
 						</table>
 					</div>
@@ -51,13 +78,148 @@
 		</div>
 	</div>
 </div>
+<!-- Small modal -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+    	<div class="labelpage-loader-div">
+      		<img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo $this->__("Loading...") ?>" />
+      </div>
+    </div>
+  </div>
+</div>
 <script>
-jQuery(document).ready(function () {
-    jQuery('#dataTables-example').dataTable();
-    
-});
 
-jQuery(".clickable-row").click(function() {
-    window.document.location = jQuery(this).data("href");
-});
+</script>
+<script type="text/javascript">
+
+var locations = [];
+<?php foreach ($locations as $location){ ?>
+	locations.push('<?php echo $location ?>');
+<?php } ?>
+
+	function addEventListners(){
+		$$('button.openbox-button-location').each(function(e){
+			e.observe('click', function(){
+				e.up('div').down('ul').toggleClassName('show-dropbox');
+			});
+		});
+		
+		$$('input.new_location').each(function(el){
+			el.observe('keyup', function(){
+				el.up('div.form-control-static').down('ul').addClassName('show-dropbox');
+				el.up('div.form-control-static').down('ul').down('li.new_location_link').down('a').innerHTML = '<?php echo $this->__("Add") ?> ' + el.value;
+			});
+		});
+		
+		$$('a.add-new-status-link').each(function(e){
+			e.observe('click', function(){
+				var newLocation = this.up('div.form-control-static').down('input.new_location').value;
+				addNewLocation(newLocation);
+			});
+		});
+		
+		$$('span.remove-location-link').each(function(e){
+			e.observe('click', function(){
+				var location = e.up('li').down('a').innerHTML;
+				removeLocation(location);
+			});
+		});
+		
+		$$('a.location-options').each(function(e){
+			e.observe('click', function(){
+				var serialId = this.up('div.show-dropbox').down('input.serial_id_hidden_box').value;
+				this.up('div.show-dropbox').down('input.new_location').value = this.innerHTML;
+				this.up('div.form-control-static').down('ul').removeClassName('show-dropbox');
+				selectLocation(serialId, this.innerHTML);
+			});
+		});
+		
+		jQuery('#dataTables-example').dataTable();
+		jQuery(".clickable-row").click(function() {
+		    window.document.location = jQuery(this).data("href");
+		});
+	}
+	
+	
+	function selectLocation(serialId, location){
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_product/selectLocation', array('_current'=>true)) ?>', {
+			method:'get',
+			parameters: {location: location, serial_id:serialId},
+		  	onSuccess: function(transport) {
+		    	var response = transport.responseText;
+		    	jQuery('.bs-example-modal-sm').modal('hide');
+		    		
+		    			    		
+		  	},
+			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	function addNewLocation(location){
+		var currentIndex = locations.indexOf(location);
+		if(currentIndex>=0){
+			return;
+		}
+		locations.push(location);
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_product/addlocation', array('_current'=>true)) ?>', {
+			method:'get',
+			parameters: {location: location},
+		  	onSuccess: function(transport) {
+		    	var response = transport.responseText;
+		    	/*if(response != "")
+		    		alert(response);*/
+		    		
+		    	new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_product/refreshserials', array('_current'=>true)) ?>', {
+					method:'get',
+				  	onSuccess: function(transport) {
+				    	var response = transport.responseText;
+				    	$('dataTables-example_wrapper').innerHTML = response;
+				    	jQuery('.bs-example-modal-sm').modal('hide');
+				    	addEventListners();
+				  	},
+					onFailure: function() { alert('Something went wrong...'); }
+				});	
+		    		
+		  	},
+			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	function removeLocation(location){
+		
+		var index = locations.indexOf(location);
+		if(index<0){
+			return;
+		}
+		locations.splice(index, 1);
+		
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_product/removelocation', array('_current'=>true)) ?>', {
+			method:'get',
+			parameters: {location: location},
+		  	onSuccess: function(transport) {
+		    	var response = transport.responseText;
+		    	/*if(response != "")
+		    		alert(response);*/
+		    		
+		    	new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_product/refreshserials', array('_current'=>true)) ?>', {
+					method:'get',
+				  	onSuccess: function(transport) {
+				    	var response = transport.responseText;
+				    	$('dataTables-example_wrapper').innerHTML = response;
+				    	jQuery('.bs-example-modal-sm').modal('hide');
+				    	addEventListners();
+				  	},
+					onFailure: function() { alert('Something went wrong...'); }
+				});	
+		    		
+		  	},
+			onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	addEventListners();
 </script>

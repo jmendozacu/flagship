@@ -1,4 +1,4 @@
-<div class="row">
+	<div class="row">
 	<div class="col-md-12">
 		<h2><?php echo $this->__("Send a product") ?></h2>
 	</div>
@@ -15,14 +15,91 @@
 						<form action="<?php echo $this->getUrl("inventorymanager/adminuser_serial/findpost") ?>" method="POST" id="find_label">
 							<div class="form-group">
 								<label><?php echo $this->__("Enter Order Number") ?></label>
-								<input type="text" class="form-control required-entry" name="order_number" />
+								<input type="text" class="form-control" id="order_number" name="order_number" />
 							</div>
 							<div class="form-group">
 								<label><?php echo $this->__("Enter Serial Key") ?></label>
-								<input type="text" class="form-control required-entry" name="serial_key" />
+								<input type="text" class="form-control" id="serial_key" name="serial_key" />
 							</div>
 							<div class="form-group">
+								<label><?php echo $this->__("Shipping Option") ?></label>
+								<select class="form-control required-entry" name="shipping_option">
+									<option value="" selected="selected">Select a Option</option>
+									<option value="EUROPE_FIRST_INTERNATIONAL_PRIORITY">Europe First International Priority</option>
+									<option value="FEDEX_2_DAY">FedEx 2 Day</option>
+									<option value="FEDEX_EXPRESS_SAVER">FedEx Express Saver</option>
+									<option value="FEDEX_GROUND">FedEx Ground</option>
+									<option value="FIRST_OVERNIGHT">FedEx First Overnight</option>
+									<option value="GROUND_HOME_DELIVERY">FedEx Home Delivery (Must mark as residential)</option>
+									<option value="INTERNATIONAL_ECONOMY">FedEx International Economy</option>
+									<option value="INTERNATIONAL_FIRST">FedEx First</option>
+									<option value="INTERNATIONAL_PRIORITY">FedEx International Priority</option>
+									<option value="PRIORITY_OVERNIGHT">FedEx Priority Overnight</option>
+									<option value="SMART_POST">FedEx Smart Post</option>
+									<option value="STANDARD_OVERNIGHT">FedEx Standard Overnight</option>
+									<option value="FEDEX_FREIGHT">Fedex Freight</option>
+									<option value="FEDEX_1_DAY_FREIGHT">FedEx 1 Day Freight</option>
+									<option value="FEDEX_2_DAY_FREIGHT">FedEx 2 Day Freight</option>
+									<option value="FEDEX_3_DAY_FREIGHT">FedEX 3 Day Freight</option>
+									<option value="FEDEX_NATIONAL_FREIGHT">FedEx National Freight</option>
+									<option value="INTERNATIONAL_ECONOMY_FREIGHT">FedEx International Economy Freight</option>
+									<option value="INTERNATIONAL_PRIORITY_FREIGHT">FedEx International Priority Freight</option>
+								</select>
+							</div>
+
+
+							<div class="form-group">
+								<label><?php echo $this->__("Length") ?></label>
+								<input type="text" class="form-control required-entry" name="length" id="length" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Width") ?></label>
+								<input type="text" class="form-control required-entry" name="width" id="width" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Height") ?></label>
+								<input type="text" class="form-control required-entry" name="height" id="height" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Weight") ?></label>
+								<input type="text" class="form-control required-entry" name="weight" id="weight" />
+							</div>
+
+
+							<div class="form-group">
+								<label><?php echo $this->__("Name") ?></label>
+								<input type="text" class="form-control required-entry" id="vendor_name" name="to_name" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Phone") ?></label>
+								<input type="text" class="form-control required-entry" id="vendor_phone" name="to_phone" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Addreess") ?></label>
+								<input type="text" class="form-control required-entry" id="vendor_address" name="to_address" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("City") ?></label>
+								<input type="text" class="form-control required-entry" id="vendor_city" name="city" />
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("State") ?></label>
+								<?php $states = Mage::getModel('directory/country')->load('US')->getRegions(); ?>
+								<select class="form-control required-entry" name="state">
+									<option value="" selected="selected">Select a Option</option>
+									<?php foreach ($states as $state): ?>
+										<option value="<?php echo $state->getCode(); ?>"><?php echo $state->getName(); ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Zip Code") ?></label>
+								<input type="text" class="form-control required-entry" id="vendor_zipcode" name="to_code" />
+							</div>
+							<div class="results"></div>
+							<div class="form-group">
 								<a class="btn btn-warning" onclick="if(dataForm.validator && dataForm.validator.validate()){ dataForm.form.submit(); }" href="#"><?php echo $this->__("Submit") ?></a>
+								<a class="btn btn-default" id="calculate_price" href="#"><?php echo $this->__("Calculate Price") ?></a>
 							</div>
 						</form>
 					</div>
@@ -33,4 +110,94 @@
 </div>
 <script>
 	var dataForm = new VarienForm('find_label', false);
+	jQuery(function($) {
+		jQuery('#calculate_price').on('click', function(){
+			jQuery('.results .alert').remove();
+			_error = false;
+			_validate = [
+				'select[name="shipping_option"]',
+				'input[name="length"]',
+				'input[name="width"]',
+				'input[name="height"]',
+				'input[name="weight"]',
+				'input[name="to_code"]',
+			];
+			jQuery.each(_validate, function(index, value){
+				jQuery(value).parent('div').children('.validation-advice').remove();
+				if (jQuery(value).val().length == 0){
+					jQuery(value).parent('div').append('<div style="" id="advice-required-entry-length" class="validation-advice">This is a required field.</div>');
+					_error = true;
+				}
+			});
+			if (_error === false){
+				jQuery('#calculate_price').attr('disabled', "disabled").html('Calculating please wait.');
+				$.ajax({
+                	url : "<?php echo $this->getUrl("inventorymanager/adminuser_serial/getrate") ?>",
+                	data : { 
+                		shipping_option: jQuery('select[name="shipping_option"]').val(),
+                		length: jQuery('input[name="length"]').val(),
+                		width: jQuery('input[name="width"]').val(),
+                		height: jQuery('input[name="height"]').val(),
+                		weight: jQuery('input[name="weight"]').val(),
+                		to_code: jQuery('input[name="to_code"]').val(),
+                	},
+                	type : 'POST',
+                	dataType: 'json',
+                	success : function(data) {
+                		jQuery('#calculate_price').removeAttr('disabled').html('Calculate Price');
+                    	if (typeof data.error !== 'undefined'){
+                    		jQuery('.results').append('<div class="alert alert-danger" role="alert">' + data.error + '</div>');
+                    	}else{
+                    		jQuery('.results').append('<div class="alert alert-success" role="alert">Price: $' + data.price + '</div>');
+                    	}
+                	}
+            	});	
+			}
+		});
+	});
+</script>
+<script>
+	$('order_number').observe('keyup', function(){
+		var ordernumber = this.value;
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_serial/findorder', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {order_id: ordernumber},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			if(response != ''){
+    				var obj = JSON.parse(response);
+    				$('vendor_name').value = obj.name;
+    				$('vendor_phone').value = obj.phone;
+    				$('vendor_address').value = obj.address;
+    				$('vendor_city').value = obj.city;
+    				$('vendor_zipcode').value = obj.zipcode;
+    			}else{
+    				
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	});
+	
+	$('serial_key').observe('keyup', function(){
+		var serrialKey = this.value;
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_serial/finddetails', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {serial_key: serrialKey},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			if(response != ''){
+    				var obj = JSON.parse(response);
+    				$('height').value = obj.height;
+    				$('width').value = obj.width;
+    				$('length').value = obj.length;
+    				$('weight').value = obj.weight;
+    				
+    			}else{
+    				
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	});
 </script>

@@ -24,6 +24,10 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
+<style>
+.breadcrumbs{ display:none}
+</style>
+<div class="innerwrapper" style="margin-top:20px">
 <?php if($this->getResultCount()): ?>
 <?php echo $this->getMessagesBlock()->toHtml() ?>
 <div class="page-title">
@@ -54,3 +58,4 @@
     <?php endif; ?>
 </p>
 <?php endif; ?>
+</div>

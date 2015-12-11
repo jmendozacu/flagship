@@ -26,14 +26,47 @@
 ?>
 <div class="footer-container">
     <div class="footer">
-        <?php echo $this->getChildHtml() ?>
+        <?php // echo $this->getChildHtml() ?>
+       
+       
+       <div class="links"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('why-buy')->toHtml() ?></div>
+       <div class="links"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('myaccount')->toHtml() ?></div>
+       <div class="links"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('helpsupport')->toHtml() ?></div>
+       <div class="links"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('contactdetails')->toHtml() ?><br />
+        <img src="<?php echo $this->getSkinUrl('images/safesecure.png');?>"/>
+       </div>
+       
+       <div class="copy_payment_social">
+       
+       	<address class="copyright"><?php echo $this->getCopyright() ?></address>
+        
         <div class="f_sosialmedia">
-        <div class="sicons ficon"></div>
+        <a href="https://www.facebook.com/directrangehoods" target="_new"><div class="sicons ficon"></div></a>
         <div class="sicons ticon"></div>
-        <div class="sicons picon"></div>
-        
+        <div class="sicons picon"></div>        
         </div>
-        <address class="copyright"><?php echo $this->getCopyright() ?></address>
         
+        <div class="paymentoptions"><img src="<?php echo $this->getSkinUrl('images/payment.png');?>"/></div>        
+        </div>
     </div>
 </div>
+<?php if(Mage::app()->getFrontController()->getAction()->getFullActionName() == 'checkout_onepage_success'):?>
+<!-- Google Code for Online Sale Conversion Page -->
+<script type="text/javascript">
+/ <![CDATA[ /
+var google_conversion_id = 944013013;
+var google_conversion_language = "en";
+var google_conversion_format = "3";
+var google_conversion_color = "ffffff";
+var google_conversion_label = "-VteCPXM9V8Q1f2RwgM";
+var google_remarketing_only = false;
+/ ]]> /
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/944013013/?label=-VteCPXM9V8Q1f2RwgM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+<?php endif;?>

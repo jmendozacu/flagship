@@ -42,6 +42,15 @@ class Ecommerceguys_Inventorymanager_Model_Session extends Mage_Core_Model_Sessi
        }
        return false;
     }
+
+    public function isEmployer()
+    {
+       // return (bool)$this->getId() && (bool)$this->checkVendorId($this->getId());
+       if (Mage::getSingleton('core/session')->getVendor() && Mage::getSingleton('core/session')->getVendor()->getId() && Mage::getSingleton('core/session')->getVendor()->getIsEmployer() == 1) {
+        return true;
+       }
+       return false;
+    }
     
     public function checkVendorId($vendorId)
     {

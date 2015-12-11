@@ -19,7 +19,7 @@ $.extend($.fn.dataTableExt.oStdClasses, {
 if ($.fn.dataTable.Api) {
     $.fn.dataTable.defaults.renderer = 'bootstrap';
     $.fn.dataTable.ext.renderer.pageButton.bootstrap = function(settings, host, idx, buttons, page, pages) {
-        var api = new $.fn.dataTable.Api(settings);
+        var api = new jQuery.fn.dataTable.Api(settings);
         var classes = settings.oClasses;
         var lang = settings.oLanguage.oPaginate;
         var btnDisplay, btnClass;
@@ -36,7 +36,7 @@ if ($.fn.dataTable.Api) {
             for (i = 0, ien = buttons.length; i < ien; i++) {
                 button = buttons[i];
 
-                if ($.isArray(button)) {
+                if (jQuery.isArray(button)) {
                     attach(container, button);
                 } else {
                     btnDisplay = '';
@@ -80,13 +80,13 @@ if ($.fn.dataTable.Api) {
                     }
 
                     if (btnDisplay) {
-                        node = $('<li>', {
+                        node = jQuery('<li>', {
                             'class': classes.sPageButton + ' ' + btnClass,
                             'aria-controls': settings.sTableId,
                             'tabindex': settings.iTabIndex,
                             'id': idx === 0 && typeof button === 'string' ? settings.sTableId + '_' + button : null
                         })
-                            .append($('<a>', {
+                            .append(jQuery('<a>', {
                                     'href': '#'
                                 })
                                 .html(btnDisplay)
@@ -104,7 +104,7 @@ if ($.fn.dataTable.Api) {
         };
 
         attach(
-            $(host).empty().html('<ul class="pagination"/>').children('ul'),
+            jQuery(host).empty().html('<ul class="pagination"/>').children('ul'),
             buttons
         );
     }

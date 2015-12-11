@@ -1,0 +1,18 @@
+<?php $comments = $this->getPurchaseOrderComments(); if($comments && $comments->count() > 0){ ?>
+	<?php foreach ($comments as $comment){ ?>
+		<tr>
+			<td><?php echo date("M d, Y h:i:s a",strtotime($comment->getCreatedTime())); ?></td>
+			<td><?php echo $comment->getComment(); ?></td>
+			<td>
+				<?php  if($comment->getAttachement() != ""){ ?>
+					<a class="subdue orderspro-file" href="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder_comment/download", array("id"=>$comment->getId())) ?>">
+						<?php echo $comment->getAttachement() ?>
+					</a>
+				<?php } ?>
+			</td>
+			<td align="center" valign="bottom">
+				<a class="btn btn-danger" onclick="deleteComment(<?php echo $comment->getId() ?>); return false;" href="javascript:void(0)">X</a>
+			</td>
+		</tr>
+	<?php } ?>
+<?php } ?>

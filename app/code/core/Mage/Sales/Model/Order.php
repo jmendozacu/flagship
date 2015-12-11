@@ -1351,7 +1351,7 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
             ->setEventType(self::EMAIL_EVENT_NAME_NEW_ORDER)
             ->setIsForceCheck(!$forceMode);
 
-        $mailer->setQueue($emailQueue)->send();
+        $mailer->send();
 
         $this->setEmailSent(true);
         $this->_getResource()->saveAttribute($this, 'email_sent');
