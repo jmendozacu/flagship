@@ -278,10 +278,96 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 	
 	public function massproductsAction(){
 		$this->loadLayout();
+		$this->_initLayoutMessages('core/session');
 		$this->renderLayout();
 	}
 	
 	public function exportproductsAction(){
+		header("Content-type: text/csv");
+		header("Content-Disposition: attachment; filename=vendorproducts.csv");
+		header("Pragma: no-cache");
+		header("Expires: 0");
 		
+		$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+		
+		$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
+		$products = $vendorModel->getProducts($vendorId);
+		
+		echo "SKU,Cost,Weight,Length,Width,Height,Box Weight,Box Length,Box Width,Box Height,UPC Code,Material,Lighting,Full Specifications\n";
+		foreach ($products as $product){
+			echo $product['sku'] . "\n";
+		}
+	}
+	
+	public function importproductsAction(){
+		if(isset($_FILES["import_csv"])) {
+		    $csv=file_get_contents($_FILES["import_csv"]["tmp_name"]);
+		
+			$csvArray = explode("\n", $csv);
+			
+			$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+			$productInfoArray = array();
+			$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+			$productInfoCollection->addFieldToFilter("vendor_id", $vendorId);
+			$productInfoCollection->addFieldToFilter("is_revision", 0);
+			foreach ($productInfoCollection as $productInfo){
+				$productInfoArray[$productInfo->getProductId()] = $productInfo;
+			}
+
+			$error = false;
+			
+			$iCounter = 0;
+			foreach ($csvArray as $csvRow){
+				$iCounter++;
+				if($iCounter == 1){ continue; }
+				$rowArray = explode(",", $csvRow);
+				
+				
+				if(isset($rowArray[0])){
+					$catalogProduct = Mage::getModel('catalog/product')->load($rowArray[0], "sku");
+					if($catalogProduct && $catalogProduct->getId()){
+						$insertData = array();
+						
+						$insertData['cost'] 		= isset($rowArray[1])?$rowArray[1]:"";
+						$insertData['weight'] 		= isset($rowArray[2])?$rowArray[2]:"";
+						$insertData['length'] 		= isset($rowArray[3])?$rowArray[3]:"";
+						$insertData['width'] 		= isset($rowArray[4])?$rowArray[4]:"";
+						$insertData['height'] 		= isset($rowArray[5])?$rowArray[5]:"";
+						$insertData['box_weight'] 	= isset($rowArray[6])?$rowArray[6]:"";
+						$insertData['box_length'] 	= isset($rowArray[7])?$rowArray[7]:"";
+						$insertData['box_width'] 	= isset($rowArray[8])?$rowArray[8]:"";
+						$insertData['box_height']	= isset($rowArray[9])?$rowArray[9]:"";
+						$insertData['upc'] 			= isset($rowArray[10])?$rowArray[10]:"";
+						$insertData['material']		= isset($rowArray[10])?$rowArray[10]:"";
+						$insertData['lighting']		= isset($rowArray[10])?$rowArray[10]:"";
+						$insertData['fun_spec']		= isset($rowArray[10])?$rowArray[10]:"";
+						$insertData['is_revision']	=	0;
+						$insertData['vendor_id']	=	$vendorId;
+						
+						try {
+						
+							if(isset($productInfoArray[$catalogProduct->getId()])){
+								$infoObject = $productInfoArray[$catalogProduct->getId()];
+								$infoObject->setData($insertData)->save();
+							}else{
+								$infoObject = Mage::getModel('inventorymanager/vendor_productinfo');
+								$infoObject->setData($insertData)->save();
+							}
+							
+						}catch (Exception $e){
+							$error = true;
+							
+						}
+						
+					}
+				}
+			}
+			if(!$error)
+				Mage::getSingleton('core/session')->addSuccess($this->__("File is imported successfullly"));
+			else
+				Mage::getSingleton('core/session')->addError($this->__("Something went wrong"));
+			$this->_redirect("*/*/massproducts");
+						return $this;
+		}
 	}
 }

@@ -9,25 +9,26 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><?php echo $this->__("Import/Export Product Details") ?></div>
 			<div class="panel-body">
-				<div class="col-md-12">
-					<h3><?php echo $this->__("Import Product Details") ?></h3>
-					<div class="form-group">
-						<label><?php echo $this->__("Immport CSV") ?></label>
-						<input type="file" name="import_csv" />
-						
+				<form action="<?php echo $this->getUrl("inventorymanager/vendor_product/importproducts") ?>" method="POST" enctype="multipart/form-data" id="import-form">
+					<div class="col-md-12">
+						<h3><?php echo $this->__("Import Product Details") ?></h3>
+						<div class="form-group">
+							<label><?php echo $this->__("Immport CSV") ?></label>
+							<input type="file" name="import_csv" />
+							
+						</div>
+						<div class="form-group">
+							<a class="btn btn-primary btn-sm" href="#" onclick="$('import-form').submit();"><?php echo $this->__("Import") ?></a>
+						</div>
 					</div>
-					<div class="form-group">
-						<a class="btn btn-primary btn-sm" href="#"><?php echo $this->__("Import") ?></a>
-					</div>
-				</div>
-				
+				</form>
 				
 				
 				<div class="col-md-12">
 					<h3><?php echo $this->__("Export Product Details") ?></h3>
 					<div class="form-group">
 						<label><?php echo $this->__("Export CSV") ?></label>
-						<a class="btn btn-primary btn-sm" href="#"><?php echo $this->__("Export") ?></a>
+						<a class="btn btn-primary btn-sm" href="<?php echo $this->getUrl('inventorymanager/vendor_product/exportproducts') ?>"><?php echo $this->__("Export") ?></a>
 					</div>
 				</div>
 				
