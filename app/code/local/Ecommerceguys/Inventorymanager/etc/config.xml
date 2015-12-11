@@ -220,13 +220,13 @@
     </adminhtml>
     <admin>
         <routers>
-            <inventorymanager>
+            <inventorymanageradmin>
                 <use>admin</use>
                 <args>
                     <module>Ecommerceguys_Inventorymanager</module>
                     <frontName>inventorymanageradmin</frontName>
                 </args>
-            </inventorymanager>
+            </inventorymanageradmin>
         </routers>
     </admin>
 </config>
