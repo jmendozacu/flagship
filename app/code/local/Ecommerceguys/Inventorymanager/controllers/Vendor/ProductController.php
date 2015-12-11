@@ -324,8 +324,13 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 				
 				
 				if(isset($rowArray[0])){
-					$catalogProduct = Mage::getModel('catalog/product')->load($rowArray[0], "sku");
-					if($catalogProduct && $catalogProduct->getId()){
+					//$catalogProduct = Mage::getModel('catalog/product')->load($rowArray[0], "sku");
+					
+					$product = Mage::getModel('catalog/product');
+					$productid = Mage::getModel('catalog/product')->getResource()->getIdBySku($rowArray[0]);
+					
+					
+					if($productid && $productid > 0){
 						$insertData = array();
 						
 						$insertData['cost'] 		= isset($rowArray[1])?$rowArray[1]:"";
@@ -341,27 +346,33 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 						$insertData['material']		= isset($rowArray[10])?$rowArray[10]:"";
 						$insertData['lighting']		= isset($rowArray[10])?$rowArray[10]:"";
 						$insertData['fun_spec']		= isset($rowArray[10])?$rowArray[10]:"";
-						$insertData['is_revision']	=	0;
-						$insertData['vendor_id']	=	$vendorId;
+						
 						
 						try {
 						
-							if(isset($productInfoArray[$catalogProduct->getId()])){
-								$infoObject = $productInfoArray[$catalogProduct->getId()];
+							if(isset($productInfoArray[$productid])){
+								$infoObject = $productInfoArray[$productid];
 								$infoObject->setData($insertData)->save();
+								
+								//echo "<br/> EXIST " . $infoObject->getId();
+								
 							}else{
+								$insertData['is_revision']	=	0;
+								$insertData['vendor_id']	=	$vendorId;
 								$infoObject = Mage::getModel('inventorymanager/vendor_productinfo');
 								$infoObject->setData($insertData)->save();
+								
+								//echo "<br/> NEW " . $infoObject->getId();
 							}
 							
 						}catch (Exception $e){
 							$error = true;
 							
 						}
-						
 					}
 				}
 			}
+			//exit;
 			if(!$error)
 				Mage::getSingleton('core/session')->addSuccess($this->__("File is imported successfullly"));
 			else
