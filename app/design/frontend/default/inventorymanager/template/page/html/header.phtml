@@ -69,6 +69,7 @@
     $adminuserNotification = false;
     $help = false;
     $shipmanager = false;
+    $massProduct = false;
     
     if($currentController == "vendor" && $currentAction == "products"){
         $productsPage = true;
@@ -112,6 +113,8 @@
         $help = true;
     }elseif ($currentController == "adminuser_shipmanager"){
     	$shipmanager = true;
+    }elseif($currentController == "vendor_product" && $currentAction == "vendor_product/massproducts"){
+    	$massProduct = true;
     }
 
 ?>
@@ -146,7 +149,14 @@
                 <a class="<?php if($productsPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/products") ?>">
                     <i class="fa fa-table fa-3x"></i> <?php echo $this->__("Products") ?>
                 </a>
-            </li>   
+            </li>
+            
+            <li>
+                <a class="<?php if($massProduct) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor_product/massproducts") ?>">
+                    <i class="fa fa-table fa-3x"></i> <?php echo $this->__("Mass Products") ?>
+                </a>
+            </li>
+            
             <li>
                 <a class="<?php echo $purchaseorderPage?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/purchaseorder/grid") ?>">
                     <i class="fa fa-desktop fa-3x"></i>

@@ -489,4 +489,16 @@
 			<block type="inventorymanager/user_shipmanager_settings" name="adminuser.sitemanager.settings" template="inventorymanager/adminuser/shipmanager/settings.phtml" />
 		</reference>
 	</inventorymanager_adminuser_shipmanager_setting>
+	
+	<inventorymanager_vendor_product_massproducts>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="core/template" name="vendor.massproducts" template="inventorymanager/vendor/product/massproducts.phtml" />
+		</reference>
+	</inventorymanager_vendor_product_massproducts>
 </layout>
