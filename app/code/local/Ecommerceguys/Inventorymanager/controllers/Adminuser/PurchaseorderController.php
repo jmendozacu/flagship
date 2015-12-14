@@ -20,6 +20,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 	public function indexAction(){
 		
 		$this->loadLayout();
+		$this->_initLayoutMessages('core/session');
 		$this->renderLayout();
 	}
 	
@@ -276,6 +277,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		        ));
 				$catalogProduct->save();
 				$serial->setStatus("Received");
+				$serial->setLocation("Received");
 				$serial->setIsInStock(1)->save();
 			}
 		}
@@ -290,7 +292,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$orderObject->setReceivedQty($orderReceivedQty)
 			->setStatus('received')->save();
 
-		Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('inventorymanager')->__('Order Received. Products stock updated.'));
+		Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Order Received. Products stock updated.'));
 		$this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
 	}
 }
