@@ -202,11 +202,11 @@
 								<label><?php echo $this->__("Material") ?></label>
 								<div class="form-control-static" >
 									<div class="btn-group show-dropbox">
-											<div class="form-group input-group show-dropbox" id="status-text-div" style="float:left; margin-right:0px;">
+											<div class="form-group input-group show-dropbox" id="status-text-div" style="float:left; margin:0px;">
 							  				<input type="text" class="form-control" name="material" id="new_material" value="<?php echo $_material; ?>" />
 							  			</div>
 									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button" style="z-index:999"><span class="caret"></span></button>
-									  	<ul class="dropdown-menu" id="dropdown-box-material">
+									  	<ul class="dropdown-menu dynamic-dropdown" id="dropdown-box-material">
 									  		<li class="add-status-li"><a href="javascript:void(0);" id="new_material_link" ><?php echo $this->__("Add New") ?></a></li>
 									  		<?php foreach ($materials as $key => $statusLabel) { ?>
 									  			<li><span class="remove-material-link">x</span><a class="material-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
@@ -220,11 +220,11 @@
 								<label><?php echo $this->__("Lighting") ?></label>
 								<div class="form-control-static" >
 									<div class="btn-group show-dropbox">
-											<div class="form-group input-group show-dropbox"  style="float:left; margin-right:0px;">
+											<div class="form-group input-group show-dropbox"  style="float:left; margin:0px;">
 							  				<input type="text" class="form-control" name="lighting" id="new_lighting" value="<?php echo $_lighting; ?>" />
 							  			</div>
 									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button-lighting" style="z-index:999"><span class="caret"></span></button>
-									  	<ul class="dropdown-menu" id="dropdown-box-lighting">
+									  	<ul class="dropdown-menu dynamic-dropdown" id="dropdown-box-lighting">
 									  		<li class="add-status-li"><a href="javascript:void(0);" id="new_lighting_link" ><?php echo $this->__("Add New") ?></a></li>
 									  		<?php foreach ($lightings as $key => $lightingLabel) { ?>
 									  			<li><span class="remove-lighting-link">x</span><a class="lighting-options" href="javascript:void(0);"><?php echo $lightingLabel ?></a></li>
