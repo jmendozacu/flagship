@@ -70,7 +70,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                        <!-- <input name="check-all" id="check-all"  class="checkbox" title="Select All" type="checkbox">-->
+                                        	<input name="select_all" id="check-all"  class="checkbox " title="Select All" type="checkbox">
                                         </th>
                                         <th><?php echo $this->__("ID") ?></th>
                                         <th><?php echo $this->__("Name") ?></th>
@@ -85,7 +85,7 @@
                                                         checked = "checked"
                                                     <?php endif;?>        
                                                 <?php endif;?>
-                                                 class="checkbox" type="checkbox"></td>
+                                                 class="checkbox products-checkbox" type="checkbox"></td>
                                             <td><?php echo $product->getId() ?></td>
                                             <td><?php echo $product->getName() ?></td>
                                         </tr>
@@ -105,10 +105,10 @@
 </script>
 
  <script type="text/javascript">
-
+var dataTable;
     jQuery(document).ready(function () {
-/*
-    jQuery("#check-all").change(function(){    
+
+   /* jQuery("#check-all").change(function(){    
            var chk = jQuery("#check_list");
            if(this.checked) {
                  for (i = 0; i < chk.length; i++)
@@ -117,11 +117,21 @@
                 for (i = 0; i < chk.length; i++)
                     {chk[i].checked = false ;}
             }
-        });
-*/
-        jQuery('#dataTables-example').dataTable();
+        });*/
+
+       dataTable = jQuery('#dataTables-example').dataTable();
     });
 
 </script>
+<script type="text/javascript">
 
+$('check-all').observe('click', function(){
+	$$('input.products-checkbox').each(function(e){
+		if($('check-all').checked)
+			e.checked = true;
+		else
+			e.checked = false;
+	});
+});
 
+</script>

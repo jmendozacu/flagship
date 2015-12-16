@@ -67,10 +67,9 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 
 		/*echo "<pre>";
 		print_r($this->getRequest()->getPost());
-		exit;
-		*/
+		exit;*/
+		
 		if ($data = $this->getRequest()->getPost()) {
-			
 			if(isset($data['check_list'])){
 				$products = $data['check_list']; //Save the array to your database
 			}
@@ -89,8 +88,15 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 				$model->save();
 				$vendorProductResource = Mage::getResourceModel('inventorymanager/vendor_products');
 				$vendorProductResource->remove($model->getId());
-				foreach ($products as $productId){
-					$vendorProductResource->insertOne(array('product_id'=>$productId, 'vendor_id'=>$model->getId()));
+				if(isset($data['select_all'])){
+					$productCollection = Mage::getModel('catalog/product')->getCollection();
+					foreach ($productCollection as $productObject){
+						$vendorProductResource->insertOne(array('product_id'=>$productObject->getId(), 'vendor_id'=>$model->getId()));
+					}
+				}else{
+					foreach ($products as $productId){
+						$vendorProductResource->insertOne(array('product_id'=>$productId, 'vendor_id'=>$model->getId()));
+					}
 				}
 
 				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor saved successfully'));
