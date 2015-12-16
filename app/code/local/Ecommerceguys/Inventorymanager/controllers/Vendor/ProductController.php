@@ -293,7 +293,7 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 		$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
 		$products = $vendorModel->getProducts($vendorId);
 		
-		echo "SKU,Cost,Weight,Length,Width,Height,Box Weight,Box Length,Box Width,Box Height,UPC Code,Material,Lighting,Full Specifications\n";
+		echo "SKU,Cost,Weight LBS,Length INCH,Width INCH,Height INCH,Box Weight INCH,Box Length INCH,Box Width INCH,Box Height INCH,UPC Code,Material,Lighting,Full Specifications\n";
 		foreach ($products as $product){
 			echo $product['sku'] . "\n";
 		}
@@ -315,7 +315,7 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 			}
 
 			$error = false;
-			
+			//echo "<pre>";
 			$iCounter = 0;
 			foreach ($csvArray as $csvRow){
 				$iCounter++;
@@ -347,12 +347,14 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 						$insertData['lighting']		= isset($rowArray[10])?$rowArray[10]:"";
 						$insertData['fun_spec']		= isset($rowArray[10])?$rowArray[10]:"";
 						
+						//print_r($insertData);
+						
 						
 						try {
 						
 							if(isset($productInfoArray[$productid])){
 								$infoObject = $productInfoArray[$productid];
-								$infoObject->setData($insertData)->save();
+								$infoObject->addData($insertData)->save();
 								
 								//echo "<br/> EXIST " . $infoObject->getId();
 								
