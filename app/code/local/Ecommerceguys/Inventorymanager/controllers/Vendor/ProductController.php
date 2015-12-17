@@ -361,6 +361,7 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 							}else{
 								$insertData['is_revision']	=	0;
 								$insertData['vendor_id']	=	$vendorId;
+								$insertData['product_id']	=	$productid;
 								$infoObject = Mage::getModel('inventorymanager/vendor_productinfo');
 								$infoObject->setData($insertData)->save();
 								
