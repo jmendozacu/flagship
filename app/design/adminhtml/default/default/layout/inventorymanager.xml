@@ -1,33 +1,33 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
-    <inventorymanager_adminhtml_vendor_index>
+    <inventorymanageradmin_adminhtml_vendor_index>
     	<reference name="content">
             <block type="inventorymanager/adminhtml_vendor" name="vendor" />
         </reference>
-    </inventorymanager_adminhtml_vendor_index>
+    </inventorymanageradmin_adminhtml_vendor_index>
     
     
         
     
-    <inventorymanager_adminhtml_purchaseorder_index>
+    <inventorymanageradmin_adminhtml_purchaseorder_index>
     	<reference name="content">
             <block type="inventorymanager/adminhtml_purchaseorder" name="purchaseorder" />
         </reference>
-    </inventorymanager_adminhtml_purchaseorder_index>
+    </inventorymanageradmin_adminhtml_purchaseorder_index>
     
-    <inventorymanager_adminhtml_purchaseorder_edit>
+    <inventorymanageradmin_adminhtml_purchaseorder_edit>
     	<reference name="content">
     		<block type="inventorymanager/adminhtml_purchaseorder_purchaseorder" template="inventorymanager/purchaseorder.phtml" />
     	</reference>
-    </inventorymanager_adminhtml_purchaseorder_edit>
+    </inventorymanageradmin_adminhtml_purchaseorder_edit>
     
-    <!--<inventorymanager_adminhtml_purchaseorder_grid>
+    <!--<inventorymanageradmin_adminhtml_purchaseorder_grid>
 	    <block type="core/text_list" name="root" output="toHtml">
 	        <block type="inventorymanager/adminhtml_purchaseorder_edit_tab_product" name="purchaseorder.grid"/>
 	    </block>
-	</inventorymanager_adminhtml_purchaseorder_grid>-->
+	</inventorymanageradmin_adminhtml_purchaseorder_grid>-->
 	
-	<inventorymanager_adminhtml_purchaseorder_orderedit>
+	<inventorymanageradmin_adminhtml_purchaseorder_orderedit>
 		<reference name="head">
 			<action method="addCss"><name>inventorymanager/style.css</name></action>
 		</reference>
@@ -36,36 +36,36 @@
 				<block type="inventorymanager/adminhtml_purchaseorder_comment" name="purchaseorder.comment" template="inventorymanager/comment.phtml" />
 			</block>
 		</reference>
-	</inventorymanager_adminhtml_purchaseorder_orderedit>
+	</inventorymanageradmin_adminhtml_purchaseorder_orderedit>
 	
-	<inventorymanager_adminhtml_purchaseorder_findproduct>
+	<inventorymanageradmin_adminhtml_purchaseorder_findproduct>
 		<reference name="root">
 			<action method="setTemplate"><template>inventorymanager/empty.phtml</template></action>
 		</reference>
 		<reference name="content">
 			<block type="inventorymanager/adminhtml_purchaseorder_findproduct" name="purchaseorder.findproduct" template="inventorymanager/findproduct.phtml" />
 		</reference>
-	</inventorymanager_adminhtml_purchaseorder_findproduct>
+	</inventorymanageradmin_adminhtml_purchaseorder_findproduct>
 	
-	<inventorymanager_adminhtml_purchaseorder_getproductinfo>
+	<inventorymanageradmin_adminhtml_purchaseorder_getproductinfo>
 		<reference name="root">
 			<action method="setTemplate"><template>inventorymanager/empty.phtml</template></action>
 		</reference>
 		<reference name="content">
 			<block type="inventorymanager/adminhtml_purchaseorder_addproduct" name="purchaseorder.addproduct" template="inventorymanager/addproduct.phtml" />
 		</reference>
-	</inventorymanager_adminhtml_purchaseorder_getproductinfo>
+	</inventorymanageradmin_adminhtml_purchaseorder_getproductinfo>
 	
-	<inventorymanager_adminhtml_comment_refresh>
+	<inventorymanageradmin_adminhtml_comment_refresh>
 		<reference name="root">
 			<action method="setTemplate"><template>inventorymanager/empty.phtml</template></action>
 		</reference>
 		<reference name="content">
 			<block type="inventorymanager/adminhtml_purchaseorder_comment" name="purchaseorder.comment.refresh" template="inventorymanager/comment_refresh.phtml" />
 		</reference>
-	</inventorymanager_adminhtml_comment_refresh>
+	</inventorymanageradmin_adminhtml_comment_refresh>
 	
-	<inventorymanager_adminhtml_vendor_products>
+	<inventorymanageradmin_adminhtml_vendor_products>
 		<block type="core/text_list" name="root" output="toHtml">
            <block type="inventorymanager/adminhtml_vendor_edit_tab_products" name="products.grid"/>
            <block type="adminhtml/widget_grid_serializer" name="grid_serializer">
@@ -82,13 +82,13 @@
                </reference>
            </block>
        </block>
-	</inventorymanager_adminhtml_vendor_products>
+	</inventorymanageradmin_adminhtml_vendor_products>
 	
-	<inventorymanager_adminhtml_vendor_productsgrid>
+	<inventorymanageradmin_adminhtml_vendor_productsgrid>
 		<block type="core/text_list" name="root" output="toHtml">
             <block type="inventorymanager/adminhtml_vendor_edit_tab_products" name="products.grid"/>
         </block>
-	</inventorymanager_adminhtml_vendor_productsgrid>
+	</inventorymanageradmin_adminhtml_vendor_productsgrid>
 	
 	
 	<!--<all_products>
