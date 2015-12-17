@@ -238,6 +238,7 @@
 		</reference>
 		<reference name="head">
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+			<action method="addItem"><type>skin_js</type><name>js/dataTables/dataTables.tableTools.js</name></action>
 		</reference>
 		<reference name="content">
 		 	<block type="inventorymanager/user_vendor" name="adminuser.vendoredit" template="inventorymanager/adminuser/vendoredit.phtml" ></block>

@@ -65,9 +65,7 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 	public function vendorsaveAction() {
 
 
-		/*echo "<pre>";
-		print_r($this->getRequest()->getPost());
-		exit;*/
+	
 		
 		if ($data = $this->getRequest()->getPost()) {
 			if(isset($data['check_list'])){
@@ -90,6 +88,13 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 				$vendorProductResource->remove($model->getId());
 				if(isset($data['select_all'])){
 					$productCollection = Mage::getModel('catalog/product')->getCollection();
+					if(isset($data['search-value']) && $data['search-value'] != ""){
+						$productCollection->addAttributeToSelect('name');
+						$productCollection->addAttributeToFilter('name', array('like'=>'%'.$data['search-value'].'%'));
+					}
+					
+					//echo $productCollection->count(); exit;
+					
 					foreach ($productCollection as $productObject){
 						$vendorProductResource->insertOne(array('product_id'=>$productObject->getId(), 'vendor_id'=>$model->getId()));
 					}
