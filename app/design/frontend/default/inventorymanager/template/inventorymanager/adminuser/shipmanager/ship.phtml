@@ -72,25 +72,25 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 						<h3><?php echo $this->__("Shipper Information") ?></h3>
 						<div class="form-group">
 							<label><?php echo $this->__("Company") ?></label>
-							<input type="text" class="form-control" value="<?php echo $companyName ?>" name="company" />
+							<input type="text" class="form-control required-entry" id="company" value="<?php echo $companyName ?>" name="company" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Phone") ?></label>
-							<input type="text" class="form-control" name="phone" value="<?php echo $phone ?>" />
+							<input type="text" class="form-control required-entry" name="phone" value="<?php echo $phone ?>" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Contact Name") ?></label>
-							<input type="text" class="form-control" name="contact_name" value="<?php echo $contactName ?>" />
+							<input type="text" class="form-control required-entry" name="contact_name" value="<?php echo $contactName ?>" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Email Address") ?></label>
-							<input type="text" class="form-control" name="email" value="<?php echo $email ?>" />
+							<input type="text" class="form-control required-entry" name="email" value="<?php echo $email ?>" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Country") ?></label>
 							<?php $_countries = Mage::getResourceModel('directory/country_collection')->loadByStore()->toOptionArray(false) ?>
 							<?php if (count($_countries) > 0): ?>
-							    <select name="country_id" id="billing:country_id" class="form-control validate-select">
+							    <select name="country_id" id="billing:country_id" class="form-control required-entry validate-select">
 							        <option value="">Please choose a country...</option>
 							        <?php foreach($_countries as $_country): ?>
 							            <option value="<?php echo $_country['value'] ?>" <?php echo $country==$_country['value']?"selected":""; ?>>
@@ -102,11 +102,11 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Address") ?></label>
-							<input type="text" class="form-control" value="<?php echo $address1 ?>" name="address" />
+							<input type="text" class="required-entry form-control" value="<?php echo $address1 ?>" name="address" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Address 2") ?></label>
-							<input type="text" class="form-control" name="address2" value="<?php echo $address2 ?>" />
+							<input type="text" class="form-control required-entry" name="address2" value="<?php echo $address2 ?>" />
 						</div>
 						<!--<div class="form-group">
 							<div class="checkbox">
@@ -118,15 +118,15 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 						</div>-->
 						<div class="form-group">
 							<label><?php echo $this->__("City") ?></label>
-							<input type="text" class="form-control" name="city" value="<?php echo $city ?>" />
+							<input type="text" class="form-control required-entry" name="city" value="<?php echo $city ?>" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Postal Code") ?></label>
-							<input type="text" class="form-control" name="postalcode" value="<?php echo $postalCode ?>" />
+							<input type="text" class="form-control required-entry" name="postalcode" value="<?php echo $postalCode ?>" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("State") ?></label>
-							<input type="text" class="form-control" name="state" value="<?php echo $stateCode ?>" />
+							<input type="text" class="form-control required-entry" name="state" value="<?php echo $stateCode ?>" />
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -148,25 +148,25 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 						
 						<div class="form-group">
 							<label><?php echo $this->__("Company") ?></label>
-							<input type="text" class="form-control" id="receiver_company" name="receiver[company]" />
+							<input type="text" class="form-control required-entry" id="receiver_company" name="receiver[company]" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Phone") ?></label>
-							<input type="text" class="form-control" id="receiver_phone" name="receiver[phone]" />
+							<input type="text" class="form-control required-entry" id="receiver_phone" name="receiver[phone]" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Contact Name") ?></label>
-							<input type="text" class="form-control" id="receiver_contact_name" name="receiver[contact_name]" />
+							<input type="text" class="form-control required-entry" id="receiver_contact_name" name="receiver[contact_name]" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Email Address") ?></label>
-							<input type="text" class="form-control" id="receiver_email" name="receiver[email]" />
+							<input type="text" class="form-control required-entry" id="receiver_email" name="receiver[email]" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Country") ?></label>
 							<?php $_countries = Mage::getResourceModel('directory/country_collection')->loadByStore()->toOptionArray(false) ?>
 							<?php if (count($_countries) > 0): ?>
-							    <select name="receiver[country_id]" id="receiver_country_id" class="form-control validate-select">
+							    <select name="receiver[country_id]" id="receiver_country_id" class="form-control required-entry validate-select">
 							        <option value="">Please choose a country...</option>
 							        <?php foreach($_countries as $_country): ?>
 							            <option value="<?php echo $_country['value'] ?>">
@@ -178,11 +178,11 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Address") ?></label>
-							<input type="text" class="form-control" id="receiver_address" name="receiver[address]" />
+							<input type="text" class="form-control required-entry" id="receiver_address" name="receiver[address]" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Address 2") ?></label>
-							<input type="text" class="form-control" id="receiver_address2" name="receiver[address2]" />
+							<input type="text" class="form-control required-entry" id="receiver_address2" name="receiver[address2]" />
 						</div>
 						<div class="form-group">
 							<div class="checkbox">
@@ -194,15 +194,15 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("City") ?></label>
-							<input type="text" class="form-control" id="receiver_city" name="receiver[city]" />
+							<input type="text" class="form-control required-entry" id="receiver_city" name="receiver[city]" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("Postal Code") ?></label>
-							<input type="text" class="form-control" id="receiver_postalcode" name="receiver[postalcode]" />
+							<input type="text" class="form-control required-entry" id="receiver_postalcode" name="receiver[postalcode]" />
 						</div>
 						<div class="form-group">
 							<label><?php echo $this->__("State") ?></label>
-							<input type="text" class="form-control" name="receiver[state]" id="receiver_state" style="display:none" />
+							<input type="text" class="form-control " name="receiver[state]" id="receiver_state" style="display:none" />
 							<select id="receiver_state_id" class="form-control" name="receiver_state_id">
 							
 							</select>
@@ -256,7 +256,7 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 										</thead>
 										<tbody id="serial_package_info">
 											<tr>
-												<td><input type="text" class="form-control" onkeyup="autoloadSerialInformation(this)" name="serial_key[1]" /></td>
+												<td><input type="text" class="form-control required-entry" onkeyup="autoloadSerialInformation(this)" name="serial_key[1]" /></td>
 												<td><input type="text" class="form-control weight-value"  name="weight[1]" /></td>
 												<td><input type="text" class="form-control length-value"  name="length[1]" /></td>
 												<td><input type="text" class="form-control width-value" name="width[1]" /></td>
@@ -283,6 +283,11 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 		</form>
 	</div>
 </div>
+<script type="text/javascript">
+    //< ![CDATA[
+        var customForm = new VarienForm('shipmanager_send', true);
+    //]]>
+</script>
 <script>
 	var serialIncrement = 1;
 	function addSerialRow(){
