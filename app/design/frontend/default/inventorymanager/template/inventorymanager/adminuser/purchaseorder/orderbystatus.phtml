@@ -1,9 +1,15 @@
 <?php 
 	$purchaseorders = $this->getOrderByStatus();
+	$status = $this->getRequest()->getParam('status');
+	$stutesArray = Mage::getModel('inventorymanager/status')->getValues();
+	$statusTaxt = $status;
+	if(isset($stutesArray[$status])){
+		$statusTaxt = $stutesArray[$status];
+	}
 ?>
 <div class="row">
 	<div class="col-md-12">
-		<h2><?php echo $this->__("Purchase Orders") ?></h2>
+		<h2><?php echo $statusTaxt ?></h2>
          <div style="float:right">
             <button class="btn btn-warning" onclick="setLocation('<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/new") ?>')" name="addvendors"><?php echo $this->__("Purchase New") ?></button>
         </div>
