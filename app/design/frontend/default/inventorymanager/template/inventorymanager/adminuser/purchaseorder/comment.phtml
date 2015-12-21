@@ -38,7 +38,8 @@
                         					<div class="col-md-4">
                         						<div class="form-group">
 	                        						<label for="attachement" class="normal"><?php echo $this->__("Attachement") ?></label>
-	                        						<input type="file" class="" id="send_file" name="send_file" value="">
+	                        						<input type="file" class="" id="send_file" name="send_file" value="" onchange="uploadImage()">
+	                        						<p id="uploaded_image_area"></p>
 	                        					</div>
                         					</div>
                         				</div>
@@ -108,7 +109,48 @@
     </div>    
 </div>
 </form>
-
+<script>
+      function uploadImage(){
+      	
+      	return;
+      	
+      	jQuery("#comment-form").on('submit',(function(e) {
+		e.preventDefault();
+		jQuery.ajax({
+        	url: "<?php echo $this->getUrl('inventorymanager/adminuser_purchaseorder_comment/ajaxUpload') ?>",
+			type: "POST",
+			data:  new FormData(this),
+			contentType: false,
+    	    cache: false,
+			processData:false,
+			success: function(data)
+		    {
+			//$("#targetLayer").html(data);
+		    },
+		  	error: function() 
+	    	{
+	    	} 	        
+	   });
+	}));
+      	
+      	
+      	
+      	
+      	
+      	
+       /* jQuery('#comment-form').bind('submit', function () {
+          jQuery.ajax({
+            type: 'post',
+            url: '<?php echo $this->getUrl('inventorymanager/adminuser_purchaseorder_comment/ajaxUpload') ?>',
+            data:jQuery('#comment-form').serialize(),
+            success: function () {
+              alert('form was submitted');
+            }
+          });
+          return false;
+        });*/
+      }
+    </script>
 <script>
 
 function subminComment(){

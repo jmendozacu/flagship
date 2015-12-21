@@ -77,7 +77,27 @@ class Ecommerceguys_Inventorymanager_Adminuser_Purchaseorder_CommentController e
 				
 			}
 		}
+	}
+	
+	public function ajaxUploadAction(){
+		$data = $this->getRequest()->getParams();
 		
+		if(isset($_FILES['send_file']['name']) && $_FILES['send_file']['name'] != '') {
+			try {	
+				$uploader = new Varien_File_Uploader('send_file');
+				//$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
+				$uploader->setAllowRenameFiles(false);
+				
+				$uploader->setFilesDispersion(false);
+				$path = Mage::getBaseDir('media') . DS ."purchaseorder_comments" . DS ;
+				$uploader->save($path, $_FILES['send_file']['name'] );
+				
+			} catch (Exception $e) {
+	      
+	        }
+
+  			$data['attachement'] = $_FILES['send_file']['name'];
+		}
 		
 	}
 }
