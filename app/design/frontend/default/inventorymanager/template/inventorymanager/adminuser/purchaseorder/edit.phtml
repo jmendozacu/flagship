@@ -191,11 +191,13 @@
                         </form>
                     </div>
                 </div>
-                <div class="row">
-					<div class="col-md-12">
-                    	<?php echo $this->getChildHtml('adminuser.purchaseorder.edit.comment') ?>
-                    </dir>
-             	</div>
+                <?php if($this->getCurrentOrder()){?>
+	                <div class="row">
+						<div class="col-md-12">
+	                    	<?php echo $this->getChildHtml('adminuser.purchaseorder.edit.comment') ?>
+	                    </dir>
+	             	</div>
+             	<?php } ?>
             </div>
         </div>
     </div>    
