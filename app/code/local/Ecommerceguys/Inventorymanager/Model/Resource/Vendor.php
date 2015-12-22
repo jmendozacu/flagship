@@ -131,6 +131,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     	$connection = $resourceObject->getConnection('core_read');
     	$select = $connection->select()
                 ->from(array("e"=>$productTable))
+                ->order(array('created_at DESC'))
                 ->group('entity_id');
          
     	return $connection->fetchAll($select);
