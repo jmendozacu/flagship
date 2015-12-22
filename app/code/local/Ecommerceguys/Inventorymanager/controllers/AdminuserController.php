@@ -64,17 +64,18 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 	}
 	public function vendorsaveAction() {
 
-
-	
-		
 		if ($data = $this->getRequest()->getPost()) {
-			if(isset($data['check_list'])){
-				$products = $data['check_list']; //Save the array to your database
+			
+			//echo "<pre>";
+			//print_r($data); exit;
+			
+			if(isset($data['selected_values'])){
+				$products = explode(",",$data['selected_values']); //Save the array to your database
 			}
 			$model = Mage::getModel('inventorymanager/vendor');		
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
-			
+
 			try {
 				if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
 					$model->setCreatedTime(now())
@@ -86,7 +87,7 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 				$model->save();
 				$vendorProductResource = Mage::getResourceModel('inventorymanager/vendor_products');
 				$vendorProductResource->remove($model->getId());
-				if(isset($data['select_all'])){
+				/*if(isset($data['select_all'])){
 					$productCollection = Mage::getModel('catalog/product')->getCollection();
 					if(isset($data['search-value']) && $data['search-value'] != ""){
 						$productCollection->addAttributeToSelect('name');
@@ -98,11 +99,11 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 					foreach ($productCollection as $productObject){
 						$vendorProductResource->insertOne(array('product_id'=>$productObject->getId(), 'vendor_id'=>$model->getId()));
 					}
-				}else{
+				}else{*/
 					foreach ($products as $productId){
 						$vendorProductResource->insertOne(array('product_id'=>$productId, 'vendor_id'=>$model->getId()));
 					}
-				}
+				//}
 
 				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor saved successfully'));
 				Mage::getSingleton('core/session')->setFormData(false);

@@ -5,6 +5,7 @@
 
 <form id="edit_form" name='edit_form' action="<?php echo $this->getPostUrl($vendorData->getId())?>" method="post" enctype="multipart/form-data">
 <input type="hidden" value="" name="search-value" id="search_value" />
+<input type="hidden" value="" name="selected_values" id="selected_values" />
 <div class="row">
     <div class="col-md-12">
         <h2><?php echo $this->__("Vendor") ?></h2>
@@ -70,7 +71,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                        	<input name="select_all" id="check-all"  class="checkbox " title="Select All" type="checkbox">
+                                        	<input name="select_all" id="check-all"   class="checkbox " title="Select All" type="checkbox" >
                                         </th>
                                         <th><?php echo $this->__("ID") ?></th>
                                         <th><?php echo $this->__("Name") ?></th>
@@ -79,7 +80,7 @@
                                 <tbody>
                                     <?php $iCounter = 0; foreach ($this->getProducts() as $product){ $iCounter++; ?>
                                         <tr class="<?php echo $iCounter%2==0?"odd":"even"; ?>">
-                                            <td><input name="check_list[]" value="<?php echo $product->getId() ?>" 
+                                            <td><input name="check_list[]" id="checkbox_<?php echo $product->getId() ?>" value="<?php echo $product->getId() ?>" 
                                                 <?php if(is_array($vendorProducts) && !empty($vendorProducts)):?>
                                                     <?php if(in_array($product->getId(),$vendorProducts)):?>
                                                         checked = "checked"
@@ -100,9 +101,12 @@
     </div>
 </div>
 </form>
- <script type="text/javascript">
+<script type="text/javascript">
     editForm = new VarienForm('edit_form','');
     function submitEditForm(){
+    	findChecked();
+    	//return;
+    	//alert(selectValString); return;
     	var searchValue = $('dataTables-example_filter').down('input').value;
     	$('search_value').value = searchValue;
     	editForm.submit();
@@ -112,31 +116,90 @@
  <script type="text/javascript">
 var dataTable;
     jQuery(document).ready(function () {
-
-   /* jQuery("#check-all").change(function(){    
-           var chk = jQuery("#check_list");
-           if(this.checked) {
-                 for (i = 0; i < chk.length; i++)
-                    {chk[i].checked = true ;}                  
-            }else{
-                for (i = 0; i < chk.length; i++)
-                    {chk[i].checked = false ;}
-            }
-        });*/
-
-       dataTable = jQuery('#dataTables-example').dataTable();
+       dataTable = jQuery('#dataTables-example').dataTable({
+       	
+       	
+       	 
+       	
+       });
+      /// jQuery("input.products-checkbox",dataTable.fnGetNodes()).attr('checked', false);
     });
 
 </script>
 <script type="text/javascript">
 
-$('check-all').observe('click', function(){
+/*$('check-all').observe('click', function(){
 	$$('input.products-checkbox').each(function(e){
+		
 		if($('check-all').checked)
 			e.checked = true;
 		else
 			e.checked = false;
 	});
+});*/
+
+/*	$$('input.products-checkbox').each(function(e){
+
+		e.observe('click', function(){
+			var selectVals = $('selected_values').value;
+			var selectedValsArray = selectVals.split(",");
+			if(this.checked){
+				selectedValsArray.push(this.value);
+			}else{
+				var index = selectedValsArray.indexOf(this.value);
+				if (index > -1) {
+				    selectedValsArray.splice(index, 1);
+				}
+			}
+			selectedValsArray = cleanArray(selectedValsArray);
+			$('selected_values').value = selectedValsArray.toString();
+		});
+	});*/
+
+</script>
+<script>
+function cleanArray(actual) {
+	var newArray = new Array();
+		for (var i = 0; i < actual.length; i++) {
+    	if (actual[i]) {
+      		newArray.push(actual[i]);
+    	}
+  	}
+  	return newArray;
+}
+
+//function selectAll(){
+jQuery('#check-all').click(function(){
+	//jQuery("input.products-checkbox",dataTable.fnGetNodes()).attr('checked', 1);
+	
+	var selectall = this.checked;
+	var nodes = dataTable._('tr', {"filter":"applied"});
+	var foundRows = [];
+	for(var i = 0; i < nodes.length ; i++){
+		foundRows.push(nodes[i][1]);
+		//jQuery('#checkbox_' + nodes[i][1]).attr("checked", selectall);
+	}
+	var allCheckboxNodes = jQuery("input.products-checkbox",dataTable.fnGetNodes());
+	var currentNode;
+	for(var i = 0; i < allCheckboxNodes.length ; i++){
+		if(foundRows.indexOf(allCheckboxNodes[i].value) != -1){
+			//alert(allCheckboxNodes[i].value);
+			currentNode = jQuery(allCheckboxNodes[i]);
+			currentNode.prop('checked', selectall);
+		}
+	}
 });
 
+
+
+function findChecked(){
+	var nodes = jQuery("input.products-checkbox",dataTable.fnGetNodes());
+	var values = [];
+	for(var i = 0; i < nodes.length ; i++){
+		if(nodes[i].checked){
+			values.push(nodes[i].value);
+		}
+	}
+	$('selected_values').value = values.toString();
+}
 </script>
