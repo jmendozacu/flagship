@@ -10,12 +10,17 @@ public function getPostUrl($id){
 		return Mage::getUrl('inventorymanager/adminuser/vendorsave',array('id'=>$id));	
 	}
 public function getProducts(){
-	return $collection = Mage::getModel('catalog/product')
+	/*return $collection = Mage::getModel('catalog/product')
             ->getCollection()
             //->setProduct($this->_getProduct())
             ->addAttributeToSelect('*')
-            ->addAttributeToSort('entity_id', 'DESC');
-
+            ->addAttributeToSort('entity_id', 'DESC');*/
+	
+	
+			$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
+		
+			$products = $vendorModel->getAllCatalogProducts();
+		return $products;
         }
 public function getVendorProducts($id){
 		if(!$id){

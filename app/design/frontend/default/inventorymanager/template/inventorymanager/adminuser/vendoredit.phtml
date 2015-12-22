@@ -78,7 +78,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $iCounter = 0; foreach ($this->getProducts() as $product){ $iCounter++; ?>
+                                    <?php $iCounter = 0;
+                                    $allProducts = $this->getProducts();
+                                    
+                                    foreach ($allProducts as $productData){
+                                    	$product = Mage::getModel('catalog/product')->load($productData['entity_id']);
+                                    	$iCounter++; ?>
                                         <tr class="<?php echo $iCounter%2==0?"odd":"even"; ?>">
                                             <td><input name="check_list[]" id="checkbox_<?php echo $product->getId() ?>" value="<?php echo $product->getId() ?>" 
                                                 <?php if(is_array($vendorProducts) && !empty($vendorProducts)):?>

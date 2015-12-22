@@ -124,4 +124,15 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
          
     	return $connection->fetchAll($select);
     }
+    
+    public function getAllCatalogProducts(){
+    	$resourceObject = $this->getResourceObject();
+    	$productTable = $resourceObject->getTableName('catalog_product_entity');
+    	$connection = $resourceObject->getConnection('core_read');
+    	$select = $connection->select()
+                ->from(array("e"=>$productTable))
+                ->group('entity_id');
+         
+    	return $connection->fetchAll($select);
+    }
 }
