@@ -60,6 +60,40 @@
         </div>
     </div>    
 </div>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Already Saved Products") ?></div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover" id="dataTables-exist">
+						<thead>
+							<tr>
+                                <th></th>
+                                <th><?php echo $this->__("ID") ?></th>
+                                <th><?php echo $this->__("Name") ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($vendorProducts as $vProduct){ ?>
+								<?php $productObject = Mage::getModel('catalog/product')->load($vProduct); ?>
+								<tr>
+									<td><input class="products-checkbox" type="checkbox" checked value="<?php echo $vProduct ?>" /></td>
+									<td><?php echo $vProduct ?></td>
+									<td><?php echo $productObject->getName() ?></td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
@@ -82,6 +116,7 @@
                                     $allProducts = $this->getProducts();
                                     
                                     foreach ($allProducts as $productData){
+                                    	if(in_array($productData['entity_id'], $vendorProducts)){ continue; }
                                     	$product = Mage::getModel('catalog/product')->load($productData['entity_id']);
                                     	$iCounter++; ?>
                                         <tr class="<?php echo $iCounter%2==0?"odd":"even"; ?>">
@@ -121,12 +156,8 @@
  <script type="text/javascript">
 var dataTable;
     jQuery(document).ready(function () {
-       dataTable = jQuery('#dataTables-example').dataTable({
-       	
-       	
-       	 
-       	
-       });
+       dataTable = jQuery('#dataTables-example').dataTable();
+       selectedTable = jQuery('#dataTables-exist').dataTable({"bFilter": false});
       /// jQuery("input.products-checkbox",dataTable.fnGetNodes()).attr('checked', false);
     });
 
@@ -206,5 +237,14 @@ function findChecked(){
 		}
 	}
 	$('selected_values').value = values.toString();
+	
+	nodes = jQuery("input.products-checkbox",selectedTable.fnGetNodes());
+	values = [];
+	for(i = 0; i < nodes.length ; i++){
+		if(nodes[i].checked){
+			values.push(nodes[i].value);
+		}
+	}
+	$('selected_values').value += ','+values.toString();
 }
 </script>
