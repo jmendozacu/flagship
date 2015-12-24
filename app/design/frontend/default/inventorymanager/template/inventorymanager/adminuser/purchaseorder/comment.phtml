@@ -38,7 +38,7 @@
                         					<div class="col-md-4">
                         						<div class="form-group">
 	                        						<label for="attachement" class="normal"><?php echo $this->__("Attachement") ?></label>
-	                        						<input type="file" class="" id="send_file" name="send_file" value="" onchange="uploadImage()">
+	                        						<input type="file" class="" id="send_file" name="send_file" value="" onchange="jQuery('#comment-form').submit();">
 	                        						<p id="uploaded_image_area"></p>
 	                        					</div>
                         					</div>
@@ -110,12 +110,18 @@
 </div>
 </form>
 <script>
-      function uploadImage(){
+    //  function uploadImage(){
       	
-      	return;
+      	//return;
       	
       	jQuery("#comment-form").on('submit',(function(e) {
 		e.preventDefault();
+		
+		if(jQuery('#send_file').val == ""){
+			return;
+		}
+	//	alert(1);
+		
 		jQuery.ajax({
         	url: "<?php echo $this->getUrl('inventorymanager/adminuser_purchaseorder_comment/ajaxUpload') ?>",
 			type: "POST",
@@ -125,7 +131,7 @@
 			processData:false,
 			success: function(data)
 		    {
-			//$("#targetLayer").html(data);
+			  jQuery("#uploaded_image_area").html('<img src="<?php echo Mage::getBaseUrl('media') , "purchaseorder_comments/" ?>'+data+'" width="200" />');
 		    },
 		  	error: function() 
 	    	{
@@ -149,7 +155,7 @@
           });
           return false;
         });*/
-      }
+    //  }
     </script>
 <script>
 

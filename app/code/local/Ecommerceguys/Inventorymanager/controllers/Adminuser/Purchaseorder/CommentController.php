@@ -14,7 +14,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_Purchaseorder_CommentController e
 				return false;
 			}
 			if(isset($_FILES['send_file']['name']) && $_FILES['send_file']['name'] != '') {
-				try {	
+				/*try {	
 					$uploader = new Varien_File_Uploader('send_file');
 					//$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
 					$uploader->setAllowRenameFiles(false);
@@ -25,7 +25,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_Purchaseorder_CommentController e
 					
 				} catch (Exception $e) {
 		      
-		        }
+		        }*/
 
 	  			$data['attachement'] = $_FILES['send_file']['name'];
 			}
@@ -81,23 +81,24 @@ class Ecommerceguys_Inventorymanager_Adminuser_Purchaseorder_CommentController e
 	
 	public function ajaxUploadAction(){
 		$data = $this->getRequest()->getParams();
-		
 		if(isset($_FILES['send_file']['name']) && $_FILES['send_file']['name'] != '') {
 			try {	
 				$uploader = new Varien_File_Uploader('send_file');
-				//$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
+				$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
 				$uploader->setAllowRenameFiles(false);
 				
 				$uploader->setFilesDispersion(false);
 				$path = Mage::getBaseDir('media') . DS ."purchaseorder_comments" . DS ;
-				$uploader->save($path, $_FILES['send_file']['name'] );
+				$result = $uploader->save($path, $_FILES['send_file']['name'] );
+				$returnVar = "";
+				if(isset($result['file'])){
+					echo $result['file'];
+				}
 				
 			} catch (Exception $e) {
 	      
 	        }
-
-  			$data['attachement'] = $_FILES['send_file']['name'];
+  			
 		}
-		
 	}
 }
