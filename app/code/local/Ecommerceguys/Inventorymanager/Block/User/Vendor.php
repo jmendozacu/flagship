@@ -6,23 +6,23 @@ class Ecommerceguys_Inventorymanager_Block_User_Vendor extends Mage_Core_Block_T
 		$vendors = Mage::getModel('inventorymanager/vendor')->getCollection();
 		return $vendors;
 	}
-public function getPostUrl($id){
+	public function getPostUrl($id){
 		return Mage::getUrl('inventorymanager/adminuser/vendorsave',array('id'=>$id));	
 	}
-public function getProducts(){
+	public function getProducts(){
 	/*return $collection = Mage::getModel('catalog/product')
             ->getCollection()
             //->setProduct($this->_getProduct())
             ->addAttributeToSelect('*')
             ->addAttributeToSort('entity_id', 'DESC');*/
+		$vendorId = $this->getRequest()->getParam('vendor_id');
 	
-	
-			$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
+		$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
 		
-			$products = $vendorModel->getAllCatalogProducts();
+		$products = $vendorModel->getUnselectedProducts();
 		return $products;
         }
-public function getVendorProducts($id){
+	public function getVendorProducts($id){
 		if(!$id){
 			return;
 		}

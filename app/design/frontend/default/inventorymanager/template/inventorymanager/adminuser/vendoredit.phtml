@@ -80,7 +80,7 @@
 							<?php foreach ($vendorProducts as $vProduct){ ?>
 								<?php $productObject = Mage::getModel('catalog/product')->load($vProduct); ?>
 								<tr>
-									<td><input class="products-checkbox" type="checkbox" checked value="<?php echo $vProduct ?>" /></td>
+									<td><input class="products-checkbox exist-product-checkbox" type="checkbox" checked value="<?php echo $vProduct ?>" /></td>
 									<td><?php echo $vProduct ?></td>
 									<td><?php echo $productObject->getName() ?></td>
 								</tr>
@@ -105,7 +105,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                        	<input name="select_all" id="check-all"   class="checkbox " title="Select All" type="checkbox" >
+                                        	<!--<input name="select_all" id="check-all"   class="checkbox " title="Select All" type="checkbox" >-->
                                         </th>
                                         <th><?php echo $this->__("ID") ?></th>
                                         <th><?php echo $this->__("Name") ?></th>
@@ -126,7 +126,7 @@
                                                         checked = "checked"
                                                     <?php endif;?>        
                                                 <?php endif;?>
-                                                 class="checkbox products-checkbox" type="checkbox"></td>
+                                                 class="checkbox products-checkbox new-product-checkbox" type="checkbox"></td>
                                             <td><?php echo $product->getId() ?></td>
                                             <td><?php echo $product->getName() ?></td>
                                         </tr>
@@ -159,6 +159,22 @@ var dataTable;
        dataTable = jQuery('#dataTables-example').dataTable();
        selectedTable = jQuery('#dataTables-exist').dataTable({"bFilter": false});
       /// jQuery("input.products-checkbox",dataTable.fnGetNodes()).attr('checked', false);
+      
+      var existSelectHTML = '<div class="selectall-links"><a onclick="selectAll(1, true)"><?php echo $this->__("Select All") ?></a><a onclick="selectVisible(1,true)"><?php echo $this->__("Select Visible") ?></a>'
+      existSelectHTML += '<a onclick="selectAll(1, false)"><?php echo $this->__("Unselect All") ?></a>'
+      existSelectHTML += '<a onclick="selectVisible(1,false)"><?php echo $this->__("Unselect Visible") ?></a>'
+      existSelectHTML += '</div>'
+      $('dataTables-exist_wrapper').insert({top:existSelectHTML});
+      
+      var newSelectHTML = '<div class="selectall-links">';
+      newSelectHTML += '<a onclick="selectAll(2, true)"><?php echo $this->__("Select All") ?></a>';
+      newSelectHTML += '<a onclick="selectVisible(2,true)"><?php echo $this->__("Select Visible") ?></a>';
+      newSelectHTML += '<a onclick="selectAll(2, false)"><?php echo $this->__("Unselect All") ?></a>'
+      newSelectHTML += '<a onclick="selectVisible(2,false)"><?php echo $this->__("Unselect Visible") ?></a>'
+      newSelectHTML += '</div>';
+      
+      
+      $('dataTables-example_wrapper').down('div.row').insert({top:newSelectHTML});
     });
 
 </script>
@@ -192,6 +208,41 @@ var dataTable;
 		});
 	});*/
 
+</script>
+<script>
+	function selectAll(val,checkedVal){
+		if(val == 1){
+			var nodes = selectedTable._('tr', {"filter":"applied"});
+			var allCheckboxNodes = jQuery("input.products-checkbox",selectedTable.fnGetNodes());
+		}else{
+			var nodes = dataTable._('tr', {"filter":"applied"});
+			var allCheckboxNodes = jQuery("input.products-checkbox",dataTable.fnGetNodes());
+		}
+		var foundRows = [];
+		for(var i = 0; i < nodes.length ; i++){
+			foundRows.push(nodes[i][1]);
+		}
+		
+		var currentNode;
+		for(var i = 0; i < allCheckboxNodes.length ; i++){
+			if(foundRows.indexOf(allCheckboxNodes[i].value) != -1){
+				currentNode = jQuery(allCheckboxNodes[i]);
+				currentNode.prop('checked', checkedVal);
+			}
+		}
+	}
+	
+	function selectVisible(val, checkedVal){
+		if(val == 1){
+			$$('input.exist-product-checkbox').each(function(e){
+				e.checked = checkedVal;
+			});
+		}else{
+			$$('input.new-product-checkbox').each(function(e){
+				e.checked = checkedVal;
+			});
+		}
+	}
 </script>
 <script>
 function cleanArray(actual) {

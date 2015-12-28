@@ -136,4 +136,24 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
          
     	return $connection->fetchAll($select);
     }
+    
+    public function getUnselectedProducts($vendorId){
+    	
+    	$vendor = Mage::getModel('inventorymanager/vendor')->load($vendorId);
+    	
+    	$resourceObject = $this->getResourceObject();
+    	$productTable = $resourceObject->getTableName('catalog_product_entity');
+    	$connection = $resourceObject->getConnection('core_read');
+    	$select = $connection->select()
+                ->from(array("e"=>$productTable))
+                ->order(array('created_at DESC'))
+                ->group('entity_id');
+        if($vendor && $vendor->getId()){
+        	$products = Mage::getResourceModel('inventorymanager/vendor')->getProducts($vendor->getId());
+        	$vendorProducts = implode(",", $products);
+        	$select->where("entity_id not in ($vendorProducts)");
+        }
+        
+        return $connection->fetchAll($select);
+    }
 }
