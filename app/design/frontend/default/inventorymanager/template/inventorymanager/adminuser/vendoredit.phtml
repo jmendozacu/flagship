@@ -50,6 +50,14 @@
                                 <input id="password" name="<?php echo $this->__('password');?>" value="<?php echo $vendorData->getPassword();?>" class="form-control required-entry" type="password" style="width:300px" />
                             </div>
                             
+                            <div class="form-group">
+                                <label><?php echo $this->__("Status") ?></label>
+                                <select class="form-control" name="active" style="width:300px">
+                                	<option value="1" <?php echo $vendorData->getActive()==1?'selected="selected"':''; ?>><?php echo $this->__("Active") ?></option>
+                                	<option value="0" <?php echo $vendorData->getActive()==0?'selected="selected"':''; ?>><?php echo $this->__("Inactive") ?></option>
+                                </select>
+                            </div>
+                            
                            <?php /* <div class="form-group">
                                 <button type="submit" title="<?php echo "<?php echo $this->__('Save');?>";?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
                             </div>

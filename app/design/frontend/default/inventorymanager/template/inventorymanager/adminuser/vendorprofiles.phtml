@@ -25,6 +25,7 @@
                                 <th><?php echo $this->__("Name") ?></th>
                                 <th><?php echo $this->__("Email") ?></th>
                                 <th><?php echo $this->__("From") ?></th>
+                                <th><?php echo $this->__("Status") ?></th>
                                 <th><?php echo $this->__("Action") ?></th>
                             </tr>
             			</thead>
@@ -35,7 +36,14 @@
             						<td><?php echo $vendor->getName() ?></td>
             						<td><?php echo $vendor->getEmail() ?></td>
             						<td><?php echo date("Y/m/d", strtotime($vendor->getCreatedTime())) ?></td>
-            						<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendoredit', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__("Edit ") ?></a> <?php echo $this->__('-|-')?><a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendordelete', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__(" Delete ") ?></a></td>
+            						<td><?php echo $vendor->getActive() == 1?$this->__("Active"):$this->__("Inactive"); ?></td>
+            						<td>
+            							<a href="<?php echo $this->getUrl('inventorymanager/adminuser/vendoredit', array('vendor_id'=>$vendor->getId())) ?>"><?php echo $this->__("Edit ") ?></a>
+            							<?php echo $this->__('-|-')?>
+            							<a href="javascript:void(0)" onclick="deleteVendor('<?php echo $this->getUrl('inventorymanager/adminuser/vendordelete', array('vendor_id'=>$vendor->getId())) ?>','<?php echo $vendor->getName(); ?>')">
+            								<?php echo $this->__(" Delete ") ?>
+            							</a>
+            						</td>
             					</tr>
             				<?php } ?>
             			</tbody>
@@ -49,4 +57,12 @@
 jQuery(document).ready(function () {
     jQuery('#dataTables-example').dataTable();
 });
+</script>
+<script type="text/javascript">
+	function deleteVendor(url, name){
+		var c = confirm("<?php echo $this->__("Are you sure you want to delete") ?>" + " " + name);
+		if(c == true){
+			location.href = url;
+		}
+	}
 </script>

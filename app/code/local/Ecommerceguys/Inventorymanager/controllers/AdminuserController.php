@@ -69,6 +69,8 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 			//echo "<pre>";
 			//print_r($data); exit;
 			
+			
+			
 			if(isset($data['selected_values'])){
 				$products = explode(",",$data['selected_values']); //Save the array to your database
 			}
@@ -76,6 +78,14 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
 
+			if(isset($data['active']) && $data['active'] == 0){
+				$model->setActive(0)->save();
+				Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("Vender is inactive, Active vendor first."));
+                Mage::getSingleton('core/session')->setFormData($data);
+                $this->_redirect('*/*/vendoredit', array('vendor_id' => $this->getRequest()->getParam('id')));
+                return $this;
+			}	
+				
 			try {
 				if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
 					$model->setCreatedTime(now())
@@ -128,7 +138,8 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 				$model = Mage::getModel('inventorymanager/vendor');
 				 
 				$model->setId($this->getRequest()->getParam('vendor_id'))
-					->delete();
+				->setActive(0)
+					->save();
 					 
 				Mage::getSingleton('core/session')->addSuccess(Mage::helper('adminhtml')->__('Vendor was successfully deleted'));
 				$this->_redirect('inventorymanager/adminuser/vendorprofiles');
