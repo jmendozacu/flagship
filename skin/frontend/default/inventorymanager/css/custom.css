@@ -449,5 +449,6 @@ div.logout{
 .bult-locations ul.dropdown-menu li a { text-align:left; }
 .shipmanager-send-button { padding-top:15px; }
 .dynamic-dropdown{ width:205px; }
-.selectall-links{}
-.selectall-links a { cursor:pointer; padding-right:10px; }
+.selectall-links{ clear:both; color:#4D6496; }
+.selectall-links a { cursor:pointer; padding:15px; }
+.selectall-links a:first-child{  }

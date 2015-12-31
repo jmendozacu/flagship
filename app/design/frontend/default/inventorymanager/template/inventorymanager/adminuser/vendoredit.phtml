@@ -168,21 +168,21 @@ var dataTable;
        selectedTable = jQuery('#dataTables-exist').dataTable({"bFilter": false});
       /// jQuery("input.products-checkbox",dataTable.fnGetNodes()).attr('checked', false);
       
-      var existSelectHTML = '<div class="selectall-links"><a onclick="selectAll(1, true)"><?php echo $this->__("Select All") ?></a><a onclick="selectVisible(1,true)"><?php echo $this->__("Select Visible") ?></a>'
-      existSelectHTML += '<a onclick="selectAll(1, false)"><?php echo $this->__("Unselect All") ?></a>'
+      var existSelectHTML = '<div class="selectall-links"><a onclick="selectAll(1, true)"><?php echo $this->__("Select All") ?></a>&nbsp;|&nbsp;<a onclick="selectVisible(1,true)"><?php echo $this->__("Select Visible") ?></a>&nbsp;|&nbsp;'
+      existSelectHTML += '<a onclick="selectAll(1, false)"><?php echo $this->__("Unselect All") ?></a>&nbsp;|&nbsp;'
       existSelectHTML += '<a onclick="selectVisible(1,false)"><?php echo $this->__("Unselect Visible") ?></a>'
       existSelectHTML += '</div>'
-      $('dataTables-exist_wrapper').insert({top:existSelectHTML});
+      $('dataTables-exist_wrapper').down('div.row').insert({bottom:existSelectHTML});
       
       var newSelectHTML = '<div class="selectall-links">';
-      newSelectHTML += '<a onclick="selectAll(2, true)"><?php echo $this->__("Select All") ?></a>';
-      newSelectHTML += '<a onclick="selectVisible(2,true)"><?php echo $this->__("Select Visible") ?></a>';
-      newSelectHTML += '<a onclick="selectAll(2, false)"><?php echo $this->__("Unselect All") ?></a>'
+      newSelectHTML += '<a onclick="selectAll(2, true)"><?php echo $this->__("Select All") ?></a>&nbsp;|&nbsp;';
+      newSelectHTML += '<a onclick="selectVisible(2,true)"><?php echo $this->__("Select Visible") ?></a>&nbsp;|&nbsp;';
+      newSelectHTML += '<a onclick="selectAll(2, false)"><?php echo $this->__("Unselect All") ?></a>&nbsp;|&nbsp;'
       newSelectHTML += '<a onclick="selectVisible(2,false)"><?php echo $this->__("Unselect Visible") ?></a>'
       newSelectHTML += '</div>';
       
       
-      $('dataTables-example_wrapper').down('div.row').insert({top:newSelectHTML});
+      $('dataTables-example_wrapper').down('div.row').insert({bottom:newSelectHTML});
     });
 
 </script>
