@@ -31,7 +31,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$senderAddress['Contact']['email'] = $data['email'];
 
 		$senderAddress['Address']['StreetLines'][0] = $data['address'];
-		$senderAddress['Address']['StreetLines'][1] = $data['address2'];
+		//$senderAddress['Address']['StreetLines'][1] = $data['address2'];
 		$senderAddress['Address']['City'] = $data['city'];
 		$senderAddress['Address']['StateOrProvinceCode'] = $data['state'];
 		$senderAddress['Address']['CountryCode'] = $data['country_id'];
@@ -42,7 +42,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$receiverAddress['Contact']['PhoneNumber'] = $data['receiver']['phone'];
 		
 		$receiverAddress['Address']['StreetLines'][0] = $data['receiver']['address'];
-		$receiverAddress['Address']['StreetLines'][1] = $data['receiver']['address2'];
+		//$receiverAddress['Address']['StreetLines'][1] = $data['receiver']['address2'];
 		$receiverAddress['Address']['City'] = $data['receiver']['city'];
 		$receiverAddress['Address']['StateOrProvinceCode'] = $data['receiver']['state'];
 		$receiverAddress['Address']['PostalCode'] = $data['receiver']['postalcode'];
@@ -142,32 +142,34 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						$boxHeight = $productInfoObject->getBoxHeight();
 						$boxWeight = $productInfoObject->getBoxWeight();
 						
-						if(isset($data['weight'][$key])){
-							$weight = $data['weight'][$key];
-						}
-						if(isset($data['length'][$key])){
-							$length = $data['length'][$key];
-						}
-						if(isset($data['width'][$key])){
-							$width = $data['width'][$key];
-						}
-						if(isset($data['height'][$key])){
-							$height = $data['height'][$key];
-						}
 						
-						if($boxLength == ""){
-							$boxLength = $length;
-						}
-						
-						if($boxWidth == ""){
-							$boxWidth = $width;
-						}
-						
-						if($boxHeight == ""){
-							$boxHeight = $height;
-						}
 					}
 				}
+			}
+			
+			if(isset($data['weight'][$key])){
+				$weight = $data['weight'][$key];
+			}
+			if(isset($data['length'][$key])){
+				$length = $data['length'][$key];
+			}
+			if(isset($data['width'][$key])){
+				$width = $data['width'][$key];
+			}
+			if(isset($data['height'][$key])){
+				$height = $data['height'][$key];
+			}
+			
+			if($boxLength == ""){
+				$boxLength = $length;
+			}
+			
+			if($boxWidth == ""){
+				$boxWidth = $width;
+			}
+			
+			if($boxHeight == ""){
+				$boxHeight = $height;
 			}
 			
 			$request['RequestedShipment'] = array(
@@ -242,9 +244,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				'PackageDetail' => 'INDIVIDUAL_PACKAGES'                                        
 			);
 			
-			/*echo "<pre>";
-			print_r($request); exit;*/
-			
 			try {
 				if($fedexApi->setEndpoint('changeEndpoint')){
 					$newLocation = $client->__setLocation(setEndpoint('endpoint'));
@@ -252,19 +251,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				$response = $client->processShipment($request); // FedEx web service invocation  
 				
 				
-				
-				
-				//echo "<pre>";
-				
-				//print_r($response); exit;
-				
-				
-				
 				$historyObject = Mage::getModel('inventorymanager/shipmanager');
 				$historyItem = Mage::getModel('inventorymanager/shipmanager_item');
 				$historySender = Mage::getModel('inventorymanager/shipmanager_sender');
 				$historyReceiver = Mage::getModel('inventorymanager/shipmanager_receiver');
-				
 				
 				$historyData = array(
 					'transaction_detail'	=>	$response->TransactionDetail->CustomerTransactionId,
@@ -298,7 +288,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 					'phone'				=>	$data['phone'],
 					'contact_name'		=>	$data['contact_name'],
 					'address1'			=>	$data['address'],
-					'address2'			=>	$data['address2'],
+					//'address2'			=>	$data['address2'],
 					'city'				=>	$data['city'],
 					'postcode'			=>	$data['postalcode'],
 					'state'				=>	$data['state'],
@@ -314,7 +304,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 					'phone'				=>	$data['receiver']['phone'],
 					'contact_name'		=>	$data['receiver']['contact_name'],
 					'address1'			=>	$data['receiver']['address'],
-					'address2'			=>	$data['receiver']['address2'],
+				//	'address2'			=>	$data['receiver']['address2'],
 					'city'				=>	$data['receiver']['city'],
 					'postcode'			=>	$data['receiver']['postalcode'],
 					'state'				=>	$data['receiver']['state'],
@@ -370,10 +360,13 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				Mage::log($client,nill, "fedex.log");    // Write to log file
 			} catch (SoapFault $exception) {
 				
-			    $fedexApi->printFault($exception, $client);
+			   // $fedexApi->printFault($exception, $client);
+			   echo Mage::helper('inventorymanager')->__("Something went wrong. Please try again with right information");
 			}
 			
 		}
+		
+		
 		
 		//$zip->close();
 				    

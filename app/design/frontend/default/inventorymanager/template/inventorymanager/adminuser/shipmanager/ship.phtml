@@ -58,7 +58,7 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 <hr>
 <div class="row">
 	<div class="col-md-12">
-		<form action="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/save") ?>" method="POST" id="shipmanager_send">
+		<form action="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/save") ?>" method="POST" id="shipmanager_send" onsubmit="return checkSerialVals()">
 		<div class="panel panel-default">
 			<div class="panel-heading"><?php echo $this->__("Fedex Ship information") ?></div>
 			<div class="panel-body">
@@ -104,10 +104,11 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 							<label><?php echo $this->__("Address") ?></label>
 							<input type="text" class="required-entry form-control" value="<?php echo $address1 ?>" name="address" />
 						</div>
+						<?php /*
 						<div class="form-group">
 							<label><?php echo $this->__("Address 2") ?></label>
 							<input type="text" class="form-control required-entry" name="address2" value="<?php echo $address2 ?>" />
-						</div>
+						</div> */ ?>
 						<!--<div class="form-group">
 							<div class="checkbox">
 								<label>
@@ -180,10 +181,10 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 							<label><?php echo $this->__("Address") ?></label>
 							<input type="text" class="form-control required-entry" id="receiver_address" name="receiver[address]" />
 						</div>
-						<div class="form-group">
+						<?php /* <div class="form-group">
 							<label><?php echo $this->__("Address 2") ?></label>
 							<input type="text" class="form-control required-entry" id="receiver_address2" name="receiver[address2]" />
-						</div>
+						</div> */ ?>
 						<div class="form-group">
 							<div class="checkbox">
 								<label>
@@ -258,10 +259,10 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 										<tbody id="serial_package_info">
 											<tr>
 												<td><input type="text" class="form-control required-entry" onkeyup="autoloadSerialInformation(this)" name="serial_key[1]" /></td>
-												<td><input type="text" class="form-control weight-value"  name="weight[1]" /></td>
-												<td><input type="text" class="form-control length-value"  name="length[1]" /></td>
-												<td><input type="text" class="form-control width-value" name="width[1]" /></td>
-												<td><input type="text" class="form-control height-value" name="height[1]" /></td>
+												<td><input type="text" class="form-control weight-value serial-vals"  name="weight[1]" /></td>
+												<td><input type="text" class="form-control length-value serial-vals"  name="length[1]" /></td>
+												<td><input type="text" class="form-control width-value serial-vals" name="width[1]" /></td>
+												<td><input type="text" class="form-control height-value serial-vals" name="height[1]" /></td>
 												<td><a class="btn btn-info" href="javascript:void(0)" onclick="addSerialRow()"><?php echo $this->__("Add New") ?></a></td>
 											</tr>
 										</tbody>
@@ -295,10 +296,10 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 		serialIncrement++;
 		var newTR = '<tr>';
 		newTR += '<td><input type="text" class="form-control" onkeyup="autoloadSerialInformation(this)" name="serial_key['+serialIncrement+']" /></td>';
-			newTR += '<td><input type="text" class="form-control weight-value" name="weight['+serialIncrement+']" /></td>';
-			newTR += '<td><input type="text" class="form-control length-value" name="length['+serialIncrement+']" /></td>';
-			newTR += '<td><input type="text" class="form-control width-value" name="width['+serialIncrement+']" /></td>';
-			newTR += '<td><input type="text" class="form-control height-value" name="height['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control weight-value serial-vals" name="weight['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control length-value serial-vals" name="length['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control width-value serial-vals" name="width['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control height-value serial-vals" name="height['+serialIncrement+']" /></td>';
 			newTR += '<td><a class="btn btn-danger" href="javascript:void(0)" onclick="removeThisRow(this)"><?php echo $this->__("Remove") ?></a></td>';
 		newTR += '</tr>';
 		jQuery('#serial_package_info').append(newTR);
@@ -369,4 +370,14 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
   			onFailure: function() { alert('Something went wrong...');}
 		});
 	});
+	
+	function checkSerialVals(){
+		$$('input.serial-vals').each(function(e){
+			
+			if(e.value == ""){
+				alert("<?php echo $this->__("Fill all serials' value") ?>");
+				return false;
+			}
+		});
+	}
 </script>
