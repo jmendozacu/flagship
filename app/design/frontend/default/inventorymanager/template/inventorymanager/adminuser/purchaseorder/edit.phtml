@@ -262,7 +262,7 @@ Calendar.setup({
 		//jQuery('.bs-example-modal-sm').modal('show');
 		//$('loading-div').show();
 		//$('product_suggestion_box').hide();
-		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminuser_purchaseorder/findproduct") ?>', {
+		new Ajax.Request('<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/findproduct") ?>', {
 			method:'post',
 			parameters: { vendor_id : vendorId}, 
   			onSuccess: function(transport) {
@@ -292,7 +292,7 @@ Calendar.setup({
 		$('loading-div').show();
 		$('product_suggestion_box').hide();
 		
-		new Ajax.Request('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminuser_purchaseorder/getproductinfo") ?>', {
+		new Ajax.Request('<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/getproductinfo") ?>', {
 			method:'post',
 			parameters: {product_id: pid},
   			onSuccess: function(transport) {
