@@ -23,6 +23,7 @@
 						<tbody>
 						<?php $iCounter = 1; foreach ($data['serial_key'] as $key => $serialKey){
 								$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
+								if($serialObject && $serialObject->getId()){
 								$serialId = $serialObject->getId();
 							?>
 								<tr>
@@ -31,9 +32,18 @@
 									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialId.'-BillOfLading.pdf'; ?> </td>
 									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialId.'-ShippingLabel.pdf'; ?> </td>
 								</tr>
-							<?php $iCounter++; } ?>
+							<?php $iCounter++; }} ?>
+							
 							</tbody>
 					</table>
+					<?php if($iCounter == 1){  ?>
+							<table class="table table-striped table-bordered table-hover">
+								<tr>
+									<td><?php echo Mage::helper('inventorymanager')->__("No valid serials found"); ?></td>
+								</tr>
+							</table>
+							<script>$('dataTables-example').hide();</script>
+							<?php } ?>
 				</div>
 			</div>
 		</div>
