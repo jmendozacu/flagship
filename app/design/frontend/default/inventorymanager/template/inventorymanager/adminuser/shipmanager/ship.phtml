@@ -374,13 +374,16 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 	});
 	
 	function checkSerialVals(){
+		var isError = false;
 		$$('input.serial-vals').each(function(e){
-			
 			if(e.value == ""){
-				alert("<?php echo $this->__("Fill all serials' value") ?>");
-				return false;
+				isError = true;
 			}
 		});
+		if(isError){
+			alert("<?php echo $this->__("Fill all serials' value") ?>");
+			return false;
+		}
 	}
 </script>
 <script>
