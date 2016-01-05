@@ -31,10 +31,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$senderAddress['Contact']['email'] = $data['email'];
 
 		$senderAddress['Address']['StreetLines'][0] = $data['address'];
-		//$senderAddress['Address']['StreetLines'][1] = $data['address2'];
+		$senderAddress['Address']['StreetLines'][1] = "";
 		$senderAddress['Address']['City'] = $data['city'];
 		$senderAddress['Address']['StateOrProvinceCode'] = $data['state'];
 		$senderAddress['Address']['CountryCode'] = $data['country_id'];
+		$senderAddress['Address']['PostalCode'] = $data['postalcode'];
 		
 		$receiverAddress = array();
 		$receiverAddress['Contact']['PersonName'] = $data['receiver']['contact_name'];
@@ -42,14 +43,16 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$receiverAddress['Contact']['PhoneNumber'] = $data['receiver']['phone'];
 		
 		$receiverAddress['Address']['StreetLines'][0] = $data['receiver']['address'];
-		//$receiverAddress['Address']['StreetLines'][1] = $data['receiver']['address2'];
+		$receiverAddress['Address']['StreetLines'][1] = "";
 		$receiverAddress['Address']['City'] = $data['receiver']['city'];
 		$receiverAddress['Address']['StateOrProvinceCode'] = $data['receiver']['state'];
 		$receiverAddress['Address']['PostalCode'] = $data['receiver']['postalcode'];
 		$receiverAddress['Address']['CountryCode'] = $data['receiver']['country_id'];
 		
-		
-		
+		/*echo "<pre>";
+		print_r($fedexApi->getProperty('freightbilling'));
+		print_r($senderAddress);
+		exit;*/
 		
 		$client = new SoapClient($fedexApi->path_to_wsdl, array('trace' => 1));
 		
@@ -173,8 +176,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 					'DropoffType' => 'REGULAR_PICKUP', 
 					'ServiceType' => 'FEDEX_FREIGHT_ECONOMY', 
 					'PackagingType' => 'YOUR_PACKAGING', 
-					'Shipper' => $fedexApi->getProperty('freightbilling'),
-					'Recipient' => $receiverAddress,
+					//'Shipper' => $fedexApi->getProperty('freightbilling'),
+					'Shipper' => $senderAddress,
+						'Recipient' => $receiverAddress,
 					'ShippingChargesPayment' => $fedexApi->addShippingChargesPayment(),
 					'FreightShipmentDetail' => array(
 						'FedExFreightAccountNumber' => $fedexApi->getProperty('freightaccount'),

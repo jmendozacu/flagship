@@ -128,8 +128,8 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 						<div class="form-group">
 							<label><?php echo $this->__("State") ?></label>
 							<input type="text" class="form-control required-entry" id="billing:region" name="state" value="<?php echo $stateCode ?>" />
-							<select id="billing:region_id"  class="form-control">
-							</select>
+							<!--<select id="billing:region_id"  class="form-control">
+							</select>-->
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -387,6 +387,6 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 	}
 </script>
 <script>
-	var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'billing:postcode');
+	//var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'billing:postcode');
 	var billingRegionUpdater = new RegionUpdater('receiver_country_id', 'receiver_state', 'receiver_state_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'receiver_postalcode');
 </script>
