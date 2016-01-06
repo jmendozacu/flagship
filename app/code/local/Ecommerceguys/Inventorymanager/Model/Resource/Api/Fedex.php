@@ -23,7 +23,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 	
 	public function getProperty($key){
 		
-		
+		$var = $key;
 		
 		if($var == 'key') Return Mage::getStoreConfig('inventorymanager/fedex_config/key');
 	    if($var == 'password') Return Mage::getStoreConfig('inventorymanager/fedex_config/password'); 
