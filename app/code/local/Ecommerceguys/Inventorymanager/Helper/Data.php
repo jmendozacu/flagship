@@ -59,7 +59,7 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 	public function getVendorMaterials(){
 		$vendor = Mage::getSingleton('core/session')->getVendor();
 		$materials = $vendor->getMaterial();
-		$materialArray = array_map(array($this, formatMaterialArray), $materials);
+		$materialArray = array_map(array($this, 'formatMaterialArray'), $materials);
 		return $materialArray;
 	}
 	
@@ -72,7 +72,7 @@ class Ecommerceguys_Inventorymanager_Helper_Data extends Mage_Core_Helper_Abstra
 	public function getVendorLighting(){
 		$vendor = Mage::getSingleton('core/session')->getVendor();
 		$lighting = $vendor->getLighting();
-		$lightingArray = array_map(array($this, formatLightingArray), $lighting);
+		$lightingArray = array_map(array($this, 'formatLightingArray'), $lighting);
 		return $lightingArray;
 	}
 	

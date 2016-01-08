@@ -133,7 +133,7 @@
  $stockItem->loadByProduct($_product->getId());
 ?>
 <?php // End added code  ?>
-
+<?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
         <?php if ($i++%$_columnCount==0): ?>
         <ul class="products-grid">
         <?php endif ?>

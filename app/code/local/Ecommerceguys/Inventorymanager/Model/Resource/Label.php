@@ -229,7 +229,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Label extends Mage_Core_Mode
     	$select = $readConnection->select()
                 ->from(array('location' => $tableName));
 		$vendor = 0;
-        $select->where("location.vendor_id = ? ", $vendorId);
+        //$select->where("location.vendor_id = ? ", $vendor);
     	return $readConnection->fetchAll($select);
     }
 }

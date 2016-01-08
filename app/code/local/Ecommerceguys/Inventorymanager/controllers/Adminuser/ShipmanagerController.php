@@ -31,7 +31,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$senderAddress['Contact']['email'] = $data['email'];
 
 		$senderAddress['Address']['StreetLines'][0] = $data['address'];
-		$senderAddress['Address']['StreetLines'][1] = "";
+		$senderAddress['Address']['StreetLines'][1] = "Do Not Delete - Test Account";
 		$senderAddress['Address']['City'] = $data['city'];
 		$senderAddress['Address']['StateOrProvinceCode'] = $data['state'];
 		$senderAddress['Address']['CountryCode'] = $data['country_id'];
@@ -124,9 +124,24 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				}
 				
 				if($catalogproduct->getIsInStock() == 1){
+					$stock_item = Mage::getModel('cataloginventory/stock_item')->loadByProduct($catalogproduct->getId());
+					if (!$stock_item->getId()) {
+						$productQty = $stock_item->getQty();
+						$productQty -= 1;
+					    $stock_item->setData('product_id', $catalogproduct->getId());
+					    //$stock_item->setData('stock_id', 1); 
+					    $isInStock = 1;
+					    if($productQty < 1){
+					    	$isInStock = 0;
+					    }
+					    $stock_item->setData('is_in_stock', $isInStock);
+					    $stock_item->setData('qty', $productQty);
+					    $stock_item->save();
+					}
+					
 					//$model->setIsInStock(1);
 					//$productModel = Mage::getModel('catalog/product')->load($data['main_product_id']);
-					$stocklevel = Mage::getModel('cataloginventory/stock_item')
+					/*$stocklevel = Mage::getModel('cataloginventory/stock_item')
 		            ->loadByProduct($catalogproduct);
 		            $productQty = 0;
 		            if($stocklevel)
@@ -140,7 +155,13 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			        if($productQty > 2){
 			        	$catalogproduct->setIsInStock(0);
 			        }
-					$catalogproduct->save();
+			        if($catalogproduct && $catalogproduct->getId()){
+			        	try {
+							$catalogproduct->save();
+			        	}catch (Exception $e){
+			        		
+			        	}
+			        }*/
 					
 					
 				}
@@ -256,19 +277,31 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 					$historySender = Mage::getModel('inventorymanager/shipmanager_sender');
 					$historyReceiver = Mage::getModel('inventorymanager/shipmanager_receiver');
 					
+					
+					
+					$quotedVal = 0;
+					if(isset($response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount)){
+						$quotedVal = $response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount;
+					}
+					
 					$historyData = array(
-						'transaction_detail'	=>	$response->TransactionDetail->CustomerTransactionId,
-						'job_id'				=>	$response->JobId,
-						'tracking_number'		=>	$response->CompletedShipmentDetail->CarrierCode,
-						'careercode' 			=>	$response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber,
-						'service_type'			=>	$response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType,
+						'transaction_detail'	=>	isset($response->TransactionDetail->CustomerTransactionId)?$response->TransactionDetail->CustomerTransactionId:"",
+						'job_id'				=>	isset($response->JobId)?$response->JobId:"",
+						'tracking_number'		=>	isset($response->CompletedShipmentDetail->CarrierCode)?$response->CompletedShipmentDetail->CarrierCode:"",
+						'careercode' 			=>	isset($response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber)?$response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber:"",
+						'service_type'			=>	isset($response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType)?$response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType:"",
 						'weight'				=>	$weight,
-						'quoted_value'			=>	$response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount,
+						'quoted_value'			=>	$quotedVal,
 						'shipping_date'			=>	date('Y-m-d'),
 						'created_time'			=>	date('Y-m-d'),
 					);
 					try{
+						
+						
+						
 						$historyObject->setData($historyData)->save();
+						
+						//print_r(get_class($historyObject)); exit;
 					}catch (Exception $e){
 						Mage::log($e->getMessage());
 					}
@@ -350,14 +383,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    		}
 				    	}
 				    	
-				    	
-					    
-				    	
-				    	
 				    }else{
 				        $fedexApi->printError($client, $response);
 				    }
-					Mage::log($client,nill, "fedex.log");    // Write to log file
+					Mage::log($client,null, "fedex.log");    // Write to log file
 				} catch (SoapFault $exception) {
 					
 				   // $fedexApi->printFault($exception, $client);

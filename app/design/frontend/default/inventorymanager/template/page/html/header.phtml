@@ -70,6 +70,8 @@
     $help = false;
     $shipmanager = false;
     $massProduct = false;
+    $vendorprofile = false;
+    $vendoremployer = false;
     
     if($currentController == "vendor" && $currentAction == "products"){
         $productsPage = true;
@@ -218,11 +220,11 @@
                     <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Products") ?>
                 </a>
             </li>
-             <li>
+             <?php /*<li>
                 <a class="<?php echo $sendProduct?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/find") ?>">
                     <i class="fa fa-table fa-3x"></i> <?php echo $this->__("Send Products") ?>
                 </a>
-            </li>
+            </li>*/ ?>
             <li>
                 <a class="<?php echo $receiveProduct?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/findreceive") ?>">
                     <i class="fa fa-desktop fa-3x"></i>

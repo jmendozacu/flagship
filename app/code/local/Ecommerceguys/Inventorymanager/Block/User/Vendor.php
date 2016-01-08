@@ -19,7 +19,7 @@ class Ecommerceguys_Inventorymanager_Block_User_Vendor extends Mage_Core_Block_T
 	
 		$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
 		
-		$products = $vendorModel->getUnselectedProducts();
+		$products = $vendorModel->getUnselectedProducts($vendorId);
 		return $products;
         }
 	public function getVendorProducts($id){
