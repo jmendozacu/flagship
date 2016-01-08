@@ -356,6 +356,8 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 		    $csv=file_get_contents($_FILES["import_csv"]["tmp_name"]);
 		
 			$csvArray = explode("\n", $csv);
+			if(sizeof($csvArray) < 2)
+		    	$csvArray = explode("\r", $csv);
 			
 			$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
 			$productInfoArray = array();
