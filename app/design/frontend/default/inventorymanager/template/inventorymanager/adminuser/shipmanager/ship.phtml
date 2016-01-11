@@ -265,6 +265,7 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 												<td><input type="text" class="form-control length-value serial-vals"  name="length[1]" /></td>
 												<td><input type="text" class="form-control width-value serial-vals" name="width[1]" /></td>
 												<td><input type="text" class="form-control height-value serial-vals" name="height[1]" /></td>
+												<td><input type="text" class="form-control price-value serial-vals" name="price[1]" /></td>
 												<td><a class="btn btn-info" href="javascript:void(0)" onclick="addSerialRow()"><?php echo $this->__("Add New") ?></a></td>
 											</tr>
 										</tbody>
@@ -302,6 +303,7 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 			newTR += '<td><input type="text" class="form-control length-value serial-vals" name="length['+serialIncrement+']" /></td>';
 			newTR += '<td><input type="text" class="form-control width-value serial-vals" name="width['+serialIncrement+']" /></td>';
 			newTR += '<td><input type="text" class="form-control height-value serial-vals" name="height['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control price-value serial-vals" name="price['+serialIncrement+']" /></td>';
 			newTR += '<td><a class="btn btn-danger" href="javascript:void(0)" onclick="removeThisRow(this)"><?php echo $this->__("Remove") ?></a></td>';
 		newTR += '</tr>';
 		jQuery('#serial_package_info').append(newTR);
