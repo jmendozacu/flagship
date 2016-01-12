@@ -10,9 +10,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$data = $this->getRequest()->getParams();
 		
 		
-		//echo "<pre>";
-		//print_r($data);
-		
+		/*echo "<pre>";
+		print_r($data);
+		exit;*/
 		
 		$realOrderId = $data['order_id'];
 		$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
@@ -212,7 +212,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			$request['RequestedShipment'] = array(
 				'ShipTimestamp' => date('c'),
 				'DropoffType' => 'REGULAR_PICKUP', 
-				'ServiceType' => 'FEDEX_FREIGHT_ECONOMY', 
+				'ServiceType' => isset($data['service_type'])?$data['service_type']:'FEDEX_FREIGHT_ECONOMY', 
 				'PackagingType' => 'YOUR_PACKAGING', 
 				//'Shipper' => $fedexApi->getProperty('freightbilling'),
 				'Shipper' => $senderAddress,
