@@ -365,7 +365,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 		$serialKey = $this->getRequest()->getParam('serial_key');
 		$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
 		if($serialObject && $serialObject->getId()){
+			
 			$orderProduct = Mage::getModel('inventorymanager/product')->load($serialObject->getProductId());
+			$catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
 			$purchaseorder = Mage::getModel('inventorymanager/purchaseorder')->load($serialObject->getOrderId());
 			$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
 			$productInfoCollection->addFieldToFilter('vendor_id', $purchaseorder->getVendorId());
@@ -381,11 +383,56 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 					$data['width'] = $productInfoObject->getBoxWidth()!=""?$productInfoObject->getBoxWidth():$productInfoObject->getWidth();
 					$data['height'] = $productInfoObject->getBoxHeight()!=""?$productInfoObject->getBoxHeight():$productInfoObject->getHeight();
 					$data['weight']	= $productInfoObject->getWeight();
+					$data['name']	= $catalogProduct->getName();
 					echo Mage::helper('core')->jsonEncode($data);
 				}
 			}
 			
 			
 		}
+	}
+	
+	public function bulklocationAction(){
+		$this->loadLayout();
+		$this->_initLayoutMessages('core/session');
+		$this->renderLayout();
+	}
+	
+	public function savebulklocationAction(){
+		$data = $this->getRequest()->getParams();
+		
+		if(isset($data['serial_keys']) && is_array($data['serial_keys'])){
+			$serials = $data['serial_keys'];
+			$serials = array_filter($serials);
+			if(sizeof($serials) > 0){
+				//try {
+				$serialCount = 0;
+				foreach ($serials as $serialKey) { 
+					$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
+					if($serialObject && $serialObject->getId()){
+						$serialCount++;
+						try {
+							$serialObject->setLocation($data['location'])->save();
+						}catch (Exception $e){
+						}
+						//unset($serialObject);
+					}
+					//break;
+				}
+				if($serialCount > 0)
+				{
+					Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__("Serials Updated"));
+					$this->_redirect("inventorymanager/adminuser_serial/bulklocation");
+					return $this;
+				}
+				//}catch (Exception $e){
+					
+				//}
+			}
+		}
+		
+		Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("No serial found"));
+		$this->_redirect("inventorymanager/adminuser_serial/bulklocation");
+		return $this;
 	}
 }

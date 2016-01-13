@@ -502,4 +502,15 @@
 			<block type="core/template" name="vendor.massproducts" template="inventorymanager/vendor/product/massproducts.phtml" />
 		</reference>
 	</inventorymanager_vendor_product_massproducts>
+	
+	
+	<inventorymanager_adminuser_serial_bulklocation>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_serial_bulklocation" name="adminuser.serials.bulklocation" template="inventorymanager/adminuser/serial/bulklocation.phtml" ></block>
+		</reference> 
+	</inventorymanager_adminuser_serial_bulklocation>
+	
 </layout>

@@ -72,6 +72,7 @@
     $massProduct = false;
     $vendorprofile = false;
     $vendoremployer = false;
+    $bulkLocation= false;
     
     if($currentController == "vendor" && $currentAction == "products"){
         $productsPage = true;
@@ -117,6 +118,8 @@
     	$shipmanager = true;
     }elseif($currentController == "vendor_product" && $currentAction == "vendor_product/massproducts"){
     	$massProduct = true;
+    }elseif($currentController == "adminuser_serial" && $currentAction == "bulklocation"){
+    	$bulkLocation = true;
     }
 
 ?>
@@ -226,17 +229,17 @@
                 </a>
             </li>*/ ?>
             <li>
-                <a class="<?php echo $receiveProduct?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/findreceive") ?>">
+                <a class="<?php echo $bulkLocation?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/bulklocation") ?>">
                     <i class="fa fa-desktop fa-3x"></i>
                     <?php echo $this->__("Receive Products") ?>
                 </a>
             </li>
-            <?php /*<li>
-                <a class="<?php echo $sentSerials?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/sent") ?>">
+            <li>
+                <a class="<?php echo $sentSerials?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/bulklocation") ?>">
                     <i class="fa fa-desktop fa-3x"></i>
-                    <?php echo $this->__("Send Serials") ?>
+                    <?php echo $this->__("Bulk Location Chnage") ?>
                 </a>
-            </li>*/?>
+            </li>
             <li>
                 <a class="<?php if($stockTab) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/adminuser_product/stockgrid') ?>">
                     <i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock") ?>

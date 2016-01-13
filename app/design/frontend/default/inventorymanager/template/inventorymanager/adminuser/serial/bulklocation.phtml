@@ -1,0 +1,91 @@
+<?php
+	$locations = $this->getLocations();
+?>
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Bulk Location Change") ?></h2>
+	</div>
+</div>
+<hr/>
+<form action="<?php echo $this->getUrl('inventorymanager/adminuser_serial/savebulklocation') ?>" id="bulk_location" method="POST">
+<div class="row">
+	<div class="col-md-12">
+		<?php echo $this->getMessagesBlock()->toHtml() ?>
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Enter serials") ?></div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover">
+						<tr>
+							<td><?php echo $this->__("Serial") ?></td>
+							<td><?php echo $this->__("Product Name") ?></td>
+							<td></td>
+						</tr>
+						<tbody id="bulk_loc_serials">
+							<tr>
+								<td><input type="text" class="form-control" onkeyup="autoloadSerialInformation(this)" name="serial_keys[1]" /></td>
+								<td class="product_name_value"></td>
+								<td><a class="btn btn-info" href="javascript:void(0)" onclick="addSerialRow()"><?php echo $this->__("Add New") ?></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-group">
+            <label><?php echo $this->__("Location") ?></label>
+            <select class="form-control" name="location">
+                <?php foreach ($locations as $location){ ?>
+                	<option value="<?php echo $location['location'] ?>"><?php echo $location['location'] ?></option>
+                <?php } ?>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<a class="btn btn-success" href="javascript:$('bulk_location').submit();"><?php echo $this->__("Update") ?></a>
+	</div>
+</div>
+</form>
+<script type="text/javascript">
+	var serialIncrement = 1;
+	function addSerialRow(){
+		serialIncrement++;
+		var newTR = '<tr>';
+		newTR += '<td><input type="text" class="form-control" onkeyup="autoloadSerialInformation(this)" name="serial_keys['+serialIncrement+']" /></td>';
+			newTR += '<td class="product_name_value"></td>';
+			newTR += '<td><a class="btn btn-danger" href="javascript:void(0)" onclick="removeThisRow(this)"><?php echo $this->__("Remove") ?></a></td>';
+		newTR += '</tr>';
+		jQuery('#bulk_loc_serials').append(newTR);
+	}
+	
+	function removeThisRow(element){
+		element.up('tr').remove();
+	}
+	
+	
+	function autoloadSerialInformation(element){
+		val = element.value;
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_serial/finddetails', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {serial_key: val},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			if(response != ''){
+    				var obj = JSON.parse(response);
+    				var trElement = element.up('tr');
+    				trElement.down('.product_name_value').innerHTML = obj.name;
+    			}else{
+    				
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+</script>
