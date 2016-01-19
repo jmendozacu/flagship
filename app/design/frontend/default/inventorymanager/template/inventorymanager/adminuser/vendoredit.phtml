@@ -1,3 +1,5 @@
+
+
 <?php $vendorData = Mage::registry('vendor_data');?>
 <?php $vendorData->getName();?>
 <?php $vendorProducts = $this->getVendorProducts($vendorData->getId());?>
@@ -10,7 +12,8 @@
     <div class="col-md-12">
         <h2><?php echo $this->__("Vendor") ?></h2>
         <div style="float:right;padding-right:10px">
-             <button type="button" onclick="submitEditForm()" title="<?php echo "<?php echo $this->__('Save');?>";?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+             <button type="button" onclick="submitEditForm()" title="<?php echo $this->__("Save and Continue") ?>" class="btn btn-warning" ><span><span><?php echo $this->__("Save and Continue") ?></span></span></button>
+             <button type="button" onclick="submitEditForm()" title="<?php echo $this->__('Save');?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
         </div>
     </div>
 </div>
@@ -121,6 +124,7 @@
                                 </thead>
                                 <tbody>
                                     <?php $iCounter = 0;
+                                    
                                     $allProducts = $this->getProducts();
                                     
                                     foreach ($allProducts as $productData){

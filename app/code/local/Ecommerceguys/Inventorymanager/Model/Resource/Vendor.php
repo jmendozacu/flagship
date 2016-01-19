@@ -150,10 +150,19 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
                 ->group('entity_id');
         if($vendor && $vendor->getId()){
         	$products = Mage::getResourceModel('inventorymanager/vendor')->getProducts($vendor->getId());
-        	$vendorProducts = implode(",", $products);
+        	
+        	$vendorProducts = array_map(array($this,'filterVendorProductArray'), $products);
+        	$vendorProducts = implode(",", $vendorProducts);
+        	
         	$select->where("entity_id not in ($vendorProducts)");
         }
         
         return $connection->fetchAll($select);
+    }
+    
+    public function filterVendorProductArray($value){
+    	if(isset($value['entity_id'])){
+    		return $value['entity_id'];
+    	}
     }
 }
