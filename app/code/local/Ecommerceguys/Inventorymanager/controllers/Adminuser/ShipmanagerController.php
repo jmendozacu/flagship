@@ -106,8 +106,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				
 				$serialId = $serialObject->getId();
 			
-				$shippingLabel = Mage::getBaseDir().'\\media\\fedex\\shippinglabels\\'.$serialId.'-ShippingLabel.pdf';
-				$bol = Mage::getBaseDir().'\\media\\fedex\\billoflanding\\'.$serialId.'-BillOfLading.pdf';
+				$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialId.'-ShippingLabel.pdf';
+				$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialId.'-BillOfLading.pdf';
 				
 				$orderProduct = Mage::getModel('inventorymanager/product')->load($serialObject->getProductId());
 				$catalogproduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
