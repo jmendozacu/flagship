@@ -31,7 +31,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$senderAddress['Contact']['email'] = $data['email'];
 
 		$senderAddress['Address']['StreetLines'][0] = $data['address'];
-		$senderAddress['Address']['StreetLines'][1] = "Do Not Delete - Test Account";
+		$senderAddress['Address']['StreetLines'][1] = "-";
 		$senderAddress['Address']['City'] = $data['city'];
 		$senderAddress['Address']['StateOrProvinceCode'] = $data['state'];
 		$senderAddress['Address']['CountryCode'] = $data['country_id'];
@@ -95,8 +95,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			
 			
 		
-			$shippingLabel = Mage::getBaseDir().'\\media\\fedex\\shippinglabels\\'.$serialKey.'-ShippingLabel.pdf';
-			$bol = Mage::getBaseDir().'\\media\\fedex\\billoflanding\\'.$serialKey.'-BillOfLading.pdf';
+			$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialKey.'-ShippingLabel.pdf';
+			$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialKey.'-BillOfLading.pdf';
 			
 			$productName = "proline item";
 			$productPrice = 0;
@@ -409,31 +409,17 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				Mage::log($client,null, "fedex.log");    // Write to log file
 			} catch (SoapFault $exception) {
 				
-			   // $fedexApi->printFault($exception, $client);
+			    $fedexApi->printFault($exception, $client);
 			   echo Mage::helper('inventorymanager')->__("Something went wrong. Please try again with right information");
 			}
 		
 			
 			
 		}
-		//exit;
 		
 		if($serialCount == 0){
 			echo Mage::helper('inventorymanager')->__("No valid serials found");
 		}
-		
-		//$zip->close();
-				    
-				        // force to download the zip
-        /*header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private",false);
-        header('Content-type: application/zip');
-        header('Content-Disposition: attachment; filename="'.$zip_name.'"');
-        readfile($zip_name);
-        // remove zip file from temp path
-        unlink($zip_name);*/
         
         $this->loadLayout();
         $this->renderLayout();
@@ -453,12 +439,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			$fileName = $this->getRequest()->getParam('filename');
 			$fileN = $fileName;
 			if($area == "bol"){
-				$fileName = 'billoflanding\\'. $fileName;
+				$fileName = 'billoflanding/'. $fileName;
 			}else{
-				$fileName = 'shippinglabels\\'. $fileName;
+				$fileName = 'shippinglabels/'. $fileName;
 			}
 				
-			$file = Mage::getBaseDir().'\\media\\fedex\\' . $fileName;
+			$file = Mage::getBaseDir().'/media/fedex/' . $fileName;
 			header("Content-Disposition: attachment; filename=" . urlencode($fileN));   
 			header("Content-Type: application/octet-stream");
 			header("Content-Type: application/download");
