@@ -174,7 +174,7 @@
 var dataTable;
     jQuery(document).ready(function () {
        dataTable = jQuery('#dataTables-example').dataTable();
-       selectedTable = jQuery('#dataTables-exist').dataTable({"bFilter": false});
+       selectedTable = jQuery('#dataTables-exist').dataTable();
       /// jQuery("input.products-checkbox",dataTable.fnGetNodes()).attr('checked', false);
       
       var existSelectHTML = '<div class="selectall-links"><a onclick="selectAll(1, true)"><?php echo $this->__("Select All") ?></a>&nbsp;|&nbsp;<a onclick="selectVisible(1,true)"><?php echo $this->__("Select Visible") ?></a>&nbsp;|&nbsp;'
