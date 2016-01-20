@@ -8,12 +8,13 @@
 <form id="edit_form" name='edit_form' action="<?php echo $this->getPostUrl($vendorData->getId())?>" method="post" enctype="multipart/form-data">
 <input type="hidden" value="" name="search-value" id="search_value" />
 <input type="hidden" value="" name="selected_values" id="selected_values" />
+<input type="hidden" value="0" name="is_back" id="is_back" />
 <div class="row">
     <div class="col-md-12">
         <h2><?php echo $this->__("Vendor") ?></h2>
         <div style="float:right;padding-right:10px">
-             <button type="button" onclick="submitEditForm()" title="<?php echo $this->__("Save and Continue") ?>" class="btn btn-warning" ><span><span><?php echo $this->__("Save and Continue") ?></span></span></button>
-             <button type="button" onclick="submitEditForm()" title="<?php echo $this->__('Save');?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+             <button type="button" onclick="submitEditForm(1)" title="<?php echo $this->__("Save and Continue") ?>" class="btn btn-warning" ><span><span><?php echo $this->__("Save and Continue") ?></span></span></button>
+             <button type="button" onclick="submitEditForm(0)" title="<?php echo $this->__('Save');?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
         </div>
     </div>
 </div>
@@ -155,12 +156,16 @@
 </form>
 <script type="text/javascript">
     editForm = new VarienForm('edit_form','');
-    function submitEditForm(){
+    function submitEditForm(val){
+    	$('is_back').value = val;
     	findChecked();
     	//return;
     	//alert(selectValString); return;
     	var searchValue = $('dataTables-example_filter').down('input').value;
     	$('search_value').value = searchValue;
+    	
+    	
+    	
     	editForm.submit();
     }
 </script>

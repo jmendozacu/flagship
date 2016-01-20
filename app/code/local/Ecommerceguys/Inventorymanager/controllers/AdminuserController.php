@@ -118,8 +118,11 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor saved successfully'));
 				Mage::getSingleton('core/session')->setFormData(false);
 
-
-				$this->_redirect('inventorymanager/adminuser/vendorprofiles');
+				if($data['is_back'] == 1){
+					$this->_redirect('*/*/vendoredit', array('vendor_id' => $this->getRequest()->getParam('id')));
+				}else{
+					$this->_redirect('inventorymanager/adminuser/vendorprofiles');
+				}
 				return;
             } catch (Exception $e) {
                 Mage::getSingleton('core/session')->addError($e->getMessage());
