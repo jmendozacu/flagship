@@ -193,6 +193,10 @@
 											</div>
 										</div>
 									</div>
+								<?php }else{ ?>
+									<?php  if($_product->getImage() != "no_selection"){ ?>
+										<img src="<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize(100); ?>" width="135" height="135" alt="<?php echo $this->getImageLabel($_product, 'small_image') ?>" />
+									<?php } ?>
 								<?php } ?>
 								
 							</div>
