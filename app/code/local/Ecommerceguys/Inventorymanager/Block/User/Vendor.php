@@ -9,30 +9,36 @@ class Ecommerceguys_Inventorymanager_Block_User_Vendor extends Mage_Core_Block_T
 	public function getPostUrl($id){
 		return Mage::getUrl('inventorymanager/adminuser/vendorsave',array('id'=>$id));	
 	}
-	public function getProducts(){
+	public function getProducts($selectedProducts){
+		
+		
+		$id = $this->getRequest()->getParam('vendor_id');
+		$products = Mage::getResourceModel('inventorymanager/vendor')->getUnselectedProducts($id, $selectedProducts);
+		
+		return $products;
+		
 	/*return $collection = Mage::getModel('catalog/product')
             ->getCollection()
             //->setProduct($this->_getProduct())
             ->addAttributeToSelect('*')
             ->addAttributeToSort('entity_id', 'DESC');*/
-		$vendorId = $this->getRequest()->getParam('vendor_id');
+		//$vendorId = $this->getRequest()->getParam('vendor_id');
 	
-		$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
+		//$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
 		
-		$products = $vendorModel->getUnselectedProducts($vendorId);
-		return $products;
+		//$products = $vendorModel->getUnselectedProducts($vendorId);
+		//return $products;
         }
 	public function getVendorProducts($id){
+		
 		if(!$id){
 			return;
 		}
+		
+		Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
+		
 		$products = Mage::getResourceModel('inventorymanager/vendor')->getProducts($id);
-
-		//echo "<pre>";
-		//print_r($products);
-		foreach($products as $pid) {
-			$returnIds[] = $pid['entity_id'];
-        }
-		return $returnIds;
+		
+		return $products;
 	}
 }

@@ -14,17 +14,17 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     public function getProducts($vendorId){
     	
     	$resourceObject = $this->getResourceObject();
-    	$productTable = $resourceObject->getTableName('catalog_product_entity');
+
+    	
     	$vendorProductTable = $resourceObject->getTableName('inventorymanager_vendorproduct');
-    	
-    	$connection = $resourceObject->getConnection('core_read');
-    	
-    	$select = $connection->select()
-                ->from(array("e"=>$productTable))
+    	$collection = Mage::getModel('catalog/product')->getCollection();
+    	$collection->addAttributeToSelect(array('name', 'status'));
+    	$collection->addAttributeToFilter('status', array('eq' => 1));
+    	$select = $collection->getSelect()
                 ->join(array("vp"=>$vendorProductTable), "e.entity_id = vp.product_id",array('vendor_id'))
                 ->where("vendor_id = " . $vendorId);  
          
-    	return $connection->fetchAll($select);
+    	return $collection;
     	
     }
     
@@ -137,27 +137,18 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     	return $connection->fetchAll($select);
     }
     
-    public function getUnselectedProducts($vendorId){
-    	
-    	$vendor = Mage::getModel('inventorymanager/vendor')->load($vendorId);
+    public function getUnselectedProducts($vendorId, $selectedProducts){
     	
     	$resourceObject = $this->getResourceObject();
-    	$productTable = $resourceObject->getTableName('catalog_product_entity');
-    	$connection = $resourceObject->getConnection('core_read');
-    	$select = $connection->select()
-                ->from(array("e"=>$productTable))
-                ->order(array('created_at DESC'))
-                ->group('entity_id');
-        if($vendor && $vendor->getId()){
-        	$products = Mage::getResourceModel('inventorymanager/vendor')->getProducts($vendor->getId());
-        	
-        	$vendorProducts = array_map(array($this,'filterVendorProductArray'), $products);
-        	$vendorProducts = implode(",", $vendorProducts);
-        	
-        	$select->where("entity_id not in ($vendorProducts)");
-        }
-        
-        return $connection->fetchAll($select);
+
+    	
+    	$vendorProductTable = $resourceObject->getTableName('inventorymanager_vendorproduct');
+    	$collection = Mage::getModel('catalog/product')->getCollection();
+    	$collection->addAttributeToSelect(array('name', 'status'));
+    	$collection->addAttributeToFilter('status', array('eq' => 1));
+    	$collection->addFieldToFilter('entity_id', array('nin' => $selectedProducts));
+         
+    	return $collection;
     }
     
     public function filterVendorProductArray($value){
