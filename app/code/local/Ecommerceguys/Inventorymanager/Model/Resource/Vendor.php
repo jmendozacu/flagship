@@ -137,7 +137,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     	return $connection->fetchAll($select);
     }
     
-    public function getUnselectedProducts($vendorId, $selectedProducts){
+    public function getUnselectedProducts($selectedProducts){
     	
     	$resourceObject = $this->getResourceObject();
 
@@ -146,7 +146,8 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     	$collection = Mage::getModel('catalog/product')->getCollection();
     	$collection->addAttributeToSelect(array('name', 'status'));
     	$collection->addAttributeToFilter('status', array('eq' => 1));
-    	$collection->addFieldToFilter('entity_id', array('nin' => $selectedProducts));
+    	if(is_array($selectedProducts) && sizeof($selectedProducts) > 0)
+    		$collection->addFieldToFilter('entity_id', array('nin' => $selectedProducts));
          
     	return $collection;
     }
