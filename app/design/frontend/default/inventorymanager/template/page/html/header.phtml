@@ -90,8 +90,6 @@
         $sendProduct = true;
     }elseif($currentController == "adminuser_serial" && $currentAction == "sent"){ 
         $sentSerials = true;
-    }elseif($currentController == "adminuser_serial" && $currentAction == "sent"){ 
-        $sentSerials = true;
     }elseif($currentController == "adminuser_product" && ($currentAction == "stockgrid" || $currentAction == "serialgrid")){ 
         $stockTab = true;
     }elseif($currentController == "vendor_product" && ($currentAction == "stockgrid" || $currentAction == "serialgrid")){ 
@@ -229,13 +227,13 @@
                 </a>
             </li>*/ ?>
             <li>
-                <a class="<?php echo $bulkLocation?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/bulklocation") ?>">
+                <a class="<?php echo $sentSerials?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/sent") ?>">
                     <i class="fa fa-desktop fa-3x"></i>
                     <?php echo $this->__("Receive Products") ?>
                 </a>
             </li>
             <li>
-                <a class="<?php echo $sentSerials?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/bulklocation") ?>">
+                <a class="<?php echo $bulkLocation?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/bulklocation") ?>">
                     <i class="fa fa-desktop fa-3x"></i>
                     <?php echo $this->__("Bulk Location Change") ?>
                 </a>
