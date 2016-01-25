@@ -408,6 +408,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 				//try {
 				$serialCount = 0;
 				foreach ($serials as $serialKey) { 
+					$serialKey = trim($serialKey);
 					$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
 					if($serialObject && $serialObject->getId()){
 						$serialCount++;

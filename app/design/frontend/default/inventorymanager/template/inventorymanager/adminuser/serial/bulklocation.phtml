@@ -72,6 +72,7 @@
 	
 	function autoloadSerialInformation(element){
 		val = element.value;
+		val = val.trim();
 		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_serial/finddetails', array('_current'=>true)) ?>', {
   			method:'post',
   			parameters: {serial_key: val},
