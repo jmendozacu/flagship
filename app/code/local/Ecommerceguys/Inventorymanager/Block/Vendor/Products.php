@@ -3,6 +3,7 @@
 class Ecommerceguys_Inventorymanager_Block_Vendor_Products extends Mage_Core_Block_Template
 {
 	public function getVendorProducts(){
+		Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
 		$vendorId = $this->getCurrentVendorId();
 		$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
 		$products = $vendorModel->getProducts($vendorId);

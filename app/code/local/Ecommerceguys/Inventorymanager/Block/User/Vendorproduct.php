@@ -10,6 +10,7 @@ class Ecommerceguys_Inventorymanager_Block_User_Vendorproduct extends Mage_Core_
 	}
 	
 	public function getVendorProducts(){
+		Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
 		/*$param = $this->getRequest()->getParams();
 		$vendorProducttable = Mage::getSingleton('core/resource')->getTableName('inventorymanager_vendorproduct');
 		$products = Mage::getModel('catalog/product')->getCollection();
