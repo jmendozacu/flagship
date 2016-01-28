@@ -66,7 +66,7 @@
 								<div class="col-md-6">
 		                            <div class="form-group">
 		                                <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
-		                                <select id="vendor_id" name="vendor_id" onchange="loadProducts();" class="required-entry select form-control">
+		                                <select id="vendor_id" name="vendor_id" onchange="loadProducts();" class="required-entry select show-select form-control selectpicker">
 											<?php foreach ($this->getVendors() as $vendorId => $vendorName): ?>
 												<option value="<?php echo $vendorId ?>" <?php echo $c_vendorId==$vendorId?"selected='seleted'":""; ?> ><?php echo $vendorName ?></option>
 											<?php endforeach; ?>
@@ -75,7 +75,7 @@
 		
 		                            <div class="form-group">
 		                                <label><?php echo $this->__("Shipping Mehtod") ?></label>
-		                                <select id="shipping_method" name="shipping_method" class="required-entry select form-control">
+		                                <select id="shipping_method" name="shipping_method" class="required-entry select form-control show-select selectpicker">
 											<?php foreach ($this->getAllShippingMethod() as $code => $title): ?>
 												<option value="<?php echo $code ?>" <?php echo $c_shippingMethod==$code?"selected='selected'":""; ?>  ><?php echo $title ?></option>
 											<?php endforeach; ?>
@@ -84,7 +84,7 @@
 		                            
 		                            <div class="form-group">
 		                                <label><?php echo $this->__("Payment Terms") ?></label>
-		                               	<select id="payment_terms" name="payment_terms" class="required-entry select form-control">
+		                               	<select id="payment_terms" name="payment_terms" class="required-entry select form-control show-select selectpicker">
 											<?php foreach ($this->getPaymentTerms() as $code => $title): ?>
 											<option value="<?php echo $code ?>" <?php echo $c_paymentTerms==$code?"selected='selected'":""; ?>><?php echo $title ?></option>
 											<?php endforeach; ?>
@@ -225,7 +225,11 @@
 
 
 <!-- New design end -->
-
+<script>
+jQuery(document).ready(function(e) {
+  jQuery('.selectpicker').selectpicker();
+});
+</script>
 
 <script type="text/javascript">
     editForm = new VarienForm('edit_form','');

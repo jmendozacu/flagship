@@ -452,3 +452,4 @@ div.logout{
 .selectall-links{ clear:both; color:#4D6496; }
 .selectall-links a { cursor:pointer; padding:15px; }
 .selectall-links a:first-child{  }
+.show-select{display:inline-block !important }

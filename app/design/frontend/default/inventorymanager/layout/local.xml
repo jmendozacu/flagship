@@ -3,6 +3,7 @@
 	<default>
 		<reference name="head">
 			<action method="addCss"><stylesheet>css/bootstrap.css</stylesheet></action>
+			<action method="addCss"><stylesheet>css/bootstrap-select.min.css</stylesheet></action>
 			<action method="addCss"><stylesheet>css/font-awesome.css</stylesheet></action>
 			<action method="addCss"><stylesheet>js/morris/morris-0.4.3.min.css</stylesheet></action>
 			<action method="addCss"><stylesheet>css/custom.css</stylesheet></action>
