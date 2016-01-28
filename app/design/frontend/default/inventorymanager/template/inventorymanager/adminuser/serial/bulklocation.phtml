@@ -40,7 +40,7 @@
 		<div class="form-group">
             <label><?php echo $this->__("Location") ?></label>
             <select class="form-control" name="location">
-                <?php foreach ($locations as $location){ ?>
+                <?php foreach ($locations as $location){ if($location['visible_area'] == 2) { continue; } ?>
                 	<option value="<?php echo $location['location'] ?>"><?php echo $location['location'] ?></option>
                 <?php } ?>
             </select>
