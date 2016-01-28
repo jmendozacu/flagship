@@ -53,13 +53,13 @@ fwrite($logfile, sprintf("\r%s:- %s",date("D M j G:i:s T Y"), $client->__getLast
  */
 function getProperty($var){
 	if($var == 'check') Return true;
-	if($var == 'shipaccount') Return '510087402';
-	if($var == 'billaccount') Return '510087402';
-	if($var == 'dutyaccount') Return '510087402';
-	if($var == 'accounttovalidate') Return '510087402';
-	if($var == 'meter') Return '100115666';
-	if($var == 'key') Return 'fbJ0YzUdEtV4rO7g';
-	if($var == 'password') Return '03r6w5244teGnUaMytLtZk5Hs';
+	if($var == 'shipaccount') Return '510087925';
+	if($var == 'billaccount') Return '510087925';
+	if($var == 'dutyaccount') Return '510087925';
+	if($var == 'accounttovalidate') Return '510087925';
+	if($var == 'meter') Return '118694498';
+	if($var == 'key') Return 'auVoUpOkHMqK050N';
+	if($var == 'password') Return '60DkQxzoMIagGK75MwqnD4Rcr';
 	if($var == 'shippingChargesPayment') Return 'SENDER';
 	if($var == 'internationalPaymentType') Return 'SENDER';
 	if($var == 'readydate') Return '2010-05-31T08:44:07';

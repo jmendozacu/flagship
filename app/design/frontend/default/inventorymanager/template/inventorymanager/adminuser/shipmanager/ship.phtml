@@ -279,6 +279,7 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 								<div class="form-group shipmanager-send-button">
 									
 									<button class="btn btn-primary" type="submit"><?php echo $this->__("Send Shipment") ?></button>
+									<!--<button class="btn btn-primary" onclick="calculatePrice()" type="button"><?php echo $this->__("Calculate Price") ?></button>-->
 								</div>
 							</div>
 						</div>
@@ -392,4 +393,24 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 <script>
 	//var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'billing:postcode');
 	var billingRegionUpdater = new RegionUpdater('receiver_country_id', 'receiver_state', 'receiver_state_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'receiver_postalcode');
+</script>
+
+<script type="text/javascript">
+	function calculatePrice(){
+		if(customForm.validator && customForm.validator.validate()){
+			checkSerialVals();
+			var url = '<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/rate') ?>';
+			$('shipmanager_send').action = url;
+			
+			customForm.submit();
+			
+			
+			/*$('shipmanager_send').request({
+		        onFailure: function() {  },
+		        onSuccess: function(t) {
+		            $('result').update(t.responseText);
+		        }
+		    });*/
+		}
+	}
 </script>

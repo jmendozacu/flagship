@@ -38,8 +38,6 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 	    
 	     if($var == 'recipient'){ 
 	     	
-	     
-	     	
 	     	return array(
 		        'Contact' => array(
 		            'PersonName' => 'Recipient Name',
