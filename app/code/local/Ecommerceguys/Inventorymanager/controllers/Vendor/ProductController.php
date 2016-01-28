@@ -289,7 +289,7 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 		header("Expires: 0");
 		
 		$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
-		
+		Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
 		$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
 		$products = $vendorModel->getProducts($vendorId);
 		
@@ -319,7 +319,8 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 		}
 		
 		echo "SKU,Cost,Weight KG,Length METER,Width METER,Height METER,Box Weight KG,Box Length METER,Box Width METER,Box Height METER,UPC Code,Material,Lighting,Full Specifications\n";
-		foreach ($products as $product){
+		foreach ($products as $productObj){
+			$product = $productObj->getData();
 			echo $product['sku'];
 			
 			if(isset($venderProductinfoArray[$product['entity_id']])){
