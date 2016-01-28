@@ -94,8 +94,9 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		foreach ($contentArray as $cont){
 			$iCounter++;
 			$pdf->writeHTML($cont, true, false, false, false, '');
-			if($contentSize > $iCounter)
+			if(($contentSize-1) > $iCounter){
 				$pdf->AddPage();
+			}
 		}
 		//$pdf->writeHTML($content, true, false, false, false, '');
 		$pdf->lastPage();
