@@ -1,7 +1,7 @@
 <?php $products = $this->getProducts(); ?>
 <?php $_helper = $this->helper('catalog/output'); ?>
 <div>
-    <?php foreach ($products as $product) { ?>
+    <?php $jCounter = 0; foreach ($products as $product) { $jCounter++; ?>
         <?php
         $orderProduct = Mage::getModel('inventorymanager/product')->load($product->getProductId());
         $catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
@@ -138,6 +138,9 @@
                 <?php } ?>
             </tr>
         </table>
-	<li style="list-style: none"><br/><br/><br/><br/></li>
+        <?php /*if($jCounter%2 == 0){ ?>
+        		<!--EOP-->
+        <?php }*/ ?>
+        <!--EOP-->
     <?php } ?>
 </div>
