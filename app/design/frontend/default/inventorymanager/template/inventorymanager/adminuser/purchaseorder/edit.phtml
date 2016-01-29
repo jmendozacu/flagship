@@ -115,8 +115,8 @@
 	                          	
 	                            	<div class="form-group">
 	                                	<label><?php echo $this->__("Add Product to purchase order") ?></label>
-	                                	<div class="form-group input-group" id="vendor_product_load">
-	                                		<select class="form-control">
+	                                	<div class="form-group " id="vendor_product_load">
+	                                		<select class="form-control selectpicker show-select">
                                                 
                                             </select>
 	                                		<!--<input type="text" class="input-text form-control" id="add_product"   />
@@ -275,6 +275,7 @@ Calendar.setup({
     			//$('loading-div').hide();
     			//$('product_suggestion_box').show();
     			$('vendor_product_load').innerHTML = response;
+    			 jQuery('#select-picker-product').selectpicker();
   			},
   			onFailure: function() { alert('Something went wrong...'); }
 		});
