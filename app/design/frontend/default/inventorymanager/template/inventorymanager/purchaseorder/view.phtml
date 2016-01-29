@@ -112,7 +112,7 @@
 								?>
 							<tr id="po_product_row_<?php echo $product->getId() ?>" class="ro_product_row clickable-row">
 								<td><?php echo ++$iCounter; ?></td>
-								<td><?php echo $realProduct->getName(); ?></td>
+								<td><?php echo $realProduct->getName(); ?>&nbsp;&nbsp;&nbsp;<button style="z-index:999" class="btn btn-primary dropdown-toggle" type="button"><span class="caret"></span></button></td>
 								<td><?php echo $product->getPrice(); ?></td>
 								<td><?php echo $product->getQty(); ?></td>
 								<td><?php echo $product->getTotal(); ?></td>
