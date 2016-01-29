@@ -561,9 +561,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 		
 		$senderAddress = array();
-		$senderAddress['Contact']['ContactId'] = "fright1";
+		$senderAddress['AccountNumber'] = '510087925';
+		//$senderAddress['Contact']['ContactId'] = "fright1";
 		$senderAddress['Contact']['PersonName'] = $data['contact_name'];
-		$senderAddress['Contact']['Title'] = $data['contact_name'];
+		$senderAddress['Contact']['Title'] = "Mr.";
 		$senderAddress['Contact']['CompanyName'] = $data['company'];
 		$senderAddress['Contact']['PhoneNumber'] = $data['phone'];
 		$senderAddress['Contact']['email'] = $data['email'];
@@ -576,7 +577,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$senderAddress['Address']['PostalCode'] = $data['postalcode'];
 		
 		$receiverAddress = array();
+		$receiverAddress['AccountNumber'] = '510087925';
 		$receiverAddress['Contact']['PersonName'] = $data['receiver']['contact_name'];
+		$receiverAddress['Contact']['Title'] = "";
 		$receiverAddress['Contact']['CompanyName'] = $data['receiver']['company'];
 		$receiverAddress['Contact']['PhoneNumber'] = '9012637906';
 		
@@ -619,10 +622,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		
 		$shippingChargesPayment = array(
 			'PaymentType' => 'SENDER', // valid values RECIPIENT, SENDER and THIRD_PARTY
-			'Payor' => array(
+			/*'Payor' => array(
 				'AccountNumber' => '510087925',
 				'CountryCode' => 'US'
-			)
+			)*/
 		);
 		$packageLineItem = array(
 			'SequenceNumber'=>1,
@@ -639,6 +642,34 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			)
 		);
 		
+		$freightShipmentDetail = array(
+			'FedExFreightAccountNumber' => '510087925',
+			'FedExFreightBillingContactAndAddress' => array('Address' => array(
+					'StreetLines' => $data['receiver']['address'],
+					'City'	=> $data['receiver']['city'],
+					'StateOrProvinceCode' => 'UT',
+					'PostalCode'=>'84104',
+					'CountryCode' => 'US',
+					'Residential' => 0
+				)
+			),
+			'Role' => 'SHIPPER',
+			'CollectTermsType' => 'STANDARD',
+			'Coupons' => '',
+			'ClientDiscountPercent' => '0',
+			'PalletWeight'	=> array('Units' => 'LB', 'Value' => '500'),
+			'ShipmentDimensions' => array('Length' => 180, 'Width' => 93, 'Height' => 106, 'Units'=>'IN'),
+			'Comment' => 'ESBD2600 (FXF - QA-B) - PRODUCTION - 2011-02-01T12:47:00-06:00',
+			'LineItems' => array(
+				'FreightClass' => 'CLASS_050',
+				'Packaging' => 'BAG',
+				'Description' => 'LineItemsDescription',
+				'Weight' => array('Units'=> 'LB', 'Value'=>19999 ),
+				'Dimensions' => array('Length' => 180, 'Width' => 93, 'Height' => 106, 'Units'=>'IN'),
+				'Volume' => array('Units' => 'CUBIC_FT', 'Value'=>28.43)
+			),
+		);
+		
 		
 		$path_to_wsdl = Mage::helper('inventorymanager')->wsdlPath() . "RateService_v18.wsdl";
 
@@ -653,33 +684,42 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			)
 		); 
 		$request['ClientDetail'] = array(
-			'AccountNumber' => 	'510087925', 
-			'MeterNumber' => '118694498'
+			'AccountNumber' => '510087925', 
+			'MeterNumber' => '118694498',
+			'IntegratorId' => '12345',
+			'Region'	=> 'US',
+			'Localization' => array('LanguageCode'=>'EN', 'LocaleCode' => 'ES')
 		);
-		$request['TransactionDetail'] = array('CustomerTransactionId' => ' *** Rate Request v18 using PHP ***');
+		$request['TransactionDetail'] = array(
+			'CustomerTransactionId' => 'Rate FedEx Freight - LTL',
+			'Localization' => array('LanguageCode'=>'EN', 'LocaleCode' => 'ES')
+		);
 		$request['Version'] = array(
 			'ServiceId' => 'crs', 
-			'Major' => '18', 
+			'Major' => '14', 
 			'Intermediate' => '0', 
 			'Minor' => '0'
 		);
 		echo "<pre>";
 		print_r($receiverAddress);
 		
-		$request['ReturnTransitAndCommit'] = true;
+		$request['ReturnTransitAndCommit'] = 1;
+		$request['VariableOptions'] = 'FREIGHT_GUARANTEE';
 		$request['RequestedShipment']['DropoffType'] = 'REGULAR_PICKUP'; // valid values REGULAR_PICKUP, REQUEST_COURIER, ...
 		$request['RequestedShipment']['ShipTimestamp'] = date('c');
-		
 		$request['RequestedShipment']['ServiceType'] = 'FEDEX_FREIGHT_PRIORITY';
 		$request['RequestedShipment']['PackagingType'] = 'YOUR_PACKAGING'; // valid values FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
-		$request['RequestedShipment']['TotalInsuredValue']=array('Ammount'=>100,'Currency'=>'USD');
-		$request['RequestedShipment']['Shipper'] = $shipper;
+		//$request['RequestedShipment']['TotalInsuredValue']=array('Ammount'=>100,'Currency'=>'USD');
+		$request['RequestedShipment']['Shipper'] = $senderAddress;
 		$request['RequestedShipment']['Recipient'] = $receiverAddress;
+		$request['RequestedShipment']['Origin'] = $shipper;
 		$request['RequestedShipment']['ShippingChargesPayment'] = $shippingChargesPayment;
+		$request['RequestedShipment']['FreightShipmentDetail'] = $freightShipmentDetail;
+		$request['RequestedShipment']['DeliveryInstructions'] = 'DeliveryInstructions'; 
+		$request['RequestedShipment']['BlockInsightVisibility'] = '1'; 
 		$request['RequestedShipment']['RateRequestTypes'] = 'ACCOUNT'; 
-		$request['RequestedShipment']['RateRequestTypes'] = 'LIST'; 
 		$request['RequestedShipment']['PackageCount'] = '1';
-		$request['RequestedShipment']['RequestedPackageLineItems'] = $packageLineItem;
+		//$request['RequestedShipment']['RequestedPackageLineItems'] = $packageLineItem;
 		
 		$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
 		
@@ -740,9 +780,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		
 		
 		$senderAddress = array();
-		$senderAddress['Contact']['ContactId'] = "fright1";
+		$senderAddress['AccountNumber'] = '510087925';
+		//$senderAddress['Contact']['ContactId'] = "fright1";
 		$senderAddress['Contact']['PersonName'] = $data['contact_name'];
-		$senderAddress['Contact']['Title'] = $data['contact_name'];
+		$senderAddress['Contact']['Title'] = "Mr";
 		$senderAddress['Contact']['CompanyName'] = $data['company'];
 		$senderAddress['Contact']['PhoneNumber'] = $data['phone'];
 		$senderAddress['Contact']['email'] = $data['email'];
@@ -796,12 +837,18 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		); 
 		$request['ClientDetail'] = array(
 			'AccountNumber' => '510087925', 
-			'MeterNumber' => '118694498'
+			'MeterNumber' => '118694498',
+			'IntegratorId' => '12345',
+			'Region'	=> 'US',
+			'Localization' => array('LanguageCode'=>'EN', 'LocaleCode' => 'ES')
 		);
-		$request['TransactionDetail'] = array('CustomerTransactionId' => ' *** Rate Request using PHP ***');
+		$request['TransactionDetail'] = array(
+			'CustomerTransactionId' => 'Rate FedEx Freight - LTL',
+			'Localization' => array('LanguageCode'=>'EN', 'LocaleCode' => 'ES')
+		);
 		$request['Version'] = array(
 			'ServiceId' => 'crs', 
-			'Major' => '10', 
+			'Major' => '14', 
 			'Intermediate' => '0', 
 			'Minor' => '0'
 		);
@@ -836,10 +883,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			
 		
 		
-			$request['ReturnTransitAndCommit'] = true;
+			$request['ReturnTransitAndCommit'] = 1;
+			$request['VariableOptions'] = 'FREIGHT_GUARANTEE';
 			$request['RequestedShipment']['DropoffType'] = 'REGULAR_PICKUP'; // valid values REGULAR_PICKUP, REQUEST_COURIER, ...
 			$request['RequestedShipment']['ShipTimestamp'] = date('c');
-			$request['RequestedShipment']['ServiceType'] = 'INTERNATIONAL_PRIORITY'; // valid values STANDARD_OVERNIGHT, PRIORITY_OVERNIGHT, FEDEX_GROUND, ...
+			$request['RequestedShipment']['ServiceType'] = 'FEDEX_FREIGHT_PRIORITY'; // valid values STANDARD_OVERNIGHT, PRIORITY_OVERNIGHT, FEDEX_GROUND, ...
 			$request['RequestedShipment']['PackagingType'] = 'YOUR_PACKAGING'; // valid values FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
 			$request['RequestedShipment']['TotalInsuredValue']=array(
 				'Ammount'=>$price,
