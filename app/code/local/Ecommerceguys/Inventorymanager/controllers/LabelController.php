@@ -127,6 +127,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 	
 	public function validateSerialKey(){
 		$serialKey = $this->getRequest()->getParam('serial_key');
+		$serialKey = trim($serialKey);
 		$labelCollection = Mage::getModel('inventorymanager/label')->getCollection();
 		$labelCollection->addFieldToFilter('serial', $serialKey);
 		if($labelCollection->count() > 0){
