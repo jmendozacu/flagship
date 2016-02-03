@@ -10,9 +10,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$data = $this->getRequest()->getParams();
 		
 		
-		echo "<pre>";
+		/*echo "<pre>";
 		print_r($data);
-		exit;
+		exit;*/
 		
 		$realOrderId = $data['order_id'];
 		$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
@@ -554,411 +554,207 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		}
 	}
 	
+
 	public function rateAction(){
 		
 		$data = $this->getRequest()->getParams();
+		
+		$region = Mage::getModel('directory/region')->load($data['receiver_state_id']);
+		$regionCode = $region->getCode();
+		
+		$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
 		$realOrderId = $data['order_id'];
 		$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 		
-		$senderAddress = array();
-		$senderAddress['AccountNumber'] = '510087925';
-		//$senderAddress['Contact']['ContactId'] = "fright1";
-		$senderAddress['Contact']['PersonName'] = $data['contact_name'];
-		$senderAddress['Contact']['Title'] = "Mr.";
-		$senderAddress['Contact']['CompanyName'] = $data['company'];
-		$senderAddress['Contact']['PhoneNumber'] = $data['phone'];
-		$senderAddress['Contact']['email'] = $data['email'];
-
-		$senderAddress['Address']['StreetLines'][0] = $data['address'];
-		$senderAddress['Address']['StreetLines'][1] = "-";
-		$senderAddress['Address']['City'] = $data['city'];
-		$senderAddress['Address']['StateOrProvinceCode'] = $data['state'];
-		$senderAddress['Address']['CountryCode'] = $data['country_id'];
-		$senderAddress['Address']['PostalCode'] = $data['postalcode'];
 		
-		$receiverAddress = array();
-		$receiverAddress['AccountNumber'] = '510087925';
-		$receiverAddress['Contact']['PersonName'] = $data['receiver']['contact_name'];
-		$receiverAddress['Contact']['Title'] = "";
-		$receiverAddress['Contact']['CompanyName'] = $data['receiver']['company'];
-		$receiverAddress['Contact']['PhoneNumber'] = '9012637906';
-		
-		$receiverAddress['Address']['StreetLines'][0] = $data['receiver']['address'];
-		$receiverAddress['Address']['StreetLines'][1] = "";
-		$receiverAddress['Address']['City'] = $data['receiver']['city'];
-		$receiverAddress['Address']['StateOrProvinceCode'] = $data['receiver']['state'];
-		$receiverAddress['Address']['PostalCode'] = $data['receiver']['postalcode'];
-		$receiverAddress['Address']['CountryCode'] = $data['receiver']['country_id'];
-		
-		
-		$shipper = array(
-			'Contact' => array(
-				'PersonName' => 'Sender Name',
-				'CompanyName' => 'Sender Company Name',
-				'PhoneNumber' => '9012638716'),
-			'Address' => array(
-				'StreetLines' => array('Address Line 1'),
-				'City' => 'Austin',
-				'StateOrProvinceCode' => 'TX',
-				'PostalCode' => '73301',
-				'CountryCode' => 'US')
-		);
-		
-		$recipient = array(
-			'Contact' => array(
-				'PersonName' => 'Recipient Name',
-				'CompanyName' => 'Company Name',
-				'PhoneNumber' => '9012637906'
-			),
-			'Address' => array(
-				'StreetLines' => array('Address Line 1'),
-				'City' => 'Richmond',
-				'StateOrProvinceCode' => 'BC',
-				'PostalCode' => 'V7C4V4',
-				'CountryCode' => 'CA',
-				'Residential' => false)
-		);
-		
-		
-		$shippingChargesPayment = array(
-			'PaymentType' => 'SENDER', // valid values RECIPIENT, SENDER and THIRD_PARTY
-			/*'Payor' => array(
-				'AccountNumber' => '510087925',
-				'CountryCode' => 'US'
-			)*/
-		);
-		$packageLineItem = array(
-			'SequenceNumber'=>1,
-			'GroupPackageCount'=>1,
-			'Weight' => array(
-				'Value' => 50.0,
-				'Units' => 'LB'
-			),
-			'Dimensions' => array(
-				'Length' => 108,
-				'Width' => 5,
-				'Height' => 5,
-				'Units' => 'IN'
-			)
-		);
-		
-		$freightShipmentDetail = array(
-			'FedExFreightAccountNumber' => '510087925',
-			'FedExFreightBillingContactAndAddress' => array('Address' => array(
-					'StreetLines' => $data['receiver']['address'],
-					'City'	=> $data['receiver']['city'],
-					'StateOrProvinceCode' => 'UT',
-					'PostalCode'=>'84104',
-					'CountryCode' => 'US',
-					'Residential' => 0
-				)
-			),
-			'Role' => 'SHIPPER',
-			'CollectTermsType' => 'STANDARD',
-			'Coupons' => '',
-			'ClientDiscountPercent' => '0',
-			'PalletWeight'	=> array('Units' => 'LB', 'Value' => '500'),
-			'ShipmentDimensions' => array('Length' => 180, 'Width' => 93, 'Height' => 106, 'Units'=>'IN'),
-			'Comment' => 'ESBD2600 (FXF - QA-B) - PRODUCTION - 2011-02-01T12:47:00-06:00',
-			'LineItems' => array(
-				'FreightClass' => 'CLASS_050',
-				'Packaging' => 'BAG',
-				'Description' => 'LineItemsDescription',
-				'Weight' => array('Units'=> 'LB', 'Value'=>19999 ),
-				'Dimensions' => array('Length' => 180, 'Width' => 93, 'Height' => 106, 'Units'=>'IN'),
-				'Volume' => array('Units' => 'CUBIC_FT', 'Value'=>28.43)
-			),
-		);
-		
-		
-		$path_to_wsdl = Mage::helper('inventorymanager')->wsdlPath() . "RateService_v18.wsdl";
-
-		ini_set("soap.wsdl_cache_enabled", "0");
-		 
-		$client = new SoapClient($path_to_wsdl, array('trace' => 1)); // Refer to http://us3.php.net/manual/en/ref.soap.php for more information
-		
+		$request = array();
 		$request['WebAuthenticationDetail'] = array(
-			'UserCredential' =>array(
-				'Key' =>'auVoUpOkHMqK050N', 
-				'Password' => '60DkQxzoMIagGK75MwqnD4Rcr'
+			'UserCredential'	=>	array(
+				'Key'	=>	$fedexApi->getProperty('key'),
+				'Password'	=>	$fedexApi->getProperty('password')
 			)
-		); 
-		$request['ClientDetail'] = array(
-			'AccountNumber' => '510087925', 
-			'MeterNumber' => '118694498',
-			'IntegratorId' => '12345',
-			'Region'	=> 'US',
-			'Localization' => array('LanguageCode'=>'EN', 'LocaleCode' => 'ES')
 		);
-		$request['TransactionDetail'] = array(
-			'CustomerTransactionId' => 'Rate FedEx Freight - LTL',
-			'Localization' => array('LanguageCode'=>'EN', 'LocaleCode' => 'ES')
+		$request['ClientDetail'] = array(
+			'AccountNumber'	=>	$fedexApi->getProperty('shipaccount'),
+			'MeterNumber'	=>	$fedexApi->getProperty('meter')
+		);
+		$request['TransactionDetail']	= array(
+			'CustomerTransactionId'	=>	'FRIGHT_RATE'
 		);
 		$request['Version'] = array(
-			'ServiceId' => 'crs', 
-			'Major' => '14', 
-			'Intermediate' => '0', 
-			'Minor' => '0'
+			'ServiceId'	=>	'crs',
+			'Major'	=>	'18',
+			'Intermediate'	=>	'0',
+			'Minor'	=>	'0'
 		);
-		echo "<pre>";
-		print_r($receiverAddress);
+		$shipmentRequest = array();
+		$shipmentRequest['ShipTimestamp']		=	date('c');
+		$shipmentRequest['DropoffType']			=	'REGULAR_PICKUP';
+		$shipmentRequest['PackagingType']		=	'YOUR_PACKAGING';
+		$shipmentRequest['PreferredCurrency']	=	'USD';
+		//$shipmentRequest['ServiceTypes']	=	'FEDEX_FREIGHT_ECONOMY';
+		$shipmentRequest['Shipper']	=	array(
+			'Contact'	=>	array(
+				'CompanyName'	=>	$data['contact_name'],
+				'PhoneNumber'	=>	$data['phone']
+			),
+			'Address'	=>	array(
+				'StreetLines'	=>	$data['address'],
+				'StreetLines'	=>	'Do Not Delete - Test Account',
+				'City'	=>	$data['city'],
+				'StateOrProvinceCode'	=>	$data['state'],
+				'PostalCode'	=>	$data['postalcode'],
+				'CountryCode'	=>	$data['country_id']
+			)
+		);
+		$shipmentRequest['Recipient'] = array(
+			'Contact'	=>	array(
+				'PersonName'	=>	$data['receiver']['contact_name'],
+				'PhoneNumber'	=>	$data['receiver']['phone']
+			),
+			'Address'	=>	array(
+				'StreetLines'	=>	$data['receiver']['address'],
+				'City'	=>	$data['receiver']['city'],
+				'StateOrProvinceCode'	=>	$regionCode,
+				'PostalCode'	=>	$data['receiver']['postalcode'],
+				'CountryCode'	=>	$data['receiver']['country_id']
+			)
+		);
+		$shipmentRequest['ShippingChargesPayment']	=	array(
+			'PaymentType'	=>	'SENDER',
+			'Payor'	=> array(
+				'ResponsibleParty'	=>	array(
+					'AccountNumber'	=>	$fedexApi->getProperty('freightaccount')
+				)
+			)
+		);
+		/*$shipmentRequest['SpecialServicesRequested']	= array(
+			'SpecialServiceTypes'	=>	'EXTREME_LENGTH'
+		);*/
 		
-		$request['ReturnTransitAndCommit'] = 1;
-		$request['VariableOptions'] = 'FREIGHT_GUARANTEE';
-		$request['RequestedShipment']['DropoffType'] = 'REGULAR_PICKUP'; // valid values REGULAR_PICKUP, REQUEST_COURIER, ...
-		$request['RequestedShipment']['ShipTimestamp'] = date('c');
-		$request['RequestedShipment']['ServiceType'] = 'FEDEX_FREIGHT_PRIORITY';
-		$request['RequestedShipment']['PackagingType'] = 'YOUR_PACKAGING'; // valid values FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
-		//$request['RequestedShipment']['TotalInsuredValue']=array('Ammount'=>100,'Currency'=>'USD');
-		$request['RequestedShipment']['Shipper'] = $senderAddress;
-		$request['RequestedShipment']['Recipient'] = $receiverAddress;
-		$request['RequestedShipment']['Origin'] = $shipper;
-		$request['RequestedShipment']['ShippingChargesPayment'] = $shippingChargesPayment;
-		$request['RequestedShipment']['FreightShipmentDetail'] = $freightShipmentDetail;
-		$request['RequestedShipment']['DeliveryInstructions'] = 'DeliveryInstructions'; 
-		$request['RequestedShipment']['BlockInsightVisibility'] = '1'; 
-		$request['RequestedShipment']['RateRequestTypes'] = 'ACCOUNT'; 
-		$request['RequestedShipment']['PackageCount'] = '1';
-		//$request['RequestedShipment']['RequestedPackageLineItems'] = $packageLineItem;
-		
-		$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
-		
-		
-		try 
-		{
-			if($fedexApi->setEndpoint('changeEndpoint'))
-			{
-				$newLocation = $client->__setLocation(setEndpoint('endpoint'));
+		echo "<table class='rate-response-table'>";
+		foreach ($data['serial_key'] as $key => $serialKey){
+			$weight = 0;
+			$length = 0;
+			$width = 0;
+			$height = 0;
+			if(isset($data['weight'][$key])){
+				$weight = $data['weight'][$key];
+			}
+			if(isset($data['length'][$key])){
+				$length = $data['length'][$key];
+			}
+			if(isset($data['width'][$key])){
+				$width = $data['width'][$key];
+			}
+			if(isset($data['height'][$key])){
+				$height = $data['height'][$key];
 			}
 			
-			$response = $client ->getRates($request);
-		        
-		    if ($response -> HighestSeverity != 'FAILURE' && $response -> HighestSeverity != 'ERROR')
-		    {  	
-		    	$rateReply = $response -> RateReplyDetails;
-		    	echo '<table border="1">';
-		        echo '<tr><td>Service Type</td><td>Amount</td><td>Delivery Date</td></tr><tr>';
-		    	$serviceType = '<td>'.$rateReply -> ServiceType . '</td>';
-		        $amount = '<td>$' . number_format($rateReply->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount,2,".",",") . '</td>';
-		        if(array_key_exists('DeliveryTimestamp',$rateReply)){
-		        	$deliveryDate= '<td>' . $rateReply->DeliveryTimestamp . '</td>';
-		        }else if(array_key_exists('TransitTime',$rateReply)){
-		        	$deliveryDate= '<td>' . $rateReply->TransitTime . '</td>';
-		        }else {
-		        	$deliveryDate='<td>&nbsp;</td>';
-		        }
-		        echo $serviceType . $amount. $deliveryDate;
-		        echo '</tr>';
-		        echo '</table>';
-		        
-		        $fedexApi->printSuccess($client, $response);
-		    }
-		    else
-		    {
-		        $fedexApi->printError($client, $response);
-		    } 
-		    
-		    //writeToLog($client);    // Write to log file   
+			if(isset($data['price'][$key]) && $data['price'][$key] > 0){
+				$productPrice = $data['price'][$key];
+			}
 		
-		} catch (SoapFault $exception) {
-		   $fedexApi->printFault($exception, $client);        
-		}
-
-		
-		
-	}
-	
-	
-	public function rate1Action(){
-		
-		$data = $this->getRequest()->getParams();
-		
-		$realOrderId = $data['order_id'];
-		
-		
-		$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
-		
-		
-		$senderAddress = array();
-		$senderAddress['AccountNumber'] = '510087925';
-		//$senderAddress['Contact']['ContactId'] = "fright1";
-		$senderAddress['Contact']['PersonName'] = $data['contact_name'];
-		$senderAddress['Contact']['Title'] = "Mr";
-		$senderAddress['Contact']['CompanyName'] = $data['company'];
-		$senderAddress['Contact']['PhoneNumber'] = $data['phone'];
-		$senderAddress['Contact']['email'] = $data['email'];
-
-		$senderAddress['Address']['StreetLines'][0] = $data['address'];
-		$senderAddress['Address']['StreetLines'][1] = "-";
-		$senderAddress['Address']['City'] = $data['city'];
-		$senderAddress['Address']['StateOrProvinceCode'] = $data['state'];
-		$senderAddress['Address']['CountryCode'] = $data['country_id'];
-		$senderAddress['Address']['PostalCode'] = $data['postalcode'];
-		
-		$receiverAddress = array();
-		$receiverAddress['Contact']['PersonName'] = $data['receiver']['contact_name'];
-		$receiverAddress['Contact']['CompanyName'] = $data['receiver']['company'];
-		$receiverAddress['Contact']['PhoneNumber'] = $data['receiver']['phone'];
-		
-		$receiverAddress['Address']['StreetLines'][0] = $data['receiver']['address'];
-		$receiverAddress['Address']['StreetLines'][1] = "";
-		$receiverAddress['Address']['City'] = $data['receiver']['city'];
-		$receiverAddress['Address']['StateOrProvinceCode'] = $data['receiver']['state'];
-		$receiverAddress['Address']['PostalCode'] = $data['receiver']['postalcode'];
-		$receiverAddress['Address']['CountryCode'] = $data['receiver']['country_id'];
-		
-		$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
-		
-		$shippingChargesPayment = array(
-			'PaymentType' => 'SENDER', // valid values RECIPIENT, SENDER and THIRD_PARTY
-			'Payor' => array(
-				'ResponsibleParty' => array(
-					'AccountNumber' => '510087925',
-					'CountryCode' => 'US'
-				)
-			)
-		);
-		
-		
-		
-		
-		
-		
-		$path_to_wsdl = Mage::helper('inventorymanager')->wsdlPath() . "RateService_v10.wsdl";
-		
-		$client = new SoapClient($path_to_wsdl, array('trace' => 1));
-
-		$request['WebAuthenticationDetail'] = array(
-			
-			'UserCredential' => array(
-				'Key' => 'auVoUpOkHMqK050N', 
-				'Password' => '60DkQxzoMIagGK75MwqnD4Rcr'
-			)
-		); 
-		$request['ClientDetail'] = array(
-			'AccountNumber' => '510087925', 
-			'MeterNumber' => '118694498',
-			'IntegratorId' => '12345',
-			'Region'	=> 'US',
-			'Localization' => array('LanguageCode'=>'EN', 'LocaleCode' => 'ES')
-		);
-		$request['TransactionDetail'] = array(
-			'CustomerTransactionId' => 'Rate FedEx Freight - LTL',
-			'Localization' => array('LanguageCode'=>'EN', 'LocaleCode' => 'ES')
-		);
-		$request['Version'] = array(
-			'ServiceId' => 'crs', 
-			'Major' => '14', 
-			'Intermediate' => '0', 
-			'Minor' => '0'
-		);
-		$jCounter = 0;
-		foreach ($data['serial_key'] as $key => $serialKey){
-			$jCounter++;
-			$serialKeyObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
-			//if($serialKeyObject && $serialKeyObject->getId()){
-				$orderProductObject = Mage::getModel('inventorymanager/product')->load($serialKeyObject->getProductId());
-			//}
-			
-			$weight = $data['weight'][$jCounter];
-			$height	= $data['height'][$jCounter];
-			$width	= $data['width'][$jCounter];
-			$length	= $data['length'][$jCounter];
-			$price	= $data['price'][$jCounter];
-			
-			$packageLineItem = array(
-				'SequenceNumber'=>1,
-				'GroupPackageCount'=>1,
-				'Weight' => array(
-					'Value' => 10,
-					'Units' => 'KG'
+			$shipmentRequest['FreightShipmentDetail'] = array(
+				'FedExFreightAccountNumber'	=>	$fedexApi->getProperty('freightaccount'),
+				'FedExFreightBillingContactAndAddress'	=>	array(
+					'Address'	=>	array(
+						'StreetLines'	=>	$data['address'],
+						'StreetLines'	=>	'Do Not Delete - Test Account',
+						'City'	=>	$data['city'],
+						'StateOrProvinceCode'	=>	$data['state'],
+						'PostalCode'	=>	$data['postalcode'],
+						'CountryCode'	=>	$data['country_id']
+					)
 				),
-				'Dimensions' => array(
-					'Length' => $length,
-					'Width' => $width,
-					'Height' => $height,
-					'Units' => 'IN'
+				'Role'	=>	'SHIPPER',
+				'CollectTermsType'	=>	'STANDARD',
+				'Coupons'	=>	'',
+				'ClientDiscountPercent'	=>	'0',
+				'PalletWeight'	=>	array(
+					'Units'	=>	'LB',
+					'Value'	=>	'50.0'
+				),
+				'ShipmentDimensions'	=>	array(
+					'Length'	=>	'10',
+					'Height'	=>	'10',
+					'Width'	=>	'10',
+					'Units'	=>	'IN'
+				),
+				'Comment'	=>	'ESBD2600 (FXF - QA-B) - PRODUCTION - 2011-02-01T12:47:00-06:00',
+				'LineItems'	=>	array(
+					'FreightClass'	=>	'CLASS_050',
+					'Packaging'	=>	'BAG',
+					'Description'	=>	'LineItemsDescription',
+					'Weight'	=>	array(
+						'Units'	=>	'LB',
+						'Value'	=>	$weight
+					),
+					'Dimensions'	=>	array(
+						'Length'	=>	$length,
+						'Width'		=>	$width,
+						'Height'	=>	$height,
+						'Units'	=>	'IN'
+					),
+					'Volume' =>	array(
+						'Units'	=>	'CUBIC_FT',
+						'Value'	=>	(($length * $width * $height) / 12)
+					)
 				)
 			);
+			$shipmentRequest['RateRequestTypes']	=	'LIST';
+			$shipmentRequest['PackageCount']	=	'1';	
 			
-		
-		
-			$request['ReturnTransitAndCommit'] = 1;
-			$request['VariableOptions'] = 'FREIGHT_GUARANTEE';
-			$request['RequestedShipment']['DropoffType'] = 'REGULAR_PICKUP'; // valid values REGULAR_PICKUP, REQUEST_COURIER, ...
-			$request['RequestedShipment']['ShipTimestamp'] = date('c');
-			$request['RequestedShipment']['ServiceType'] = 'FEDEX_FREIGHT_PRIORITY'; // valid values STANDARD_OVERNIGHT, PRIORITY_OVERNIGHT, FEDEX_GROUND, ...
-			$request['RequestedShipment']['PackagingType'] = 'YOUR_PACKAGING'; // valid values FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
-			$request['RequestedShipment']['TotalInsuredValue']=array(
-				'Ammount'=>$price,
-				'Currency'=>'USD'
-			);
-			$request['RequestedShipment']['Shipper'] = $senderAddress;
-			$request['RequestedShipment']['Recipient'] = $receiverAddress;
-			$request['RequestedShipment']['ShippingChargesPayment'] = $shippingChargesPayment;
-			$request['RequestedShipment']['RateRequestTypes'] = 'ACCOUNT'; 
-			$request['RequestedShipment']['RateRequestTypes'] = 'LIST'; 
-			$request['RequestedShipment']['PackageCount'] = '1';
-			$request['RequestedShipment']['RequestedPackageLineItems'] = $packageLineItem;
-		
+			
+			$request['RequestedShipment']	= $shipmentRequest;
 			
 			
 			
-			$request['ReturnTransitAndCommit'] = true;
-			$request['RequestedShipment']['DropoffType'] = 'REGULAR_PICKUP'; // valid values REGULAR_PICKUP, REQUEST_COURIER, ...
-			$request['RequestedShipment']['ShipTimestamp'] = date('c');
-			$request['RequestedShipment']['ServiceType'] = 'INTERNATIONAL_PRIORITY'; // valid values STANDARD_OVERNIGHT, PRIORITY_OVERNIGHT, FEDEX_GROUND, ...
-			$request['RequestedShipment']['PackagingType'] = 'YOUR_PACKAGING'; // valid values FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
-			$request['RequestedShipment']['TotalInsuredValue']=array('Ammount'=>100,'Currency'=>'USD');
-			$request['RequestedShipment']['Shipper'] = $senderAddress;
-			$request['RequestedShipment']['Recipient'] = $receiverAddress;
-			$request['RequestedShipment']['ShippingChargesPayment'] = $shippingChargesPayment;
-			$request['RequestedShipment']['RateRequestTypes'] = 'ACCOUNT'; 
-			$request['RequestedShipment']['RateRequestTypes'] = 'LIST'; 
-			$request['RequestedShipment']['PackageCount'] = '1';
-			$request['RequestedShipment']['RequestedPackageLineItems'] = $packageLineItem;
 			
+			$path_to_wsdl = Mage::helper('inventorymanager')->wsdlPath() . "RateService_v18.wsdl";
+			
+			$client = new SoapClient($path_to_wsdl, array('trace' => 1));
+			
+			
+		//	print_r($request);
 			
 			try {
 				if($fedexApi->setEndpoint('changeEndpoint')){
 					$newLocation = $client->__setLocation(setEndpoint('endpoint'));
 				}
 				
-				echo "<pre>";
-				print_r($request); 
+				$response = $client->getRates($request);
+			    
+				echo "<tr><td>". $this->__("Serial") ."</td><td>" . $serialKey . "</td></tr>";
 				
-				$response = $client -> getRates($request);
-			        
 			    if ($response -> HighestSeverity != 'FAILURE' && $response -> HighestSeverity != 'ERROR'){  	
 			    	$rateReply = $response -> RateReplyDetails;
-			    	echo '<table border="1">';
-			        echo '<tr><td>Service Type</td><td>Amount</td><td>Delivery Date</td></tr><tr>';
-			    	$serviceType = '<td>'.$rateReply -> ServiceType . '</td>';
-			    	if($rateReply->RatedShipmentDetails && is_array($rateReply->RatedShipmentDetails)){
-						$amount = '<td>$' . number_format($rateReply->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount,2,".",",") . '</td>';
-					}elseif($rateReply->RatedShipmentDetails && ! is_array($rateReply->RatedShipmentDetails)){
-						$amount = '<td>$' . number_format($rateReply->RatedShipmentDetails->ShipmentRateDetail->TotalNetCharge->Amount,2,".",",") . '</td>';
-					}
-			        if(array_key_exists('DeliveryTimestamp',$rateReply)){
-			        	$deliveryDate= '<td>' . $rateReply->DeliveryTimestamp . '</td>';
-			        }else if(array_key_exists('TransitTime',$rateReply)){
-			        	$deliveryDate= '<td>' . $rateReply->TransitTime . '</td>';
-			        }else {
-			        	$deliveryDate='<td>&nbsp;</td>';
-			        }
-			        echo $serviceType . $amount. $deliveryDate;
-			        echo '</tr>';
-			        echo '</table>';
-			        
-			        $fedexApi->printSuccess($client, $response);
+			    	
+			    	foreach ($rateReply as $rate){
+			    		$type = $rate->ServiceType;
+			    		$shipmentDetails = $rate->RatedShipmentDetails;
+			    		$netAmount = 0;
+			    		foreach ($shipmentDetails as $detail){
+			    			$rateDetail = $detail->ShipmentRateDetail;
+			    			$netCharges = $rateDetail->TotalNetCharge->Amount;
+			    		}
+			    		echo "<tr><td>".$netCharges . "</td><td> " . $type . "</td></tr>";
+			    	}
+					//exit;
+			    	
+			    	
+			        //$fedexApi->printSuccess($client, $response);
 			    }else{
-			        $fedexApi->printError($client, $response);
+			        //$fedexApi->printError($client, $response);
+			        echo $this->__("Something went wrong. Please try again.");
 			    } 
 			   // $fedexApi->writeToLog($client);    // Write to log file   
 			}catch (SoapFault $exception) {
-				$fedexApi->printFault($exception, $client);        
+				echo $this->__("Something went wrong. Please try again.");
+				//$fedexApi->printFault($exception, $client);        
 			}
+		
 		}
-
+		echo "</table>";
 	}
 }

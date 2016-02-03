@@ -453,3 +453,4 @@ div.logout{
 .selectall-links a { cursor:pointer; padding:15px; }
 .selectall-links a:first-child{  }
 .show-select{display:inline-block !important }
+.rate-response-table td { padding:5px; }

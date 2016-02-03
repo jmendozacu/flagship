@@ -276,10 +276,15 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 						</div>
 						<div class="row">
 							<div class="col-md-12">
+								<div id="result"></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
 								<div class="form-group shipmanager-send-button">
 									
 									<button class="btn btn-primary" type="submit"><?php echo $this->__("Send Shipment") ?></button>
-									<!--<button class="btn btn-primary" onclick="calculatePrice()" type="button"><?php echo $this->__("Calculate Price") ?></button>-->
+									<button class="btn btn-primary" onclick="calculatePrice()" type="button"><?php echo $this->__("Calculate Price") ?></button>
 								</div>
 							</div>
 						</div>
@@ -399,18 +404,18 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 	function calculatePrice(){
 		if(customForm.validator && customForm.validator.validate()){
 			checkSerialVals();
-			var url = '<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/rate') ?>';
+			var url = '<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/process3') ?>';
 			$('shipmanager_send').action = url;
 			
-			customForm.submit();
+			//customForm.submit();
 			
 			
-			/*$('shipmanager_send').request({
+			$('shipmanager_send').request({
 		        onFailure: function() {  },
 		        onSuccess: function(t) {
 		            $('result').update(t.responseText);
 		        }
-		    });*/
+		    });
 		}
 	}
 </script>
