@@ -673,12 +673,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				'ClientDiscountPercent'	=>	'0',
 				'PalletWeight'	=>	array(
 					'Units'	=>	'LB',
-					'Value'	=>	'50.0'
+					'Value'	=>	'10.0'
 				),
 				'ShipmentDimensions'	=>	array(
-					'Length'	=>	'10',
-					'Height'	=>	'10',
-					'Width'	=>	'10',
+					'Length'	=>	$length,
+					'Height'	=>	$height,
+					'Width'	=>	$width,
 					'Units'	=>	'IN'
 				),
 				'Comment'	=>	'ESBD2600 (FXF - QA-B) - PRODUCTION - 2011-02-01T12:47:00-06:00',
