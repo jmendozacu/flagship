@@ -404,7 +404,7 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 	function calculatePrice(){
 		if(customForm.validator && customForm.validator.validate()){
 			checkSerialVals();
-			var url = '<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/process3') ?>';
+			var url = '<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/rate') ?>';
 			$('shipmanager_send').action = url;
 			
 			//customForm.submit();
