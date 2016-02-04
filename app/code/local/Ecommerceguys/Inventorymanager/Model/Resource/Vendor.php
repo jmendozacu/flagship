@@ -17,12 +17,15 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
 
     	
     	$vendorProductTable = $resourceObject->getTableName('inventorymanager_vendorproduct');
+    	$vendorProductInfoTable = $resourceObject->getTableName('inventorymanager_vendor_productdetail');
     	$collection = Mage::getModel('catalog/product')->getCollection();
     	$collection->addAttributeToSelect(array('name', 'status'));
     	$collection->addAttributeToFilter('status', array('eq' => 1));
     	$select = $collection->getSelect()
-                ->join(array("vp"=>$vendorProductTable), "e.entity_id = vp.product_id",array('vendor_id'))
-                ->where("vendor_id = " . $vendorId);  
+                ->join(array("vp"=>$vendorProductTable), "e.entity_id = vp.product_id", array('vendor_id'))
+                ->joinLeft(array("vpi"=>$vendorProductInfoTable), "e.entity_id = vpi.product_id", array('cost'))
+                ->where("vp.vendor_id = " . $vendorId . " AND vp.vendor_id = " . $vendorId . " AND is_revision = 0" )
+                ->group('e.entity_id'); 
          
     	return $collection;
     	

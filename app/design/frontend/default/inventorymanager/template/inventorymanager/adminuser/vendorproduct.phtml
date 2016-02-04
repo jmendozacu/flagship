@@ -27,11 +27,11 @@
             			</thead>
             			<tbody>
             				<?php $iCounter = 0; foreach ($products as $_product){ $iCounter++; ?>
-            				<?php $product = Mage::getModel('catalog/product')->load($_product['entity_id']) ?>
+            				 <?php $product = Mage::getModel('catalog/product')->load($_product['entity_id']) ?>
             					<tr class="<?php echo $iCounter%2==0?"odd":"even"; ?>">
             						<td><?php echo $product->getId() ?></td>
             						<td><?php echo $product->getName() ?></td>
-            						<td><?php echo  $currency->formatPrecision($product->getFinalPrice(),2); ?></td>
+            						<td><?php echo  $currency->formatPrecision($_product->getData('cost'),2); ?></td>
             					</tr>
             				<?php } ?>
             			</tbody>
