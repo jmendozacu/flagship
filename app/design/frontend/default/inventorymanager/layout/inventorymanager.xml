@@ -513,4 +513,13 @@
 		</reference> 
 	</inventorymanager_adminuser_serial_bulklocation>
 	
+	<inventorymanager_adminuser_vendor_productinfo>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_vendor_productinfo" name="adminuser.vendor.productinfo" template="inventorymanager/adminuser/vendor/productinfo.phtml" ></block>
+		</reference>
+	</inventorymanager_adminuser_vendor_productinfo>
+	
 </layout>
