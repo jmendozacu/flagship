@@ -738,7 +738,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			    			$rateDetail = $detail->ShipmentRateDetail;
 			    			$netCharges = $rateDetail->TotalNetCharge->Amount;
 			    		}
-			    		echo "<tr><td>".$netCharges . "</td><td> " . $type . "</td></tr>";
+			    		if($type == $data['service_type']){
+			    			echo "<tr><td>".$netCharges . "</td><td> " . $type . "</td></tr>";
+			    		} 
 			    	}
 					//exit;
 			    	
