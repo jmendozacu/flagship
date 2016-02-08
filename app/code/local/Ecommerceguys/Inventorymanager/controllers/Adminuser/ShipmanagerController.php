@@ -653,7 +653,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			
 			if(isset($data['price'][$key]) && $data['price'][$key] > 0){
 				$productPrice = $data['price'][$key];
-			}
+			} 
 		
 			$shipmentRequest['FreightShipmentDetail'] = array(
 				'FedExFreightAccountNumber'	=>	$fedexApi->getProperty('freightaccount'),
