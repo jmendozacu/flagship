@@ -384,6 +384,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_SerialController extends Mage_Cor
 					$data['height'] = $productInfoObject->getBoxHeight()!=""?$productInfoObject->getBoxHeight():$productInfoObject->getHeight();
 					$data['weight']	= $productInfoObject->getWeight();
 					$data['name']	= $catalogProduct->getName();
+					$data['price'] = $orderProduct->getPrice();
 					echo Mage::helper('core')->jsonEncode($data);
 				}
 			}
