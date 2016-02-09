@@ -169,7 +169,9 @@
 		                            					<td align="center" valign="bottom"><a class="btn btn-danger" onclick="removeProduct(this)">X</a></td>
 		                            				</tr>
 		                            			<?php }?>
-	                            			<?php }?>
+	                            			<?php }else{ ?>
+	                            				<input type="hidden" value="0" class="order_product_hidden_input" />
+	                            			<?php } ?>
 	                            		</tbody>
 	                            		<tfoot>
 	                            			<tr>
@@ -226,9 +228,9 @@
 
 <!-- New design end -->
 <script>
-jQuery(document).ready(function(e) {
+/*jQuery(document).ready(function(e) {
   jQuery('.selectpicker').selectpicker();
-});
+});*/
 </script>
 
 <script type="text/javascript">
@@ -275,7 +277,7 @@ Calendar.setup({
     			//$('loading-div').hide();
     			//$('product_suggestion_box').show();
     			$('vendor_product_load').innerHTML = response;
-    			 jQuery('#select-picker-product').selectpicker();
+    			//jQuery('#select-picker-product').selectpicker();
   			},
   			onFailure: function() { alert('Something went wrong...'); }
 		});
@@ -296,10 +298,10 @@ Calendar.setup({
 		jQuery('.bs-example-modal-sm').modal('show');
 		$('loading-div').show();
 		$('product_suggestion_box').hide();
-		
+		var vendorId = $('vendor_id').value;
 		new Ajax.Request('<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/getproductinfo") ?>', {
 			method:'post',
-			parameters: {product_id: pid},
+			parameters: {product_id: pid, vendor_id:vendorId},
   			onSuccess: function(transport) {
     			var response = transport.responseText || "no response text";
     			jQuery('.bs-example-modal-sm').modal('hide');
