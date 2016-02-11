@@ -73,6 +73,8 @@ class Ecommerceguys_Inventorymanager_PurchaseorderController extends Mage_Core_C
 		$content = $this->getLayout()->createBlock('inventorymanager/purchaseorder_productpdf')
 		->setTemplate('inventorymanager/purchaseorder/productpdf.phtml')->toHtml();
 		
+		//echo htmlspecialchars($content); exit;
+		
 		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->SetCreator(PDF_CREATOR);
 		$pdf->SetAuthor('Inventory Manager');
@@ -109,11 +111,22 @@ class Ecommerceguys_Inventorymanager_PurchaseorderController extends Mage_Core_C
 		// ---------------------------------------------------------
 		// set font
 		// add a page
-		$pdf->AddPage();
+		//$pdf->AddPage();
 		$pdf->SetFont('helvetica', '', 8);
 		
-		$pdf->writeHTML($content, true, false, false, false, '');
-		$pdf->lastPage();
+		$contentArray = explode("<!--EOP-->", $content);
+		$contentArray = array_filter($contentArray);
+		$contentSize = sizeof($contentArray);
+		$iCounter = 0;
+		foreach ($contentArray as $cont){
+			$iCounter++;
+			if(($contentSize) > $iCounter)
+				$pdf->AddPage();
+			$pdf->writeHTML($cont, true, false, false, false, '');
+		}
+		
+		//$pdf->writeHTML($content, true, false, false, false, '');
+		//$pdf->lastPage();
 		$pdf->Output($productId.'_productserials.pdf', 'D');
 	}
 	

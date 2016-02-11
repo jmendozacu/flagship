@@ -200,8 +200,22 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$pdf->AddPage();
 		$pdf->SetFont('helvetica', '', 8);
 		
-		$pdf->writeHTML($content, true, false, false, false, '');
-		$pdf->lastPage();
+		
+		$contentArray = explode("<!--EOP-->", $content);
+		
+		$contentSize = sizeof($contentArray);
+		$iCounter = 0;
+		foreach ($contentArray as $cont){
+			$iCounter++;
+			$pdf->writeHTML($cont, true, false, false, false, '');
+			if(($contentSize) > $iCounter){
+				$pdf->AddPage();
+			}
+		}
+		
+		
+		//$pdf->writeHTML($content, true, false, false, false, '');
+		//$pdf->lastPage();
 
 		// ---------------------------------------------------------
 		

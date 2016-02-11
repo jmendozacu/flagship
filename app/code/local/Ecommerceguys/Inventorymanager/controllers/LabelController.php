@@ -89,17 +89,20 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		$pdf->SetFont('helvetica', '', 8);
 		
 		$contentArray = explode("<!--EOP-->", $content);
+		
+		$contentArray = array_filter($contentArray);
+		
 		$contentSize = sizeof($contentArray);
 		$iCounter = 0;
 		foreach ($contentArray as $cont){
 			$iCounter++;
 			$pdf->writeHTML($cont, true, false, false, false, '');
-			if(($contentSize-1) > $iCounter){
+			if(($contentSize) > $iCounter){
 				$pdf->AddPage();
 			}
 		}
 		//$pdf->writeHTML($content, true, false, false, false, '');
-		$pdf->lastPage();
+		//$pdf->lastPage();
 
 		// ---------------------------------------------------------
 		//Close and output PDF document
@@ -325,6 +328,9 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		// ---------------------------------------------------------
 		// set font
 		// add a page
+		
+		//$contentArray
+		
 		$pdf->AddPage();
 		$pdf->SetFont('helvetica', '', 8);
 		
