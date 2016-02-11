@@ -725,11 +725,13 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				
 				$response = $client->getRates($request);
 			    
-				echo "<tr><td>". $this->__("Serial") ."</td><td>" . $serialKey . "</td></tr>";
+				//echo "<tr><td>". $this->__("Serial") ."</td><td>" . $serialKey . "</td></tr>";
+				
+				echo "<tr><td>".$this->__("Calculated Price")."</td></tr>";
 				
 			    if ($response -> HighestSeverity != 'FAILURE' && $response -> HighestSeverity != 'ERROR'){  	
 			    	$rateReply = $response -> RateReplyDetails;
-			    	
+			    	$totalCharge = 0;
 			    	foreach ($rateReply as $rate){
 			    		$type = $rate->ServiceType;
 			    		$shipmentDetails = $rate->RatedShipmentDetails;
@@ -739,9 +741,13 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			    			$netCharges = $rateDetail->TotalNetCharge->Amount;
 			    		}
 			    		if($type == $data['service_type']){
-			    			echo "<tr><td>".$netCharges . "</td><td> " . $type . "</td></tr>";
+				    		
+				    		$totalCharge += $netCharges;
+				    		
+			    			//echo "<tr><td>".$netCharges .  "</td></tr>";
 			    		} 
 			    	}
+			    	echo "<tr><td>$".$totalCharge .  "</td></tr>";
 					//exit;
 			    	
 			    	
