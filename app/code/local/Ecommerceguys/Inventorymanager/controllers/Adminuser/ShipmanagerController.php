@@ -633,6 +633,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		);*/
 		
 		echo "<table class='rate-response-table'>";
+		$totalCharge = 0;
 		foreach ($data['serial_key'] as $key => $serialKey){
 			$weight = 0;
 			$length = 0;
@@ -727,11 +728,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			    
 				//echo "<tr><td>". $this->__("Serial") ."</td><td>" . $serialKey . "</td></tr>";
 				
-				echo "<tr><td>".$this->__("Calculated Price")."</td></tr>";
+				
 				
 			    if ($response -> HighestSeverity != 'FAILURE' && $response -> HighestSeverity != 'ERROR'){  	
 			    	$rateReply = $response -> RateReplyDetails;
-			    	$totalCharge = 0;
+			    	
 			    	foreach ($rateReply as $rate){
 			    		$type = $rate->ServiceType;
 			    		$shipmentDetails = $rate->RatedShipmentDetails;
@@ -747,7 +748,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			    			//echo "<tr><td>".$netCharges .  "</td></tr>";
 			    		} 
 			    	}
-			    	echo "<tr><td>$".$totalCharge .  "</td></tr>";
+			    	
 					//exit;
 			    	
 			    	
@@ -763,6 +764,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			}
 		
 		}
+		echo "<tr><td>".$this->__("Calculated Price")."</td></tr>";
+		echo "<tr><td>$".$totalCharge .  "</td></tr>";
 		echo "</table>";
 	}
 }
