@@ -97,23 +97,15 @@ class Ecommerceguys_Inventorymanager_AdminuserController extends Mage_Core_Contr
 				$model->save();
 				$vendorProductResource = Mage::getResourceModel('inventorymanager/vendor_products');
 				$vendorProductResource->remove($model->getId());
-				/*if(isset($data['select_all'])){
-					$productCollection = Mage::getModel('catalog/product')->getCollection();
-					if(isset($data['search-value']) && $data['search-value'] != ""){
-						$productCollection->addAttributeToSelect('name');
-						$productCollection->addAttributeToFilter('name', array('like'=>'%'.$data['search-value'].'%'));
-					}
-					
-					//echo $productCollection->count(); exit;
-					
-					foreach ($productCollection as $productObject){
-						$vendorProductResource->insertOne(array('product_id'=>$productObject->getId(), 'vendor_id'=>$model->getId()));
-					}
-				}else{*/
+				
+				echo "<pre>";
 					foreach ($products as $productId){
+						
+						print_r(array('product_id'=>$productId, 'vendor_id'=>$model->getId()));
+						
 						$vendorProductResource->insertOne(array('product_id'=>$productId, 'vendor_id'=>$model->getId()));
 					}
-				//}
+				exit;
 
 				Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor saved successfully'));
 				Mage::getSingleton('core/session')->setFormData(false);

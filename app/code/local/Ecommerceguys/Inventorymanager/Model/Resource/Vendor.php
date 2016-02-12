@@ -23,8 +23,9 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     	$collection->addAttributeToFilter('status', array('eq' => 1));
     	$select = $collection->getSelect()
                 ->join(array("vp"=>$vendorProductTable), "e.entity_id = vp.product_id", array('vendor_id'))
-                ->joinLeft(array("vpi"=>$vendorProductInfoTable), "e.entity_id = vpi.product_id", array('cost'))
-                ->where("vp.vendor_id = " . $vendorId . " AND vp.vendor_id = " . $vendorId . " AND is_revision = 0" )
+                //->joinLeft(array("vpi"=>$vendorProductInfoTable), "e.entity_id = vpi.product_id", array('cost'))
+                //->where("vp.vendor_id = " . $vendorId . " AND vpi.vendor_id = " . $vendorId . " AND is_revision = 0" )
+                ->where("vp.vendor_id = " . $vendorId)
                 ->group('e.entity_id'); 
          
     	return $collection;
