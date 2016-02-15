@@ -55,7 +55,9 @@
 </div>
 <script>
 jQuery(document).ready(function () {
-    jQuery('#dataTables-example').dataTable();
+    jQuery('#dataTables-example').dataTable({
+	    "aaSorting": [[0, 'desc']]
+    });
 });
 </script>
 <script type="text/javascript">
