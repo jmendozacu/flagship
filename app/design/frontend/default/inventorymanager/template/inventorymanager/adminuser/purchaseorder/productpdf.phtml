@@ -1,5 +1,6 @@
 <?php $products = $this->getProducts(); ?>
 <?php $_helper = $this->helper('catalog/output'); ?>
+<?php $contentSize = sizeof($products); ?>
 <div>
     <?php $jCounter=0; foreach ($products as $product) { $jCounter++?>
         <?php
@@ -41,9 +42,9 @@
             }
         }
         ?>
-        <table>
+        <table style="width:700px;height:1000px">
             <tr>
-                <?php for ($ic = 0; $ic < 2; $ic++) { ?>
+                <?php // for ($ic = 0; $ic < 2; $ic++) { ?>
                     <td style="width:45%; font-size:13px;">
                         <table border="1" cellpadding="5" width="100%" style="1px solid #ccc">
                             
@@ -60,10 +61,10 @@
                              </tr>
                              <tr>
 	                             <td><?php echo $product->getSerial() ?> </td>
-	                             <td><?php echo $productInfoObject->getUpc() ?></td>
+	                             <td><?php //echo $productInfoObject->getUpc() ?></td>
                              </tr>
                             
-				<tr><td colspan="2"><span style=""><?php echo $imageHtml ?></span>
+				<tr><td colspan="2"><span style=""><?php //echo $imageHtml ?></span>
 </td></tr>
                         </table>
                         <table border="1" cellpadding="5" width="100%">
@@ -108,11 +109,11 @@
 			<?php if($ic == 0):?>
 				<td style="width:10%">&nbsp;</td>
 			<?php endif;?>
-                <?php } ?>
+                <?php //} ?>
             </tr>
         </table>
 		
-        <?php if($jCounter%2 == 0){ ?>
+        <?php if(($jCounter >= 1) && ($jCounter < $contentSize)){ ?>
         		<!--EOP-->
         <?php }else{ ?>
         	<br/><br/><br/><br/>
