@@ -522,4 +522,18 @@
 		</reference>
 	</inventorymanager_adminuser_vendor_productinfo>
 	
+	<!-- Order after 15th feb with waiting to ship -->
+
+	<inventorymanager_adminuser_shipmanager_waitingshipment>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="inventorymanager/user_shipmanager_waitingshipment" name="adminuser.sitemanager.waitingshipment" template="inventorymanager/adminuser/shipmanager/waitingshipment.phtml" />
+		</reference>
+	</inventorymanager_adminuser_shipmanager_waitingshipment>
+
 </layout>

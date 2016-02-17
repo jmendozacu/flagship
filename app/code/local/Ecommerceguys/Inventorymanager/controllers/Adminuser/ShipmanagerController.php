@@ -2,6 +2,7 @@
 class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mage_Core_Controller_Front_Action
 {
 	public function indexAction(){
+
 		$this->loadLayout();
 		$this->renderLayout();
 	}
@@ -428,6 +429,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 	}
 	
 	public function historyAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function waitingshipmentAction(){
 		$this->loadLayout();
 		$this->renderLayout();
 	}
