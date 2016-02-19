@@ -49,7 +49,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		
 		//echo $content; exit;
 		
-		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,152.4), true, 'UTF-8', false);
 		$pdf->SetCreator(PDF_CREATOR);
 		$pdf->SetAuthor('Inventory Manager');
 		$pdf->SetTitle('Inventory Manager');
@@ -57,17 +57,18 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 		
 		// set default header data
-		$pdf->SetHeaderData('/../skin/frontend/default/theme279/images/prohoods_logo_sm.png', 0, '', '');
+		$pdf->SetHeaderData('/../skin/frontend/default/theme279/images/prohoods_logo_sm.png',70.6, '', '');
 		
 		// set header and footer fonts
-		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+		//$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		//$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 		
 		// set default monospaced font
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 		
 		// set margins
-		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		//$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		$pdf->SetMargins(0,PDF_MARGIN_TOP,0);
 		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 		
@@ -91,7 +92,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		$contentArray = explode("<!--EOP-->", $content);
 		
 		$contentArray = array_filter($contentArray);
-		
+		array_pop($contentArray);
 		$contentSize = sizeof($contentArray);
 		$iCounter = 0;
 		foreach ($contentArray as $cont){
