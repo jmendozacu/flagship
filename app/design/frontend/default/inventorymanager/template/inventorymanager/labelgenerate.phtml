@@ -7,8 +7,10 @@
         $catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
         $productInfoObject = $this->getProductrInfoObject($orderProduct->getMainProductId());
         $imageHtml = "";
+        
+        
         if ($productInfoObject && $productInfoObject->getMainImage() != "") {
-            $imageHtml = '<img src="' . $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 260, 260, "productdetail/") . '" />';
+            $imageHtml = '<img  src="' . $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/") . '" />';
         }
         $height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');
         $width = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
@@ -65,7 +67,7 @@
                             </tr>
                             
 				<tr><td colspan="2" align="center"><?php echo $imageHtml ?>
-</td></tr>
+                    </td></tr>
                         </table>
                         <table border="1" cellpadding="5" width="100%">
                             <?php /* <tr>

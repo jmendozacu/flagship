@@ -1,5 +1,7 @@
 <?php
 require_once(Mage::getBaseDir().'/tcpdf/tcpdf.php');
+require_once('FPDI/fpdf.php');
+require_once('FPDI/fpdi.php');
 class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mage_Core_Controller_Front_Action
 {
 	public function indexAction(){
@@ -425,8 +427,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
         
         $this->loadLayout();
         $this->renderLayout();
-		
-		
 	}
 	
 	public function historyAction(){
@@ -465,7 +465,39 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			    flush(); // this is essential for large downloads
 			} 
 			fclose($fp); 
-	}
+			/*
+			header("Content-Type: application/octet-stream");
+			$area = $this->getRequest()->getParam('area');
+			$fileName1 = $fileName = $this->getRequest()->getParam('filename');
+			$fileN = $fileName;
+			if($area == "bol"){
+				$fileName = 'billoflanding/'. $fileName;
+				
+				header("Content-Disposition: attachment; filename=" . urlencode($fileN));   
+				header("Content-Type: application/octet-stream");
+				header("Content-Type: application/download");
+				header("Content-Description: File Transfer");            
+				header("Content-Length: " . filesize($file));
+				flush(); // this doesn't really matter.
+				$fp = fopen($file, "r");
+				while (!feof($fp))
+				{
+			    echo fread($fp, 65536);
+			    flush(); // this is essential for large downloads
+				} 
+				fclose($fp);			
+			}else{
+					$fileName = 'shippinglabels/'. $fileName;
+					$file = Mage::getBaseDir().'/media/fedex/' . $fileName;
+					$pdf = new FPDI();
+					$pageCount = $pdf->setSourceFile($file);
+					$tplIdx = $pdf->importPage(1, '/MediaBox');
+					$pdf->addPage();
+					$pdf->useTemplate($tplIdx,null,null,0,0,true);
+					$pdf->Output($fileName1,'I');
+				}
+				*/
+			}
 	
 	public function settingAction(){
 		$this->loadLayout();
@@ -494,6 +526,124 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		}
 	}
 	
+	
+	
+	protected function _saveaspdf($img){
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		//$id = $this->getRequest()->getParam('id');
+		
+		
+		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetAuthor('Inventory Manager');
+		$pdf->SetTitle('Inventory Manager');
+		$pdf->SetSubject('');
+		$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+		// set header and footer fonts
+		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+		// set default monospaced font
+		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+		// set margins
+		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+		// set auto page breaks
+		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+		// set image scale factor
+		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+		// set some language-dependent strings (optional)
+		if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+    			require_once(dirname(__FILE__).'/lang/eng.php');
+    			$pdf->setLanguageArray($l);
+		}
+
+		// -------------------------------------------------------------------
+
+		// add a page
+		$pdf->AddPage();
+
+		// set JPEG quality
+		$pdf->setJPEGQuality(75);
+
+		// Image method signature:
+		//$pdf->Image($img, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox=false, $hidden=false, $fitonpage=false);
+
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		
+		// Example of Image from data stream ('PHP rules')
+		//$imgdata = base64_decode($img);
+		//echo $imgdata;exit;
+		//echo $imgdata;exit;
+      //echo "<img src='".$imgdata."' alt='Smiley face' >";exit;
+		// The '@' character is used to indicate that follows an image data stream and not an image file name
+		//$pdf->Image('@'.$imgdata);
+		
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+		// Image example with resizing
+		//$pdf->Image($img, 15, 140, 75, 113, 'JPG', 'http://www.tcpdf.org', '', true, 150, '', false, false, 1, false, false, false);
+
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+		// test fitbox with all alignment combinations
+/*
+$horizontal_alignments = array('L', 'C', 'R');
+$vertical_alignments = array('T', 'M', 'B');
+
+$x = 15;
+$y = 35;
+$w = 30;
+$h = 30;
+// test all combinations of alignments
+for ($i = 0; $i < 3; ++$i) {
+    $fitbox = $horizontal_alignments[$i].' ';
+    $x = 15;
+    for ($j = 0; $j < 3; ++$j) {
+        $fitbox[1] = $vertical_alignments[$j];
+        $pdf->Rect($x, $y, $w, $h, 'F', array(), array(128,255,128));
+        $pdf->Image('images/image_demo.jpg', $x, $y, $w, $h, 'JPG', '', '', false, 300, '', false, false, 0, $fitbox, false, false);
+        $x += 32; // new column
+    }
+    $y += 32; // new row
+}
+
+$x = 115;
+$y = 35;
+$w = 25;
+$h = 50;
+for ($i = 0; $i < 3; ++$i) {
+    $fitbox = $horizontal_alignments[$i].' ';
+    $x = 115;
+    for ($j = 0; $j < 3; ++$j) {
+        $fitbox[1] = $vertical_alignments[$j];
+        $pdf->Rect($x, $y, $w, $h, 'F', array(), array(128,255,255));
+        $pdf->Image('images/image_demo.jpg', $x, $y, $w, $h, 'JPG', '', '', false, 300, '', false, false, 0, $fitbox, false, false);
+        $x += 27; // new column
+    }
+    $y += 52; // new row
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// Stretching, position and alignment example
+*/
+$pdf->SetXY(110, 200);
+echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).DS.label.DA;
+$pdf->Image($img, '', '', 40, 40, '', '', 'T', false, 300, '', false, false, 1, false, false, false);
+/*
+$pdf->Image('images/image_demo.jpg', '', '', 40, 40, '', '', '', false, 300, '', false, false, 1, false, false, false);
+
+// -------------------------------------------------------------------
+	*/
+//Close and output PDF document
+$pdf->Output(Mage::getBaseDir().'/media/fedex/shippinglabels/TestShippingLabel.pdf', 'F');
+			
+	}
 	public function findorderAction(){
 		$orderId = $this->getRequest()->getParam('order_id');
 		$from = $this->getRequest()->getParam('from');
