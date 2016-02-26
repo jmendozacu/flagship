@@ -1,0 +1,65 @@
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Fedex History") ?></h2>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("History Information") ?></div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+						<thead>
+							<tr>
+								<td><?php echo "#"; ?></td>
+								<td><?php echo $this->__("Career"); ?></td>
+								<td><?php echo $this->__("Tracking Number"); ?></td>
+								<td><?php echo $this->__("Serivce"); ?></td>
+								<td><?php echo $this->__("Weight"); ?></td>
+								<td><?php echo $this->__("Quoted Value"); ?></td>
+								<td><?php echo $this->__("Date"); ?></td>
+								<td><?php echo $this->__("Bill Of Lading"); ?></td>
+								<td><?php echo $this->__("Shipping Label"); ?></td>
+							</tr>
+						</thead>
+						<?php $historyCollection = $this->getHistory(); ?>
+						<?php if($historyCollection && $historyCollection->count()){ ?>
+							<tbody>
+							<?php foreach ($historyCollection as $historyObject){ ?>
+							<?php
+								$historyItem = Mage::getModel('inventorymanager/shipmanager_item')->load($historyObject->getId(), "history_id");
+								$serial = $historyItem->getSerial();
+								$serialObject = Mage::getModel('inventorymanager/label')->load($serial, 'serial');
+								$serialId = $serialObject->getId();
+								$shippingLabel = Mage::getBaseDir().'\\media\\fedex\\shippinglabels\\'.$serialId.'-ShippingLabel.pdf';
+								$bol = Mage::getBaseDir().'\\media\\fedex\\billoflanding\\'.$serialId.'-BillOfLading.pdf';
+							?>
+								<tr>
+									<td><?php echo $historyObject->getId() 	?></td>
+									<td><?php echo $historyObject->getTransactionDetail() ?></td>
+									<td><?php echo $historyObject->getCareercode() ?></td>
+									<td><?php echo $historyObject->getServiceType() ?></td>
+									<td><?php echo $historyObject->getWeight() ?></td>
+									<td><?php echo $historyObject->getQuotedValue() ?></td>
+									<td><?php echo $historyObject->getShippingDate() ?></td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialId.'-BillOfLading.pdf'; ?> </td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialId.'-ShippingLabel.pdf'; ?> </td>
+								</tr>
+							<?php } ?>
+							</tbody>
+						<?php } ?>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	jQuery(document).ready(function () {
+		dataTable = jQuery('#dataTables-example').dataTable({
+			"aaSorting": [[0, 'desc']],
+		});
+	});
+</script>

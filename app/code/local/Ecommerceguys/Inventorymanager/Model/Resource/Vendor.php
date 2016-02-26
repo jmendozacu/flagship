@@ -14,17 +14,21 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     public function getProducts($vendorId){
     	
     	$resourceObject = $this->getResourceObject();
-    	$productTable = $resourceObject->getTableName('catalog_product_entity');
+
+    	
     	$vendorProductTable = $resourceObject->getTableName('inventorymanager_vendorproduct');
-    	
-    	$connection = $resourceObject->getConnection('core_read');
-    	
-    	$select = $connection->select()
-                ->from(array("e"=>$productTable))
-                ->join(array("vp"=>$vendorProductTable), "e.entity_id = vp.product_id",array('vendor_id'))
-                ->where("vendor_id = " . $vendorId);  
+    	$vendorProductInfoTable = $resourceObject->getTableName('inventorymanager_vendor_productdetail');
+    	$collection = Mage::getModel('catalog/product')->getCollection();
+    	$collection->addAttributeToSelect(array('name', 'status'));
+    	$collection->addAttributeToFilter('status', array('eq' => 1));
+    	$select = $collection->getSelect()
+                ->join(array("vp"=>$vendorProductTable), "e.entity_id = vp.product_id", array('vendor_id'))
+                ->joinLeft(array("vpi"=>$vendorProductInfoTable), "e.entity_id = vpi.product_id AND vpi.vendor_id = $vendorId AND is_revision = 0", array('cost'))
+                //->where("vp.vendor_id = " . $vendorId . " AND is_revision != 1" )
+                ->where("vp.vendor_id = " . $vendorId)
+                ->group('e.entity_id'); 
          
-    	return $connection->fetchAll($select);
+    	return $collection;
     	
     }
     
@@ -109,6 +113,52 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Vendor extends Mage_Core_Mod
     		$writeConnection->delete($tableName, $whereCondition);
     	}catch (Exception $e){
     		Mage::log($e->getMessage());
+    	}
+    }
+    
+    public function getAllProducts(){
+    	$resourceObject = $this->getResourceObject();
+    	$productTable = $resourceObject->getTableName('catalog_product_entity');
+    	$vendorProductTable = $resourceObject->getTableName('inventorymanager_vendorproduct');
+    	$connection = $resourceObject->getConnection('core_read');
+    	$select = $connection->select()
+                ->from(array("e"=>$productTable))
+                ->join(array("vp"=>$vendorProductTable), "e.entity_id = vp.product_id",array('vendor_id'))
+                ->group('entity_id');
+         
+    	return $connection->fetchAll($select);
+    }
+    
+    public function getAllCatalogProducts(){
+    	$resourceObject = $this->getResourceObject();
+    	$productTable = $resourceObject->getTableName('catalog_product_entity');
+    	$connection = $resourceObject->getConnection('core_read');
+    	$select = $connection->select()
+                ->from(array("e"=>$productTable))
+                ->order(array('created_at DESC'))
+                ->group('entity_id');
+         
+    	return $connection->fetchAll($select);
+    }
+    
+    public function getUnselectedProducts($selectedProducts){
+    	
+    	$resourceObject = $this->getResourceObject();
+
+    	
+    	$vendorProductTable = $resourceObject->getTableName('inventorymanager_vendorproduct');
+    	$collection = Mage::getModel('catalog/product')->getCollection();
+    	$collection->addAttributeToSelect(array('name', 'status'));
+    	$collection->addAttributeToFilter('status', array('eq' => 1));
+    	if(is_array($selectedProducts) && sizeof($selectedProducts) > 0)
+    		$collection->addFieldToFilter('entity_id', array('nin' => $selectedProducts));
+         
+    	return $collection;
+    }
+    
+    public function filterVendorProductArray($value){
+    	if(isset($value['entity_id'])){
+    		return $value['entity_id'];
     	}
     }
 }

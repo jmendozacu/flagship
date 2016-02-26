@@ -76,4 +76,3 @@ $more = 0;
 	</div><!-- end of #content-blog -->
 
 <?php get_sidebar(); ?>
-<?php get_footer(); ?>

@@ -2,6 +2,7 @@
 	$purchaseorderObject = $this->getPurchaseOrder();
 	$methods = Mage::getSingleton('shipping/config')->getActiveCarriers();
   	$shippingMethods = array();
+  	$locations = $this->helper('inventorymanager')->getLocations($purchaseorderObject->getVendorId());
   	foreach($methods as $_code => $_method)
  	{
  		if(!$_title = Mage::getStoreConfig("carriers/$_code/title")){
@@ -15,15 +16,50 @@
 	<div class="col-md-12">
 		<h2>
 			<?php echo $this->__("Purchase Order View") ?>
-			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/generate", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right"><?php echo $this->__("Generate") ?></a>
+			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/generate", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right"><?php echo $this->__("Print all labels in PDF") ?></a>
+		<?php /*	<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/print", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right; margin-right:5px;">
+				<?php echo $this->__("Print all labels") ?>
+			</a> */ ?>
+			<a class="btn btn-warning" href="<?php echo $this->getUrl("inventorymanager/label/printpo", array('id'=>$purchaseorderObject->getId())) ?>" style="float:right; margin-right:5px;">
+				<?php echo $this->__("Print P.O") ?>
+			</a>
 		</h2>
 	</div>
 </div>
 <hr>
+<?php /* 
 <div class="row">
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="panel panel-back noti-box">
 			<table class="table table-striped">
+				<tr>
+					
+					<td align="right">
+						<div class="right-align-group">
+							<a href="javascript:void(0)" onclick="submitMassLocations()" class="btn btn-primary btn-sm"><?php echo $this->__("Submit") ?></a>
+						</div>
+						<div class="right-align-group">
+							<select class="form-control mass-location" id="mass-location">
+								<?php foreach ($locations as $location){ ?>
+									<option><?php echo $location ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div class="right-align-group"><label><?php echo $this->__("Locations") ?></label></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div> */ ?>
+<div class="row">
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="panel panel-back noti-box">
+			<table class="table table-striped">
+				<tr>
+					<td style="width:200px"><label><?php echo $this->__("Order Number") ?></label></td>
+					<td><?php echo $purchaseorderObject->getId(); ?></td>
+				</tr>
 				<tr>
 					<td style="width:200px"><label><?php echo $this->__("Shipping Method") ?></label></td>
 					<td><?php echo $shippingMethods[$purchaseorderObject->getShippingMethod()] ?></td>
@@ -53,6 +89,7 @@
 			</table>
 		</div>
 	</div>
+
 	<div class="col-md-12">
 		<div class="panel panel-default">
 			<div class="panel-heading"><?php echo $this->__("Products") ?></div>
@@ -66,19 +103,126 @@
 								<th><?php echo $this->__("Price") ?></th>
 								<th><?php echo $this->__("Qty") ?></th>
 								<th><?php echo $this->__("Total") ?></th>
+								<th><?php echo $this->__("Action") ?></th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php $iCounter = 0; foreach ($this->getProducts() as $product){
 							$realProduct = Mage::getModel('catalog/product')->load($product->getMainProductId());
 								?>
-							<tr>
+							<tr id="po_product_row_<?php echo $product->getId() ?>" class="ro_product_row clickable-row">
 								<td><?php echo ++$iCounter; ?></td>
-								<td><?php echo $realProduct->getName(); ?></td>
+								<td><?php echo $realProduct->getName(); ?>&nbsp;&nbsp;&nbsp;<button style="z-index:999" class="btn btn-primary dropdown-toggle" type="button"><span class="caret"></span></button></td>
 								<td><?php echo $product->getPrice(); ?></td>
 								<td><?php echo $product->getQty(); ?></td>
 								<td><?php echo $product->getTotal(); ?></td>
+								<td><a href="<?php echo $this->getUrl("inventorymanager/purchaseorder/downloadproductpdf", array("order_id"=>$purchaseorderObject->getId(), "product_id"=>$product->getId()) ) ?>">
+									<?php echo $this->__("Download Labels"); ?>
+								</a></td>
 							</tr>
+							<?php $serials = $this->getSerials($product->getId());
+							if($serials && $serials->count()>0){
+							$firstSerials = $serials->getFirstItem();
+							 ?>
+							<tr id="serials_po_product_row_<?php echo $product->getId() ?>" style="display:none" class="product-serial-content" productid="<?php echo $product->getId() ?>">
+								<td colspan="6" id="load-serials-content<?php echo $product->getId() ?>">
+									<div class="row">
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											<div class="panel panel-back noti-box">
+												<table class="table table-striped">
+													<tr>
+														<td align="right bult-locations">
+															<div class="right-align-group" style="padding:3px;">
+																<a href="javascript:void(0)" onclick="submitMassLocations(<?php echo $product->getId() ?>)" class="btn btn-primary btn-sm"><?php echo $this->__("Submit") ?></a>
+															</div>
+															<div class="right-align-group">
+																<div class="form-control-static" >
+																	<div class="btn-group show-dropbox show-location-dropbox">
+																		<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
+															  				<!--<input type="text" class="form-control label-box" onkeyup="statusText(this)" name="location" id="new_location_bulk<?php echo $product->getId() ?>" value="" />-->
+															  				<input type="text" class="form-control label-box" readonly name="location" id="new_location_bulk<?php echo $product->getId() ?>" value="" />
+															  			</div>
+																	  	<button type="button" class="btn btn-primary dropdown-toggle" onclick="openLocationBox(this)" style="z-index:999"><span class="caret"></span></button>
+																	  	<ul class="dropdown-menu location-box" id="dropdown-box-location_bulk<?php echo $product->getId() ?>">
+																	  		<!--<li class="add-location-li"><a href="javascript:addLocation('_bulk<?php echo $product->getId() ?>', <?php echo $product->getId() ?>)"  ><?php echo $this->__("Add New") ?></a></li>-->
+																	  		<?php foreach ($locations as $key => $locationLabel) { ?>
+																	  			<li>
+																	  				<!--<span class="remove-location-link" onclick="removeLocationFunction('<?php echo $locationLabel ?>',<?php echo $product->getId() ?>)">x</span>-->
+																	  				<a class="location-options" href="javascript:selectLocation('<?php echo $locationLabel ?>','_bulk<?php echo $product->getId() ?>')"><?php echo $locationLabel ?></a>
+																	  			</li>
+																	  		<?php } ?>
+																	  	</ul>
+																	</div>
+																</div>
+															</div>
+															<div class="right-align-group" ><label><?php echo $this->__("Bulk location change") ?></label></div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
+								
+									<div class="panel panel-default" >
+										<div class="panel-heading"><?php echo $this->__("Serials") ?></div>
+										<div class="panel-body">
+											<div class="table-responsive">
+												<table class="table">
+													<thead>
+														<tr>
+															<th width="4%">
+																<div class="checkbox label-checkbox"><label><input type="checkbox" class="select-all-serials" id="select_all<?php echo $product->getId() ?>" value="<?php echo $product->getId() ?>"></label></div>
+															</th>
+															<th><?php echo $this->__("Serial") ?></th>
+															<th width="20%"><?php echo $this->__("Location") ?></th>
+															<th width="20%"><?php echo $this->__("Action") ?></th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php foreach ($serials as $serial){ ?>
+															<tr>
+																<td>
+																	<div class="checkbox label-checkbox"><label><input type="checkbox" class="serial-checkboxes-<?php echo $product->getId() ?>" value="<?php echo $serial->getId(); ?>"></label></div>
+																</td>
+																<td><a href="<?php echo $this->getUrl("inventorymanager/label/edit", array('serial_key'=>$serial->getSerial())); ?>"><?php echo $serial->getSerial() ?></a></td>
+																<td>
+																	<?php /*echo $serial->getLocation()*/ ?>
+																	<?php /*<select class="form-control" id="location_<?php echo $serial->getId() ?>">
+																		<?php foreach ($locations as $key => $locationLabel) { ?>
+																			<option <?php echo $serial->getLocation() == $locationLabel?"selected='selected'":""; ?>><?php echo $locationLabel ?></option>
+																		<?php } ?>
+																	</select> */ ?>
+																	<div class="form-control-static" >
+																		<div class="btn-group show-dropbox show-location-dropbox">
+																			<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
+																  				<!--<input type="text" class="form-control label-box" onkeyup="statusText(this)" name="location" id="new_location<?php echo $serial->getId() ?>" value="<?php echo $serial->getLocation(); ?>" />-->
+																  				<input type="text" readonly class="form-control label-box" name="location" id="new_location<?php echo $serial->getId() ?>" value="<?php echo $serial->getLocation(); ?>" />
+																  			</div>
+																		  	<button type="button" class="btn btn-primary dropdown-toggle" onclick="openLocationBox(this)" style="z-index:999"><span class="caret"></span></button>
+																		  	<ul class="dropdown-menu location-box" id="dropdown-box-location<?php echo $serial->getId() ?>">
+																		  		<!--<li class="add-location-li"><a href="javascript:addLocation(<?php echo $serial->getId() ?>,<?php echo $product->getId() ?>)"  ><?php echo $this->__("Add New") ?></a></li>-->
+																		  		<?php foreach ($locations as $key => $locationLabel) { ?>
+																		  			<li>
+																		  				<!--<span class="remove-location-link" onclick="removeLocationFunction('<?php echo $locationLabel ?>',<?php echo $product->getId() ?>)">x</span>-->
+																		  				<a class="location-options" href="javascript:selectLocation('<?php echo $locationLabel ?>',<?php echo $serial->getId() ?>)"><?php echo $locationLabel ?></a>
+																		  			</li>
+																		  		<?php } ?>
+																		  	</ul>
+																		</div>
+																	</div>
+																</td>
+																
+																<td><a class="btn btn-primary btn-sm" onclick="updateLocation(<?php echo $serial->getId() ?>)" href="javascript:void(0)"><?php echo $this->__("Update") ?></a></td>
+															</tr>
+														<?php } ?>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<?php } ?>
 							<?php } ?>
 						</tbody>
 					</table>
@@ -118,3 +262,175 @@
 		</div>
 	</div>
 </div>
+<!-- Small modal -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+    	<div class="labelpage-loader-div">
+      		<img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo $this->__("Loading...") ?>" />
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+	function refreshAllContent(cpId){
+		$$('tr.product-serial-content').each(function(e){
+			var pId = e.readAttribute('productid');
+			refrechLabels(pId);
+		});
+		
+	}
+
+
+	$$("tr.ro_product_row").each(function(e){
+		e.observe('click', function(){
+			$('serials_' + e.id).toggle();
+		});
+	});
+	function updateLocation(serialId){
+		jQuery('.bs-example-modal-sm').modal('show');
+		var location = $('new_location' + serialId).value;
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/updatelocation') ?>', {
+			method:'get',
+			parameters: {serial_id:serialId, location:location},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			jQuery('.bs-example-modal-sm').modal('hide');
+    			if(response.length > 0)
+    				alert(response);
+  			},
+  			onFailure: function() {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+  				alert('Something went wrong...');
+  			}
+		});
+	}
+</script>
+<script>
+	var locations = [];
+	<?php foreach ($locations as $location){ ?>
+		locations.push("<?php echo $location; ?>");
+	<?php } ?>
+	function openLocationBox(obj){
+		var targetElement = obj.up('div.show-location-dropbox').down('ul.location-box');
+		var openBox = true;
+		if(targetElement.hasClassName('show-dropbox')){
+			openBox = false;
+		}
+		$$('ul.location-box').each(function(e){
+			e.removeClassName('show-dropbox');
+		});
+		if(openBox){
+			targetElement.addClassName('show-dropbox');
+		}
+	}
+	
+	function statusText(obj){
+		$('dropdown-box-location')
+		obj.up('div.show-location-dropbox').down('ul.location-box').down('li.add-location-li').down('a').innerHTML = '<?php echo $this->__("Add") ?> ' + obj.value;
+	}
+	
+	function selectLocation(location,sId){
+		
+		$('new_location' + sId).value = location;
+		$$('ul.location-box').each(function(e){
+			e.removeClassName('show-dropbox');
+		});
+	}
+
+	function addLocation(sId,pId){
+		var location = $('new_location' + sId).value;
+		if(location == ""){
+			return;
+		}
+		var currentIndex = locations.indexOf(location);
+		if(currentIndex>=0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addlocation') ?>', {
+  			method:'post',
+  			parameters: {location:location},
+  			onSuccess: function(transport) {
+  				//jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				locations.push(location);
+    				refreshAllContent(pId);
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	function removeLocationFunction(location, pId){
+		
+		var currentIndex = locations.indexOf(location);
+		if(currentIndex<0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removelocation') ?>', {
+  			method:'post',
+  			parameters: {location: location},
+  			onSuccess: function(transport) {
+  				//jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			/*if(response != ''){
+    				alert(response);
+    			}else{*/
+    				locations.splice(currentIndex, 1);
+    				/*e.up('li').remove();*/
+    				refreshAllContent(pId);
+    			//}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	function refrechLabels(pId){
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/loadserials') ?>', {
+  			method:'post',
+  			parameters: {product_id: pId, order_id:<?php echo $purchaseorderObject->getId(); ?>},
+  			onSuccess: function(transport) {
+  				//jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			$('load-serials-content' + pId).innerHTML = response;
+    			jQuery('.bs-example-modal-sm').modal('hide');
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	function submitMassLocations(pid){
+		var location = $('new_location_bulk' + pid).value;
+		var serials = "";
+		$$('.serial-checkboxes-'+pid).each(function(e){
+			//alert(e.value);
+			if(e.checked){
+				serials += e.value+'-';
+			}
+		});
+		var url = "<?php echo $this->getUrl('inventorymanager/label/masslocation') ?>?ids="+serials+"&location="+location+"&order_id=<?php echo $purchaseorderObject->getId(); ?>";
+		if(serials != ""){
+			window.location.replace(url);
+		}
+		
+	}
+</script>
+<script type="text/javascript">
+	$$('.select-all-serials').each(function(e){
+		e.observe('click', function(){
+			var checkVal = this.checked;
+			$$('.serial-checkboxes-' + this.value).each(function(s){
+				if(checkVal)
+					s.checked = true;
+				else
+					s.checked = false;
+			});
+		});
+	});
+</script>

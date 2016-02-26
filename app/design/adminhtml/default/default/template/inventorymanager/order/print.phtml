@@ -1,0 +1,122 @@
+<?php
+	$order = $this->getCurrentOrder();
+	/*echo "<pre>";
+	print_r($order->getData());
+	echo "</pre>";*/
+	
+	if($order && $order->getId()){
+		$customer = $this->getCurrentCustomer();
+		$customerGroup = Mage::getModel("customer/group")->load($order->getCustomerGroupId());
+		$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+		$currency= Mage::getModel("directory/currency")->load($currency_code);
+?>
+<div>
+	<table border="1" cellpadding="10">
+		<tr>
+			<td align="center">
+				<table cellpadding="10" cellspacing="10">
+					<tr>
+						<td><?php echo $order->getIncrementId() ?></td>
+						<td><img src="<?php echo str_replace(array("index.php","index.php/"), "", Mage::getBaseUrl())	."barcode.php?text=".$order->getIncrementId()."&size=32"; ?>" /></td>
+					</tr>
+				</table>
+				<table cellpadding="5" cellspacing="0">
+					<tr>
+						<td>
+							<table border="1" cellpadding="5" cellspacing="0">
+								<tr>
+									<td colspan="2" align="center"><?php echo $this->__("Order Information") ?></td>
+								</tr>
+								<tr>
+									<td><?php echo $this->__("Order Date") ?></td>
+									<td><?php echo date("Y-m-d", strtotime($order->getCreatedAt())) ?></td>
+								</tr>
+								<tr>
+									<td><?php echo $this->__("Order Status") ?></td>
+									<td><?php echo  $order->getStatusLabel() ?></td>
+								</tr>
+								<tr>
+									<td><?php echo $this->__("Purchased From") ?></td>
+									<td><?php echo $order->getStoreName(); ?></td>
+								</tr>
+							</table>
+						</td>
+						<td>
+							<table border="1" cellpadding="5" cellspacing="0">
+								<tr>
+									<td colspan="2" align="center"><?php echo $this->__("Customer Information") ?></td>
+								</tr>
+								<tr>
+									<td><?php echo $this->__("Customer Name") ?></td>
+									<td><?php echo $customer->getName() ?></td>
+								</tr>
+								<tr>
+									<td><?php echo $this->__("Email") ?></td>
+									<td><?php echo $customer->getEmail() ?></td>
+								</tr>
+								<tr>
+									<td><?php echo $this->__("Customer Group") ?></td>
+									<td><?php echo $customerGroup->getCustomerGroupCode(); ?></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table cellpadding="5" border="1" width="100%">
+					<tr>
+						<td colspan="5"><?php echo $this->__("Order Items") ?></td>
+					</tr>
+					<tr>
+						<td><?php echo $this->__("Product") ?></td>
+						<td><?php echo $this->__("Item Status") ?></td>
+						<td><?php echo $this->__("Price") ?></td>
+						<td><?php echo $this->__("Qty") ?></td>
+						<td><?php echo $this->__("Total") ?></td>
+					</tr>
+					<?php $orderItems = $order->getAllItems();
+					foreach ($orderItems as $item){ ?>
+						<tr>
+							<td>
+								<?php $product = Mage::getModel('catalog/product')->load($item->getProductId()) ?>
+								<?php /*if($product && $product->getSmallImage() != "no_selection" && $product->getSmallImage() != ""){ ?>
+									<?php echo "->".$product->getSmallImage() . "<-<br/>";$imagePath = $this->helper('catalog/image')->init($product, 'small_image')->resize(100);   ?>
+									<?php  if(file_exists($imagePath)){ ?>
+										<img src="<?php echo $imagePath ?>" width="100" height="100" />
+									<?php } ?>
+								<?php }*/ ?>
+								<span><?php echo $product->getName() ?></span>
+							</td>
+							<td align="center"><?php echo $item->getStatus(); ?></td>
+							<td align="right"><?php echo $currency->formatPrecision($item->getPrice(), 2); ?></td>
+							<td align="right"><?php echo (int)$item->getQtyOrdered() ?></td>
+							<td align="right"><?php echo $currency->formatPrecision($item->getRowTotalInclTax(), 2); ?></td>
+						</tr>
+					<?php } ?>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td align="right" >
+				<table width="30%" style="float:right">
+					<tr>
+						<td align="right"><?php echo $this->__("Subtotal") ?></td>
+						<td align="right"><?php echo $currency->formatPrecision($order->getSubtotal(), 2);; ?></td>
+					</tr>
+					<tr>
+					 	<td align="right"><?php echo $this->__("Shipping") ?></td>
+						<td align="right"><?php echo $currency->formatPrecision($order->getShippingInclTax(), 2);; ?></td>
+					</tr>
+					<tr>
+						<td align="right"><?php echo $this->__("Grand Total") ?></td>
+						<td align="right"><?php echo $currency->formatPrecision($order->getGrandTotal(), 2);; ?></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<?php } ?>

@@ -4,6 +4,7 @@ class Ecommerceguys_Inventorymanager_Block_Label_Edit extends Mage_Core_Block_Te
 {
 	public function getLabelObject(){
 		$serialKey = $this->getRequest()->getParam('serial_key');
+		$serialKey= trim($serialKey);
 		$labelObject = Mage::getModel('inventorymanager/label')->load($serialKey, 'serial');
 		if($labelObject && $labelObject->getId()){
 			return $labelObject;
@@ -32,6 +33,23 @@ class Ecommerceguys_Inventorymanager_Block_Label_Edit extends Mage_Core_Block_Te
 	}
 	
 	public function getPurchaseOrder(){
-		return Mage::getModel('inventorymanager/purchaseorder')->load($this->gerMainProduct()->getPoId());
+		return Mage::getModel('inventorymanager/purchaseorder')->load($this->getOrderProduct()->getPoId());
+	}
+	
+	public function getVendorInfoObject(){
+		$order = $this->getPurchaseOrder();
+		$catalogProduct = $this->gerMainProduct();
+		
+		//echo "vendorId = " . $order->getVendorId();
+		//echo "<br/>ProductId = " . $catalogProduct->getId();
+		
+		$inventorymanagerProducts = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+		$inventorymanagerProducts->addFieldToFilter('vendor_id', $order->getVendorId());
+		$inventorymanagerProducts->addFieldToFilter('product_id', $catalogProduct->getId());
+		
+		if($inventorymanagerProducts->count()){
+			return $inventorymanagerProducts->getFirstItem();
+		}
+		return false;
 	}
 }

@@ -71,3 +71,5 @@ div.p-remove{
 	padding-top:5px;
 	background-position:0 7px;
 }
+#product_suggestion_box .close-button { text-align:right; padding:0 3px; border:none; margin:0;}
+#product_suggestion_box .close-button a { text-decoration:none }

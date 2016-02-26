@@ -264,4 +264,179 @@ class Ecommerceguys_Inventorymanager_Vendor_ProductController extends Mage_Core_
 		//Close and output PDF document
 		$pdf->Output($productId.'_orderlabel.pdf', 'D');
 	}
+	
+	public function stockgridAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function serialgridAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	
+	public function massproductsAction(){
+		$this->loadLayout();
+		$this->_initLayoutMessages('core/session');
+		$this->renderLayout();
+	}
+	
+	public function exportproductsAction(){
+		header("Content-type: text/csv");
+		header("Content-Disposition: attachment; filename=vendorproducts.csv");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		
+		$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+		Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
+		$vendorModel = Mage::getResourceModel('inventorymanager/vendor');
+		$products = $vendorModel->getProducts($vendorId);
+		
+		$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+		$productInfoCollection->addFieldToFilter("vendor_id", $vendorId);
+		$productInfoCollection->addFieldToFilter("is_revision", 0);
+		$venderProductinfoArray = array();
+		foreach ($productInfoCollection as $productInfoObject){
+			//print_r($productInfoObject->getData());
+			
+			$informationArray = array();
+			$informationArray['cost'] = $productInfoObject->getCost();
+			$informationArray['length'] = $productInfoObject->getLength();
+			$informationArray['width'] = $productInfoObject->getWidth();
+			$informationArray['height'] = $productInfoObject->getHeight();
+			$informationArray['fun_spec'] = $productInfoObject->getFunSpec();
+			$informationArray['material'] = $productInfoObject->getMaterial();
+			$informationArray['lighting'] = $productInfoObject->getLighting();
+			$informationArray['upc'] = $productInfoObject->getUpc();
+			$informationArray['box_height'] = $productInfoObject->getBoxHeight();
+			$informationArray['box_width'] = $productInfoObject->getBoxWidth();
+			$informationArray['box_length'] = $productInfoObject->getBoxLength();
+			$informationArray['box_weight'] = $productInfoObject->getBoxWeight();
+			$informationArray['weight'] = $productInfoObject->getWeight();
+			
+			$venderProductinfoArray[$productInfoObject->getProductId()] = $informationArray;
+		}
+		
+		echo "SKU,Cost,Weight KG,Length METER,Width METER,Height METER,Box Weight KG,Box Length METER,Box Width METER,Box Height METER,UPC Code,Material,Lighting,Full Specifications\n";
+		foreach ($products as $productObj){
+			$product = $productObj->getData();
+			echo $product['sku'];
+			
+			if(isset($venderProductinfoArray[$product['entity_id']])){
+				$informationArray = $venderProductinfoArray[$product['entity_id']];
+				echo ",";
+				echo $informationArray['cost'] . ",";
+				echo $informationArray['weight'] . ",";
+				echo $informationArray['length']>0? $informationArray['length'] / 39.37 : "";
+				echo ",";
+				echo $informationArray['width']>0? $informationArray['width'] / 39.37 : "";
+				echo ",";
+				echo $informationArray['height']>0? $informationArray['height'] / 39.37 : "";
+				echo ",";
+				echo $informationArray['box_weight'] . ",";
+				echo $informationArray['box_length']>0? $informationArray['box_length'] / 39.37 : "";
+				echo ",";
+				echo $informationArray['box_width']>0? $informationArray['box_width'] / 39.37 : "";
+				echo ",";
+				echo $informationArray['box_height']>0? $informationArray['box_height'] / 39.37 : "";
+				echo ",";
+				echo $informationArray['upc'] . ",";
+				echo $informationArray['material'] . ",";
+				echo $informationArray['lighting'] . ",";
+				echo $informationArray['fun_spec'];
+			}
+			
+			
+			echo "\n";
+		}
+	}
+	
+	public function importproductsAction(){
+		if(isset($_FILES["import_csv"])) {
+		    $csv=file_get_contents($_FILES["import_csv"]["tmp_name"]);
+		
+			$csvArray = explode("\n", $csv);
+			if(sizeof($csvArray) < 2)
+		    	$csvArray = explode("\r", $csv);
+			
+			$vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+			$productInfoArray = array();
+			$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+			$productInfoCollection->addFieldToFilter("vendor_id", $vendorId);
+			$productInfoCollection->addFieldToFilter("is_revision", 0);
+			foreach ($productInfoCollection as $productInfo){
+				$productInfoArray[$productInfo->getProductId()] = $productInfo;
+			}
+
+			$error = false;
+			//echo "<pre>";
+			$iCounter = 0;
+			foreach ($csvArray as $csvRow){
+				$iCounter++;
+				if($iCounter == 1){ continue; }
+				$rowArray = explode(",", $csvRow);
+				
+				
+				if(isset($rowArray[0])){
+					//$catalogProduct = Mage::getModel('catalog/product')->load($rowArray[0], "sku");
+					
+					$product = Mage::getModel('catalog/product');
+					$productid = Mage::getModel('catalog/product')->getResource()->getIdBySku($rowArray[0]);
+					
+					
+					if($productid && $productid > 0){
+						$insertData = array();
+						
+						$insertData['cost'] 		= isset($rowArray[1])?$rowArray[1]:"";
+						$insertData['weight'] 		= isset($rowArray[2])?$rowArray[2]:"";
+						$insertData['length'] 		= isset($rowArray[3])?$rowArray[3] * 39.37:"";
+						$insertData['width'] 		= isset($rowArray[4])?$rowArray[4] * 39.37:"";
+						$insertData['height'] 		= isset($rowArray[5])?$rowArray[5] * 39.37:"";
+						$insertData['box_weight'] 	= isset($rowArray[6])?$rowArray[6]:"";
+						$insertData['box_length'] 	= isset($rowArray[7])?$rowArray[7] * 39.37:"";
+						$insertData['box_width'] 	= isset($rowArray[8])?$rowArray[8] * 39.37:"";
+						$insertData['box_height']	= isset($rowArray[9])?$rowArray[9] * 39.37:"";
+						$insertData['upc'] 			= isset($rowArray[10])?$rowArray[10]:"";
+						$insertData['material']		= isset($rowArray[11])?$rowArray[11]:"";
+						$insertData['lighting']		= isset($rowArray[12])?$rowArray[12]:"";
+						$insertData['fun_spec']		= isset($rowArray[13])?$rowArray[13]:"";
+						
+						//print_r($insertData);
+						
+						
+						try {
+						
+							if(isset($productInfoArray[$productid])){
+								$infoObject = $productInfoArray[$productid];
+								$infoObject->addData($insertData)->save();
+								
+								//echo "<br/> EXIST " . $infoObject->getId();
+								
+							}else{
+								$insertData['is_revision']	=	0;
+								$insertData['vendor_id']	=	$vendorId;
+								$insertData['product_id']	=	$productid;
+								$infoObject = Mage::getModel('inventorymanager/vendor_productinfo');
+								$infoObject->setData($insertData)->save();
+								
+								//echo "<br/> NEW " . $infoObject->getId();
+							}
+							
+						}catch (Exception $e){
+							$error = true;
+							
+						}
+					}
+				}
+			}
+			//exit;
+			if(!$error)
+				Mage::getSingleton('core/session')->addSuccess($this->__("File is imported successfullly"));
+			else
+				Mage::getSingleton('core/session')->addError($this->__("Something went wrong"));
+			$this->_redirect("*/*/massproducts");
+						return $this;
+		}
+	}
 }

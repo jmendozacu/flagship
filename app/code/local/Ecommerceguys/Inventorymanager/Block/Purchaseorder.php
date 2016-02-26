@@ -9,6 +9,7 @@ class Ecommerceguys_Inventorymanager_Block_Purchaseorder extends Mage_Core_Block
 		$vendorId = $this->getCurrentVendorId();
 		$purchaseorderCollection = Mage::getModel('inventorymanager/purchaseorder')->getCollection();
 		$purchaseorderCollection->addFieldToFilter('vendor_id', $vendorId);
+		$purchaseorderCollection->setOrder('po_id','DESC');
 		return $purchaseorderCollection;
 	}
 }

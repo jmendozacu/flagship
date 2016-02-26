@@ -1,0 +1,423 @@
+<?php
+$shipper = Mage::getStoreConfig('inventorymanager/fedex_config/shipper_address');
+$shipperAddress = (array)json_decode($shipper); 
+$shipperAddress['Contact'] = (array)$shipperAddress['Contact'];
+$shipperAddress['Address'] = (array)$shipperAddress['Address'];
+/*echo "<pre>";
+print_r($shipperAddress); 
+echo "</pre>";*/
+
+$companyName = "";
+$phone = "";
+$contactName = "";
+$email = "";
+$country = "US";
+$address1 = "";
+$address2 = "";
+$city = "";
+$postalCode = "";
+$stateCode = "";
+if(isset($shipperAddress['Contact']['CompanyName'])){
+	$companyName = $shipperAddress['Contact']['CompanyName'];
+}
+if(isset($shipperAddress['Contact']['PhoneNumber'])){
+	$phone = $shipperAddress['Contact']['PhoneNumber'];
+}
+if(isset($shipperAddress['Contact']['email'])){
+	$email = $shipperAddress['Contact']['email'];
+}
+if(isset($shipperAddress['Contact']['PersonName'])){
+	$contactName = $shipperAddress['Contact']['PersonName'];
+}
+if(isset($shipperAddress['Address']['CountryCode'])){
+	$country = $shipperAddress['Address']['CountryCode'];
+}
+if(isset($shipperAddress['Address']['StreetLines'][0])){
+	$address1 = $shipperAddress['Address']['StreetLines'][0];
+}
+if(isset($shipperAddress['Address']['StreetLines'][1])){
+	$address2 = $shipperAddress['Address']['StreetLines'][1];
+}
+if(isset($shipperAddress['Address']['City'])){
+	$city = $shipperAddress['Address']['City'];
+}
+if(isset($shipperAddress['Address']['PostalCode'])){
+	$postalCode = $shipperAddress['Address']['PostalCode'];
+}
+if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
+	$stateCode = $shipperAddress['Address']['StateOrProvinceCode'];
+}
+?>
+
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Shipmanager - Ship")  ?></h2>
+	</div>
+	
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-12">
+		<form action="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/save") ?>" method="POST" id="shipmanager_send" onsubmit="return checkSerialVals()">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Fedex Ship information") ?></div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<h3><?php echo $this->__("Shipper Information") ?></h3>
+						<div class="form-group">
+							<label><?php echo $this->__("Company") ?></label>
+							<input type="text" class="form-control required-entry" id="company" value="<?php echo $companyName ?>" name="company" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Phone") ?></label>
+							<input type="text" class="form-control required-entry" name="phone" value="<?php echo $phone ?>" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Contact Name") ?></label>
+							<input type="text" class="form-control required-entry" name="contact_name" value="<?php echo $contactName ?>" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Email Address") ?></label>
+							<input type="text" class="form-control required-entry" name="email" value="<?php echo $email ?>" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Country") ?></label>
+							<?php $_countries = Mage::getResourceModel('directory/country_collection')->loadByStore()->toOptionArray(false) ?>
+							<?php if (count($_countries) > 0): ?>
+							    <select name="country_id" id="billing:country_id" class="form-control required-entry validate-select">
+							        <option value="">Please choose a country...</option>
+							        <?php foreach($_countries as $_country): ?>
+							            <option value="<?php echo $_country['value'] ?>" <?php echo $country==$_country['value']?"selected":""; ?>>
+							                <?php echo $_country['label'] ?>
+							            </option>
+							        <?php endforeach; ?>
+							    </select>
+							<?php endif; ?>
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Address") ?></label>
+							<input type="text" class="required-entry form-control" value="<?php echo $address1 ?>" name="address" />
+						</div>
+						<?php /*
+						<div class="form-group">
+							<label><?php echo $this->__("Address 2") ?></label>
+							<input type="text" class="form-control required-entry" name="address2" value="<?php echo $address2 ?>" />
+						</div> */ ?>
+						<!--<div class="form-group">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" value="1" name="residential_address" />
+									<?php echo $this->__("Residential Address") ?>
+ 								</label>
+							</div>
+						</div>-->
+						<div class="form-group">
+							<label><?php echo $this->__("City") ?></label>
+							<input type="text" class="form-control required-entry" name="city" value="<?php echo $city ?>" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Postal Code") ?></label>
+							<input type="text" class="form-control required-entry" id="billing:postcode" name="postalcode" value="<?php echo $postalCode ?>" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("State") ?></label>
+							<input type="text" class="form-control required-entry" id="billing:region" name="state" value="<?php echo $stateCode ?>" />
+							<!--<select id="billing:region_id"  class="form-control">
+							</select>-->
+						</div>
+					</div>
+					<div class="col-md-6">
+						<h3><?php echo $this->__("Receiver Address") ?></h3>
+						
+						<div class="form-group">
+							<label><?php echo $this->__("Fetch Order information from") ?></label>
+							<select  class="form-control" name="order_from" id="order_from">
+								<option value="1"><?php echo $this->__("Magento") ?></option>
+								<option value="2"><?php echo $this->__("OS Commerce") ?></option>
+							</select>
+						</div>
+						
+						<div class="form-group">
+							<label><?php echo $this->__("Order Number") ?></label>
+							<input type="text" class="form-control" name="order_id" id="real_order_id" placeholder="<?php echo $this->__("Enter Real Order Id") ?>" />
+							<p><?php echo $this->__("Enter real order id to populate Receiver addresss") ?></p>
+						</div>
+						
+						<div class="form-group">
+							<label><?php echo $this->__("Company") ?></label>
+							<input type="text" class="form-control required-entry" id="receiver_company" name="receiver[company]" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Phone") ?></label>
+							<input type="text" class="form-control required-entry" id="receiver_phone" name="receiver[phone]" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Contact Name") ?></label>
+							<input type="text" class="form-control required-entry" id="receiver_contact_name" name="receiver[contact_name]" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Email Address") ?></label>
+							<input type="text" class="form-control required-entry" id="receiver_email" name="receiver[email]" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Country") ?></label>
+							<?php $_countries = Mage::getResourceModel('directory/country_collection')->loadByStore()->toOptionArray(false) ?>
+							<?php if (count($_countries) > 0): ?>
+							    <select name="receiver[country_id]" id="receiver_country_id" class="form-control required-entry validate-select">
+							        <option value="">Please choose a country...</option>
+							        <?php foreach($_countries as $_country): ?>
+							            <option value="<?php echo $_country['value'] ?>">
+							                <?php echo $_country['label'] ?>
+							            </option>
+							        <?php endforeach; ?>
+							    </select>
+							<?php endif; ?>
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Address") ?></label>
+							<input type="text" class="form-control required-entry" id="receiver_address" name="receiver[address]" />
+						</div>
+						<?php /* <div class="form-group">
+							<label><?php echo $this->__("Address 2") ?></label>
+							<input type="text" class="form-control required-entry" id="receiver_address2" name="receiver[address2]" />
+						</div> */ ?>
+						<div class="form-group">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" value="1" name="residential_address" />
+									<?php echo $this->__("Residential Address") ?>
+ 								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("City") ?></label>
+							<input type="text" class="form-control required-entry" id="receiver_city" name="receiver[city]" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Postal Code") ?></label>
+							<input type="text" class="form-control required-entry" id="receiver_postalcode" name="receiver[postalcode]" />
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("State") ?></label>
+							<input type="text" class="form-control " name="receiver[state]" id="receiver_state" style="display:none" />
+							<select id="receiver_state_id" class="form-control" name="receiver_state_id">
+							
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<h3><?php echo $this->__("Package Information") ?></h3>
+						<div class="row">
+							<div class="col-md-6">
+								<?php /*
+								<div class="form-group">
+									<label><?php echo $this->__("Shipping Date") ?></label>
+									<input type="text" class="form-control" name="Shipping Date" />
+								</div>
+								*/ ?>
+								<div class="form-group">
+									<label><?php echo $this->__("Service Type") ?></label>
+									<select name="service_type" class="form-control">
+										<option value="FEDEX_FREIGHT_ECONOMY">FEDEX FREIGHT ECONOMY</option>
+										<option value="FEDEX_FREIGHT_PRIORITY">FEDEX FREIGHT PRIORITY</option>
+										<option value="FEDEX_GROUND">FEDEX GROUND</option>
+										<option value="GROUND_HOME_DELIVERY">GROUND HOME DELIVERY</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Package Type") ?></label>
+									<select name="package_type" class="form-control">
+										<option value="FEDEX_10KG_BOX">Fedex 10KG Box</option>
+										<option value="FEDEX_25KG_BOX">Fedex 25KG Box</option>
+										<option value="FEDEX_SMALL_BOX">Fedex Small Box</option>
+										<option value="FEDEX_MEDIUM_BOX">Fedex Medium Box</option>
+										<option value="FEDEX_LARGE_BOX">Fedex Large Box</option>
+										<option value="FEDEX_EXTRA_LARGE_BOX">Fedex Extra Large Box</option>
+										<option value="YOUR_PACKAGING">Your Packaging</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="table-responsive table-bordered">
+									<table class="table">
+										<thead>
+											<tr>
+												<th width="50%"><?php echo $this->__("Serial") ?></th>
+												<th><?php echo $this->__("Weight") ?></th>
+												<th><?php echo $this->__("Length") ?></th>
+												<th><?php echo $this->__("Width") ?></th>
+												<th><?php echo $this->__("Height") ?></th>
+												<th><?php echo $this->__("Price") ?></th>
+												<th><?php echo $this->__("") ?></th>
+											</tr>
+										</thead>
+										<tbody id="serial_package_info">
+											<tr>
+												<td><input type="text" class="form-control required-entry" onkeyup="autoloadSerialInformation(this)" name="serial_key[1]" /></td>
+												<td><input type="text" class="form-control weight-value serial-vals"  name="weight[1]" /></td>
+												<td><input type="text" class="form-control length-value serial-vals"  name="length[1]" /></td>
+												<td><input type="text" class="form-control width-value serial-vals" name="width[1]" /></td>
+												<td><input type="text" class="form-control height-value serial-vals" name="height[1]" /></td>
+												<td><input type="text" class="form-control price-value serial-vals" name="price[1]" /></td>
+												<td><a class="btn btn-info" href="javascript:void(0)" onclick="addSerialRow()"><?php echo $this->__("Add New") ?></a></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div id="result"></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group shipmanager-send-button">
+									
+									<button class="btn btn-primary" type="submit"><?php echo $this->__("Send Shipment") ?></button>
+									<button class="btn btn-primary" onclick="calculatePrice()" type="button"><?php echo $this->__("Calculate Shipping Price") ?></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+    //< ![CDATA[
+        var customForm = new VarienForm('shipmanager_send', true);
+    //]]>
+</script>
+<script>
+	var serialIncrement = 1;
+	function addSerialRow(){
+		serialIncrement++;
+		var newTR = '<tr>';
+		newTR += '<td><input type="text" class="form-control" onkeyup="autoloadSerialInformation(this)" name="serial_key['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control weight-value serial-vals" name="weight['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control length-value serial-vals" name="length['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control width-value serial-vals" name="width['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control height-value serial-vals" name="height['+serialIncrement+']" /></td>';
+			newTR += '<td><input type="text" class="form-control price-value serial-vals" name="price['+serialIncrement+']" /></td>';
+			newTR += '<td><a class="btn btn-danger" href="javascript:void(0)" onclick="removeThisRow(this)"><?php echo $this->__("Remove") ?></a></td>';
+		newTR += '</tr>';
+		jQuery('#serial_package_info').append(newTR);
+	}
+	
+	function removeThisRow(element){
+		element.up('tr').remove();
+	}
+	
+	function autoloadSerialInformation(element){
+		val = element.value;
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_serial/finddetails', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {serial_key: val},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			if(response != ''){
+    				var obj = JSON.parse(response);
+    				
+    				var trElement = element.up('tr');
+    				
+    				trElement.down('input.weight-value').value = obj.height;
+    				trElement.down('input.length-value').value = obj.width;
+    				trElement.down('input.width-value').value = obj.length;
+    				trElement.down('input.height-value').value = obj.weight;
+    				trElement.down('input.price-value').value = obj.price;
+    			}else{
+    				
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	$('real_order_id').observe('keyup', function(){
+		var orderId = this.value;
+		var from = $('order_from').value;
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/findorder', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {order_id: orderId, from:from},
+  			onSuccess: function(transport) {
+    			var response = transport.responseText;
+    			if(response != ''){
+    				var obj = JSON.parse(response);
+    				$('receiver_company').value = obj.name;
+    				$('receiver_email').value = obj.email;
+    				$('receiver_contact_name').value = obj.name;
+    				$('receiver_phone').value = obj.phone;
+    				$('receiver_address').value = obj.address;
+    				$('receiver_city').value = obj.city;
+    				$('receiver_postalcode').value = obj.zipcode;
+    				
+    				$('receiver_country_id').value = obj.country;
+    				var billingRegionUpdater = new RegionUpdater('receiver_country_id', 'receiver_state', 'receiver_state_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'receiver_postalcode');
+    				$('receiver_state').value = obj.region;
+    				$('receiver_state_id').value = obj.region_id;
+    				if(obj.region_id == ""){
+    					$('receiver_state_id').hide();
+    					$('receiver_state').show();
+    				}else{
+    					$('receiver_state_id').show();
+    					$('receiver_state').hide();
+    				}
+    			}else{
+    				
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	});
+	
+	function checkSerialVals(){
+		var isError = false;
+		$$('input.serial-vals').each(function(e){
+			if(e.value == ""){
+				isError = true;
+			}
+		});
+		if(isError){
+			alert("<?php echo $this->__("Fill all serials' value") ?>");
+			return false;
+		}
+	}
+</script>
+<script>
+	//var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'billing:postcode');
+	var billingRegionUpdater = new RegionUpdater('receiver_country_id', 'receiver_state', 'receiver_state_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'receiver_postalcode');
+</script>
+
+<script type="text/javascript">
+	function calculatePrice(){
+		if(customForm.validator && customForm.validator.validate()){
+			checkSerialVals();
+			var url = '<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/rate') ?>';
+			$('shipmanager_send').action = url;
+			
+			//customForm.submit();
+			
+			
+			$('shipmanager_send').request({
+		        onFailure: function() {  },
+		        onSuccess: function(t) {
+		            $('result').update(t.responseText);
+		        }
+		    });
+		}
+	}
+</script>

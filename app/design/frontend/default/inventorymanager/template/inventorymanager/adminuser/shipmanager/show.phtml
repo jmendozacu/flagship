@@ -1,0 +1,68 @@
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Shipping PDFs") ?></h2>
+	</div>
+</div>
+<?php $data = $this->getRequest()->getParams() ?>
+<hr>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("History Information") ?></div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+						<thead>
+							<tr>
+								<td><?php echo "#"; ?></td>
+								<td><?php echo $this->__("Serial"); ?></td>
+								<td><?php echo $this->__("Bill Of Lading"); ?></td>
+								<td><?php echo $this->__("Shipping Label"); ?></td>
+							</tr>
+						</thead>
+						<tbody>
+						<?php $iCounter = 1; foreach ($data['serial_key'] as $key => $serialKey){
+								$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
+								if($serialObject && $serialObject->getId()){
+								$serialId = $serialObject->getId();
+							?>
+								<tr>
+									<td><?php echo $iCounter 	?></td>
+									<td><?php echo $serialKey 	?></td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialId.'-BillOfLading.pdf'; ?> </td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialId.'-ShippingLabel.pdf'; ?> </td>
+								</tr>
+							<?php  }else{?>
+								<tr>
+									<td><?php echo $iCounter 	?></td>
+									<td><?php echo $serialKey 	?></td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialKey.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialKey.'-BillOfLading.pdf'; ?> </td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialKey.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialKey.'-ShippingLabel.pdf'; ?> </td>
+								</tr>
+							<?php }
+							$iCounter++;
+						} ?>
+							
+							</tbody>
+					</table>
+					<?php if($iCounter == 1){  ?>
+							<table class="table table-striped table-bordered table-hover">
+								<tr>
+									<td><?php echo Mage::helper('inventorymanager')->__("No valid serials found"); ?></td>
+								</tr>
+							</table>
+							<script>$('dataTables-example').hide();</script>
+							<?php } ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="form-group shipmanager-send-button">
+			
+			<button type="button" onclick="location.href = '<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager") ?>'" class="btn btn-primary">Back</button>
+		</div>
+	</div>
+</div>

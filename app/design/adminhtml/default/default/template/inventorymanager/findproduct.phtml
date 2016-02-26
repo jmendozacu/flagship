@@ -1,7 +1,18 @@
+<?php
+	$products = $this->getMatchingProduct();
+?>
+
 <ul>
-	<?php foreach ($this->getMatchingProduct() as $product){ ?>
-		<li>
-			<a onclick="addProduct(<?php echo $product->getId() ?>)"><?php echo $product->getName(); ?></a>
-		</li>
+	<li class="close-button">
+		<a style="text-align:right;cursor:pointer" onclick="$('product_suggestion_box').hide();">x</a>
+	</li>
+	<?php if($products && $products->count() > 0){ ?>
+		<?php foreach ($this->getMatchingProduct() as $product){ ?>
+			<li>
+				<a onclick="addProduct(<?php echo $product->getId() ?>)"><?php echo $product->getName(); ?></a>
+			</li>
+		<?php } ?>
+	<?php }else{ ?>
+		<li><a><?php echo $this->__("No matching products found") ?></a></li>
 	<?php } ?>
 </ul>

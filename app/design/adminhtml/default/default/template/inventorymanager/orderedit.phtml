@@ -21,9 +21,17 @@
 				</h3>	
 				<p class="form-buttons">
 				
+					<button style="" onclick="history.back()" class="scalable back" type="button" title="Back" >
+						<span><span><span>Back</span></span></span>
+					</button>
+				
 					<?php if($this->getCurrentOrder()) { ?>
 					<button style="" onclick="setLocation('<?php echo Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_purchaseorder/generatePdf", array('id'=>$this->getCurrentOrder()->getId()) ) ?>');" class="scalable save" type="button" title="<?php echo $this->__("Download PDF") ?>">
 						<span><span><span><?php echo $this->__("Download PDF") ?></span></span></span>
+					</button>
+					<?php $deleteUrl =  Mage::helper('adminhtml')->getUrl("inventorymanager/adminhtml_purchaseorder/delete", array('id'=>$this->getCurrentOrder()->getId()) ) ?>
+					<button style="" onclick="deleteConfirm('<?php echo $this->__("Are you sure you want to do this?") ?>', '<?php echo $deleteUrl ?>')" class="scalable delete" type="button" title="" >
+						<span><span><span>Delete Customer</span></span></span>
 					</button>
 					<?php } ?>
 				
@@ -104,7 +112,7 @@
 												<label for="date_of_po"><?php echo $this->__("Expted Date") ?></label>
 											</td>
 											<td class="value">
-												<input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo date("d/m/Y", strtotime($c_expectedDate)); ?>" name="expected_date" id="expected_date">
+												<input type="text" style="width:110px !important;" class=" input-text" title="<?php echo $this->__("Expted Date") ?>" value="<?php echo $c_expectedDate!=""?date('d/m/Y', strtotime($c_expectedDate)):date('d/m/Y', strtotime('+30 days')); ?>" name="expected_date" id="expected_date">
 												<img style="" title="<?php echo $this->__("Select Date") ?>" id="expected_date_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/grid-cal.gif") ?> ">
 											</td>
 										</tr>
@@ -114,7 +122,7 @@
 												<label for="add_product"><?php echo $this->__("Add Product to purchase order") ?></label>
 											</td>
 											<td class="value">
-												<input style="width:300px" type="text" class="input-text" id="add_product" onkeyup="loadProducts(this.value)"  />
+												<input style="width:300px" type="text" class="input-text" autocomplete="off" id="add_product" onkeyup="loadProducts(this.value)"  />
 												<div id="product_suggestion_box"></div>
 											</td>
 										</tr>
@@ -136,7 +144,8 @@
 															<li>
 																<div class="product-content p-name">
 																	<?php echo $productObject->getName() ?>
-																	<input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" />
+																	<input type="hidden" name="po_product[]" value="<?php echo $orderProduct->getId() ?>" />
+																	<input type="hidden" name="main_product[]" value="<?php echo $productObject->getId() ?>" />
 																</div>
 																<div class="product-content p-qty">
 																	<?php echo $orderProduct->getQty() ?>
@@ -238,7 +247,7 @@ $('product_suggestion_box').hide();
 			if(e.innerHTML > 0)
 				total += parseFloat(e.innerHTML);
 		});
-		$('grant_total').innerHTML = total.toFixed(4);;
+		$('grant_total').innerHTML = total.toFixed(2);;
 	}
 	
 	function countQty(){
@@ -266,8 +275,9 @@ $('product_suggestion_box').hide();
     			var lis = $('products_grid').childElements();
     			
     				$('products_grid').show();
-    			countTotal();
+    			//countTotal();
 				countQty();
+				countGTotal();
   			},
   			onFailure: function() { alert('Something went wrong...'); }
 		});
@@ -282,7 +292,7 @@ $('product_suggestion_box').hide();
 		}
 		total = val2 * element.value;
 		
-		total = total.toFixed(4);
+		total = total.toFixed(2);
 		element.up('li').down('div.p-total').innerHTML = total;
 		countGTotal();
 		countQty();

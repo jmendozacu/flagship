@@ -1,4 +1,5 @@
 <?php
+	$vendorId = $this->getRequest()->getParam('vendor_id');
 	$products = $this->getVendorProducts();
 	$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
 	$currency= Mage::getModel("directory/currency")->load($currency_code);
@@ -17,7 +18,7 @@
             </div>
             <div class="panel-body">
             	<div class="table-responsive">
-            		<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+            		<table class="table table-striped table-bordered table-hover agent-vendor-products-grid" id="dataTables-example">
             			<thead>
             				<tr>
                                 <th><?php echo $this->__("ID") ?></th>
@@ -27,11 +28,11 @@
             			</thead>
             			<tbody>
             				<?php $iCounter = 0; foreach ($products as $_product){ $iCounter++; ?>
-            				<?php $product = Mage::getModel('catalog/product')->load($_product['entity_id']) ?>
-            					<tr class="<?php echo $iCounter%2==0?"odd":"even"; ?>">
+            				 <?php $product = Mage::getModel('catalog/product')->load($_product['entity_id']) ?>
+            					<tr redirect="<?php echo $this->getUrl("inventorymanager/adminuser_vendor/productinfo" , array('product_id'=>$_product->getId(), 'vendor_id'=>$vendorId)) ?>" class="clickable-row <?php echo $iCounter%2==0?"odd":"even"; ?>">
             						<td><?php echo $product->getId() ?></td>
             						<td><?php echo $product->getName() ?></td>
-            						<td><?php echo  $currency->formatPrecision($product->getFinalPrice(),2); ?></td>
+            						<td><?php echo  $currency->formatPrecision($_product->getData('cost'),2); ?></td>
             					</tr>
             				<?php } ?>
             			</tbody>
@@ -43,6 +44,12 @@
 </div>
 <script>
 jQuery(document).ready(function () {
-    jQuery('#dataTables-example').dataTable();
+    var table = jQuery('#dataTables-example').dataTable();
+    
+    jQuery('#dataTables-example tbody').on('click', 'tr', function () {
+	    var url = jQuery(this).attr('redirect');
+        location.href = url;
+    } );
+    
 });
 </script>

@@ -1,0 +1,25 @@
+<?php
+	$productObject = $this->getProduct();
+	$vendorProduct = $this->getVendorProduct();
+	$cost = $productObject->getPrice();
+	if($vendorProduct && $vendorProduct->getId()){
+		$cost = $vendorProduct->getCost();
+	}
+	$cost = number_format($cost,2);
+	$cost = str_replace(",", "", $cost);
+?>
+<tr class="order-row">
+	<td>
+		<?php echo $productObject->getName() ?>
+		<input type="hidden" name="po_product[]" value="<?php echo $productObject->getId() ?>" class="order_product_hidden_input" />
+	</td>
+	<td>
+		<input type="text" value="1" name="qty[<?php echo $productObject->getId() ?>]" class="input-text input-qty form-control" onchange="countTotal()" />
+	</td>
+	<td>
+		
+		<input type="text" value="<?php echo $cost ?>" name="product_value[<?php echo $productObject->getId() ?>]" class="input-text input-price form-control" onchange="countTotal()" />
+	</td>
+	<td class="row-total p-input"></td>
+	<td align="center" valign="bottom"><a class="btn btn-danger" onclick="removeProduct(this)">X</a></td>
+</tr>

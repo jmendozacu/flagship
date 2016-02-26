@@ -1,0 +1,130 @@
+<?php
+	$serials = $this->getSerials();
+	$productId = $data["product_id"];
+	$orderProduct = $this->getOrderOroduct();
+	$catalogProduct = $this->getCatalogProduct();
+	$productInfoObject = $this->getProductInfoObject();
+	$_helper = $this->helper('catalog/output');
+?>
+<?php
+	$imageHtml = "";
+	if($productInfoObject && $productInfoObject->getMainImage() != ""){
+		$imageHtml =  '<img src="'.$this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/").'" />';
+	}
+	
+	$height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');
+	$width =  $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
+	$depth = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth');
+	$weight = $_helper->productAttribute($catalogProduct, $catalogProduct->getWeight(), 'weight');
+	
+	$boxWidth = 0; $boxHeight = 0; $boxLength = 0; $boxWeight = 0;
+	
+	if($productInfoObject && $productInfoObject->getId()){
+		
+		$boxWidth = $productInfoObject->getBoxWidth();
+		$boxHeight = $productInfoObject->getBoxHeight();
+		$boxLength = $productInfoObject->getBoxLength();
+		$boxWeight = $productInfoObject->getBoxWeight();
+		
+		if($productInfoObject->getHeight() && $productInfoObject->getHeight() > 0){
+			$height = $productInfoObject->getHeight();
+		}
+		if($productInfoObject->getWidth() && $productInfoObject->getWidth() > 0){
+			$width = $productInfoObject->getWidth();
+		}
+		if($productInfoObject->getLength() && $productInfoObject->getLength() > 0){
+			$depth = $productInfoObject->getLength();
+		}
+		if ($productInfoObject->getWeight() && $productInfoObject->getWeight() > 0) {
+            $weight = $productInfoObject->getWeight();
+        }
+	}
+?>
+<div>
+	
+		<?php $iCounter = 1; $jCounter = 0; ?>
+		<?php foreach ($serials as $product){ ?>
+		<?php if($iCounter > 10) { break; } $iCounter++; $jCounter++;  // place restriction to geneate lables for 300 qty ?>
+		<table>
+		<tr>
+		<?php for($ic=0;$ic<2;$ic++) {?>
+			<td style="width:45%; font-size:13px;">
+				<table border="1" cellpadding="5" width="100%">
+					
+					<tr>
+						<td>
+							<img src="<?php echo str_replace(array("index.php","index.php/"), "", Mage::getBaseUrl())	."barcode.php?text=".$product->getSerial()."&size=32"; ?>" />
+						</td>
+						<td>
+							<?php if($productInfoObject && $productInfoObject->getUpc() != ""){ ?>
+								<img src="<?php echo str_replace(array("index.php","index.php/"), "", Mage::getBaseUrl())	."barcode.php?text=".$productInfoObject->getUpc()."&size=32"; ?>" />
+							<?php } ?>
+						</td>
+					</tr>
+					<tr>
+						<td width="70%"><?php echo $product->getSerial() ?></td>
+						<td width="30%"><?php echo $productInfoObject->getUpc() ?></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<span style="">
+								<?php if($product->getMainImage() != "") { ?>
+									<img src="<?php echo $this->helper("inventorymanager")->resizeImage($product->getMainImage(), 100, 100, "label/"); ?>" />
+								<?php }elseif ($catalogProduct->getImage() != "" && $catalogProduct->getImage() != "no_selection"){ ?>
+									<img src="<?php echo $this->helper('catalog/image')->init($catalogProduct, 'image')->resize(100); ?>" />
+								<?php } ?>
+							</span>
+						</td>
+					</tr>
+				</table>
+				<table border="1" cellpadding="5" width="100%">
+					<tr>
+						<td width="30%"><?php echo $this->__("Product") ?></td>
+						<td width="70%"><?php echo $catalogProduct->getName() ?></td>
+					</tr>
+				</table>
+				<table border="1" cellpadding="5" width="100%">
+                    <tr>
+                    	<td width="30%"><?php echo $this->__("Weight(kg/lbs)") ?></td>
+                    	<td width="20%"><?php echo $weight ?>/<?php echo number_format($weight*2.20462,2) ?></td>
+                    	<td width="30%"><?php echo $this->__("Box Weight(kg/lbs)") ?></td>
+                    	<td width="20%"><?php echo $boxWeight ?>/<?php echo number_format($boxWeight*2.20462,2) ?></td>
+                    	
+                    </tr>
+                </table>
+				<table border="1" cellpadding="5" width="100%">
+					<tr>
+						<td width="30%"><?php echo $this->__("H W D") ?></td>
+						<td width="70%">
+							<?php echo $height ?>/
+							<?php echo $width ?>/
+							<?php echo $depth ?>
+						</td>
+					</tr>
+					<tr>
+						<td><?php echo $this->__("Box HWD") ?></td>
+						<td>
+							<?php echo $boxHeight ?>/
+							<?php echo $boxWidth ?>/
+							<?php echo $boxLength ?>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<?php if($ic == 0):?>
+				<td style="width:10%">&nbsp;</td>
+			<?php endif;?>
+		<?php } ?>
+		</tr>
+		</table>
+		
+		<?php if($jCounter%2 == 0){ ?>
+        		<!--EOP-->
+        <?php }else{ ?>
+        	<br/><br/><br/><br/>
+        <?php } ?>
+		
+		<?php } ?>
+	
+	
+</div>

@@ -1,0 +1,324 @@
+
+
+<?php $vendorData = Mage::registry('vendor_data');?>
+<?php $vendorData->getName();?>
+<?php $vendorProducts = $this->getVendorProducts($vendorData->getId());?>
+
+
+<form id="edit_form" name='edit_form' action="<?php echo $this->getPostUrl($vendorData->getId())?>" method="post" enctype="multipart/form-data">
+<input type="hidden" value="" name="search-value" id="search_value" />
+<input type="hidden" value="" name="selected_values" id="selected_values" />
+<input type="hidden" value="0" name="is_back" id="is_back" />
+<div class="row">
+    <div class="col-md-12">
+        <h2><?php echo $this->__("Vendor") ?></h2>
+        <div style="float:right;padding-right:10px">
+             <button type="button" onclick="submitEditForm(1)" title="<?php echo $this->__("Save and Continue") ?>" class="btn btn-warning" ><span><span><?php echo $this->__("Save and Continue") ?></span></span></button>
+             <button type="button" onclick="submitEditForm(0)" title="<?php echo $this->__('Save');?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $this->__("Vendor Information") ?></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php echo $this->getMessagesBlock()->toHtml() ?>
+                            <div class="form-group">
+                                
+                                <label for="name"><?php echo $this->__('Name');?><span class="required">*</span></label>
+                                <input id="name" name="<?php echo $this->__('name');?>" value="<?php echo $vendorData->getName();?>" class="required-entry form-control" type="text" style="width:300px" />
+                            </div>
+
+                            <div class="form-group">
+                                <label><?php echo $this->__("Vendor Email") ?></label>
+                                <input id="email" name="<?php echo $this->__('email');?>" value="<?php echo $vendorData->getEmail();?>" class="form-control  required-entry validate-email required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Vendor Code") ?></label>
+                                <input id="vendor_code" name="<?php echo $this->__('vendor_code');?>" value="<?php echo $vendorData->getVendorCode();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Username") ?></label>
+                                <input id="username" name="<?php echo $this->__('username');?>" value="<?php echo $vendorData->getUsername();?>" class="form-control required-entry" type="text" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Password") ?></label>
+                                <input id="password" name="<?php echo $this->__('password');?>" value="<?php echo $vendorData->getPassword();?>" class="form-control required-entry" type="password" style="width:300px" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><?php echo $this->__("Status") ?></label>
+                                <select class="form-control" name="active" style="width:300px">
+                                	<option value="1" <?php echo $vendorData->getActive()==1?'selected="selected"':''; ?>><?php echo $this->__("Active") ?></option>
+                                	<option value="0" <?php echo $vendorData->getActive()==0?'selected="selected"':''; ?>><?php echo $this->__("Inactive") ?></option>
+                                </select>
+                            </div>
+                            
+                           <?php /* <div class="form-group">
+                                <button type="submit" title="<?php echo "<?php echo $this->__('Save');?>";?>" class="btn btn-warning" ><span><span><?php echo "Save";?></span></span></button>
+                            </div>
+                            */?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Already Saved Products") ?></div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover" id="dataTables-exist">
+						<thead>
+							<tr>
+                                <th></th>
+                                <th><?php echo $this->__("ID") ?></th>
+                                <th><?php echo $this->__("Name") ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							$selectedProductsArray = array();
+							foreach ($vendorProducts as $productObject){ ?>
+								<?php 
+									//$productObject = Mage::getModel('catalog/product')->load($vProduct);
+									$vProduct = $productObject->getId();
+									$selectedProductsArray[] = $productObject->getId();
+								?>
+								<tr>
+									<td><input class="products-checkbox exist-product-checkbox" type="checkbox" checked value="<?php echo $vProduct ?>" /></td>
+									<td><?php echo $vProduct ?></td>
+									<td><?php echo $productObject->getName() ?></td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $this->__("Vendor Products") ?></div>
+                <div class="panel-body">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                        	<!--<input name="select_all" id="check-all"   class="checkbox " title="Select All" type="checkbox" >-->
+                                        </th>
+                                        <th><?php echo $this->__("ID") ?></th>
+                                        <th><?php echo $this->__("Name") ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $iCounter = 0;
+                                    
+                                    $allProducts = $this->getProducts($selectedProductsArray);
+                                    
+                                    foreach ($allProducts as $product){
+                                    	//if(in_array($productData['entity_id'], $vendorProducts)){ continue; }
+                                    	//$product = Mage::getModel('catalog/product')->load($productData['entity_id']);
+                                    	$iCounter++; ?>
+                                        <tr class="<?php echo $iCounter%2==0?"odd":"even"; ?>">
+                                            <td><input name="check_list[]" id="checkbox_<?php echo $product->getId() ?>" value="<?php echo $product->getId() ?>" 
+                                                <?php if(is_array($vendorProducts) && !empty($vendorProducts)):?>
+                                                    <?php if(in_array($product->getId(),$vendorProducts)):?>
+                                                        checked = "checked"
+                                                    <?php endif;?>        
+                                                <?php endif;?>
+                                                 class="checkbox products-checkbox new-product-checkbox" type="checkbox"></td>
+                                            <td><?php echo $product->getId() ?></td>
+                                            <td><?php echo $product->getName() ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+<script type="text/javascript">
+    editForm = new VarienForm('edit_form','');
+    function submitEditForm(val){
+    	$('is_back').value = val;
+    	findChecked();
+    	//return;
+    	//alert(selectValString); return;
+    	var searchValue = $('dataTables-example_filter').down('input').value;
+    	$('search_value').value = searchValue;
+    	
+    	
+    	
+    	editForm.submit();
+    }
+</script>
+
+ <script type="text/javascript">
+var dataTable;
+    jQuery(document).ready(function () {
+       dataTable = jQuery('#dataTables-example').dataTable();
+       selectedTable = jQuery('#dataTables-exist').dataTable();
+      /// jQuery("input.products-checkbox",dataTable.fnGetNodes()).attr('checked', false);
+      
+      var existSelectHTML = '<div class="selectall-links"><a onclick="selectAll(1, true)"><?php echo $this->__("Select All") ?></a>&nbsp;|&nbsp;<a onclick="selectVisible(1,true)"><?php echo $this->__("Select Visible") ?></a>&nbsp;|&nbsp;'
+      existSelectHTML += '<a onclick="selectAll(1, false)"><?php echo $this->__("Unselect All") ?></a>&nbsp;|&nbsp;'
+      existSelectHTML += '<a onclick="selectVisible(1,false)"><?php echo $this->__("Unselect Visible") ?></a>'
+      existSelectHTML += '</div>'
+      $('dataTables-exist_wrapper').down('div.row').insert({bottom:existSelectHTML});
+      
+      var newSelectHTML = '<div class="selectall-links">';
+      newSelectHTML += '<a onclick="selectAll(2, true)"><?php echo $this->__("Select All") ?></a>&nbsp;|&nbsp;';
+      newSelectHTML += '<a onclick="selectVisible(2,true)"><?php echo $this->__("Select Visible") ?></a>&nbsp;|&nbsp;';
+      newSelectHTML += '<a onclick="selectAll(2, false)"><?php echo $this->__("Unselect All") ?></a>&nbsp;|&nbsp;'
+      newSelectHTML += '<a onclick="selectVisible(2,false)"><?php echo $this->__("Unselect Visible") ?></a>'
+      newSelectHTML += '</div>';
+      
+      
+      $('dataTables-example_wrapper').down('div.row').insert({bottom:newSelectHTML});
+    });
+
+</script>
+<script type="text/javascript">
+
+/*$('check-all').observe('click', function(){
+	$$('input.products-checkbox').each(function(e){
+		
+		if($('check-all').checked)
+			e.checked = true;
+		else
+			e.checked = false;
+	});
+});*/
+
+/*	$$('input.products-checkbox').each(function(e){
+
+		e.observe('click', function(){
+			var selectVals = $('selected_values').value;
+			var selectedValsArray = selectVals.split(",");
+			if(this.checked){
+				selectedValsArray.push(this.value);
+			}else{
+				var index = selectedValsArray.indexOf(this.value);
+				if (index > -1) {
+				    selectedValsArray.splice(index, 1);
+				}
+			}
+			selectedValsArray = cleanArray(selectedValsArray);
+			$('selected_values').value = selectedValsArray.toString();
+		});
+	});*/
+
+</script>
+<script>
+	function selectAll(val,checkedVal){
+		if(val == 1){
+			var nodes = selectedTable._('tr', {"filter":"applied"});
+			var allCheckboxNodes = jQuery("input.products-checkbox",selectedTable.fnGetNodes());
+		}else{
+			var nodes = dataTable._('tr', {"filter":"applied"});
+			var allCheckboxNodes = jQuery("input.products-checkbox",dataTable.fnGetNodes());
+		}
+		var foundRows = [];
+		for(var i = 0; i < nodes.length ; i++){
+			foundRows.push(nodes[i][1]);
+		}
+		
+		var currentNode;
+		for(var i = 0; i < allCheckboxNodes.length ; i++){
+			if(foundRows.indexOf(allCheckboxNodes[i].value) != -1){
+				currentNode = jQuery(allCheckboxNodes[i]);
+				currentNode.prop('checked', checkedVal);
+			}
+		}
+	}
+	
+	function selectVisible(val, checkedVal){
+		if(val == 1){
+			$$('input.exist-product-checkbox').each(function(e){
+				e.checked = checkedVal;
+			});
+		}else{
+			$$('input.new-product-checkbox').each(function(e){
+				e.checked = checkedVal;
+			});
+		}
+	}
+</script>
+<script>
+function cleanArray(actual) {
+	var newArray = new Array();
+		for (var i = 0; i < actual.length; i++) {
+    	if (actual[i]) {
+      		newArray.push(actual[i]);
+    	}
+  	}
+  	return newArray;
+}
+
+//function selectAll(){
+jQuery('#check-all').click(function(){
+	//jQuery("input.products-checkbox",dataTable.fnGetNodes()).attr('checked', 1);
+	
+	var selectall = this.checked;
+	var nodes = dataTable._('tr', {"filter":"applied"});
+	var foundRows = [];
+	for(var i = 0; i < nodes.length ; i++){
+		foundRows.push(nodes[i][1]);
+		//jQuery('#checkbox_' + nodes[i][1]).attr("checked", selectall);
+	}
+	var allCheckboxNodes = jQuery("input.products-checkbox",dataTable.fnGetNodes());
+	var currentNode;
+	for(var i = 0; i < allCheckboxNodes.length ; i++){
+		if(foundRows.indexOf(allCheckboxNodes[i].value) != -1){
+			//alert(allCheckboxNodes[i].value);
+			currentNode = jQuery(allCheckboxNodes[i]);
+			currentNode.prop('checked', selectall);
+		}
+	}
+});
+
+
+
+function findChecked(){
+	var nodes = jQuery("input.products-checkbox",dataTable.fnGetNodes());
+	var values = [];
+	for(var i = 0; i < nodes.length ; i++){
+		if(nodes[i].checked){
+			values.push(nodes[i].value);
+		}
+	}
+	$('selected_values').value = values.toString();
+	
+	nodes = jQuery("input.products-checkbox",selectedTable.fnGetNodes());
+	values = [];
+	for(i = 0; i < nodes.length ; i++){
+		if(nodes[i].checked){
+			values.push(nodes[i].value);
+		}
+	}
+	$('selected_values').value += ','+values.toString();
+}
+</script>

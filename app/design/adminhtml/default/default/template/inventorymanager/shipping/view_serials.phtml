@@ -1,0 +1,68 @@
+<?php $serials = $this->getCurrentSerials(); ?>
+<div class="grid">
+	<table class="data" cellspacing="0">
+		<colgroup>
+			<col>
+			<col width="80">
+		</colgroup>
+		<thead>
+			<tr class="headings">
+				<td><?php echo $this->__("Serial") ?></td>
+				<td class="last"><?php echo $this->__("Action") ?></td>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<td><input type="text" class="input-text" id="new_serial" /></td>
+				<td class="last"><button onclick="addSerial()" class="scalable save" type="button"><span><span><span><?php echo $this->__("Add") ?></span></span></span></button></td>
+			</tr>
+		</tfoot>
+		<tbody id="added_serials">
+			<?php $i=0; foreach ($serials as $serial){ $i++; ?>
+				<tr class="<?php echo $i%2==0?"even":"odd"; ?>" id="serial_tr_<?php echo $serial->getId() ?>">
+					<td><?php echo $serial->getSerial() ?></td>
+					<td><a href="javascript:void(0)" onclick="removeSerial(<?php echo $serial->getId() ?>)"><?php echo $this->__("Remove") ?></a></td>
+				</tr>
+			<?php } ?>
+		</tbody>
+	</table>
+</div>
+<script>
+	var i = <?php echo $i ?>;
+	function addSerial(){
+		var trClass = "odd";
+		if(i%2==0) { trClass = "even"; }
+		i++;
+		var serial = $('new_serial').value;
+		var shipmentId = '<?php echo $this->getShipmentId()?$this->getShipmentId():""; ?>';
+		var orderId = '<?php echo $this->getOrderId(); ?>';
+		$('new_serial').value = '';
+		new Ajax.Request('<?php echo $this->helper('adminhtml')->getUrl("inventorymanager/adminhtml_label/assignShipment") ?>', {
+			method:'get',
+			parameters: {serial: serial, shipment_id:shipmentId, order_id:orderId},
+			onSuccess: function(transport) {
+		    	var response = transport.responseText;
+		    	if(response != ""){
+		    	var ins = '<tr id="serial_tr_'+serial+'" class="'+ trClass +'"><td>'+serial+'</td><td><a href="javascript:void(0)" onclick="removeSerial('+response+')"><?php echo $this->__("Remove") ?></a></td></tr>';	
+		    		$('added_serials').insert(ins);
+				}else{
+					alert('<?php echo $this->__("Something went wrong") ?>');
+				}
+			},
+		  	onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+	
+	function removeSerial(id){
+		new Ajax.Request('<?php echo $this->helper('adminhtml')->getUrl("inventorymanager/adminhtml_label/unassignShipment") ?>', {
+			method:'get',
+			parameters: {serial_id: id},
+			onSuccess: function(transport) {
+		    	var response = transport.responseText;
+		    	$('serial_tr_'+id).remove();
+		    	
+			},
+		  	onFailure: function() { alert('Something went wrong...'); }
+		});
+	}
+</script>

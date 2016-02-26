@@ -49,6 +49,59 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
 		$this->renderLayout();
 	}
 	
+    public function profileAction(){
+        if (!$this->_getSession()->isLoggedIn()) {
+            $this->_redirect('*/*/login');
+            return;
+        }
+        $this->loadLayout();
+        $this->renderLayout();
+    }
+
+    public function vendorsaveAction() {
+
+        
+        if ($data = $this->getRequest()->getPost()) {
+           
+           $vendorId = Mage::getSingleton('core/session')->getVendor()->getId();
+           
+           /*
+           echo "<pre>";
+            print_r($data);
+           exit;
+            */
+            $model = Mage::getModel('inventorymanager/vendor');     
+            $model->setData($data)
+                ->setId($vendorId);
+            
+            try {
+                if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
+                    $model->setCreatedTime(now())
+                        ->setUpdateTime(now());
+                } else {
+                    $model->setUpdateTime(now());
+                }   
+                
+                $model->save();
+                
+
+                Mage::getSingleton('core/session')->addSuccess(Mage::helper('inventorymanager')->__('Vendor saved successfully'));
+                Mage::getSingleton('core/session')->setFormData(false);
+                Mage::getSingleton('core/session')->setVendor($model);
+                //Mage::getModel('inventorymanager/session')->setVendor($model);
+                $this->_redirect('inventorymanager/vendor/profile');
+                return;
+            } catch (Exception $e) {
+                Mage::getSingleton('core/session')->addError($e->getMessage());
+                Mage::getSingleton('core/session')->setFormData($data);
+                $this->_redirect('*/*/profile');
+                return;
+            }
+        }
+        Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__('Unable to find vendor to save'));
+        $this->_redirect('inventorymanager/adminuser/vendorprofiles');
+    }
+
 	public function productsAction(){
 		if (!$this->_getSession()->isLoggedIn()) {
             $this->_redirect('*/*/login');
@@ -123,10 +176,46 @@ class Ecommerceguys_Inventorymanager_VendorController extends Mage_Core_Controll
         $this->_redirect('*/*/login');
 	}
 	
+    
 	public function logoutAction(){
 		$this->_getSession()->logout()
             ->renewSession();
 
         $this->_redirect('*/*/login');
+	}
+	
+	public function locationsAction(){
+		$this->loadLayout();
+		$this->renderLayout();
+	}
+	
+	public function saveLocationAction(){
+		$data = $this->getRequest()->getParams();
+		$session = $this->_getSession();
+		if(isset($data['location']) && $data['location'] != ""){
+			$labelResource = Mage::getResourceModel('inventorymanager/label');
+			$labelResource->addLocation($data['location']);
+			$session->addSuccess(Mage::helper('inventorymanager')->__("Location added."));
+			$this->_redirect("inventorymanager/vendor/locations");
+			return $this;
+		}
+		$session->addError(Mage::helper('inventorymanager')->__("Invalid data"));
+		$this->_redirect("inventorymanager/vendor/locations");
+		return $this;
+	}
+	
+	public function deleteLocationAction(){
+		$data = $this->getRequest()->getParams();
+		$session = $this->_getSession();
+		if(isset($data['location']) && $data['location'] != ""){
+			$labelResource = Mage::getResourceModel('inventorymanager/label');
+			$labelResource->removeLocation($data['location']);
+			$session->addSuccess(Mage::helper('inventorymanager')->__("Location removed."));
+			$this->_redirect("inventorymanager/vendor/locations");
+			return $this;
+		}
+		$session->addError(Mage::helper('inventorymanager')->__("Invalid data"));
+		$this->_redirect("inventorymanager/vendor/locations");
+		return $this;
 	}
 }

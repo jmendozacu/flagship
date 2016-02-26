@@ -26,8 +26,8 @@
 							<tbody>
 								<?php
 								$icounter = 0;
-								foreach ($vendorProducts as $productData){
-								$product = Mage::getModel('catalog/product')->load($productData['entity_id']) ?>
+								foreach ($vendorProducts as $product){
+								//$product = Mage::getModel('catalog/product')->load($productData['entity_id']) ?>
 									<tr id="products_tr_<?php echo $product->getId() ?>" class="<?php echo $icounter%2==0?"even":""; ?> gradeA">
 										<td class="sorting_1"><a href="<?php echo $this->getUrl("inventorymanager/vendor_product/edit", array('id'=>$product->getId())) ?>"><?php echo $product->getId() ?></a></td>
 										<td><a href="<?php echo $this->getUrl("inventorymanager/vendor_product/edit", array('id'=>$product->getId())) ?>"><?php echo $product->getName() ?></a></td>
@@ -42,3 +42,8 @@
 		</div>
 	</div>
 </div>
+<script>
+jQuery(document).ready(function () {
+    jQuery('#dataTables-example').dataTable();
+});
+</script>

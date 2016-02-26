@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ecommerceguys_Inventorymanager>
-            <version>0.2.8</version>
+            <version>0.4.8</version>
         </Ecommerceguys_Inventorymanager>
     </modules>
     <frontend>
@@ -58,10 +58,57 @@
                     <label_comment>
                     	<table>inventorymanager_purchaseorder_label_comment</table>
                     </label_comment>
+                    <label_history>
+                    	<table>inventorymanager_purchaseorder_label_history</table>
+                    </label_history>
+                    <vendor_deletedlocation>
+                    	<table>inventorymanager_vendor_deleted_location</table>
+                    </vendor_deletedlocation>
+                    <vendor_employee>
+                    	<table>inventorymanager_vendor_employee</table>
+                    </vendor_employee>
+                    <shipmanager>
+                    	<table>inventorymanager_shipmanager_history</table>
+                    </shipmanager>
+                    <shipmanager_item>
+                    	<table>inventorymanager_shipmanager_history_item</table>
+                    </shipmanager_item>
+                    <shipmanager_sender>
+                    	<table>inventorymanager_shipmanager_history_senderaddress</table>
+                    </shipmanager_sender>
+                    <shipmanager_receiver>
+                    	<table>inventorymanager_shipmanager_history_receiveraddress</table>
+                    </shipmanager_receiver>
                 </entities>
             </inventorymanager_resource>
         </models>
         <resources>
+        	<oscomm_write>
+        		<connection>
+        			<use>oscomm_database</use>
+        		</connection>
+        	</oscomm_write>
+        	<oscomm_read>
+        		<connection>
+        			<use>oscomm_database</use>
+        		</connection>
+        	</oscomm_read>
+        	<oscomm_setup>
+        		<connection>
+        			<use>core_setup</use>
+        		</connection>
+        	</oscomm_setup>
+        	<oscomm_database>
+        		<connection>
+        			<host><![CDATA[c-database1.hahj.stackablehost.com]]></host>
+					<username><![CDATA[prolinerangehood]]></username>
+					<password><![CDATA[80FxWbtK]]></password>
+					<dbname><![CDATA[prolinerangehoods]]></dbname>
+					<model>mysql4</model>
+					<type>pdo_mysql</type>
+					<active>1</active>
+        		</connection>
+        	</oscomm_database>
             <inventorymanager_setup>
                 <setup>
                     <module>Ecommerceguys_Inventorymanager</module>
@@ -93,9 +140,19 @@
             <adminhtml>
             	<rewrite>
             		<catalog_product_edit_tabs>Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Tabs</catalog_product_edit_tabs>
+            		<sales_order_view_tabs>Ecommerceguys_Inventorymanager_Block_Adminhtml_Sales_Order_View_Tabs</sales_order_view_tabs>
            		</rewrite>
             </adminhtml>
         </blocks>
+        <template>
+			<email>
+				<purchaseorder_email module="inventorynamager">
+					<label>Purchase Order Email</label>
+					<file>purchaseorder_email.html</file>
+					<type>html</type>
+				</purchaseorder_email>
+			</email>
+		</template>
     </global>
     <adminhtml>
         <layout>
@@ -113,12 +170,12 @@
 					<vendor module="inventorymanager">
 						<title>Manage Vendors</title>
 						<sort_order>0</sort_order>
-						<action>inventorymanager/adminhtml_vendor</action>
+						<action>inventorymanageradmin/adminhtml_vendor</action>
 					</vendor>
 					<purchaseorder module="inventorymanager">
 						<title>Purchase Order</title>
 						<sort_order>1</sort_order>
-						<action>inventorymanager/adminhtml_purchaseorder</action>
+						<action>inventorymanageradmin/adminhtml_purchaseorder</action>
 					</purchaseorder>
 				</children>
 			</inventorymanager>
@@ -142,16 +199,34 @@
 				</admin>
 			</resources>
 		</acl>
+		<events>
+	        <core_block_abstract_prepare_layout_before>
+	            <observers>
+	                <newmodule_core_block_abstract_prepare_layout_before>
+	                    <class>inventorymanager/observer</class>
+	                    <method>addMassAction</method>
+	                </newmodule_core_block_abstract_prepare_layout_before>
+	            </observers>
+	        </core_block_abstract_prepare_layout_before>
+	        <sales_order_shipment_save_after>
+	        	<observers>
+	                <inventorymanager_order_shipment_save_after>
+	                    <class>inventorymanager/observer</class>
+	                    <method>saveShipmentAfter</method>
+	                </inventorymanager_order_shipment_save_after>
+	            </observers>
+	        </sales_order_shipment_save_after>
+	    </events>
     </adminhtml>
     <admin>
         <routers>
-            <inventorymanager>
+            <inventorymanageradmin>
                 <use>admin</use>
                 <args>
                     <module>Ecommerceguys_Inventorymanager</module>
-                    <frontName>inventorymanager</frontName>
+                    <frontName>inventorymanageradmin</frontName>
                 </args>
-            </inventorymanager>
+            </inventorymanageradmin>
         </routers>
     </admin>
 </config>

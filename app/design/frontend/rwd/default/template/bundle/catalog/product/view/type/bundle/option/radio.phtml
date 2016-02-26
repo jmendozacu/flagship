@@ -76,7 +76,37 @@
                 <?php echo $this->setValidationContainer('bundle-option-'.$_option->getId().'-'.$_selection->getSelectionId(), 'bundle-option-'.$_option->getId().'-container') ?>
             <?php endif; ?>
             </li> 
-        <?php endforeach; ?>
+<?php /* =======
+            <li><input type="radio" onclick="bundle.changeSelection(this); fillPrice('<?php echo $_selection->getId() ?>')" class="radio<?php echo $_option->getRequired()?' validate-one-required-by-name':'' ?> change-container-classname" id="bundle-option-<?php echo $_option->getId() ?>-<?php echo $_selection->getSelectionId() ?>" name="bundle_option[<?php echo $_option->getId() ?>]"<?php if ($this->_isSelected($_selection)) echo ' checked="checked"' ?><?php if (!$_selection->isSaleable()) echo ' disabled="disabled"' ?>value="<?php echo $_selection->getSelectionId() ?>"/>
+            <span class="label">
+            	<label for="bundle-option-<?php echo $_option->getId() ?>-<?php echo $_selection->getSelectionId() ?>"><?php echo $this->getSelectionTitlePrice($_selection) ?>
+					<span class="regular-price">
+						<?php $normalPrice = ""; if($_selection && $_selection->getFinalPrice() < $_selection->getPrice()) { ?>
+							<?php $normalPrice = $currency->formatPrecision($_selection->getPrice(), 2); ?>
+							<?php echo $normalPrice; ?>
+						<?php }  ?>
+					</span>
+            	</label>
+		        <?php $retailPrice = ""; if($_selection->getRetailPrice() && $_selection->getRetailPrice() > 0){ $retailPrice = $currency->formatPrecision($_selection->getRetailPrice(), 2); } ?>
+				<span id="retails_price_<?php echo $_selection->getId() ?>" style="display:none" class="gray"> <h2>Retail</h2><?php echo $retailPrice ?> </span>
+				<span id="final_price_<?php echo $_selection->getId() ?>" style="display:none" class="gray">
+                <h2>Direct</h2>
+					<span class="price"><?php echo $this->__("Price") ?>&nbsp;:&nbsp;</span>
+					<span><?php echo $currency->formatPrecision($_selection->getFinalPrice(), 2); ?></span>
+					<span class="directcross"><?php echo $normalPrice ?></span>
+				</span>
+				
+				<style>
+				.directcross{text-decoration: line-through;}
+				.gray{ background-color: #66707e;}
+				</style>
+            </span>
+            <?php if ($_option->getRequired()): ?>
+                <?php echo $this->setValidationContainer('bundle-option-'.$_option->getId().'-'.$_selection->getSelectionId(), 'bundle-option-'.$_option->getId().'-container') ?>
+            <?php endif; ?>
+            </li>
+>>>>>>> 4dc59263f04104dcd39abbe10cf7ff718d76d1ed
+*/?>        <?php endforeach; ?>
         </ul>
         <div id="bundle-option-<?php echo $_option->getId() ?>-container"></div>
     <?php endif; ?>

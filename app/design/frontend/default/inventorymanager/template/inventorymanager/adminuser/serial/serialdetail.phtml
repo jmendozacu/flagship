@@ -1,0 +1,470 @@
+<?php
+	$_helper = $this->helper('catalog/output');
+	$labelObject = $this->getLabelObject();
+	$catalogProduct = $this->gerMainProduct();
+	
+	$productInfoObject = $this->getVendorProduct();
+	
+	$_purchaseorder = $this->getPurchaseOrder();
+	
+	$_helper = $this->helper('catalog/output');
+	$labelComments = $this->getComments();
+	$status = Mage::helper('inventorymanager')->getOrderedProductStatusArray($_purchaseorder->getVendorId());
+	$locations = $this->helper('inventorymanager')->getAgentLocations();
+	
+	$staticStatusArray = $this->helper('inventorymanager')->getStaticStatusOptions();
+	
+	$height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');
+    $width = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
+    $depth = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth');
+    $weight = $_helper->productAttribute($catalogProduct, $catalogProduct->getWeight(), 'weight');
+
+    $boxWidth = 0;
+    $boxHeight = 0;
+    $boxLength = 0;
+    $boxWeight = 0;
+
+    if ($productInfoObject && $productInfoObject->getId()) {
+
+        $boxWidth = $productInfoObject->getBoxWidth();
+        $boxHeight = $productInfoObject->getBoxHeight();
+        $boxLength = $productInfoObject->getBoxLength();
+        $boxWeight = $productInfoObject->getBoxWeight();
+
+        if ($productInfoObject->getHeight() && $productInfoObject->getHeight() > 0) {
+            $height = $productInfoObject->getHeight();
+        }
+        if ($productInfoObject->getWidth() && $productInfoObject->getWidth() > 0) {
+            $width = $productInfoObject->getWidth();
+        }
+        if ($productInfoObject->getLength() && $productInfoObject->getLength() > 0) {
+            $depth = $productInfoObject->getLength();
+        }
+        if ($productInfoObject->getWeight() && $productInfoObject->getWeight() > 0) {
+            $weight = $productInfoObject->getWeight();
+        }
+    }
+?>
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Receive a Product") ?></h2>
+		<h5><?php echo $this->__("This form submits product to stock") ?></h5>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $catalogProduct->getName() ?></div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<form action="<?php echo $this->getUrl("inventorymanager/adminuser_serial/receivepost") ?>" method="POST" id="edit_productlabel" enctype="multipart/form-data">
+							<input type="hidden" value="<?php echo $labelObject->getId() ?>" name="label_id" />
+							<input type="hidden" value="<?php echo $catalogProduct->getId() ?>" name="main_product_id" />
+							<div class="form-group">
+								<label><?php echo $this->__("Serial Key") ?></label>
+								<p class="form-control-static"><?php echo $labelObject->getSerial(); ?></p>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Height") ?></label>
+								<p class="form-control-static">
+									<?php echo $height ?>
+								</p>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Width") ?></label>
+								<p class="form-control-static">
+									<?php echo $width ?>
+								</p>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Depth") ?></label>
+								<p class="form-control-static">
+									<?php echo $depth ?>
+								</p>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Image") ?></label>
+								<p class="form-control-static">
+									<input type="file" name="main_image" id="main_image"  />
+								</p>
+								<?php if($labelObject->getMainImage() != ""){ ?>
+									<p>
+										<a href="javascript:void(0);" onclick="jQuery('#main_image_model').modal('show');">
+											<img src="<?php echo $this->helper("inventorymanager")->resizeImage($labelObject->getMainImage(), 100, 100, "label/"); ?>" />
+										</a>
+										<br>
+										<input type="hidden" name="main_image" value="<?php echo $labelObject->getMainImage(); ?>" />
+										<input type="checkbox" name="remove_main_image" id="remove_main_image" value="1" />
+										<?php echo $this->__("Remove Image") ?>
+									</p>
+									<?php $imageSize = getimagesize(Mage::getBaseUrl('media') . 'label/' . $labelObject->getMainImage()); ?>
+									<div class="modal fade bs-example-modal-lg" id="main_image_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+										<div class="modal-dialog modal-lg" style="width:<?php echo $imageSize[0]+20 ?>px !important;">
+											<div class="modal-content"">
+												<div style="padding:10px;"><a href="#" style="float:right;" onclick="jQuery('#main_image_model').modal('hide');">X</a>
+													<img src="<?php echo Mage::getBaseUrl('media') . 'label/' . $labelObject->getMainImage(); ?>" />
+												</div>
+											</div>
+										</div>
+									</div>
+								<?php } ?>
+							</div>
+							<div class="form-group">
+								<div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="is_shipped" value="1"><?php echo $this->__("Shipped") ?>
+                                    </label>
+                                </div>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Location") ?></label>
+								<div class="form-control-static" >
+									<div class="btn-group show-dropbox">
+											<div class="form-group input-group show-dropbox" style="float:left; margin-right:0px;">
+							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" name="location" id="new_location" value="<?php echo $labelObject->getLocation(); ?>" />
+							  			</div>
+									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button-location" style="z-index:999"><span class="caret"></span></button>
+									  	<ul class="dropdown-menu" id="dropdown-box-location">
+									  		<li class="add-location-li"><a href="javascript:void(0);" id="new_location_link" ><?php echo $this->__("Add New") ?></a></li>
+									  		<?php foreach ($locations as $key => $locationLabel) { ?>
+									  			<li><span class="remove-location-link">x</span><a class="location-options" href="javascript:void(0);"><?php echo $locationLabel ?></a></li>
+									  		<?php } ?>
+									  	</ul>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label><?php echo $this->__("Status") ?></label>
+								<div class="form-control-static" >
+									<div class="btn-group show-dropbox">
+											<div class="form-group input-group show-dropbox" id="status-text-div" style="float:left; margin-right:0px;">
+							  				<input type="text" class="form-control" onkeyup="statusText(this.value)" readonly name="status" id="new_status" value="<?php echo $labelObject->getStatus(); ?>" />
+							  			</div>
+									  	<button type="button" class="btn btn-primary dropdown-toggle" id="openbox-button" style="z-index:999"><span class="caret"></span></button>
+									  	<ul class="dropdown-menu" id="dropdown-box">
+									  		<?php /* <li class="add-status-li"><a href="javascript:void(0);" id="new_status_link" ><?php echo $this->__("Add New") ?></a></li> */ ?>
+									  		<?php foreach ($staticStatusArray as $key => $statusLabel) { ?>
+									  			<li><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  		<?php } ?>
+									  		<?php /*foreach ($status as $key => $statusLabel) { ?>
+									  			<li><span class="remove-status-link">x</span><a class="status-options" href="javascript:void(0);"><?php echo $statusLabel ?></a></li>
+									  		<?php }*/ ?>
+									  	</ul>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12 col-sm-12">
+									<div class="panel panel-primary">
+										<!--<div class="panel-heading"><?php echo $this->__("Comment Section") ?></div>-->
+										<div class="panel-body">
+											<div class="form-group">
+												<label><?php echo $this->__("Comments") ?></label>
+											</div>
+											
+											<?php if($labelComments && $labelComments->count() > 0){ ?>
+												<table class="table table-striped table-bordered table-hover">
+													<thead>
+														<tr>
+															<td><?php echo $this->__("Date") ?></td>
+															<td><?php echo $this->__("Comment") ?></td>
+															<td><?php echo $this->__("Image") ?></td>
+														</tr>
+													</thead>
+													<?php foreach ($labelComments as $comment){ ?>
+														<tr>
+															<td><?php echo date("Y-m-d", strtotime($comment->getCreatedTime())); ?></td>
+															<td><?php echo $comment->getComment() ?></td>
+															<td>
+																<?php if($comment->getImage() != ""){ ?>
+																	<a href="javascript:void(0);" onclick="jQuery('#image_model_<?php echo $comment->getId() ?>').modal('show');">
+																		<img src="<?php echo $this->helper("inventorymanager")->resizeImage($comment->getImage(), 100, 100, "label/comments"); ?>" />
+																	</a>
+																	<?php
+																		$imageSize = getimagesize(Mage::getBaseUrl('media') . 'label/comments/' . $comment->getImage());
+																	?>
+																	<div class="modal fade bs-example-modal-lg" id="image_model_<?php echo $comment->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+				  														<div class="modal-dialog modal-lg" style="width:<?php echo $imageSize[0]+20 ?>px !important;">
+			    															<div class="modal-content"">
+			    																<div style="padding:10px"><a href="#" style="float:right;" onclick="jQuery('#image_model_<?php echo $comment->getId() ?>').modal('hide');">X</a>
+			      																	<img src="<?php echo Mage::getBaseUrl('media') . 'label/comments/' . $comment->getImage(); ?>" />
+			      																</div>
+			    															</div>
+			  															</div>
+																	</div>
+																<?php } ?>
+															</td>
+														</tr>
+													<?php } ?>
+												</table>
+											<?php } ?>
+											
+											<div class="form-group">
+												<label><?php echo $this->__("Comment") ?></label>
+												<textarea class="form-control" rows="2" name="comment"></textarea>
+											</div>
+											<div class="form-group">
+												<label><?php echo $this->__("Comment Image") ?></label>
+												<p class="form-control-static">
+													<input type="file" name="comment_image" id="comment_image"  />
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<a class="btn btn-warning" onclick="if(dataForm.validator && dataForm.validator.validate()){ dataForm.form.submit(); }" href="javascript:void(0)"><?php echo $this->__("Receive Product") ?></a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Small modal -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+    	<div class="labelpage-loader-div">
+      		<img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo $this->__("Loading...") ?>" />
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+	var dataForm = new VarienForm('edit_productlabel', false);
+</script>
+<script>
+	// SMART DROPBOX
+	// LABEL STATUS
+	var statuses = [];
+	<?php foreach ($status as $statusLabel) { ?>
+		statuses.push("<?php echo $statusLabel ?>");
+	<?php } ?>
+
+	function statusText(val){
+		//$('new_status_link').innerHTML = '<?php echo $this->__("Add") ?> ' + val;
+	}
+	
+	$$('a.status-options').each(function(e){
+		e.observe('click', function(){
+			$('new_status').value = e.innerHTML;
+			$('dropdown-box').toggleClassName('show-dropbox');
+		});
+	});
+	
+	$('status-text-div').observe('click', function(){
+		$('dropdown-box').addClassName('show-dropbox');
+	});
+	
+	$('openbox-button').observe('click', function(){
+		$('dropdown-box').toggleClassName('show-dropbox');
+	});
+	
+	$('new_status_link').observe('click', function(){
+		addStatusFunction();
+	});
+	
+
+	function addStatusFunction(){
+		var status = $('new_status').value;
+		var currentIndex = statuses.indexOf(status);
+		if(currentIndex>=0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addnewstatus', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {status: status},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				var removeSpan = document.createElement("span");
+    				removeSpan.addClassName('remove-status-link');
+    				removeSpan.innerHTML = 'x';
+    				
+    				var liElement = document.createElement("li");
+    				liElement.appendChild(removeSpan);
+    				liElement.insert('<a class="status-options" href="javascript:void(0);">'+status+'</a></li>');
+    				
+    				var tempDiv = document.createElement("div");
+    				tempDiv.appendChild(liElement);
+    				
+    				$('dropdown-box').innerHTML = $('dropdown-box').innerHTML + tempDiv.innerHTML;
+    				statuses.push(status);
+    				$$('a.status-options').each(function(e){
+						e.observe('click', function(){
+							$('new_status').value = e.innerHTML;
+							$('dropdown-box').toggleClassName('show-dropbox');
+						});
+					});
+					$('dropdown-box').toggleClassName('show-dropbox');
+					$('new_status_link').observe('click', function(){
+						addStatusFunction();
+					});
+					$$("span.remove-status-link").each(function(el){
+						el.observe('click', function(){
+							removeStatusFunction(this); 
+						});
+					});
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	
+	$$("span.remove-status-link").each(function(e){
+		e.observe('click', function(){
+			removeStatusFunction(e);
+		});
+	});
+	
+	function removeStatusFunction(e){
+		
+		var status = e.up('li').down('a').innerHTML;
+		var currentIndex = statuses.indexOf(status);
+		if(currentIndex<0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removenewstatus', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {status: status},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				statuses.splice(currentIndex, 1);
+    				e.up('li').remove();
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+</script>
+
+<script>
+	// SMART DROPBOX SCRIPTS
+	// locations
+	var locations = [];
+	<?php foreach ($locations as $location){ ?>
+		locations.push("<?php echo $location; ?>");
+	<?php } ?>
+	
+	$('openbox-button-location').observe('click', function(){
+		$('dropdown-box-location').toggleClassName('show-dropbox');
+	});
+	
+	$('new_location').observe("keyup", function(){
+		$('dropdown-box-location').addClassName('show-dropbox');
+		$('new_location_link').innerHTML = '<?php echo $this->__("Add") ?> ' + this.value;
+	});
+	
+	$('new_location').observe("click", function(){
+		$('dropdown-box-location').addClassName('show-dropbox');
+	});
+	
+	$('new_location_link').observe('click', function(){
+		addNewLocation();
+	});
+	
+	$$('a.location-options').each(function(e){
+		e.observe('click', function(){
+			$('new_location').value = e.innerHTML;
+			$('dropdown-box-location').toggleClassName('show-dropbox');
+		});
+	});
+	
+	function addNewLocation(){
+		var location = $('new_location').value;
+		var currentIndex = locations.indexOf(location);
+		if(currentIndex>=0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/addlocation', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {location:location},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				var removeSpan = document.createElement("span");
+    				
+    				removeSpan.addClassName('remove-location-link');
+    				removeSpan.innerHTML = 'x';
+    				
+    				var liElement = document.createElement("li");
+    				liElement.appendChild(removeSpan);
+    				liElement.insert('<a class="location-options" href="javascript:void(0);">'+location+'</a></li>');
+    				
+    				var tempDiv = document.createElement("div");
+    				tempDiv.appendChild(liElement);
+    				
+    				$('dropdown-box-location').innerHTML = $('dropdown-box-location').innerHTML + tempDiv.innerHTML;
+    				locations.push(location);
+    				$$('a.location-options').each(function(e){
+						e.observe('click', function(){
+							$('new_location').value = e.innerHTML;
+							$('dropdown-box-location').toggleClassName('show-dropbox');
+						});
+					});
+					$('dropdown-box-location').toggleClassName('show-dropbox');
+					$('new_location_link').observe('click', function(){
+						addNewLocation();
+					});
+					$$("span.remove-location-link").each(function(el){
+						el.observe('click', function(){
+							removeLocationFunction(el); 
+						});
+					});
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+	
+	$$("span.remove-location-link").each(function(e){
+		e.observe('click', function(){
+			removeLocationFunction(e);
+		});
+	});
+	
+	function removeLocationFunction(e){
+		var location = e.up('li').down('a').innerHTML;
+		var currentIndex = locations.indexOf(location);
+		if(currentIndex<0){
+			return;
+		}
+		jQuery('.bs-example-modal-sm').modal('show');
+		new Ajax.Request('<?php echo $this->getUrl('inventorymanager/label/removelocation', array('_current'=>true)) ?>', {
+  			method:'post',
+  			parameters: {location: location},
+  			onSuccess: function(transport) {
+  				jQuery('.bs-example-modal-sm').modal('hide');
+    			var response = transport.responseText;
+    			if(response != ''){
+    				alert(response);
+    			}else{
+    				locations.splice(currentIndex, 1);
+    				e.up('li').remove();
+    			}
+  			},
+  			onFailure: function() { alert('Something went wrong...');}
+		});
+	}
+</script>

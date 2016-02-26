@@ -1,0 +1,114 @@
+<?php
+	$productInfoObject = $this->getProductInfo();
+	$product = Mage::getModel('catalog/product')->load($productInfoObject->getProductId());
+	$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+	$currency= Mage::getModel("directory/currency")->load($currency_code);
+	$vendor = $this->getCurrentVendor();
+	$materials = $vendor->getMaterial();
+	$helper = Mage::helper('inventorymanager');
+	$materialArray = array_map(array($helper, 'formatMaterialArray'), $materials);
+	$lighting = $vendor->getLighting();
+	$lightingArray = array_map(array($helper, 'formatLightingArray'), $lighting);
+?>
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $product->getName(); ?></h2>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><?php echo $this->__("Vendor Product Information") ?></div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label><?php echo $this->__("SKU") ?> : </label>
+							<?php echo $product->getSku() ?>
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Description") ?> : </label>
+							<?php echo $productInfoObject->getDescription() ?>
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Price") ?> : </label>
+							<?php echo $currency->formatPrecision($productInfoObject->getCost(), 2);  ?>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label><?php echo $this->__("Weight") ?></label>
+									<div>KG : <?php echo $productInfoObject->getWeight() ?></div>
+									<div>LBS : <?php echo $productInfoObject->getWeight() * 2.20462 ?></div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Length") ?></label>
+									<div>INCH : <?php echo number_format($productInfoObject->getLength(), 2) ?></div>
+									<div>MM : <?php echo number_format($productInfoObject->getLength() * 25.4, 2) ?></div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Width") ?></label>
+									<div>INCH : <?php echo number_format($productInfoObject->getWidth(), 2) ?></div>
+									<div>MM : <?php echo number_format($productInfoObject->getWidth() * 25.4, 2) ?></div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Height") ?></label>
+									<div>INCH : <?php echo number_format($productInfoObject->getHeight(), 2) ?></div>
+									<div>MM : <?php echo number_format($productInfoObject->getHeight() * 25.4, 2) ?></div>
+								</div>
+							</div>
+							
+							<div class="col-md-6">
+								<div class="form-group">
+									<label><?php echo $this->__("Box Weight") ?></label>
+									<div>KG : <?php echo $productInfoObject->getBoxWeight() ?></div>
+									<div>LBS : <?php echo $productInfoObject->getBoxWeight() * 2.20462 ?></div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Box Length") ?></label>
+									<div>INCH : <?php echo number_format($productInfoObject->getBoxLength(), 2) ?></div>
+									<div>MM : <?php echo number_format($productInfoObject->getBoxLength() * 25.4, 2) ?></div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Box Width") ?></label>
+									<div>INCH : <?php echo number_format($productInfoObject->getBoxWidth(), 2) ?></div>
+									<div>MM : <?php echo number_format($productInfoObject->getBoxWidth() * 25.4, 2) ?></div>
+								</div>
+								<div class="form-group">
+									<label><?php echo $this->__("Box Height") ?></label>
+									<div>INCH : <?php echo number_format($productInfoObject->getBoxHeight(), 2) ?></div>
+									<div>MM : <?php echo number_format($productInfoObject->getBoxHeight() * 25.4, 2) ?></div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("UPC Code") ?> : </label>
+							<?php echo $productInfoObject->getUpc()  ?>
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Full Specification") ?> : </label>
+							<?php echo $productInfoObject->getFunSpec()  ?>
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Meterial") ?> : </label>
+							<?php echo isset($materialArray[$productInfoObject->getMaterial()])?$materialArray[$productInfoObject->getMaterial()]:$productInfoObject->getMaterial();  ?>
+						</div>
+						<div class="form-group">
+							<label><?php echo $this->__("Lighting") ?> : </label>
+							<?php echo isset($lightingArray[$productInfoObject->getLighting()])?$lightingArray[$productInfoObject->getLighting()]:$productInfoObject->getLighting()  ?>
+						</div>
+						<?php if($productInfoObject->getMainImage() != ""){ ?>
+						<div class="form-group">
+							<label><?php echo $this->__("Image") ?></label>
+							<div>
+								<img src="<?php echo $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/"); ?>" />
+							</div>
+						</div>
+						<?php } ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

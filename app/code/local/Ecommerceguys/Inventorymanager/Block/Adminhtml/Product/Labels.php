@@ -8,7 +8,7 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Labels extends Mage
         $this->setId('label_product_content');
         $this->setDefaultSort('label_id');
         $this->setUseAjax(true);
-        $this->setDefaultLimit(3);
+        //$this->setDefaultLimit(3);
     }
     
     public function getTabLabel(){
@@ -58,7 +58,8 @@ class Ecommerceguys_Inventorymanager_Block_Adminhtml_Product_Labels extends Mage
     {
         $collection = Mage::getModel('inventorymanager/label')->getCollection();
         $collection->addFieldToFilter('product_id', array("in" => $this->getPurchaseorderProductId()));
-        $collection->addFieldToFilter('location', Mage::helper('inventorymanager')->__("In Stock On Magento"));
+        //$collection->addFieldToFilter('location', Mage::helper('inventorymanager')->__("In Stock On Magento"));
+        $collection->addFieldToFilter('is_in_stock', 1);
         
         $resource = Mage::getSingleton('core/resource');
     	$orderTable = $resource->getTableName('inventorymanager_purchase_order');

@@ -143,20 +143,8 @@ searchForm.initAutocomplete('http://directrangehoods.com/catalogsearch/ajax/sugg
 		) ); ?>
         </div>
 <div class="blogbanner">
-sssss
 <?php get_header_image(); ?>
-
-
 <h2>KITCHEN</h2>
-<ul>
-<li>FOOD</li>
-<li class="devider">X</li>
-<li>LIFESTYLE</li>
-<li class="devider">X</li>
-<li>HOME</li>
-
-
-</ul>
 </div>
 		<?php if ( has_nav_menu( 'sub-header-menu', 'responsive' ) ) {
 			wp_nav_menu( array(
@@ -179,3 +167,6 @@ sssss
 	<div id="wrapper" class="clearfix">
 <?php responsive_wrapper_top(); // before wrapper content hook ?>
 <?php responsive_in_wrapper(); // wrapper hook ?>
+<style>
+#content-blog h2.entry-title{min-height: 75px !important;}
+</style>

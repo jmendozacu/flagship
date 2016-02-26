@@ -1,0 +1,130 @@
+<?php $products = $this->getProducts(); ?>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $contentSize = sizeof($products); ?>
+<div>
+    <?php $jCounter=0; foreach ($products as $product) { $jCounter++?>
+        <?php
+
+       
+        //$smallimage = Mage::helper('catalog/image')->init(Mage::getModel('catalog/product')->load($product->getId()),'thumbnail');
+        $orderProduct = Mage::getModel('inventorymanager/product')->load($product->getProductId());
+        $catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
+        $productInfoObject = $this->getProductrInfoObject($orderProduct->getMainProductId());
+        $imageHtml = "";
+        
+        if ($productInfoObject && $productInfoObject->getMainImage() != "") {
+            $imageHtml = '<img src="' . $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/") . '" />';
+        }
+        else{
+           $_product = Mage::getModel('catalog/product')->load($productInfoObject->getProductId());
+           $smallImage = Mage::helper('catalog/image')->init($_product, 'thumbnail');
+           if($smallImage){
+                $imageHtml = '<img  src="' .$smallImage->resize(100,100). '" />'; 
+            }
+        }
+
+        $height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');
+        $width = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
+        $depth = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth');
+        $weight = $_helper->productAttribute($catalogProduct, $catalogProduct->getWeight(), 'weight');
+
+        $boxWidth = 0;
+        $boxHeight = 0;
+        $boxLength = 0;
+        $boxWeight = 0;
+
+        if ($productInfoObject && $productInfoObject->getId()) {
+
+            $boxWidth = $productInfoObject->getBoxWidth();
+            $boxHeight = $productInfoObject->getBoxHeight();
+            $boxLength = $productInfoObject->getBoxLength();
+            $boxWeight = $productInfoObject->getBoxWeight();
+
+            if ($productInfoObject->getHeight() && $productInfoObject->getHeight() > 0) {
+                $height = $productInfoObject->getHeight();
+            }
+            if ($productInfoObject->getWidth() && $productInfoObject->getWidth() > 0) {
+                $width = $productInfoObject->getWidth();
+            }
+            if ($productInfoObject->getLength() && $productInfoObject->getLength() > 0) {
+                $depth = $productInfoObject->getLength();
+            }
+            if ($productInfoObject->getWeight() && $productInfoObject->getWeight() > 0) {
+                $weight = $productInfoObject->getWeight();
+            }
+        }
+        ?>
+        <?php  for ($ic = 0; $ic < 2; $ic++) { ?>
+        <table width="776px" height="1076px">
+            <tr>
+                
+                    <td style="width:45%; font-size:13px;">
+                        <table border="1" cellpadding="5" width="100%" style="1px solid #ccc">
+                            
+                            <tr>
+                                <td width="70%">
+                                    <img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $product->getSerial() . "&size=32"; ?>" />
+
+                                </td>
+                                <?php if ($productInfoObject && $productInfoObject->getUpc() != "") { ?>
+                                    <td width="30%">
+                                        <img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $productInfoObject->getUpc() . "&size=32"; ?>" />
+                                    </td>
+                                <?php } ?>
+                             </tr>
+                             <tr>
+                                 <td><?php echo $product->getSerial() ?> </td>
+                                 <td><?php echo $productInfoObject->getUpc() ?></td>
+                             </tr>
+                       
+                <tr><td colspan="2"><span style=""><?php echo $imageHtml ?></span>
+</td></tr>
+                        </table>
+                        <table border="1" cellpadding="5" width="100%">
+                            <?php /* <tr>
+                              <td><?php echo $this->__("Serial") ?></td>
+                              <td><?php echo $product->getSerial() ?></td>
+                              </tr> */ ?>
+                            <tr>
+                                <td width="30%"><?php echo $this->__("Product") ?></td>
+                                <td width="70%"><?php echo $catalogProduct->getName() ?></td>
+                            </tr>
+                        </table>
+                        <table border="1" cellpadding="5" width="100%">
+                            <tr>
+                                <td width="30%"><?php echo $this->__("Weight(kg/lbs)") ?></td>
+                                <td width="20%"><?php echo $weight ?>/<?php echo number_format($weight*2.20462,2) ?></td>
+                                <td width="30%"><?php echo $this->__("Box Weight(kg/lbs)") ?></td>
+                                <td width="20%"><?php echo $boxWeight ?>/<?php echo number_format($boxWeight*2.20462,2) ?></td>
+                                
+                            </tr>             
+                        </table>
+                        <table border="1" cellpadding="5" width="100%">
+                            <tr>
+                                <td width="30%"><?php echo $this->__("H W D") ?></td>
+                                <td width="70%">
+                                    <?php echo $height ?>/
+                                    <?php echo $width ?>/
+                                    <?php echo $depth ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo $this->__("Box HWD") ?></td>
+                                <td>
+                                    <?php echo $boxHeight ?>/
+                                    <?php echo $boxWidth ?>
+                                    <?php echo $boxLength ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+            </tr>
+        </table>
+         <?php if($ic >= 0 && $ic <= 1):?>
+                <?php /*if(($jCounter >= 1) && ($jCounter < $contentSize)): */?>
+                <!--EOP-->
+      <?php endif;?>
+   <?php } ?>
+        
+    <?php } ?>
+</div>

@@ -1,3 +1,4 @@
+<?php if (Mage::getSingleton('inventorymanager/session')->isLoggedIn()) { ?>    
 <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
@@ -6,22 +7,38 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html"><?php echo $this->__("Vendor Section") ?></a> 
+                <?php if (Mage::getSingleton('inventorymanager/session')->isEmployer()): ?>    
+                <a class="navbar-brand" style='font-size:25px' href="index.html"><?php echo $this->__("Employee Section") ?></a>
+                <?php else:?>
+                <a class="navbar-brand" href="index.html"><?php echo $this->__("Vendor Section") ?></a>
+                <?php endif;?>
             </div>
-            <?php if (Mage::getSingleton('inventorymanager/session')->isLoggedIn()) { ?>
-  <div style="color: white;
-padding: 15px 50px 5px 50px;
-float: right;
-font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;--> 
+   
+        <?php /*echo $this->getLayout()->createBlock('inventorymanager/vendor_notification')->setTemplate("inventorymanager/vendor/notification.phtml")->toHtml();*/ ?> 
+            
+  <div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> 
   <a href="<?php echo $this->getUrl('inventorymanager/vendor/logout') ?>" class="btn btn-danger square-btn-adjust">
-  	<?php echo $this->__("Logout") ?>
+    <?php echo $this->__("Logout") ?>
   </a>
   
 </div>
 <?php }elseif(Mage::getSingleton('inventorymanager/session')->isAdminUser()){ ?>
-	<div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> 
+
+<nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html"><?php echo $this->__("Agent Section") ?></a> 
+            </div>
+
+
+    <div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> 
   <a href="<?php echo $this->getUrl('inventorymanager/adminuser/logout') ?>" class="btn btn-danger square-btn-adjust">
-  	<?php echo $this->__("Logout") ?>
+    <?php echo $this->__("Logout") ?>
   </a>
   
 </div>
@@ -31,78 +48,244 @@ font-size: 16px;"> <!--Last access : 30 May 2014 &nbsp;-->
 
         </nav>
 <?php
-	$currentController = $this->getRequest()->getControllerName();
-	$currentAction = $this->getRequest()->getActionName();
-	$productsPage = false;
-	$dashboardPage = false;
-	$printendLabel = false;
-	$purchaseorderPage = false;
-	if($currentController == "vendor" && $currentAction == "products"){
-		$productsPage = true;
-	}elseif($currentController == "vendor" && $currentAction == "index"){
-		$dashboardPage = true;
-	}elseif($currentController == "purchaseorder" && $currentAction == "grid"){
-		$purchaseorderPage = true;
-	}elseif($currentController == "label" && $currentAction == "find"){
-		$printendLabel = true;
-	}
+    $currentController = $this->getRequest()->getControllerName();
+    $currentAction = $this->getRequest()->getActionName();
+    $orderStatuses = Mage::getModel('inventorymanager/status')->getValues();
+    $productsPage = false;
+    $dashboardPage = false;
+    $printendLabel = false;
+    $purchaseorderPage = false;
+    $adminuserVendors = false;
+    $manageVendors = false;
+    $receiveProduct = false;
+    $sendProduct = false;
+    $sentSerials = false;
+    $stockTab = false;
+    $purchaseorder = false;
+    $shippedProduct = false;
+    $notification = false;
+    $manageLabels = false;
+    $adminuserLocations = false;
+    $adminuserNotification = false;
+    $help = false;
+    $shipmanager = false;
+    $massProduct = false;
+    $vendorprofile = false;
+    $vendoremployer = false;
+    $bulkLocation= false;
+    
+    if($currentController == "vendor" && $currentAction == "products"){
+        $productsPage = true;
+    }elseif($currentController == "vendor" && $currentAction == "index"){
+        $dashboardPage = true;
+    }elseif($currentController == "purchaseorder" && $currentAction == "grid"){
+        $purchaseorderPage = true;
+    }elseif($currentController == "label" && $currentAction == "find"){
+        $printendLabel = true;
+    }elseif($currentController == "adminuser" && $currentAction == "vendors"){
+        $adminuserVendors = true;
+    }elseif($currentController == "adminuser_serial" && ($currentAction == "findreceive" || $currentAction == "receive")){
+        $receiveProduct = true;
+    }elseif($currentController == "adminuser_serial" && ($currentAction == "find" || $currentAction == "send")){
+        $sendProduct = true;
+    }elseif($currentController == "adminuser_serial" && $currentAction == "sent"){ 
+        $sentSerials = true;
+    }elseif($currentController == "adminuser_product" && ($currentAction == "stockgrid" || $currentAction == "serialgrid")){ 
+        $stockTab = true;
+    }elseif($currentController == "vendor_product" && ($currentAction == "stockgrid" || $currentAction == "serialgrid")){ 
+        $shippedProduct = true;
+    }elseif($currentController == "adminuser" && ($currentAction == "vendorprofiles" || $currentAction == "vendoredit")){ 
+        $manageVendors = true;
+    }elseif($currentController == "adminuser" && ($currentAction == "purchaseorder" || $currentAction == "edit")){ 
+        $purchaseorder = true;
+    }elseif($currentController == "notification" && $currentAction == "index"){ 
+        $notification = true;
+    }elseif($currentController == "vendor" && $currentAction == "locations"){ 
+        $manageLabels = true;
+    }elseif($currentController == "vendor" && ($currentAction == "profile")){ 
+        $vendorprofile = true;
+    }elseif($currentController == "vendor_employer" && ($currentAction == "employer" || $currentAction == "new" || $currentAction == "edit" || $currentAction == "index")){ 
+        $vendoremployer = true;
+    }elseif($currentController == "adminuser_serial" && ($currentAction == "locations")){ 
+        $adminuserLocations = true;
+    }elseif($currentController == "adminuser_notification" && ($currentAction == "index")){ 
+        $adminuserNotification = true;
+    }elseif($currentController == "help" && ($currentAction == "index")){ 
+        $help = true;
+    }elseif ($currentController == "adminuser_shipmanager"){
+    	$shipmanager = true;
+    }elseif($currentController == "vendor_product" && $currentAction == "vendor_product/massproducts"){
+    	$massProduct = true;
+    }elseif($currentController == "adminuser_serial" && $currentAction == "bulklocation"){
+    	$bulkLocation = true;
+    }
+
 ?>
+       
         
 <nav class="navbar-default navbar-side" role="navigation">
 <?php if (Mage::getSingleton('inventorymanager/session')->isLoggedIn()) { ?>
-	<div class="sidebar-collapse">
-		<ul class="nav" id="main-menu">
-			<li class="text-center">
-				<img src="<?php echo $this->getSkinUrl("images/find_user.png") ?>" class="user-image img-responsive"/>
-				<?php echo $this->getLayout()->createBlock('inventorymanager/vendor_info')->setTemplate("inventorymanager/vendorinfo.phtml")->toHtml() ?>
-			</li>
-            <li>
-                <a class="<?php if($dashboardPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/index") ?>">
-                	<i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Dashboard") ?>
-                </a>
+    <div class="sidebar-collapse">
+        <ul class="nav" id="main-menu">
+            <li class="text-center">
+                <img src="<?php echo $this->getSkinUrl("images/find_user.png") ?>" class="user-image img-responsive"/>
+                <?php echo $this->getLayout()->createBlock('inventorymanager/vendor_info')->setTemplate("inventorymanager/vendorinfo.phtml")->toHtml() ?>
             </li>
             <li>
-                <a class="<?php if($productsPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/products") ?>">
-                	<i class="fa fa-table fa-3x"></i> <?php echo $this->__("Products") ?>
+                <a class="<?php if($dashboardPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/index") ?>">
+                    <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Dashboard") ?>
                 </a>
-            </li>   
-			<li>
+            </li>
+             <li>
+                <a class="<?php if($vendorprofile) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/profile") ?>">
+                    <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Profile") ?>
+                </a>
+            </li>
+            <?php if (!Mage::getSingleton('inventorymanager/session')->isEmployer()): ?>
+                <li>
+                    <a class="<?php if($vendoremployer) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor_employer") ?>">
+                        <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Employee") ?>
+                    </a>
+                </li>
+            <?php endif;?>
+            <li>
+                <a class="<?php if($productsPage) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor/products") ?>">
+                    <i class="fa fa-table fa-3x"></i> <?php echo $this->__("Products") ?>
+                </a>
+            </li>
+            
+            <li>
+                <a class="<?php if($massProduct) { echo "active-menu"; } ?>"  href="<?php echo $this->getUrl("inventorymanager/vendor_product/massproducts") ?>">
+                    <i class="fa fa-table fa-3x"></i> <?php echo $this->__("Mass Products") ?>
+                </a>
+            </li>
+            
+            <li>
                 <a class="<?php echo $purchaseorderPage?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/purchaseorder/grid") ?>">
-                	<i class="fa fa-desktop fa-3x"></i>
-                	<?php echo $this->__("Purchase Orders") ?>
+                    <i class="fa fa-desktop fa-3x"></i>
+                    <?php echo $this->__("Purchase Orders") ?>
                 </a>
             </li>
             <li>
                 <a class="<?php if($printendLabel) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/label/find') ?>">
-                	<i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Serial Number Status") ?>
+                    <i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Serial Number Status") ?>
                 </a>
             </li>
-		</ul>           
-	</div>
+            <?php /* 
+            <li>
+                <a class="<?php if($shippedProduct) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/vendor_product/stockgrid') ?>">
+                    <i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock in US") ?>
+                </a>
+            </li>
+            
+            <li>
+                <a class="<?php if($notification) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/notification/") ?>">
+                    <i class="fa fa-edit fa-3x"></i><?php echo $this->__("Notifications") ?>
+                </a>
+            </li> */ ?>
+            
+            <li>
+                <a class="<?php if($help) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/help/") ?>">
+                    <i class="fa fa-desktop fa-3x"></i><?php echo $this->__("Help") ?>
+                </a>
+            </li>
+            
+            <?php /* 
+            <li>
+                <a class="<?php if($manageLabels) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/vendor/locations") ?>">
+                    <i class="fa fa-edit fa-3x"></i><?php echo $this->__("Manage Locations") ?>
+                </a>
+            </li>
+            */ ?>
+            <?php /*
+            <li>
+                <a href="#"><i class="fa fa-sitemap fa-3x"></i><?php echo $this->__("Order Status") ?><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level" id="status-nav">
+                    <?php foreach ($orderStatuses as $key => $status){ ?>
+                        <li><a href="<?php echo $this->getUrl('inventorymanager/purchaseorder/showbystatus', array('status'=>$key)) ?>"><?php echo $status ?></a></li>
+                    <?php } ?>
+                </ul>
+            </li> **/ ?>
+            
+        </ul>           
+    </div>
 <?php }elseif(Mage::getSingleton('inventorymanager/session')->isAdminUser()){ ?>
-	<div class="sidebar-collapse">
-		<ul class="nav" id="main-menu">
-			<li class="text-center">
-				<img src="<?php echo $this->getSkinUrl("images/find_user.png") ?>" class="user-image img-responsive"/>
-				<?php /* echo $this->getLayout()->createBlock('inventorymanager/vendor_info')->setTemplate("inventorymanager/vendorinfo.phtml")->toHtml()*/ ?>
-			</li>
-			<li>
-                <a class=""  href="<?php echo $this->getUrl("inventorymanager/adminuser/vendors") ?>">
-                	<i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Products") ?>
+    <div class="sidebar-collapse">
+        <ul class="nav" id="main-menu">
+            <li class="text-center">
+                <img src="<?php echo $this->getSkinUrl("images/find_user.png") ?>" class="user-image img-responsive"/>
+                <?php /* echo $this->getLayout()->createBlock('inventorymanager/vendor_info')->setTemplate("inventorymanager/vendorinfo.phtml")->toHtml()*/ ?>
+            </li>
+            <li>
+                <a class="<?php echo $adminuserVendors?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser/vendors") ?>">
+                    <i class="fa fa-dashboard fa-3x"></i> <?php echo $this->__("Vendor Products") ?>
                 </a>
             </li>
-             <li>
-                <a class=""  href="<?php echo $this->getUrl("inventorymanager/label/find") ?>">
-                	<i class="fa fa-table fa-3x"></i> <?php echo $this->__("Send Products") ?>
+             <?php /*<li>
+                <a class="<?php echo $sendProduct?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/find") ?>">
+                    <i class="fa fa-table fa-3x"></i> <?php echo $this->__("Send Products") ?>
                 </a>
             </li>
             <li>
-                <a class="" href="<?php echo $this->getUrl("inventorymanager/label/find") ?>">
-                	<i class="fa fa-desktop fa-3x"></i>
-                	<?php echo $this->__("Receive Products") ?>
+                <a class="<?php echo $sentSerials?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/sent") ?>">
+                    <i class="fa fa-desktop fa-3x"></i>
+                    <?php echo $this->__("Receive Products") ?>
+                </a>
+            </li>*/ ?>
+            <li>
+                <a class="<?php echo $bulkLocation?"active-menu":""; ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/bulklocation") ?>">
+                    <i class="fa fa-desktop fa-3x"></i>
+                    <?php echo $this->__("Bulk Location Change") ?>
                 </a>
             </li>
-		</ul>
-	</div>
+            <li>
+                <a class="<?php if($stockTab) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl('inventorymanager/adminuser_product/stockgrid') ?>">
+                    <i class="fa fa-qrcode fa-3x"></i><?php echo $this->__("Stock") ?>
+                </a>
+            </li>
+            <li>
+               <a class="<?php echo $manageVendors?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser/vendorprofiles") ?>">
+                    <i class="fa fa-edit fa-3x"></i> <?php echo $this->__("Manage Vendors") ?>
+                </a>
+            </li>
+            <li>
+                <a class="<?php echo $purchaseorder?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser_purchaseorder/index") ?>">
+                    <i class="fa fa-square-o fa-3x"></i> <?php echo $this->__("Purchase Orders") ?>
+                </a>
+            </li>
+            
+            <li>
+                <a class="<?php echo $adminuserLocations?"active-menu":""; ?>"  href="<?php echo $this->getUrl("inventorymanager/adminuser_serial/locations") ?>">
+                    <i class="fa fa-square-o fa-3x"></i> <?php echo $this->__("Manage Locations") ?>
+                </a>
+            </li>
+            <?php /* <li>
+                <a class="<?php if($notification) { echo "active-menu"; } ?>" href="<?php echo $this->getUrl("inventorymanager/adminuser_notification/") ?>">
+                    <i class="fa fa-edit fa-3x"></i><?php echo $this->__("Notifications") ?>
+                </a>
+            </li> */ ?>
+            <li>
+                <a href="#"><i class="fa fa-sitemap fa-3x"></i><?php echo $this->__("Order Status") ?><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level" id="status-nav">
+                    <?php foreach ($orderStatuses as $key => $status){ ?>
+                        <li><a href="<?php echo $this->getUrl('inventorymanager/adminuser_purchaseorder/showbystatus', array('status'=>$key)) ?>"><?php echo $status ?></a></li>
+                    <?php } ?>
+                </ul>
+            </li>
+            <li class="<?php echo $shipmanager?"active":""; ?>">
+            	<a href="#"><i class="fa fa-sitemap fa-3x"></i><?php echo $this->__("Manage Shipments") ?><span class="fa arrow"></span></a>
+            	<ul class="nav nav-second-level" id="shipmanager_nav">
+            		<li><a href="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/") ?>"><?php echo $this->__("Ship") ?></a></li>
+            		<li><a href="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/history") ?>"><?php echo $this->__("History") ?></a></li>
+            		<li><a><?php echo $this->__("Schedule pickup") ?></a></li>
+            		<li><a><?php echo $this->__("Track") ?></a></li>
+            		<li><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/setting') ?>"><?php echo $this->__("Settings") ?></a></li>
+            	</ul>
+            </li>
+        </ul>
+    </div>
 <?php } ?>
 </nav>
+<script>
+     jQuery('#main-menu').metisMenu();
+</script>

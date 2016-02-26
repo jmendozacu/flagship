@@ -1,0 +1,148 @@
+<div class="row">
+	<div class="col-md-12">
+		<h2><?php echo $this->__("Shipmanager Settings") ?></h2>
+	</div>
+</div>
+<hr>
+<?php
+	$shipperAddressJson = (array)json_decode($this->getShipperAddress());
+	$shipperAddressJson['Contact'] = (array)$shipperAddressJson['Contact'];
+	$shipperAddressJson['Address'] = (array)$shipperAddressJson['Address'];
+	/*echo "<pre>";
+	print_r($shipperAddressJson);
+	echo "</pre>";*/
+	
+	$contactId = ""; $personName = ""; $companyName=""; $title=""; $phoneNumber=""; $email = "";
+	if(isset($shipperAddressJson['Contact']['ContactId'])){
+		$contactId = $shipperAddressJson['Contact']['ContactId'];
+	}
+	if(isset($shipperAddressJson['Contact']['PersonName'])){
+		$personName = $shipperAddressJson['Contact']['PersonName'];
+	}
+	if(isset($shipperAddressJson['Contact']['Title'])){
+		$title = $shipperAddressJson['Contact']['Title'];
+	}
+	if(isset($shipperAddressJson['Contact']['CompanyName'])){
+		$companyName = $shipperAddressJson['Contact']['CompanyName'];
+	}
+	if(isset($shipperAddressJson['Contact']['PhoneNumber'])){
+		$phoneNumber = $shipperAddressJson['Contact']['PhoneNumber'];
+	}
+	if(isset($shipperAddressJson['Contact']['email'])){
+		$email = $shipperAddressJson['Contact']['email'];
+	}
+	
+	$address1 = ""; $address2=""; $city=""; $stateCode = ""; $postalCode = ""; $countryCode = "";
+	if(isset($shipperAddressJson['Address']['StreetLines'][0])){
+		$address1 = $shipperAddressJson['Address']['StreetLines'][0];
+	}
+	if(isset($shipperAddressJson['Address']['StreetLines'][1])){
+		$address2 = $shipperAddressJson['Address']['StreetLines'][1];
+	}
+	if(isset($shipperAddressJson['Address']['City'])){
+		$city = $shipperAddressJson['Address']['City'];
+	}
+	if(isset($shipperAddressJson['Address']['StateOrProvinceCode'])){
+		$stateCode = $shipperAddressJson['Address']['StateOrProvinceCode'];
+	}
+	if(isset($shipperAddressJson['Address']['PostalCode'])){
+		$postalCode = $shipperAddressJson['Address']['PostalCode'];
+	}
+	if(isset($shipperAddressJson['Address']['CountryCode'])){
+		$countryCode = $shipperAddressJson['Address']['CountryCode'];
+	}
+?>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<form method="POST" action="<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/saveSettings") ?>">
+				<div class="panel-heading"><b><?php echo $this->__("Fedex Shipping Configuration") ?></b></div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label><?php echo $this->__("Ship Account") ?></label>
+						<input type="text" class="form-control" name="ship_account" value="<?php echo $this->getShipAccount(); ?>" />
+					</div>
+					<?php /*
+					<div class="form-group">
+						<label><?php echo $this->__("Fright Account") ?></label>
+						<input type="text" class="form-control" name="fright_account" value="<?php echo $this->getFrightAccount(); ?>" />
+					</div> */ ?>
+					<div class="form-group">
+						<label><?php echo $this->__("Meter Number") ?></label>
+						<input type="text" class="form-control" name="meter_number" value="<?php echo $this->getMeterNumber(); ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Key") ?></label>
+						<input type="text" class="form-control" name="key" value="<?php echo $this->getKey(); ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Password") ?></label>
+						<input type="text" class="form-control" name="password" value="<?php echo $this->getFedexPassword(); ?>" />
+					</div>
+				</div>	
+				<div class="panel-heading"><b><?php echo $this->__("Shipper Address") ?></b></div>
+				<div class="panel-body">
+				
+					<div class="form-group">
+						<label><?php echo $this->__("Contact ID") ?></label>
+						<input type="text" class="form-control" name="address[Contact][ContactId]" value="<?php echo $contactId; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Person Name") ?></label>
+						<input type="text" class="form-control" name="address[Contact][PersonName]" value="<?php echo $personName; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Title") ?></label>
+						<input type="text" class="form-control" name="address[Contact][Title]" value="<?php echo $title; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Company Name") ?></label>
+						<input type="text" class="form-control" name="address[Contact][CompanyName]" value="<?php echo $companyName; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Phone Number") ?></label>
+						<input type="text" class="form-control" name="address[Contact][PhoneNumber]" value="<?php echo $phoneNumber; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Email") ?></label>
+						<input type="text" class="form-control" name="address[Contact][email]" value="<?php echo $email; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Address 1") ?></label>
+						<input type="text" class="form-control" name="address[Address][StreetLines][0]" value="<?php echo $address1; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Address 2") ?></label>
+						<input type="text" class="form-control" name="address[Address][StreetLines][1]" value="<?php echo $address2; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("City") ?></label>
+						<input type="text" class="form-control" name="address[Address][City]" value="<?php echo $city; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("State Or Province Code") ?></label>
+						<input type="text" class="form-control" name="address[Address][StateOrProvinceCode]" value="<?php echo $stateCode; ?>" />
+					</div>
+					<div class="form-group">
+						<label><?php echo $this->__("Postal Code") ?></label>
+						<input type="text" class="form-control" name="address[Address][PostalCode]" value="<?php echo $postalCode; ?>" />
+					</div>
+					
+					<div class="form-group">
+						<label><?php echo $this->__("Country Code") ?></label>
+						<input type="text" class="form-control" name="address[Address][CountryCode]" value="<?php echo $countryCode; ?>" />
+					</div>
+					<?php /*
+					<div class="form-group">
+						<label><?php echo $this->__("Shipper Address (JSON format)") ?></label>
+						<textarea rows="3" class="form-control" name="shipper_address"><?php echo $this->getShipperAddress(); ?></textarea>
+					</div> */ ?>
+					<div class="form-group shipmanager-send-button">
+						<button type="submit" class="btn btn-primary"><?php echo $this->__("Save") ?></button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
