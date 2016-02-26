@@ -27,6 +27,7 @@
 <div class="footer-container">
     <div class="footer">
         <?php echo $this->getChildHtml() ?>
+        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('new_footer')->toHtml() ?>
         <div class="f_sosialmedia">
         <a href="https://www.facebook.com/directrangehoods" target="_new"><div class="sicons ficon"></div></a>
         <div class="sicons ticon"></div>
