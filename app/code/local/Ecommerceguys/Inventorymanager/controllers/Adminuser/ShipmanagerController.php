@@ -17,6 +17,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		/*echo "<pre>";
 		print_r($data);
 		exit;*/
+		//echo "test";exit;		
 		
 		$realOrderId = $data['order_id'];
 		$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
