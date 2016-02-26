@@ -8,9 +8,25 @@
         $productInfoObject = $this->getProductrInfoObject($orderProduct->getMainProductId());
         $imageHtml = "";
         
-        
         if ($productInfoObject && $productInfoObject->getMainImage() != "") {
+
             $imageHtml = '<img  src="' . $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/") . '" />';
+        }else{
+
+
+            $rc = Mage::getModel('catalog/product');
+            $smallImage = $rc->getAttributeRawValue($productId, 'small_image', Mage::app()->getStore());
+$imageModel = Mage::getModel('catalog/product_image');
+$imageModel->setDestinationSubdir('small_image');
+$imageModel->setBaseFile($smallImage);
+var_dump($imageModel->getUrl());
+
+            $_product = Mage::getModel('catalog/product')->load($productInfoObject->getProductId());
+            $smallImage = Mage::helper('catalog/image')->init($_product, 'small_image');
+            //echo $_product->getId();exit;
+            if($smallImage){
+                $imageHtml = '<img  src="' .$smallImage->resize(100,100). '" />'; 
+            }
         }
         $height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');
         $width = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
@@ -51,16 +67,17 @@
                         <table border="1" cellpadding="5" width="100%" style="1px solid #ccc">
                             <tr>
                                 <td width="70%"><?php echo $product->getSerial() ?></td>
-                                <td width="30%"><?php //echo $productInfoObject->getUpc() ?></td>
+                                <td width="30%"><?php echo $productInfoObject->getUpc() ?></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $product->getSerial() . "&size=32"; ?>" />
+                                   <img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $product->getSerial() . "&size=32"; ?>" />
 
                                 </td>
+                                <?php //echo "<pre>";print_r($productInfoObject);exit;?>
                                 <?php if ($productInfoObject && $productInfoObject->getUpc() != "") { ?>
                                 	<td>
-	                                	<img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $productInfoObject->getUpc() . "&size=32"; ?>" />
+	                                	11<img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $productInfoObject->getUpc() . "&size=32"; ?>" />
                                 	</td>
                                 <?php } ?>
                                 

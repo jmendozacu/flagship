@@ -4,13 +4,25 @@
 <div>
     <?php $jCounter=0; foreach ($products as $product) { $jCounter++?>
         <?php
+
+       
+        //$smallimage = Mage::helper('catalog/image')->init(Mage::getModel('catalog/product')->load($product->getId()),'thumbnail');
         $orderProduct = Mage::getModel('inventorymanager/product')->load($product->getProductId());
         $catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
         $productInfoObject = $this->getProductrInfoObject($orderProduct->getMainProductId());
         $imageHtml = "";
+        
         if ($productInfoObject && $productInfoObject->getMainImage() != "") {
             $imageHtml = '<img src="' . $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/") . '" />';
         }
+        else{
+           $_product = Mage::getModel('catalog/product')->load($productInfoObject->getProductId());
+           $smallImage = Mage::helper('catalog/image')->init($_product, 'thumbnail');
+           if($smallImage){
+                $imageHtml = '<img  src="' .$smallImage->resize(100,100). '" />'; 
+            }
+        }
+
         $height = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodHeightInches(), 'hood_height_inches');
         $width = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodWidthInches(), 'hood_width_inches');
         $depth = $_helper->productAttribute($catalogProduct, $catalogProduct->getHoodDepth(), 'hood_depth');
@@ -62,10 +74,10 @@
                              </tr>
                              <tr>
                                  <td><?php echo $product->getSerial() ?> </td>
-                                 <td><?php //echo $productInfoObject->getUpc() ?></td>
+                                 <td><?php echo $productInfoObject->getUpc() ?></td>
                              </tr>
                        
-                <tr><td colspan="2"><span style=""><?php //echo $imageHtml ?></span>
+                <tr><td colspan="2"><span style=""><?php echo $imageHtml ?></span>
 </td></tr>
                         </table>
                         <table border="1" cellpadding="5" width="100%">
@@ -85,8 +97,7 @@
                                 <td width="30%"><?php echo $this->__("Box Weight(kg/lbs)") ?></td>
                                 <td width="20%"><?php echo $boxWeight ?>/<?php echo number_format($boxWeight*2.20462,2) ?></td>
                                 
-                            </tr>
-                            
+                            </tr>             
                         </table>
                         <table border="1" cellpadding="5" width="100%">
                             <tr>
