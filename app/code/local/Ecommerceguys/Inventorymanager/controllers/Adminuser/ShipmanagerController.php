@@ -1,5 +1,4 @@
 <?php
-echo "test";exit;
 require_once(Mage::getBaseDir().'/tcpdf/tcpdf.php');
 require_once('FPDI/fpdf.php');
 require_once('FPDI/fpdi.php');
