@@ -76,12 +76,14 @@ $imageModel->setBaseFile($smallImage);
                                 <td colspan="2" align="center"><?php echo $productInfoObject->getUpc() ?></td>
                             </tr>
                             <tr>
-                                <td colspan="2" align="center">
+                                
                                 <?php if ($productInfoObject && $productInfoObject->getUpc() != "") { ?>
-                                	<td>
+                                	<td colspan="2" align="center">
 	                                	<img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $productInfoObject->getUpc() . "&size=32"; ?>" />
                                 	</td>
-                                <?php } ?>
+                                <?php }else{
+                                    <td colspan="2" align="center">&nbsp</td>
+                                } ?>
                                 
                             </tr>
                             
