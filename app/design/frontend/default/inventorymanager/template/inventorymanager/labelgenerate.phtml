@@ -12,14 +12,12 @@
 
             $imageHtml = '<img  src="' . $this->helper("inventorymanager")->resizeImage($productInfoObject->getMainImage(), 100, 100, "productdetail/") . '" />';
         }else{
-
-
             $rc = Mage::getModel('catalog/product');
             $smallImage = $rc->getAttributeRawValue($productId, 'small_image', Mage::app()->getStore());
 $imageModel = Mage::getModel('catalog/product_image');
 $imageModel->setDestinationSubdir('small_image');
 $imageModel->setBaseFile($smallImage);
-var_dump($imageModel->getUrl());
+//var_dump($imageModel->getUrl());
 
             $_product = Mage::getModel('catalog/product')->load($productInfoObject->getProductId());
             $smallImage = Mage::helper('catalog/image')->init($_product, 'small_image');
@@ -77,7 +75,7 @@ var_dump($imageModel->getUrl());
                                 <?php //echo "<pre>";print_r($productInfoObject);exit;?>
                                 <?php if ($productInfoObject && $productInfoObject->getUpc() != "") { ?>
                                 	<td>
-	                                	11<img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $productInfoObject->getUpc() . "&size=32"; ?>" />
+	                                	<img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $productInfoObject->getUpc() . "&size=32"; ?>" />
                                 	</td>
                                 <?php } ?>
                                 
