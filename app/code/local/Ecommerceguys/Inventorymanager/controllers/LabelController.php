@@ -49,7 +49,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		
 		//echo $content; exit;
 		
-		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,152.4), true, 'UTF-8', false);
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,172.4), true, 'UTF-8', false);
 		$pdf->SetCreator(PDF_CREATOR);
 		$pdf->SetAuthor('Inventory Manager');
 		$pdf->SetTitle('Inventory Manager');
