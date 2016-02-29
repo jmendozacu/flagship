@@ -69,8 +69,8 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		// set margins
 		//$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 		$pdf->SetMargins(0,PDF_MARGIN_TOP,0);
-		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+		//$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+		//$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 		
 		// set auto page breaks
 		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
