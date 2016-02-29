@@ -64,15 +64,19 @@ $imageModel->setBaseFile($smallImage);
                     <td style="width:45%; font-size:13px;">
                         <table border="1" cellpadding="5" width="100%" style="1px solid #ccc">
                             <tr>
-                                <td width="70%"><?php echo $product->getSerial() ?></td>
-                                <td width="30%"><?php echo $productInfoObject->getUpc() ?></td>
+                                <td colspan="2" align="center"><?php echo $product->getSerial() ?></td>
                             </tr>
                             <tr>
-                                <td>
+                                <td colspan="2" align="center">
                                    <img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $product->getSerial() . "&size=32"; ?>" />
 
                                 </td>
-                                <?php //echo "<pre>";print_r($productInfoObject);exit;?>
+                            </tr>
+                            <tr>   
+                                <td colspan="2" align="center"><?php echo $productInfoObject->getUpc() ?></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="center">
                                 <?php if ($productInfoObject && $productInfoObject->getUpc() != "") { ?>
                                 	<td>
 	                                	<img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $productInfoObject->getUpc() . "&size=32"; ?>" />
