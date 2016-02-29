@@ -579,7 +579,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		// add a page
 		$pdf->AddPage();
 		$pdf->SetPrintHeader(false);
-		echo $img;exit;
+		
 		//echo $pdffile  = str_replace(".png",".pdf",$img);exit;
 		$pdf->Image($img, '', '', 0,0, '', '', '', false, 300, '', false, false, 1, false, false, false);
 		$pdf->Output();

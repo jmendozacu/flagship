@@ -30,14 +30,14 @@
 									<td><?php echo $iCounter 	?></td>
 									<td><?php echo $serialKey 	?></td>
 									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialId.'-BillOfLading.pdf'; ?> </td>
-									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialId.'-ShippingLabel.pdf'; ?> </td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-ShippingLabel.png', 'area'=>'label')) ?>" target="_blank"> <?php echo $serialId.'-ShippingLabel.pdf'; ?> </td>
 								</tr>
 							<?php  }else{?>
 								<tr>
 									<td><?php echo $iCounter 	?></td>
 									<td><?php echo $serialKey 	?></td>
 									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialKey.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialKey.'-BillOfLading.pdf'; ?> </td>
-									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialKey.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialKey.'-ShippingLabel.pdf'; ?> </td>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialKey.'-ShippingLabel.png	', 'area'=>'label')) ?>"  target="_blank"> <?php echo $serialKey.'-ShippingLabel.pdf'; ?> </td>
 								</tr>
 							<?php }
 							$iCounter++;
