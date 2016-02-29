@@ -148,7 +148,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 	
 	public function generatepdfAction(){
 		
-		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,152.4), true, 'UTF-8', false);
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,172.4), true, 'UTF-8', false);
 		$id = $this->getRequest()->getParam('id');
 		$purchaseOrder = Mage::getModel('inventorymanager/purchaseorder')->load($id);
 		
@@ -201,6 +201,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		// add a page
 		$pdf->AddPage();
 		$pdf->SetFont('helvetica', '', 8);
+		
 		
 		
 		$contentArray = explode("<!--EOP-->", $content);
