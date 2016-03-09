@@ -13,10 +13,6 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 		ini_set('soap.wsdl_cache_ttl', 0);
 		//define('SHIP_LABEL', Mage::getBaseDir().'/media/fedex/billoflanding'.'BillOfLading.pdf');  // PDF label file.
 		//define('ADDRESS_LABEL', 'AddressLabel.pdf');  // PDF label file.
-		
-		
-		
-
 		ini_set("soap.wsdl_cache_enabled", "0");
 
 	}

@@ -11,424 +11,695 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 	}
 	
 	public function saveAction(){
-		$data = $this->getRequest()->getParams();
-		
-		
-		/*echo "<pre>";
+		 $data = $this->getRequest()->getParams();
+		 $realOrderId = $data['order_id'];
+		/*
+		echo "<pre>";
 		print_r($data);
-		exit;*/
-		
-		$realOrderId = $data['order_id'];
-		$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
-		
-		
-		
-		$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
+		exit;
+		*/
+		if($data['service_type'] == 'FEDEX_GROUND'){
+			//echo "test";exit;
+			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedexground');
+			$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 		
 		
-		$senderAddress = array();
-		$senderAddress['Contact']['ContactId'] = "fright1";
-		$senderAddress['Contact']['PersonName'] = $data['contact_name'];
-		$senderAddress['Contact']['Title'] = $data['contact_name'];
-		$senderAddress['Contact']['CompanyName'] = $data['company'];
-		$senderAddress['Contact']['PhoneNumber'] = $data['phone'];
-		$senderAddress['Contact']['email'] = $data['email'];
+			$senderAddress = array();
+			$senderAddress['Contact']['ContactId'] = "ground1";
+			$senderAddress['Contact']['PersonName'] = $data['contact_name'];
+			$senderAddress['Contact']['Title'] = $data['contact_name'];
+			$senderAddress['Contact']['CompanyName'] = $data['company'];
+			$senderAddress['Contact']['PhoneNumber'] = $data['phone'];
+			$senderAddress['Contact']['email'] = $data['email'];
 
-		$senderAddress['Address']['StreetLines'][0] = $data['address'];
-		$senderAddress['Address']['StreetLines'][1] = "-";
-		$senderAddress['Address']['City'] = $data['city'];
-		$senderAddress['Address']['StateOrProvinceCode'] = $data['state'];
-		$senderAddress['Address']['CountryCode'] = $data['country_id'];
-		$senderAddress['Address']['PostalCode'] = $data['postalcode'];
-		
-		$receiverAddress = array();
-		$receiverAddress['Contact']['PersonName'] = $data['receiver']['contact_name'];
-		$receiverAddress['Contact']['CompanyName'] = $data['receiver']['company'];
-		$receiverAddress['Contact']['PhoneNumber'] = $data['receiver']['phone'];
-		
-		$receiverAddress['Address']['StreetLines'][0] = $data['receiver']['address'];
-		$receiverAddress['Address']['StreetLines'][1] = "";
-		$receiverAddress['Address']['City'] = $data['receiver']['city'];
-		$receiverAddress['Address']['StateOrProvinceCode'] = $data['receiver']['state'];
-		$receiverAddress['Address']['PostalCode'] = $data['receiver']['postalcode'];
-		$receiverAddress['Address']['CountryCode'] = $data['receiver']['country_id'];
-		
-		/*echo "<pre>";
-		print_r($fedexApi->getProperty('freightbilling'));
-		print_r($senderAddress);
-		exit;*/
-		
-		$client = new SoapClient($fedexApi->path_to_wsdl, array('trace' => 1));
-		
-		
-		$request['WebAuthenticationDetail'] = array(
+			$senderAddress['Address']['StreetLines'][0] = $data['address'];
+			$senderAddress['Address']['StreetLines'][1] = "-";
+			$senderAddress['Address']['City'] = $data['city'];
+			$senderAddress['Address']['StateOrProvinceCode'] = $data['state'];
+			$senderAddress['Address']['CountryCode'] = $data['country_id'];
+			$senderAddress['Address']['PostalCode'] = $data['postalcode'];
+			
+			$receiverAddress = array();
+			$receiverAddress['Contact']['PersonName'] = $data['receiver']['contact_name'];
+			$receiverAddress['Contact']['CompanyName'] = $data['receiver']['company'];
+			$receiverAddress['Contact']['PhoneNumber'] = $data['receiver']['phone'];
+			
+			$receiverAddress['Address']['StreetLines'][0] = $data['receiver']['address'];
+			$receiverAddress['Address']['StreetLines'][1] = "";
+			$receiverAddress['Address']['City'] = $data['receiver']['city'];
+			$receiverAddress['Address']['StateOrProvinceCode'] = $data['receiver']['state'];
+			$receiverAddress['Address']['PostalCode'] = $data['receiver']['postalcode'];
+			$receiverAddress['Address']['CountryCode'] = $data['receiver']['country_id'];
+			
+			/*
+			echo "<pre>";
+			print_r($fedexApi->getProperty('freightbilling'));
+			print_r($senderAddress);
+			exit;
+			*/
+			
+			$client = new SoapClient($fedexApi->path_to_wsdl, array('trace' => 1));
+
+			$request['WebAuthenticationDetail'] = array(
+				'ParentCredential' => array(
+					'Key' => $fedexApi->getProperty('parentkey'), 
+					'Password' => $fedexApi->getProperty('parentpassword')
+				),
 				'UserCredential' => array(
-				'Key' => $fedexApi->getProperty('key'), 
-				'Password' => $fedexApi->getProperty('password')
-			)
-		);
-		
-		$request['ClientDetail'] = array(
-			'AccountNumber' => $fedexApi->getProperty('shipaccount'), 
-			'MeterNumber' => $fedexApi->getProperty('meter')
-		);
-		
-		$request['TransactionDetail'] = array('CustomerTransactionId' => 'Freight Shipment Example');
-		
-		$request['Version'] = array(
-			'ServiceId' => 'ship', 
-			'Major' => '17', 
-			'Intermediate' => '0', 
-			'Minor' => '0'
-		);
-		
-		/*$zip = new ZipArchive();
-	    $zip_name = "zipfile.zip";
-	    if($zip->open($zip_name, ZIPARCHIVE::CREATE)!==TRUE){
-	        $error .= "* Sorry ZIP creation failed at this time";
-	    }*/
-		
-		$totalWeight = 0;
-		$serialCount = 0;
-		foreach ($data['serial_key'] as $key => $serialKey){
-			$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
-			
-			$serialCount++;
-			
-			//$response = $fedexApi->getResponse($serialObject->getId(), $orderObject->getId());
-			
-			
-		
-			$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialKey.'-ShippingLabel.png';
-			$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialKey.'-BillOfLading.pdf';
-			
-			$productName = "proline item";
-			$productPrice = 0;
-			
-			if($serialObject && $serialObject->getId()){
-				
-				
-				$serialId = $serialObject->getId();
-			
-				$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialId.'-ShippingLabel.png';
-				$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialId.'-BillOfLading.pdf';
-				
-				$orderProduct = Mage::getModel('inventorymanager/product')->load($serialObject->getProductId());
-				$catalogproduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
-				$purchaseorder = Mage::getModel('inventorymanager/purchaseorder')->load($serialObject->getOrderId());
-				$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
-				$productInfoCollection->addFieldToFilter('vendor_id', $purchaseorder->getVendorId());
-				$productInfoCollection->addFieldToFilter('product_id', $orderProduct->getMainProductId());
-				if($productInfoCollection && $productInfoCollection->count() > 0){
-					$productInfoObject = $productInfoCollection->getFirstItem();
-					if($productInfoObject && $productInfoObject->getId()){
-						
-						
-						$productPrice = $catalogproduct->getFinalPrice();
-						$productName = $catalogproduct->getName();
-						
-						$length	= $productInfoObject->getLength();
-						$width = $productInfoObject->getWidth();
-						$height = $productInfoObject->getHeight();
-						$weight	= $productInfoObject->getWeight();
-						
-						$boxLength = $productInfoObject->getBoxLength();
-						$boxWidth = $productInfoObject->getBoxWidth();
-						$boxHeight = $productInfoObject->getBoxHeight();
-						$boxWeight = $productInfoObject->getBoxWeight();
-					}
-				}
-				
-				if($catalogproduct->getIsInStock() == 1){
-					$stock_item = Mage::getModel('cataloginventory/stock_item')->loadByProduct($catalogproduct->getId());
-					if (!$stock_item->getId()) {
-						$productQty = $stock_item->getQty();
-						$productQty -= 1;
-					    $stock_item->setData('product_id', $catalogproduct->getId());
-					    //$stock_item->setData('stock_id', 1); 
-					    $isInStock = 1;
-					    if($productQty < 1){
-					    	$isInStock = 0;
-					    }
-					    $stock_item->setData('is_in_stock', $isInStock);
-					    $stock_item->setData('qty', $productQty);
-					    $stock_item->save();
-					}
-					
-					//$model->setIsInStock(1);
-					//$productModel = Mage::getModel('catalog/product')->load($data['main_product_id']);
-					/*$stocklevel = Mage::getModel('cataloginventory/stock_item')
-		            ->loadByProduct($catalogproduct);
-		            $productQty = 0;
-		            if($stocklevel)
-		            	$productQty = $stocklevel->getQty();
-		            
-		            $catalogproduct->setStockData(array( 
-			            'qty' => $productQty - 1,
-			            'is_in_stock' => 1,
-			            'manage_stock' => 1,
-			        )); 
-			        if($productQty > 2){
-			        	$catalogproduct->setIsInStock(0);
-			        }
-			        if($catalogproduct && $catalogproduct->getId()){
-			        	try {
-							$catalogproduct->save();
-			        	}catch (Exception $e){
-			        		
-			        	}
-			        }*/
-					
-					
-				}
-			}
-	
-			
-			if(isset($data['weight'][$key])){
-				$weight = $data['weight'][$key];
-			}
-			if(isset($data['length'][$key])){
-				$length = $data['length'][$key];
-			}
-			if(isset($data['width'][$key])){
-				$width = $data['width'][$key];
-			}
-			if(isset($data['height'][$key])){
-				$height = $data['height'][$key];
-			}
-			
-			if(isset($data['price'][$key]) && $data['price'][$key] > 0){
-				$productPrice = $data['price'][$key];
-			}
-			
-			if($boxLength == ""){
-				$boxLength = $length;
-			}
-			
-			if($boxWidth == ""){
-				$boxWidth = $width;
-			}
-			
-			if($boxHeight == ""){
-				$boxHeight = $height;
-			}
-			
-			$request['RequestedShipment'] = array(
-				'ShipTimestamp' => date('c'),
-				'DropoffType' => 'REGULAR_PICKUP', 
-				'ServiceType' => isset($data['service_type'])?$data['service_type']:'FEDEX_FREIGHT_ECONOMY', 
-				'PackagingType' => 'YOUR_PACKAGING', 
-				//'Shipper' => $fedexApi->getProperty('freightbilling'),
-				'Shipper' => $senderAddress,
-					'Recipient' => $receiverAddress,
-				'ShippingChargesPayment' => $fedexApi->addShippingChargesPayment(),
-				'FreightShipmentDetail' => array(
-					'FedExFreightAccountNumber' => $fedexApi->getProperty('freightaccount'),
-					'FedExFreightBillingContactAndAddress' => $fedexApi->getProperty('freightbilling'),
-					'PrintedReferences' => array(
-						'Type' => 'SHIPPER_ID_NUMBER',
-						'Value' => 'RBB1057'
-					),
-					'Role' => 'SHIPPER',
-					'PaymentType' => 'PREPAID',
-					'CollectTermsType' => 'STANDARD',
-					'DeclaredValuePerUnit' => array(
-						'Currency' => 'USD',
-						'Amount' => $productPrice
-					),
-					'LiabilityCoverageDetail' => array(
-						'CoverageType' => 'NEW',
-						'CoverageAmount' => array(
-							'Currency' => 'USD',
-							'Amount' => '50'
-						)
-					),
-					'TotalHandlingUnits' => 1,
-					'ClientDiscountPercent' => 0,
-					'PalletWeight' => array(
-						'Units' => 'LB',
-						'Value' => 20
-					),
-					'ShipmentDimensions' => array(
-						'Length' => $boxLength,
-						'Width' => $boxWidth,
-						'Height' => $boxHeight,
-						'Units' => 'IN'
-					),
-					'LineItems' => array(
-						'FreightClass' => 'CLASS_050',
-						'ClassProvidedByCustomer' => false,
-						'HandlingUnits' => 1,
-						'Packaging' => 'PALLET',
-						'Pieces' => 1,
-						'BillOfLaddingNumber' => 'BOL_12345',
-						'PurchaseOrderNumber' => 'PO_12345',
-						'Description' => $productName,
-						'Weight' => array(
-							'Value' => $weight,
-							'Units' => 'LB'
-						),
-						'Dimensions' => array(
-							'Length' => $boxLength ,
-							'Width' => $boxWidth ,
-							'Height' => $boxHeight ,
-							'Units' => 'IN'
-						),
-						'Volume' => array(
-							'Units' => 'CUBIC_FT',
-							'Value' => 30
-						)
-					)
-				),	
-				'LabelSpecification' => $fedexApi->addLabelSpecification(),
-				'ShippingDocumentSpecification' => $fedexApi->addShippingDocumentSpecification(),
-				'PackageCount' => 1,
-				'PackageDetail' => 'INDIVIDUAL_PACKAGES'                                        
+					'Key' => $fedexApi->getProperty('key'), 
+					'Password' => $fedexApi->getProperty('password')
+				)
+			);
+
+			$request['ClientDetail'] = array(
+				'AccountNumber' => $fedexApi->getProperty('shipaccount'), 
+				'MeterNumber' => $fedexApi->getProperty('meter')
+			);
+			$request['TransactionDetail'] = array('CustomerTransactionId' => '*** Ground Domestic Shipping Request using PHP ***');
+			$request['Version'] = array(
+				'ServiceId' => 'ship', 
+				'Major' => '17', 
+				'Intermediate' => '0', 
+				'Minor' => '0'
 			);
 			
-			//echo "<pre>";
-			//print_r($request); continue;
+
 			
-			try {
-				if($fedexApi->setEndpoint('changeEndpoint')){
-					$newLocation = $client->__setLocation(setEndpoint('endpoint'));
+			$totalWeight = 0;
+			$serialCount = 0;
+			foreach ($data['serial_key'] as $key => $serialKey){
+
+
+				$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
+				
+				$serialCount++;
+				
+				//$response = $fedexApi->getResponse($serialObject->getId(), $orderObject->getId());
+				//echo $serialCount;exit;
+				
+			
+				$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialKey.'-ShippingLabel.png';
+				//$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialKey.'-BillOfLading.pdf';
+				
+				$productName = "proline item";
+				$productPrice = 0;
+				
+				if($serialObject && $serialObject->getId()){
+					
+					
+					$serialId = $serialObject->getId();
+				
+					$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialId.'-ShippingLabel.png';
+					//$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialId.'-BillOfLading.pdf';
+					
+					$orderProduct = Mage::getModel('inventorymanager/product')->load($serialObject->getProductId());
+					$catalogproduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
+					$purchaseorder = Mage::getModel('inventorymanager/purchaseorder')->load($serialObject->getOrderId());
+					$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+					$productInfoCollection->addFieldToFilter('vendor_id', $purchaseorder->getVendorId());
+					$productInfoCollection->addFieldToFilter('product_id', $orderProduct->getMainProductId());
+					if($productInfoCollection && $productInfoCollection->count() > 0){
+						$productInfoObject = $productInfoCollection->getFirstItem();
+						if($productInfoObject && $productInfoObject->getId()){
+							
+							
+							$productPrice = $catalogproduct->getFinalPrice();
+							$productName = $catalogproduct->getName();
+							
+							$length	= $productInfoObject->getLength();
+							$width = $productInfoObject->getWidth();
+							$height = $productInfoObject->getHeight();
+							$weight	= $productInfoObject->getWeight();
+							
+							$boxLength = $productInfoObject->getBoxLength();
+							$boxWidth = $productInfoObject->getBoxWidth();
+							$boxHeight = $productInfoObject->getBoxHeight();
+							$boxWeight = $productInfoObject->getBoxWeight();
+						}
+					}
+					
+					if($catalogproduct->getIsInStock() == 1){
+						$stock_item = Mage::getModel('cataloginventory/stock_item')->loadByProduct($catalogproduct->getId());
+						if (!$stock_item->getId()) {
+							$productQty = $stock_item->getQty();
+							$productQty -= 1;
+						    $stock_item->setData('product_id', $catalogproduct->getId());
+						    //$stock_item->setData('stock_id', 1); 
+						    $isInStock = 1;
+						    if($productQty < 1){
+						    	$isInStock = 0;
+						    }
+						    $stock_item->setData('is_in_stock', $isInStock);
+						    $stock_item->setData('qty', $productQty);
+						    $stock_item->save();
+						}
+						
+					}
 				}
-				$response = $client->processShipment($request); // FedEx web service invocation  
+		
 				
-				
-				$historyObject = Mage::getModel('inventorymanager/shipmanager');
-				$historyItem = Mage::getModel('inventorymanager/shipmanager_item');
-				$historySender = Mage::getModel('inventorymanager/shipmanager_sender');
-				$historyReceiver = Mage::getModel('inventorymanager/shipmanager_receiver');
-				
-				
-				
-				$quotedVal = 0;
-				if(isset($response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount)){
-					$quotedVal = $response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount;
+				if(isset($data['weight'][$key])){
+					$weight = $data['weight'][$key];
+				}
+				if(isset($data['length'][$key])){
+					$length = $data['length'][$key];
+				}
+				if(isset($data['width'][$key])){
+					$width = $data['width'][$key];
+				}
+				if(isset($data['height'][$key])){
+					$height = $data['height'][$key];
 				}
 				
-				$historyData = array(
-					'transaction_detail'	=>	isset($response->TransactionDetail->CustomerTransactionId)?$response->TransactionDetail->CustomerTransactionId:"",
-					'job_id'				=>	isset($response->JobId)?$response->JobId:"",
-					'tracking_number'		=>	isset($response->CompletedShipmentDetail->CarrierCode)?$response->CompletedShipmentDetail->CarrierCode:"",
-					'careercode' 			=>	isset($response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber)?$response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber:"",
-					'service_type'			=>	isset($response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType)?$response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType:"",
-					'weight'				=>	$weight,
-					'quoted_value'			=>	$quotedVal,
-					'shipping_date'			=>	date('Y-m-d'),
-					'created_time'			=>	date('Y-m-d'),
-				);
-				try{
-					
-					
-					
-					$historyObject->setData($historyData)->save();
-					
-					//print_r(get_class($historyObject)); exit;
-				}catch (Exception $e){
-					Mage::log($e->getMessage());
+				if(isset($data['price'][$key]) && $data['price'][$key] > 0){
+					$productPrice = $data['price'][$key];
 				}
 				
-				$historyItemData = array(
-					'history_id'		=>	$historyObject->getId(),
-					'serial'			=>	$serialKey,
-					'width'				=>	$width,
-					'height'			=>	$height,
-					'length'			=>	$length,
-					'created_time'			=>	date('Y-m-d'),
-				);
+				if($boxLength == ""){
+					$boxLength = $length;
+				}
 				
-				$senderAddressData = array(
-					'history_id'		=>	$historyObject->getId(),
-					'company'			=>	$data['company'],
-					'phone'				=>	$data['phone'],
-					'contact_name'		=>	$data['contact_name'],
-					'address1'			=>	$data['address'],
-					//'address2'			=>	$data['address2'],
-					'city'				=>	$data['city'],
-					'postcode'			=>	$data['postalcode'],
-					'state'				=>	$data['state'],
-					'order_id'			=>	$data['order_id'],
-					'country'			=>	$data['country_id'],
-					'email'				=>	$data['email'],
-					'created_time'		=>	date('Y-m-d'),
-				);
+				if($boxWidth == ""){
+					$boxWidth = $width;
+				}
 				
-				$receiverAddressData = array(
-					'history_id'		=>	$historyObject->getId(),
-					'company'			=>	$data['receiver']['company'],
-					'phone'				=>	$data['receiver']['phone'],
-					'contact_name'		=>	$data['receiver']['contact_name'],
-					'address1'			=>	$data['receiver']['address'],
-				//	'address2'			=>	$data['receiver']['address2'],
-					'city'				=>	$data['receiver']['city'],
-					'postcode'			=>	$data['receiver']['postalcode'],
-					'state'				=>	$data['receiver']['state'],
-					'country'			=>	$data['receiver']['country_id'],
-					'email'				=>	$data['receiver']['email'],
-				);
+				if($boxHeight == ""){
+					$boxHeight = $height;
+				}
 				
+				$request['RequestedShipment'] = array(
+				'ShipTimestamp' => date('c'),
+				'DropoffType' => 'REGULAR_PICKUP', // valid values REGULAR_PICKUP, REQUEST_COURIER, DROP_BOX, BUSINESS_SERVICE_CENTER and STATION
+				'ServiceType' => 'FEDEX_GROUND', // valid values STANDARD_OVERNIGHT, PRIORITY_OVERNIGHT, FEDEX_GROUND, ...
+				'PackagingType' => 'YOUR_PACKAGING', // valid values FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
+				'Shipper' => $senderAddress,
+				'Recipient' => $receiverAddress,
+				'ShippingChargesPayment' => $fedexApi->addShippingChargesPayment(),
+				'LabelSpecification' => $fedexApi->addLabelSpecification(), 
+				/* Thermal Label */
+				/*
+				'LabelSpecification' => array(
+					'LabelFormatType' => 'COMMON2D', // valid values COMMON2D, LABEL_DATA_ONLY
+					'ImageType' => 'EPL2', // valid values DPL, EPL2, PDF, ZPLII and PNG
+					'LabelStockType' => 'STOCK_4X6.75_LEADING_DOC_TAB',
+					'LabelPrintingOrientation' => 'TOP_EDGE_OF_TEXT_FIRST'
+				),
+				*/
+				'PackageCount' => 1,
+				'PackageDetail' => 'INDIVIDUAL_PACKAGES',                                        
+				'RequestedPackageLineItems' => array(
+					'0' => $fedexApi->addPackageLineItem1())
+				);
+
 				try {
-					$historyItem->setData($historyItemData)->save();
-					$historySender->setData($senderAddressData)->save();
-					$historyReceiver->setData($receiverAddressData)->save();
-				}catch (Exception $e){
-					Mage::log($e->getMessage());
+
+					if($fedexApi->setEndpoint('changeEndpoint')){
+						$newLocation = $client->__setLocation($fedexApi->setEndpoint('endpoint'));
+					}	
+					$response = $client->processShipment($request); // FedEx web service invocation
+					$historyObject = Mage::getModel('inventorymanager/shipmanager');
+						$historyItem = Mage::getModel('inventorymanager/shipmanager_item');
+						$historySender = Mage::getModel('inventorymanager/shipmanager_sender');
+						$historyReceiver = Mage::getModel('inventorymanager/shipmanager_receiver');
+						
+						
+						
+						$quotedVal = 0;
+						if(isset($response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount)){
+							$quotedVal = $response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount;
+						}
+						
+						$historyData = array(
+							'transaction_detail'	=>	isset($response->TransactionDetail->CustomerTransactionId)?$response->TransactionDetail->CustomerTransactionId:"",
+							'job_id'				=>	isset($response->JobId)?$response->JobId:"",
+							'tracking_number'		=>	isset($response->CompletedShipmentDetail->CarrierCode)?$response->CompletedShipmentDetail->CarrierCode:"",
+							'careercode' 			=>	isset($response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber)?$response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber:"",
+							'service_type'			=>	isset($response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType)?$response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType:"",
+							'weight'				=>	$weight,
+							'quoted_value'			=>	$quotedVal,
+							'shipping_date'			=>	date('Y-m-d'),
+							'created_time'			=>	date('Y-m-d'),
+						);
+						try{
+							
+							
+							
+							$historyObject->setData($historyData)->save();
+							
+							//print_r(get_class($historyObject)); exit;
+						}catch (Exception $e){
+							Mage::log($e->getMessage());
+						}
+						
+						$historyItemData = array(
+							'history_id'		=>	$historyObject->getId(),
+							'serial'			=>	$serialKey,
+							'width'				=>	$width,
+							'height'			=>	$height,
+							'length'			=>	$length,
+							'created_time'			=>	date('Y-m-d'),
+						);
+						
+						$senderAddressData = array(
+							'history_id'		=>	$historyObject->getId(),
+							'company'			=>	$data['company'],
+							'phone'				=>	$data['phone'],
+							'contact_name'		=>	$data['contact_name'],
+							'address1'			=>	$data['address'],
+							//'address2'			=>	$data['address2'],
+							'city'				=>	$data['city'],
+							'postcode'			=>	$data['postalcode'],
+							'state'				=>	$data['state'],
+							'order_id'			=>	$data['order_id'],
+							'country'			=>	$data['country_id'],
+							'email'				=>	$data['email'],
+							'created_time'		=>	date('Y-m-d'),
+						);
+						
+						$receiverAddressData = array(
+							'history_id'		=>	$historyObject->getId(),
+							'company'			=>	$data['receiver']['company'],
+							'phone'				=>	$data['receiver']['phone'],
+							'contact_name'		=>	$data['receiver']['contact_name'],
+							'address1'			=>	$data['receiver']['address'],
+						//	'address2'			=>	$data['receiver']['address2'],
+							'city'				=>	$data['receiver']['city'],
+							'postcode'			=>	$data['receiver']['postalcode'],
+							'state'				=>	$data['receiver']['state'],
+							'country'			=>	$data['receiver']['country_id'],
+							'email'				=>	$data['receiver']['email'],
+						);
+						
+						try {
+							$historyItem->setData($historyItemData)->save();
+							$historySender->setData($senderAddressData)->save();
+							$historyReceiver->setData($receiverAddressData)->save();
+						}catch (Exception $e){
+							Mage::log($e->getMessage());
+						}
+						
+				    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
+				        
+				        /*
+				    	echo "<pre>";
+				    	print_r($response->CompletedShipmentDetail);
+				    	exit;
+						/*
+
+				        $shippingDocuments = $response->CompletedShipmentDetail->CompletedPackageDetails;
+						*/
+				        /* ROW	
+				        $fedexApi->printSuccess($client, $response);
+
+				        $fp = fopen(SHIP_CODLABEL, 'wb');   
+				        fwrite($fp, $response->CompletedShipmentDetail->CompletedPackageDetails->CodReturnDetail->Label->Parts->Image); //Create COD Return PNG or PDF file
+				        fclose($fp);
+				        echo '<a href="./'.SHIP_CODLABEL.'">'.SHIP_CODLABEL.'</a> was generated.'.Newline;
+				        
+				        // Create PNG or PDF label
+				        // Set LabelSpecification.ImageType to 'PNG' for generating a PNG label
+				    
+				        $fp = fopen(SHIP_LABEL, 'wb');   
+				        fwrite($fp, ($response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image));
+				        fclose($fp);
+				        echo '<a href="./'.SHIP_LABEL.'">'.SHIP_LABEL.'</a> was generated.'; 
+						*/
+
+				       // foreach($shippingDocuments as $key => $value){
+				    	//	$type = $value->Type;
+				    	//	if($type == "OUTBOUND_LABEL"){
+				    	//		$bolImage =$value->Parts->Image;
+				    			if($response->CompletedShipmentDetail->CompletedPackageDetails->Label == "OUTBOUND_LABEL")
+				    			{
+				    				$fp = fopen($shippingLabel, 'wb');
+				    				fwrite($fp,$response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image);
+				        			fclose($fp);
+				        		}
+				        	//	$zip->addFromString(basename($serialId.'-BillOfLading.pdf'),$bolImage);
+				        		
+				        		//echo '<a href="'.$this->bol.'">BILL OF LANDING</a> was generated.<br/>';
+				    		//}else if($type == "FREIGHT_ADDRESS_LABEL"){
+				    	//		$addressLabel = $value->Parts->Image;
+							/*
+				    			$fp1 = fopen($shippingLabel, 'wb');   
+				        		fwrite($fp1,$response->CompletedShipmentDetail->CompletedPackageDetails->CodReturnDetail->Label->Parts->Image);
+				        		fclose($fp1);
+				        		*/
+				        		//$zip->addFromString(basename($serialId.'-ShippingLabel.pdf'),$addressLabel);
+				        		//echo '<a href="'.$this->shippingLabel.'">Label</a> was generated.<br/>'; 
+				    		//}
+				    	//}
+
+				    }else{
+					        $fedexApi->printError($client, $response);
+					    }
+						Mage::log($client,null, "fedex.log");    // Write to log file
+				} catch (SoapFault $exception) {
+						
+					    $fedexApi->printFault($exception, $client);
+					   echo Mage::helper('inventorymanager')->__("Something went wrong. Please try again with right information");
 				}
-				
-			    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
-			    	//$this->printSuccess($client, $response);
-			        // Create PNG or PDF label
-			        // Set LabelSpecification.ImageType to 'PNG' for generating a PNG label
-	
-			    	$shippingDocuments = $response->CompletedShipmentDetail->ShipmentDocuments;
-			    	foreach($shippingDocuments as $key => $value){
-			    		$type = $value->Type;
-			    		if($type == "OUTBOUND_LABEL"){
-			    			$bolImage =$value->Parts->Image;
-			    			
-			    			$fp = fopen($bol, 'wb');
-			    			fwrite($fp, $bolImage);
-			        		fclose($fp);
-			        		
-			        	//	$zip->addFromString(basename($serialId.'-BillOfLading.pdf'),$bolImage);
-			        		
-			        		//echo '<a href="'.$this->bol.'">BILL OF LANDING</a> was generated.<br/>';
-			    		}else if($type == "FREIGHT_ADDRESS_LABEL"){
-			    			$addressLabel = $value->Parts->Image;
-	
-			    			$fp1 = fopen($shippingLabel, 'wb');   
-			        		fwrite($fp1, $addressLabel);
-			        		fclose($fp1);
-			        		
-			        		//$zip->addFromString(basename($serialId.'-ShippingLabel.pdf'),$addressLabel);
-			        		//echo '<a href="'.$this->shippingLabel.'">Label</a> was generated.<br/>'; 
-			    		}
-			    	}
-			    	
-			    }else{
-			        $fedexApi->printError($client, $response);
-			    }
-				Mage::log($client,null, "fedex.log");    // Write to log file
-			} catch (SoapFault $exception) {
-				
-			    $fedexApi->printFault($exception, $client);
-			   echo Mage::helper('inventorymanager')->__("Something went wrong. Please try again with right information");
 			}
+			
+			if($serialCount == 0){
+				echo Mage::helper('inventorymanager')->__("No valid serials found");
+			}
+		}else{
+			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
+			$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 		
+		
+			$senderAddress = array();
+			$senderAddress['Contact']['ContactId'] = "fright1";
+			$senderAddress['Contact']['PersonName'] = $data['contact_name'];
+			$senderAddress['Contact']['Title'] = $data['contact_name'];
+			$senderAddress['Contact']['CompanyName'] = $data['company'];
+			$senderAddress['Contact']['PhoneNumber'] = $data['phone'];
+			$senderAddress['Contact']['email'] = $data['email'];
+
+			$senderAddress['Address']['StreetLines'][0] = $data['address'];
+			$senderAddress['Address']['StreetLines'][1] = "-";
+			$senderAddress['Address']['City'] = $data['city'];
+			$senderAddress['Address']['StateOrProvinceCode'] = $data['state'];
+			$senderAddress['Address']['CountryCode'] = $data['country_id'];
+			$senderAddress['Address']['PostalCode'] = $data['postalcode'];
+			
+			$receiverAddress = array();
+			$receiverAddress['Contact']['PersonName'] = $data['receiver']['contact_name'];
+			$receiverAddress['Contact']['CompanyName'] = $data['receiver']['company'];
+			$receiverAddress['Contact']['PhoneNumber'] = $data['receiver']['phone'];
+			
+			$receiverAddress['Address']['StreetLines'][0] = $data['receiver']['address'];
+			$receiverAddress['Address']['StreetLines'][1] = "";
+			$receiverAddress['Address']['City'] = $data['receiver']['city'];
+			$receiverAddress['Address']['StateOrProvinceCode'] = $data['receiver']['state'];
+			$receiverAddress['Address']['PostalCode'] = $data['receiver']['postalcode'];
+			$receiverAddress['Address']['CountryCode'] = $data['receiver']['country_id'];
+			
+			/*
+			echo "<pre>";
+			print_r($fedexApi->getProperty('freightbilling'));
+			print_r($senderAddress);
+			exit;
+			*/
+			
+			$client = new SoapClient($fedexApi->path_to_wsdl, array('trace' => 1));
 			
 			
-		}
+			$request['WebAuthenticationDetail'] = array(
+					'UserCredential' => array(
+					'Key' => $fedexApi->getProperty('key'), 
+					'Password' => $fedexApi->getProperty('password')
+				)
+			);
+			
+			$request['ClientDetail'] = array(
+				'AccountNumber' => $fedexApi->getProperty('shipaccount'), 
+				'MeterNumber' => $fedexApi->getProperty('meter')
+			);
+			
+			$request['TransactionDetail'] = array('CustomerTransactionId' => 'Freight Shipment Example');
+			
+			$request['Version'] = array(
+				'ServiceId' => 'ship', 
+				'Major' => '17', 
+				'Intermediate' => '0', 
+				'Minor' => '0'
+			);
+			
+			/*$zip = new ZipArchive();
+		    $zip_name = "zipfile.zip";
+		    if($zip->open($zip_name, ZIPARCHIVE::CREATE)!==TRUE){
+		        $error .= "* Sorry ZIP creation failed at this time";
+		    }*/
+			
+			$totalWeight = 0;
+			$serialCount = 0;
+			foreach ($data['serial_key'] as $key => $serialKey){
+				$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
+				$serialCount++;
+				$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialKey.'-ShippingLabel.png';
+				$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialKey.'-BillOfLading.pdf';			
+				$productName = "proline item";
+				$productPrice = 0;
+				if($serialObject && $serialObject->getId()){				
+					$serialId = $serialObject->getId();
+					$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialId.'-ShippingLabel.png';
+					$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialId.'-BillOfLading.pdf';
+					$orderProduct = Mage::getModel('inventorymanager/product')->load($serialObject->getProductId());
+					$catalogproduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
+					$purchaseorder = Mage::getModel('inventorymanager/purchaseorder')->load($serialObject->getOrderId());
+					$productInfoCollection = Mage::getModel('inventorymanager/vendor_productinfo')->getCollection();
+					$productInfoCollection->addFieldToFilter('vendor_id', $purchaseorder->getVendorId());
+					$productInfoCollection->addFieldToFilter('product_id', $orderProduct->getMainProductId());
+					if($productInfoCollection && $productInfoCollection->count() > 0){
+						$productInfoObject = $productInfoCollection->getFirstItem();
+						if($productInfoObject && $productInfoObject->getId()){
+							$productPrice = $catalogproduct->getFinalPrice();
+							$productName = $catalogproduct->getName();
+							$length	= $productInfoObject->getLength();
+							$width = $productInfoObject->getWidth();
+							$height = $productInfoObject->getHeight();
+							$weight	= $productInfoObject->getWeight();
+							$boxLength = $productInfoObject->getBoxLength();
+							$boxWidth = $productInfoObject->getBoxWidth();
+							$boxHeight = $productInfoObject->getBoxHeight();
+							$boxWeight = $productInfoObject->getBoxWeight();
+						}
+					}
+					if($catalogproduct->getIsInStock() == 1){
+						$stock_item = Mage::getModel('cataloginventory/stock_item')->loadByProduct($catalogproduct->getId());
+						if (!$stock_item->getId()) {
+							$productQty = $stock_item->getQty();
+							$productQty -= 1;
+						    $stock_item->setData('product_id', $catalogproduct->getId());
+						    //$stock_item->setData('stock_id', 1); 
+						    $isInStock = 1;
+						    if($productQty < 1){
+						    	$isInStock = 0;
+						    }
+						    $stock_item->setData('is_in_stock', $isInStock);
+						    $stock_item->setData('qty', $productQty);
+						    $stock_item->save();
+						}				
+					}
+				}
+				if(isset($data['weight'][$key])){
+					$weight = $data['weight'][$key];
+				}
+				if(isset($data['length'][$key])){
+					$length = $data['length'][$key];
+				}
+				if(isset($data['width'][$key])){
+					$width = $data['width'][$key];
+				}
+				if(isset($data['height'][$key])){
+					$height = $data['height'][$key];
+				}
+				if(isset($data['price'][$key]) && $data['price'][$key] > 0){
+					$productPrice = $data['price'][$key];
+				}
+				if($boxLength == ""){
+					$boxLength = $length;
+				}
+				if($boxWidth == ""){
+					$boxWidth = $width;
+				}
+				if($boxHeight == ""){
+					$boxHeight = $height;
+				}
+				$request['RequestedShipment'] = array(
+					'ShipTimestamp' => date('c'),
+					'DropoffType' => 'REGULAR_PICKUP', 
+					'ServiceType' => isset($data['service_type'])?$data['service_type']:'FEDEX_FREIGHT_ECONOMY', 
+					'PackagingType' => 'YOUR_PACKAGING', 
+					//'Shipper' => $fedexApi->getProperty('freightbilling'),
+					'Shipper' => $senderAddress,
+						'Recipient' => $receiverAddress,
+					'ShippingChargesPayment' => $fedexApi->addShippingChargesPayment(),
+					'FreightShipmentDetail' => array(
+						'FedExFreightAccountNumber' => $fedexApi->getProperty('freightaccount'),
+						'FedExFreightBillingContactAndAddress' => $fedexApi->getProperty('freightbilling'),
+						'PrintedReferences' => array(
+							'Type' => 'SHIPPER_ID_NUMBER',
+							'Value' => 'RBB1057'
+						),
+						'Role' => 'SHIPPER',
+						'PaymentType' => 'PREPAID',
+						'CollectTermsType' => 'STANDARD',
+						'DeclaredValuePerUnit' => array(
+							'Currency' => 'USD',
+							'Amount' => $productPrice
+						),
+						'LiabilityCoverageDetail' => array(
+							'CoverageType' => 'NEW',
+							'CoverageAmount' => array(
+								'Currency' => 'USD',
+								'Amount' => '50'
+							)
+						),
+						'TotalHandlingUnits' => 1,
+						'ClientDiscountPercent' => 0,
+						'PalletWeight' => array(
+							'Units' => 'LB',
+							'Value' => 20
+						),
+						'ShipmentDimensions' => array(
+							'Length' => $boxLength,
+							'Width' => $boxWidth,
+							'Height' => $boxHeight,
+							'Units' => 'IN'
+						),
+						'LineItems' => array(
+							'FreightClass' => 'CLASS_050',
+							'ClassProvidedByCustomer' => false,
+							'HandlingUnits' => 1,
+							'Packaging' => 'PALLET',
+							'Pieces' => 1,
+							'BillOfLaddingNumber' => 'BOL_12345',
+							'PurchaseOrderNumber' => 'PO_12345',
+							'Description' => $productName,
+							'Weight' => array(
+								'Value' => $weight,
+								'Units' => 'LB'
+							),
+							'Dimensions' => array(
+								'Length' => $boxLength ,
+								'Width' => $boxWidth ,
+								'Height' => $boxHeight ,
+								'Units' => 'IN'
+							),
+							'Volume' => array(
+								'Units' => 'CUBIC_FT',
+								'Value' => 30
+							)
+						)
+					),	
+					'LabelSpecification' => $fedexApi->addLabelSpecification(),
+					'ShippingDocumentSpecification' => $fedexApi->addShippingDocumentSpecification(),
+					'PackageCount' => 1,
+					'PackageDetail' => 'INDIVIDUAL_PACKAGES'                                        
+				);
+				try {
+					if($fedexApi->setEndpoint('changeEndpoint')){
+						$newLocation = $client->__setLocation(setEndpoint('endpoint'));
+					}
+					$response = $client->processShipment($request); // FedEx web service invocation  
+					$historyObject = Mage::getModel('inventorymanager/shipmanager');
+					$historyItem = Mage::getModel('inventorymanager/shipmanager_item');
+					$historySender = Mage::getModel('inventorymanager/shipmanager_sender');
+					$historyReceiver = Mage::getModel('inventorymanager/shipmanager_receiver');
+					$quotedVal = 0;
+					if(isset($response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount)){
+						$quotedVal = $response->CompletedShipmentDetail->ShipmentRating->ShipmentRateDetails->FreightRateDetail->BaseCharges->ExtendedAmount->Amount;
+					}
+					$historyData = array(
+						'transaction_detail'	=>	isset($response->TransactionDetail->CustomerTransactionId)?$response->TransactionDetail->CustomerTransactionId:"",
+						'job_id'				=>	isset($response->JobId)?$response->JobId:"",
+						'tracking_number'		=>	isset($response->CompletedShipmentDetail->CarrierCode)?$response->CompletedShipmentDetail->CarrierCode:"",
+						'careercode' 			=>	isset($response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber)?$response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber:"",
+						'service_type'			=>	isset($response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType)?$response->CompletedShipmentDetail->MasterTrackingId->TrackingIdType:"",
+						'weight'				=>	$weight,
+						'quoted_value'			=>	$quotedVal,
+						'shipping_date'			=>	date('Y-m-d'),
+						'created_time'			=>	date('Y-m-d'),
+					);
+					try{
+						$historyObject->setData($historyData)->save();
+					}catch (Exception $e){
+						Mage::log($e->getMessage());
+					}
+					$historyItemData = array(
+						'history_id'		=>	$historyObject->getId(),
+						'serial'			=>	$serialKey,
+						'width'				=>	$width,
+						'height'			=>	$height,
+						'length'			=>	$length,
+						'created_time'			=>	date('Y-m-d'),
+					);
+					$senderAddressData = array(
+						'history_id'		=>	$historyObject->getId(),
+						'company'			=>	$data['company'],
+						'phone'				=>	$data['phone'],
+						'contact_name'		=>	$data['contact_name'],
+						'address1'			=>	$data['address'],
+						//'address2'			=>	$data['address2'],
+						'city'				=>	$data['city'],
+						'postcode'			=>	$data['postalcode'],
+						'state'				=>	$data['state'],
+						'order_id'			=>	$data['order_id'],
+						'country'			=>	$data['country_id'],
+						'email'				=>	$data['email'],
+						'created_time'		=>	date('Y-m-d'),
+					);
+					$receiverAddressData = array(
+						'history_id'		=>	$historyObject->getId(),
+						'company'			=>	$data['receiver']['company'],
+						'phone'				=>	$data['receiver']['phone'],
+						'contact_name'		=>	$data['receiver']['contact_name'],
+						'address1'			=>	$data['receiver']['address'],
+					//	'address2'			=>	$data['receiver']['address2'],
+						'city'				=>	$data['receiver']['city'],
+						'postcode'			=>	$data['receiver']['postalcode'],
+						'state'				=>	$data['receiver']['state'],
+						'country'			=>	$data['receiver']['country_id'],
+						'email'				=>	$data['receiver']['email'],
+					);
+					try {
+						$historyItem->setData($historyItemData)->save();
+						$historySender->setData($senderAddressData)->save();
+						$historyReceiver->setData($receiverAddressData)->save();
+					}catch (Exception $e){
+						Mage::log($e->getMessage());
+					}
+				    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
+				    	//$this->printSuccess($client, $response);
+				        // Create PNG or PDF label
+				        // Set LabelSpecification.ImageType to 'PNG' for generating a PNG label
 		
-		if($serialCount == 0){
-			echo Mage::helper('inventorymanager')->__("No valid serials found");
+				    	$shippingDocuments = $response->CompletedShipmentDetail->ShipmentDocuments;
+				    	foreach($shippingDocuments as $key => $value){
+				    		$type = $value->Type;
+				    		if($type == "OUTBOUND_LABEL"){
+				    			$bolImage =$value->Parts->Image;
+				    			
+				    			$fp = fopen($bol, 'wb');
+				    			fwrite($fp, $bolImage);
+				        		fclose($fp);
+				        		
+				        	//	$zip->addFromString(basename($serialId.'-BillOfLading.pdf'),$bolImage);
+				        		
+				        		//echo '<a href="'.$this->bol.'">BILL OF LANDING</a> was generated.<br/>';
+				    		}else if($type == "FREIGHT_ADDRESS_LABEL"){
+				    			$addressLabel = $value->Parts->Image;
+		
+				    			$fp1 = fopen($shippingLabel, 'wb');   
+				        		fwrite($fp1, $addressLabel);
+				        		fclose($fp1);
+				        		
+				        		//$zip->addFromString(basename($serialId.'-ShippingLabel.pdf'),$addressLabel);
+				        		//echo '<a href="'.$this->shippingLabel.'">Label</a> was generated.<br/>'; 
+				    		}
+				    	}
+				    	
+				    }else{
+				        $fedexApi->printError($client, $response);
+				    }
+					Mage::log($client,null, "fedex.log");    // Write to log file
+				} catch (SoapFault $exception) {
+					
+				    $fedexApi->printFault($exception, $client);
+				   echo Mage::helper('inventorymanager')->__("Something went wrong. Please try again with right information");
+				}
+			}		
+			if($serialCount == 0){
+				echo Mage::helper('inventorymanager')->__("No valid serials found");
+			}
 		}
-        
-        $this->loadLayout();
+		$this->loadLayout();
         $this->renderLayout();
 	}
-	
+		
 	public function historyAction(){
 		$this->loadLayout();
 		$this->renderLayout();
@@ -440,7 +711,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 	}
 	
 	public function downloadAction(){
-			
+
 			if($this->getRequest()->getParam('area') == "bol"){			
 			header("Content-Type: application/octet-stream");					
 			$area = $this->getRequest()->getParam('area');
@@ -453,6 +724,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			}
 				
 			$file = Mage::getBaseDir().'/media/fedex/' . $fileName;
+			//$file = str_replace(".pdf",".png",$file);
+
 			header("Content-Disposition: attachment; filename=" . urlencode($fileN));   
 			header("Content-Type: application/octet-stream");
 			header("Content-Type: application/download");
@@ -844,9 +1117,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			    			//echo "<tr><td>".$netCharges .  "</td></tr>";
 			    		} 
 			    	}
-			    	
-					//exit;
-			    	
 			    	
 			        //$fedexApi->printSuccess($client, $response);
 			    }else{
