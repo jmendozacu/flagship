@@ -215,7 +215,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 
 					if($fedexApi->setEndpoint('changeEndpoint')){
 						$newLocation = $client->__setLocation($fedexApi->setEndpoint('endpoint'));
-					}	
+					}
+
+					echo "<pre>";
+					print_r($request);
+					exit;
+					
 					$response = $client->processShipment($request); // FedEx web service invocation
 					$historyObject = Mage::getModel('inventorymanager/shipmanager');
 						$historyItem = Mage::getModel('inventorymanager/shipmanager_item');
