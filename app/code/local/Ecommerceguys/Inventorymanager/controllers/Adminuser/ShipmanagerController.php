@@ -302,11 +302,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						
 				    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
 				        
-				        /*
+				        
 				    	echo "<pre>";
 				    	print_r($response->CompletedShipmentDetail);
 				    	exit;
-						/*
+						
 
 				        $shippingDocuments = $response->CompletedShipmentDetail->CompletedPackageDetails;
 						*/
@@ -370,7 +370,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
 			$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 		
-		
+			
 			$senderAddress = array();
 			$senderAddress['Contact']['ContactId'] = "fright1";
 			$senderAddress['Contact']['PersonName'] = $data['contact_name'];
