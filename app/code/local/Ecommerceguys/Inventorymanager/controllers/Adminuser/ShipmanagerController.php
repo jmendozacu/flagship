@@ -13,11 +13,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 	public function saveAction(){
 		 $data = $this->getRequest()->getParams();
 		 $realOrderId = $data['order_id'];
-		/*
+		
 		echo "<pre>";
 		print_r($data);
 		exit;
-		*/
+		
 		if($data['service_type'] == 'FEDEX_GROUND'){
 			//echo "test";exit;
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedexground');
