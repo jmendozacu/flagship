@@ -15,11 +15,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		 $realOrderId = $data['order_id'];
 		 $data['receiver']['state'] = 'Utah';
 		
-
-		/*echo "<pre>";
-		print_r($data);
-		exit;
-		*/
+		
 		if($data['service_type'] == 'FEDEX_GROUND'){
 			//echo "test";exit;
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedexground');
@@ -93,24 +89,16 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 
 
 				$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
-				
 				$serialCount++;
-				
 				//$response = $fedexApi->getResponse($serialObject->getId(), $orderObject->getId());
 				//echo $serialCount;exit;
-				
-			
 				$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialKey.'-ShippingLabel.png';
 				//$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialKey.'-BillOfLading.pdf';
-				
 				$productName = "proline item";
 				$productPrice = 0;
 				
 				if($serialObject && $serialObject->getId()){
-					
-					
 					$serialId = $serialObject->getId();
-				
 					$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialId.'-ShippingLabel.png';
 					//$bol = Mage::getBaseDir().'/media/fedex/billoflanding/'.$serialId.'-BillOfLading.pdf';
 					
@@ -306,7 +294,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	echo "<pre>";
 				    	print_r($response->CompletedShipmentDetail);
 				    	exit;
-						
+						/*
 
 				        $shippingDocuments = $response->CompletedShipmentDetail->CompletedPackageDetails;
 						*/
@@ -333,7 +321,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	//		$bolImage =$value->Parts->Image;
 				    			if($response->CompletedShipmentDetail->CompletedPackageDetails->Label == "OUTBOUND_LABEL")
 				    			{
-				    				echo $response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image;exit;
+
+				    				echo "<pre>";
+				    				print_r($response->CompletedShipmentDetail->CompletedPackageDetails);
+				    				exit;
 				    				$fp = fopen($shippingLabel, 'wb');
 				    				fwrite($fp,$response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image);
 				        			fclose($fp);
@@ -371,7 +362,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
 			$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 		
-			
+		
 			$senderAddress = array();
 			$senderAddress['Contact']['ContactId'] = "fright1";
 			$senderAddress['Contact']['PersonName'] = $data['contact_name'];
@@ -430,11 +421,13 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				'Minor' => '0'
 			);
 			
-			/*$zip = new ZipArchive();
+			/*
+			$zip = new ZipArchive();
 		    $zip_name = "zipfile.zip";
 		    if($zip->open($zip_name, ZIPARCHIVE::CREATE)!==TRUE){
 		        $error .= "* Sorry ZIP creation failed at this time";
-		    }*/
+		    }
+		    */
 			
 			$totalWeight = 0;
 			$serialCount = 0;
