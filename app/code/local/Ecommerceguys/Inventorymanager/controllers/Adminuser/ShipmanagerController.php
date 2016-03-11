@@ -309,7 +309,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						
 
 				        $shippingDocuments = $response->CompletedShipmentDetail->CompletedPackageDetails;
-						*/
+						
 				        /* ROW	
 				        $fedexApi->printSuccess($client, $response);
 
