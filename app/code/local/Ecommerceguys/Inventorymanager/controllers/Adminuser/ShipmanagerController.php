@@ -302,14 +302,14 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						
 				    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
 				        
-				        
+				        /*
 				    	echo "<pre>";
 				    	print_r($response->CompletedShipmentDetail);
 				    	exit;
 						
 
 				        $shippingDocuments = $response->CompletedShipmentDetail->CompletedPackageDetails;
-						
+						*/
 				        /* ROW	
 				        $fedexApi->printSuccess($client, $response);
 
@@ -333,6 +333,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	//		$bolImage =$value->Parts->Image;
 				    			if($response->CompletedShipmentDetail->CompletedPackageDetails->Label == "OUTBOUND_LABEL")
 				    			{
+				    				echo $response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image;exit;
 				    				$fp = fopen($shippingLabel, 'wb');
 				    				fwrite($fp,$response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image);
 				        			fclose($fp);
