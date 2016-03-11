@@ -13,7 +13,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 	public function saveAction(){
 		 $data = $this->getRequest()->getParams();
 		 $realOrderId = $data['order_id'];
-		
+		 $data['receiver']['state'] = 'Utah';
 		echo "<pre>";
 		print_r($data);
 		exit;
