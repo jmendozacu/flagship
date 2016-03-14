@@ -299,7 +299,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						}
 						
 echo "<pre> Before --------> ";
-				    	print_r($response->CompletedShipmentDetail);
+				    	print_r($response);
 				    	exit;
 
 				    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
