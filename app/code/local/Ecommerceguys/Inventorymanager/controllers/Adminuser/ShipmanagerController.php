@@ -304,6 +304,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	echo "<pre>";
 				    	print_r($response->CompletedShipmentDetail);
 				    	exit;
+						*/
 						/*
 
 				        $shippingDocuments = $response->CompletedShipmentDetail->CompletedPackageDetails;
@@ -329,7 +330,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	//	$type = $value->Type;
 				    	//	if($type == "OUTBOUND_LABEL"){
 				    	//		$bolImage =$value->Parts->Image;
-				    			if($response->CompletedShipmentDetail->CompletedPackageDetails->Label == "OUTBOUND_LABEL")
+				    			if($response->CompletedShipmentDetail->CompletedPackageDetails->Label->Type == "OUTBOUND_LABEL")
 				    			{
 				    				$fp = fopen($shippingLabel, 'wb');
 				    				fwrite($fp,$response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image);
