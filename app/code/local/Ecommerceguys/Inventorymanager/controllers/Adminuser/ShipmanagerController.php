@@ -298,17 +298,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 							Mage::log($e->getMessage());
 						}
 						
-echo "<pre> Before --------> ";
-				    	print_r($response);
-				    	exit;
-
 				    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
 				        
-				        
+				        /*
 				    	echo "<pre>";
 				    	print_r($response->CompletedShipmentDetail);
 				    	exit;
-						
 						/*
 
 				        $shippingDocuments = $response->CompletedShipmentDetail->CompletedPackageDetails;
