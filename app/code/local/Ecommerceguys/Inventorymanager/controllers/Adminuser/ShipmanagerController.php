@@ -22,8 +22,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			//echo "test";exit;
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedexground');
 			$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
-		
-		
+			$receiverstate = $this->_regioncode($data['receiver_state_id']);
+			
+		/*
+			echo "<pre>";
+			print_r($data['receiver']['state']);exit;
+		*/
 			$senderAddress = array();
 			$senderAddress['Contact']['ContactId'] = "ground1";
 			$senderAddress['Contact']['PersonName'] = $data['contact_name'];
@@ -47,7 +51,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			$receiverAddress['Address']['StreetLines'][0] = $data['receiver']['address'];
 			$receiverAddress['Address']['StreetLines'][1] = "";
 			$receiverAddress['Address']['City'] = $data['receiver']['city'];
-			$receiverAddress['Address']['StateOrProvinceCode'] = $data['receiver']['state'];
+			$receiverAddress['Address']['StateOrProvinceCode'] = $receiverstate;//$data['receiver']['state'];
 			$receiverAddress['Address']['PostalCode'] = $data['receiver']['postalcode'];
 			$receiverAddress['Address']['CountryCode'] = $data['receiver']['country_id'];
 			
@@ -403,6 +407,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			exit;
 			*/
 			
+
+
 			$client = new SoapClient($fedexApi->path_to_wsdl, array('trace' => 1));
 			
 			
@@ -923,6 +929,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		}
 	}
 	
+
+	protected function _regioncode($receiver_state_id){
+		$region = Mage::getModel('directory/region')->load($receiver_state_id);
+		return $regionCode = $region->getCode();
+	}
 
 	public function rateAction(){
 		
