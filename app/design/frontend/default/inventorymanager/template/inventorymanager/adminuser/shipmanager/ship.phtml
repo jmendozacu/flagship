@@ -129,7 +129,7 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 							<label><?php echo $this->__("State") ?></label>
 							<input type="text" class="form-control required-entry" id="billing:region" name="state" value="<?php echo $stateCode ?>" />
 							<!--<select id="billing:region_id"  class="form-control">
-							</select>-->
+							</select>-->	
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -225,10 +225,24 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 								*/ ?>
 								<div class="form-group">
 									<label><?php echo $this->__("Service Type") ?></label>
-									<select name="service_type" class="form-control">
+									<select name="service_type" class="form-control" onchange="applicableservice(this);">
 										<option value="FEDEX_FREIGHT_ECONOMY">FEDEX FREIGHT ECONOMY</option>
 										<option value="FEDEX_FREIGHT_PRIORITY">FEDEX FREIGHT PRIORITY</option>
 										<option value="FEDEX_GROUND">FEDEX GROUND</option>
+										<?php /* <option value="GROUND_HOME_DELIVERY">GROUND HOME DELIVERY</option> */?>
+									</select>
+								</div>
+								
+								<div class="form-group" id="applicable_service" style="display:none">
+									<label><?php echo $this->__("Applicable Services") ?></label>
+									<select name="applicable_services" class="form-control">
+										<option value="FIRST_OVERNIGHT">FIRST OVERNIGHT</option>
+										<option value="PRIORITY_OVERNIGHT">FEDEX PRIORITY OVERNIGHT</option>
+										<option value="STANDARD_OVERNIGHT">FEDEX STANDARD OVERNIGHT</option>
+										<option value="FEDEX_2DAY">FEDEX 2DAY</option>
+										<option value="FEDEX_2_DAY_AM">FEDEX 2 DAY AM</option>
+										<option value="FEDEX_EXPRESS_SAVER">FEDEX EXPRESS SAVER</option>
+										<?php /* <option value="FEDEX_GROUND">FedEx Ground</option> */?>
 										<?php /* <option value="GROUND_HOME_DELIVERY">GROUND HOME DELIVERY</option> */?>
 									</select>
 								</div>
@@ -303,6 +317,14 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
     //]]>
 </script>
 <script>
+	function applicableservice(sel){
+		if(sel.value=="FEDEX_GROUND"){
+			document.getElementById("applicable_service").style.display = "block";
+		}else{
+			document.getElementById("applicable_service").style.display = "none";
+		}		
+
+	}
 	var serialIncrement = 1;
 	function addSerialRow(){
 		serialIncrement++;
@@ -403,6 +425,8 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 </script>
 
 <script type="text/javascript">
+
+
 	function calculatePrice(){
 		if(customForm.validator && customForm.validator.validate()){
 			checkSerialVals();

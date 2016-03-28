@@ -29,7 +29,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedexground extends Ecom
 	
 	    if($var == 'meter') Return Mage::getStoreConfig('inventorymanager/fedex_config/meter_number');
 	    
-	     if($var == 'recipient'){ 
+	    if($var == 'recipient'){ 
 	     	
 	     	return array(
 		        'Contact' => array(
@@ -128,8 +128,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedexground extends Ecom
 			)
 		);
 		   
-		   
-		                                                                                                                           
+		                                                                                        
 		try {
 
 			if(setEndpoint('changeEndpoint')){
@@ -138,7 +137,6 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedexground extends Ecom
 			$response = $client->processShipment($request); // FedEx web service invocation
 		    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
 		        printSuccess($client, $response);
-
 		        $fp = fopen(SHIP_CODLABEL, 'wb');   
 		        fwrite($fp, $response->CompletedShipmentDetail->CompletedPackageDetails->CodReturnDetail->Label->Parts->Image); //Create COD Return PNG or PDF file
 		        fclose($fp);
@@ -147,7 +145,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedexground extends Ecom
 		        // Create PNG or PDF label
 		        // Set LabelSpecification.ImageType to 'PNG' for generating a PNG label
 		    
-		        $fp = fopen(SHIP_LABEL, 'wb');   
+		        $fp = fopen(SHIP_LABEL, 'wb');
 		        fwrite($fp, ($response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image));
 		        fclose($fp);
 		        echo '<a href="./'.SHIP_LABEL.'">'.SHIP_LABEL.'</a> was generated.'; 
