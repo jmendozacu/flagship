@@ -19,15 +19,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		exit;
 		*/
 		if($data['service_type'] == 'FEDEX_GROUND'){
-			//echo "test";exit;
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedexground');
 			$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 			$receiverstate = $this->_regioncode($data['receiver_state_id']);
 			
-		/*
-			echo "<pre>";
-			print_r($data['receiver']['state']);exit;
-		*/
+		
 			$senderAddress = array();
 			$senderAddress['Contact']['ContactId'] = "ground1";
 			$senderAddress['Contact']['PersonName'] = $data['contact_name'];
@@ -407,8 +403,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			exit;
 			*/
 			
-
-
 			$client = new SoapClient($fedexApi->path_to_wsdl, array('trace' => 1));
 			
 			
@@ -581,20 +575,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 							)
 						)
 					),	
-					'LabelSpecification' => $fedexApi->addLabelSpecification(),
-					'ShippingDocumentSpecification' => $fedexApi->addShippingDocumentSpecification(),
-					'PackageCount' => 1,
-					'PackageDetail' => 'INDIVIDUAL_PACKAGES'                                        
-				);
-				$request['RequestedShipment'] = array(
-					'ShipTimestamp' => date('c'),
-					'DropoffType' => 'REGULAR_PICKUP', 
-					'ServiceType' => isset($data['service_type'])?$data['service_type']:'FEDEX_GROUND', 
-					'PackagingType' => 'YOUR_PACKAGING', 
-					//'Shipper' => $fedexApi->getProperty('freightbilling'),
-					'Shipper' => $senderAddress,
-						'Recipient' => $receiverAddress,
-					'ShippingChargesPayment' => $fedexApi->addShippingChargesPayment(),
 					'LabelSpecification' => $fedexApi->addLabelSpecification(),
 					'ShippingDocumentSpecification' => $fedexApi->addShippingDocumentSpecification(),
 					'PackageCount' => 1,
@@ -1145,7 +1125,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				}
 				
 				$response = $client->getRates($request);
-			   /* echo "<pre>";
+			   /*
+			   echo "<pre>";
 			print_r($response);
 			exit;
 				*/
