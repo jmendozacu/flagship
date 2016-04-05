@@ -3,9 +3,11 @@ $shipper = Mage::getStoreConfig('inventorymanager/fedex_config/shipper_address')
 $shipperAddress = (array)json_decode($shipper); 
 $shipperAddress['Contact'] = (array)$shipperAddress['Contact'];
 $shipperAddress['Address'] = (array)$shipperAddress['Address'];
-/*echo "<pre>";
+/*
+echo "<pre>";
 print_r($shipperAddress); 
-echo "</pre>";*/
+echo "</pre>";
+*/
 
 $companyName = "";
 $phone = "";
@@ -53,7 +55,6 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 	<div class="col-md-12">
 		<h2><?php echo $this->__("Shipmanager - Ship")  ?></h2>
 	</div>
-	
 </div>
 <hr>
 <div class="row">
@@ -442,6 +443,9 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
 		            $('result').update(t.responseText);
 		        }
 		    });
+			var url = '<?php echo $this->getUrl("inventorymanager/adminuser_shipmanager/save") ?>';
+			$('shipmanager_send').action = url;
+			
 		}
 	}
 </script>
