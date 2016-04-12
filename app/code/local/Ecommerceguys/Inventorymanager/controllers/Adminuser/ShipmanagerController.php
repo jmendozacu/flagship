@@ -215,6 +215,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						$newLocation = $client->__setLocation($fedexApi->setEndpoint('endpoint'));
 					}
 					$response = $client->processShipment($request); // FedEx web service invocation
+
+
+
 					$historyObject = Mage::getModel('inventorymanager/shipmanager');
 						$historyItem = Mage::getModel('inventorymanager/shipmanager_item');
 						$historySender = Mage::getModel('inventorymanager/shipmanager_sender');
@@ -327,6 +330,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	//	$type = $value->Type;
 				    	//	if($type == "OUTBOUND_LABEL"){
 				    	//		$bolImage =$value->Parts->Image;
+				        $shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
+						$shipmentModel->completeShipment($realOrderId,$response->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
 				    			if($response->CompletedShipmentDetail->CompletedPackageDetails->Label->Type == "OUTBOUND_LABEL")
 				    			{
 				    				$fp = fopen($shippingLabel, 'wb');
@@ -654,7 +659,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	//$this->printSuccess($client, $response);
 				        // Create PNG or PDF label
 				        // Set LabelSpecification.ImageType to 'PNG' for generating a PNG label
-		
+						$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
+						$shipmentModel->completeShipment($realOrderId,$response->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
+				    			
 				    	$shippingDocuments = $response->CompletedShipmentDetail->ShipmentDocuments;
 				    	foreach($shippingDocuments as $key => $value){
 				    		$type = $value->Type;
