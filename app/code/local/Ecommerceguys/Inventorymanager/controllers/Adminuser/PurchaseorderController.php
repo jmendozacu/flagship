@@ -148,7 +148,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 	
 	public function generatepdfAction(){
 		
-		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,172.4), true, 'UTF-8', false);
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,152.4), true, 'UTF-8', false);
 		$id = $this->getRequest()->getParam('id');
 		$purchaseOrder = Mage::getModel('inventorymanager/purchaseorder')->load($id);
 		
@@ -201,7 +201,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		// add a page
 		$pdf->AddPage();
 		$pdf->SetFont('helvetica', '', 8);
-		
 		
 		
 		$contentArray = explode("<!--EOP-->", $content);
@@ -273,6 +272,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 	}
 	
 	public function receiveAction(){
+		
+
 		$orderId = $this->getRequest()->getParam('id');
 		$orderObject = Mage::getModel('inventorymanager/purchaseorder')->load($orderId);
 		
@@ -280,19 +281,15 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$serials->addFieldToFilter('order_id', $orderObject->getId());
 		$serials->addFieldToFilter('is_in_stock', array('neq'=>1));
 		$receivedSerials = 0;
+		$inventorymanagerproductModel = Mage::getModel('inventorymanager/product');
+		$catalogproductModel = Mage::getModel('catalog/product');
+		$cataloginventorystockitemModel = Mage::getModel('cataloginventory/stock_item');
+
 		foreach ($serials as $serial){
-			//echo $serial->getSerial() . "<br/>";
-			$orderProduct = Mage::getModel('inventorymanager/product')->load($serial->getProductId());
+			$orderProduct = $inventorymanagerproductModel->load($serial->getProductId());
 			if($orderProduct && $orderProduct->getId()){
-				$catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
-				
-				/*if($catalogProduct && $catalogProduct->getId()){
-					echo "<br/> PRODUCT FOUND " . $catalogProduct->getId();
-				}else{
-					echo "<br/> PRODUCT NOT FOUND " . $serial->getId();
-				}
-				continue;*/
-				$stocklevel = Mage::getModel('cataloginventory/stock_item')->loadByProduct($catalogProduct);
+				$catalogProduct = $catalogproductModel->load($orderProduct->getMainProductId());
+				$stocklevel = $cataloginventorystockitemModel->loadByProduct($catalogProduct);
                 $receivedSerials++;
 				$productQty = 0;
                 if($stocklevel){
