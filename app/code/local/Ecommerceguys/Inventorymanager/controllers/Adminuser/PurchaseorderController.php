@@ -205,6 +205,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		
 		$contentArray = explode("<!--EOP-->", $content);
 		//print_r($contentArray);exit;
+<<<<<<< HEAD
+=======
 		$contArray = array();
 		array_pop($contentArray);
 		foreach($contentArray as $itemcontent)	{
@@ -213,11 +215,16 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 					}
 		}	
 		
+>>>>>>> 69e8ac8151c5531515639f466bae9dd88df81109
 		$contentSize = sizeof($contentArray);
 		
 		$iCounter = 0;
 		//$pdf->AddPage();
+<<<<<<< HEAD
+		foreach ($contentArray as $cont){
+=======
 		foreach ($contArray as $cont){
+>>>>>>> 69e8ac8151c5531515639f466bae9dd88df81109
 			$iCounter++;
 			$pdf->writeHTML($cont, true, false, false, false, '');
 			if(($contentSize) > $iCounter){

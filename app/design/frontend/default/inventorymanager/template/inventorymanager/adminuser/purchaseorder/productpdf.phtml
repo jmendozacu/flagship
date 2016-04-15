@@ -67,16 +67,15 @@
 
                                 </td>
                                 <?php if ($productInfoObject && $productInfoObject->getUpc() != "") { ?>
-                                    <td width="30%">
-                                        <img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $productInfoObject->getUpc() . "&size=32"; ?>" />
-                                    </td>
+                                	<td width="30%">
+	                                	<img src="<?php echo str_replace(array("index.php", "index.php/"), "", Mage::getBaseUrl()) . "barcode.php?text=" . $productInfoObject->getUpc() . "&size=32"; ?>" />
+                                	</td>
                                 <?php } ?>
                              </tr>
                              <tr>
                                  <td><?php echo $product->getSerial() ?> </td>
                                  <td><?php echo $productInfoObject->getUpc() ?></td>
                              </tr>
-                       
                 <tr><td colspan="2"><span style=""><?php echo $imageHtml ?></span>
 </td></tr>
                         </table>
@@ -89,32 +88,31 @@
                                 <td width="30%"><?php echo $this->__("Product") ?></td>
                                 <td width="70%"><?php echo $catalogProduct->getName() ?></td>
                             </tr>
-                        </table>
+						</table>
                         <table border="1" cellpadding="5" width="100%">
                             <tr>
-                                <td width="30%"><?php echo $this->__("Weight(kg/lbs)") ?></td>
+										<td width="30%"><?php echo $this->__("Weight(kg/lbs)") ?></td>
                                 <td width="20%"><?php echo $weight ?>/<?php echo number_format($weight*2.20462,2) ?></td>
                                 <td width="30%"><?php echo $this->__("Box Weight(kg/lbs)") ?></td>
-                                <td width="20%"><?php echo $boxWeight ?>/<?php echo number_format($boxWeight*2.20462,2) ?></td>
-                                
+                                <td width="20%"><?php echo $boxWeight ?>/<?php echo number_format($boxWeight*2.20462,2) ?></td>      
                             </tr>             
                         </table>
                         <table border="1" cellpadding="5" width="100%">
                             <tr>
                                 <td width="30%"><?php echo $this->__("H W D") ?></td>
-                                <td width="70%">
-                                    <?php echo $height ?>/
-                                    <?php echo $width ?>/
-                                    <?php echo $depth ?>
-                                </td>
+								<td width="70%">
+									<?php echo $height ?>/
+									<?php echo $width ?>/
+									<?php echo $depth ?>
+								</td>
                             </tr>
                             <tr>
                                 <td><?php echo $this->__("Box HWD") ?></td>
                                 <td>
-                                    <?php echo $boxHeight ?>/
-                                    <?php echo $boxWidth ?>
-                                    <?php echo $boxLength ?>
-                                </td>
+	                                <?php echo $boxHeight ?>/
+									<?php echo $boxWidth ?>
+									<?php echo $boxLength ?>
+								</td>
                             </tr>
                         </table>
                     </td>
@@ -125,6 +123,6 @@
                 <!--EOP-->
       <?php endif;?>
    <?php } ?>
-        
+   
     <?php } ?>
 </div>

@@ -57,16 +57,17 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 		
 		// set default header data
-		$pdf->SetHeaderData('/../skin/frontend/default/theme279/images/prohoods_logo_sm.png',70.6, '', '');
+		$pdf->SetHeaderData('/../skin/frontend/default/theme279/images/prohoods_logo_sm.png', 0, '', '');
 		
 		// set header and footer fonts
-		//$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-		//$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 		
 		// set default monospaced font
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 		
 		// set margins
+
 		//$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 		$pdf->SetMargins(0,PDF_MARGIN_TOP,0);
 		//$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
@@ -92,7 +93,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		$contentArray = explode("<!--EOP-->", $content);
 		
 		$contentArray = array_filter($contentArray);
-		array_pop($contentArray);
+		
 		$contentSize = sizeof($contentArray);
 		$iCounter = 0;
 		foreach ($contentArray as $cont){

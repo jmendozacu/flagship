@@ -57,14 +57,16 @@ $imageModel->setBaseFile($smallImage);
             }
         }
         ?>
+        <table>
         <?php for ($ic = 0; $ic < 2; $ic++) { ?>
         <table width="776px" height="1376px">
             <tr>
-                
+                <?php for ($ic = 0; $ic < 2; $ic++) { ?>
                     <td style="width:45%; font-size:13px;">
                         <table border="1" cellpadding="5" width="100%" style="1px solid #ccc">
                             <tr>
-                                <td colspan="2" align="center"><?php echo $product->getSerial() ?></td>
+                                <td width="70%"><?php echo $product->getSerial() ?></td>
+                                <td width="30%"><?php echo $productInfoObject->getUpc() ?></td>
                             </tr>
                             <tr>
                                 <td colspan="2" align="center">
@@ -127,14 +129,17 @@ $imageModel->setBaseFile($smallImage);
                             </tr>
                         </table>
                     </td>
+			<?php if($ic == 0):?>
+				<td style="width:10%">&nbsp;</td>
+			<?php endif;?>
+                <?php } ?>
             </tr>
         </table>
         
-  <?php if($ic >= 0 && $ic <= 1):?>
-                <?php /*if(($jCounter >= 1) && ($jCounter < $contentSize)): */?>
-                <!--EOP-->
-      <?php endif;?>
-   <?php } ?>
-        
+        <?php if($jCounter%2 == 0){ ?>
+        		<!--EOP-->
+        <?php }else{ ?>
+        	<br/><br/><br/><br/>
+        <?php } ?>
     <?php } ?>
 </div>

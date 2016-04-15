@@ -8,7 +8,6 @@
  * @version   1.6.1
  */
 
-
 if (!class_exists('FPDF_TPL')) {
     require_once('fpdf_tpl.php');
 }
@@ -118,7 +117,6 @@ class FPDI extends FPDF_TPL
      */
     protected function _getPdfParser($filename)
     {
-        //test
         if (!class_exists('fpdi_pdf_parser')) {
             require_once('fpdi_pdf_parser.php');
         }

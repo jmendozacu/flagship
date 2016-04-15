@@ -8,7 +8,6 @@
  * @version   1.6.1
  */
 
-
 if (!class_exists('fpdi_bridge')) {
     require_once('fpdi_bridge.php');
 }
@@ -152,7 +151,6 @@ class FPDF_TPL extends fpdi_bridge
      */
     public function endTemplate()
     {
-        
         if (is_subclass_of($this, 'TCPDF')) {
             $args = func_get_args();
             return call_user_func_array(array($this, 'TCPDF::endTemplate'), $args);
