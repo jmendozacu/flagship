@@ -842,7 +842,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 
 		// set image scale factor
 		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-		$pdf->SetMargins(0,0,0,0);
+		$pdf->SetMargins(0,10,0,0);
 		// set some language-dependent strings (optional)
 		if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
     			require_once(dirname(__FILE__).'/lang/eng.php');
@@ -865,7 +865,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 
 			// new image dimensions with right padding
 			$dst_wide = $src_wide;
-			$dst_high = $src_high+10;
+			$dst_high = $src_high+18;
 
 			// New resource image at new size
 			$dst = imagecreatetruecolor($dst_wide, $dst_high);
@@ -887,7 +887,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		/* Re-code  */
 
 		//echo $pdffile  = str_replace(".png",".pdf",$img);exit;
-		$pdf->Image($img, '','0',0,0, '', '', '', false, 300,1, false, false,false, false, false, false);
+		$pdf->Image($img, '','',0,0, '', '', '', false, 300,1, false, false,false, false, false, false);
 		$pdf->Output();
 		//$pdf->Output();
 			
