@@ -17,7 +17,7 @@
         }
         else{
            $_product = Mage::getModel('catalog/product')->load($productInfoObject->getProductId());
-           $smallImage = Mage::helper('catalog/image')->init($_product, 'thumbnail');
+           $smallImage = Mage::helper('catalog/image')->init($_product, 'small_image');
            if($smallImage){
                 $imageHtml = '<img  src="' .$smallImage->resize(100,100). '" />'; 
             }
