@@ -3,7 +3,7 @@
 		<h2><?php echo $this->__("Shipping PDFs") ?></h2>
 	</div>
 </div>
-<?php $data = $this->getRequest()->getParams() ?>
+<?php $data = $this->getRequest()->getParams();	?>
 <hr>
 <div class="row">
 	<div class="col-md-12">
@@ -16,7 +16,7 @@
 							<tr>
 								<td><?php echo "#"; ?></td>
 								<td><?php echo $this->__("Serial"); ?></td>
-								<td><?php echo $this->__("Bill Of Lading"); ?></td>
+							<?php if($data['service_type'] !== 'FEDEX_GROUND'):?><td><?php echo $this->__("Bill Of Lading"); ?></td><?php endif;?>
 								<td><?php echo $this->__("Shipping Label"); ?></td>
 							</tr>
 						</thead>
@@ -29,15 +29,15 @@
 								<tr>
 									<td><?php echo $iCounter 	?></td>
 									<td><?php echo $serialKey 	?></td>
-									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialId.'-BillOfLading.pdf'; ?> </td>
-									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialId.'-ShippingLabel.pdf'; ?> </td>
+									<?php if($data['service_type'] !== 'FEDEX_GROUND'):?><td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialId.'-BillOfLading.pdf'; ?> </td><?php endif;?>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-ShippingLabel.png', 'area'=>'label')) ?>" target="_blank"> <?php echo $serialId.'-ShippingLabel.pdf'; ?> </td>
 								</tr>
 							<?php  }else{?>
 								<tr>
 									<td><?php echo $iCounter 	?></td>
 									<td><?php echo $serialKey 	?></td>
-									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialKey.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialKey.'-BillOfLading.pdf'; ?> </td>
-									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialKey.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialKey.'-ShippingLabel.pdf'; ?> </td>
+									<?php if($data['service_type'] !== 'FEDEX_GROUND'):?><td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialKey.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialKey.'-BillOfLading.pdf'; ?> </td><?php endif;?>
+									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialKey.'-ShippingLabel.png	', 'area'=>'label')) ?>"  target="_blank"> <?php echo $serialKey.'-ShippingLabel.pdf'; ?> </td>
 								</tr>
 							<?php }
 							$iCounter++;

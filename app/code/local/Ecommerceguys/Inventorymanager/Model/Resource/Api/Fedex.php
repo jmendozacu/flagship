@@ -13,10 +13,6 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 		ini_set('soap.wsdl_cache_ttl', 0);
 		//define('SHIP_LABEL', Mage::getBaseDir().'/media/fedex/billoflanding'.'BillOfLading.pdf');  // PDF label file.
 		//define('ADDRESS_LABEL', 'AddressLabel.pdf');  // PDF label file.
-		
-		
-		
-
 		ini_set("soap.wsdl_cache_enabled", "0");
 
 	}
@@ -153,7 +149,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 	     	
 		//echo $this->path_to_wsdl; exit;
 		
-		$this->shippingLabel = Mage::getBaseDir().'\\media\\fedex\\shippinglabels\\'.$serialId.'-ShippingLabel.pdf';
+		$this->shippingLabel = Mage::getBaseDir().'\\media\\fedex\\shippinglabels\\'.$serialId.'-ShippingLabel.png';
 		
 		
 		$this->bol = Mage::getBaseDir().'\\media\\fedex\\billoflanding\\'.$serialId.'-BillOfLading.pdf';
@@ -320,6 +316,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 				)
 			)
 		);
+		
 		return $shippingChargesPayment;
 	}
 	public function addLabelSpecification(){
@@ -335,7 +332,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedex extends Ecommerceg
 			'ShippingDocumentTypes' => array('FREIGHT_ADDRESS_LABEL'),
 			'FreightAddressLabelDetail' => array(
 				'Format' => array(
-					'ImageType' => 'PDF',
+					'ImageType' => 'PNG',
 					'StockType' => 'PAPER_4X6',
 					//'ProvideInstuctions' => true
 				)

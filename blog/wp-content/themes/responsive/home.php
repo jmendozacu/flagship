@@ -40,28 +40,22 @@ $more = 0;
 
 				<?php responsive_entry_before(); ?>
 				<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-                <?php if ( has_post_thumbnail() ) : ?>
-							<a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
-								
-                                
-                                <?php the_post_thumbnail(array(347,230, left)); ?> 
-							</a>
-						<?php endif; ?>
 					<?php responsive_entry_top(); ?>
 
 					<?php get_template_part( 'post-meta', get_post_type() ); ?>
 
 					<div class="post-entry">
-						
-						<?php $content = get_the_content();
-  $trimmed_content = wp_trim_words( $content, 40, '<a href="'. get_permalink() .'">...[ read more ]</a>' ); ?>
-  <p><?php echo $trimmed_content; ?></p>
-
+						<?php if ( has_post_thumbnail() ) : ?>
+							<a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
+								<?php the_post_thumbnail(); ?>
+							</a>
+						<?php endif; ?>
+						<?php the_content( __( 'Read more &#8250;', 'responsive' ) ); ?>
 						<?php wp_link_pages( array( 'before' => '<div class="pagination">' . __( 'Pages:', 'responsive' ), 'after' => '</div>' ) ); ?>
 					</div>
 					<!-- end of .post-entry -->
 
-					<?php //get_template_part( 'post-data', get_post_type() ); ?>
+					<?php get_template_part( 'post-data', get_post_type() ); ?>
 
 					<?php responsive_entry_bottom(); ?>
 				</div><!-- end of #post-<?php the_ID(); ?> -->
@@ -82,4 +76,3 @@ $more = 0;
 	</div><!-- end of #content-blog -->
 
 <?php get_sidebar(); ?>
-<?php get_footer(); ?>

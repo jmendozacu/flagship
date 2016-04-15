@@ -49,7 +49,7 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		
 		//echo $content; exit;
 		
-		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,172.4), true, 'UTF-8', false);
 		$pdf->SetCreator(PDF_CREATOR);
 		$pdf->SetAuthor('Inventory Manager');
 		$pdf->SetTitle('Inventory Manager');
@@ -67,9 +67,11 @@ class Ecommerceguys_Inventorymanager_LabelController extends Mage_Core_Controlle
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 		
 		// set margins
-		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+		//$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		$pdf->SetMargins(0,PDF_MARGIN_TOP,0);
+		//$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+		//$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 		
 		// set auto page breaks
 		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);

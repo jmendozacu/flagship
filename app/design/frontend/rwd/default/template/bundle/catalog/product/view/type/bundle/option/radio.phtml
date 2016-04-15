@@ -59,6 +59,24 @@
             <?php if ($_selection->getSelectionCanChangeQty() && $this->_isSelected($_selection)): ?>
                 <?php $tierPriceHtml = $this->getTierPriceHtml($_selection); ?>
             <?php endif; ?>
+            <li><input type="radio" onclick="bundle.changeSelection(this)" class="radio<?php echo $_option->getRequired()?' validate-one-required-by-name':'' ?> change-container-classname" id="bundle-option-<?php echo $_option->getId() ?>-<?php echo $_selection->getSelectionId() ?>" name="bundle_option[<?php echo $_option->getId() ?>]"<?php if ($this->_isSelected($_selection)) echo ' checked="checked"' ?><?php if (!$_selection->isSaleable()) echo ' disabled="disabled"' ?>value="<?php echo $_selection->getSelectionId() ?>"/>
+            <span class="label"><label for="bundle-option-<?php echo $_option->getId() ?>-<?php echo $_selection->getSelectionId() ?>"><?php echo $this->getSelectionTitlePrice($_selection) ?></label>
+            	<?php /* if($_selection && $_selection->getFinalPrice() < $_selection->getPrice()) {*/ ?>
+            		<label class="regular-price"><?php echo $currency->formatPrecision($_selection->getPrice(), 2); ?></label>
+            	<?php /*} */ ?>
+            </span>
+			
+			<?php if($_selection->getRetailPrice() && $_selection->getRetailPrice() > 0){ ?>
+  <span class="regular-price">
+   <?php echo $_selection->getRetailPrice(); ?>
+  </span>
+ <?php } ?>
+ 
+            <?php if ($_option->getRequired()): ?>
+                <?php echo $this->setValidationContainer('bundle-option-'.$_option->getId().'-'.$_selection->getSelectionId(), 'bundle-option-'.$_option->getId().'-container') ?>
+            <?php endif; ?>
+            </li> 
+<?php /* =======
             <li><input type="radio" onclick="bundle.changeSelection(this); fillPrice('<?php echo $_selection->getId() ?>')" class="radio<?php echo $_option->getRequired()?' validate-one-required-by-name':'' ?> change-container-classname" id="bundle-option-<?php echo $_option->getId() ?>-<?php echo $_selection->getSelectionId() ?>" name="bundle_option[<?php echo $_option->getId() ?>]"<?php if ($this->_isSelected($_selection)) echo ' checked="checked"' ?><?php if (!$_selection->isSaleable()) echo ' disabled="disabled"' ?>value="<?php echo $_selection->getSelectionId() ?>"/>
             <span class="label">
             	<label for="bundle-option-<?php echo $_option->getId() ?>-<?php echo $_selection->getSelectionId() ?>"><?php echo $this->getSelectionTitlePrice($_selection) ?>
@@ -87,7 +105,8 @@
                 <?php echo $this->setValidationContainer('bundle-option-'.$_option->getId().'-'.$_selection->getSelectionId(), 'bundle-option-'.$_option->getId().'-container') ?>
             <?php endif; ?>
             </li>
-        <?php endforeach; ?>
+>>>>>>> 4dc59263f04104dcd39abbe10cf7ff718d76d1ed
+*/?>        <?php endforeach; ?>
         </ul>
         <div id="bundle-option-<?php echo $_option->getId() ?>-container"></div>
     <?php endif; ?>

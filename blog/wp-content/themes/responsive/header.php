@@ -110,7 +110,7 @@ searchForm.initAutocomplete('http://directrangehoods.com/catalogsearch/ajax/sugg
 		<?php if ( get_header_image() != '' ) : ?>
 <div id="header2">
 			<div id="logo">
-				<a href="http://directrangehoods.com"><img src="<?php echo esc_url( home_url( '/' ) ); ?>wp-content/themes/responsive/core/images/logo.png" /></a>
+				<a href="<?php echo home_url( '/' ); ?>"><img src="<?php header_image(); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>" alt="<?php bloginfo( 'name' ); ?>"/></a>
 			</div><!-- end of #logo -->
 <div class="h_sosialmedia">
 <a target="_new" href="https://twitter.com/directhoods"><div class="sicons ticon"></div></a>
@@ -143,21 +143,8 @@ searchForm.initAutocomplete('http://directrangehoods.com/catalogsearch/ajax/sugg
 		) ); ?>
         </div>
 <div class="blogbanner">
-
-<?php if(function_exists('chi_display_header')) { chi_display_header(); } ?>
-<img src="<?php header_image(); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>" alt="" />
-
-
-<!--<h2>KITCHEN</h2> 
-<ul>
-<li>FOOD</li>
-<li class="devider">X</li>
-<li>LIFESTYLE</li>
-<li class="devider">X</li>
-<li>HOME</li>
-
-
-</ul>-->
+<?php get_header_image(); ?>
+<h2>KITCHEN</h2>
 </div>
 		<?php if ( has_nav_menu( 'sub-header-menu', 'responsive' ) ) {
 			wp_nav_menu( array(
@@ -180,7 +167,6 @@ searchForm.initAutocomplete('http://directrangehoods.com/catalogsearch/ajax/sugg
 	<div id="wrapper" class="clearfix">
 <?php responsive_wrapper_top(); // before wrapper content hook ?>
 <?php responsive_in_wrapper(); // wrapper hook ?>
-
 <style>
 #content-blog h2.entry-title{min-height: 75px !important;}
 </style>

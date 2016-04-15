@@ -148,7 +148,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 	
 	public function generatepdfAction(){
 		
-		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,152.4), true, 'UTF-8', false);
 		$id = $this->getRequest()->getParam('id');
 		$purchaseOrder = Mage::getModel('inventorymanager/purchaseorder')->load($id);
 		
@@ -165,22 +165,24 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 		
 		// set default header data
-		$pdf->SetHeaderData('/../skin/frontend/default/theme279/images/prohoods_logo_sm.png', 0, '', '');
+		$pdf->SetHeaderData('/../skin/frontend/default/theme279/images/prohoods_logo_sm.png',70.6, '', '');
 		
 		// set header and footer fonts
-		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+		//$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		//$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 		
 		// set default monospaced font
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 		
 		// set margins
-		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		//$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		$pdf->SetMargins(0,PDF_MARGIN_TOP,0);
+				
 		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 		
 		// set auto page breaks
-		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+		//$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 		
 		// set image scale factor
 		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -203,11 +205,26 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		
 		$contentArray = explode("<!--EOP-->", $content);
 		//print_r($contentArray);exit;
+<<<<<<< HEAD
+=======
+		$contArray = array();
+		array_pop($contentArray);
+		foreach($contentArray as $itemcontent)	{
+					if($itemcontent != '' || $itemcontent != ' '){
+									$contArray[]	= 	$itemcontent;
+					}
+		}	
+		
+>>>>>>> 69e8ac8151c5531515639f466bae9dd88df81109
 		$contentSize = sizeof($contentArray);
 		
 		$iCounter = 0;
 		//$pdf->AddPage();
+<<<<<<< HEAD
 		foreach ($contentArray as $cont){
+=======
+		foreach ($contArray as $cont){
+>>>>>>> 69e8ac8151c5531515639f466bae9dd88df81109
 			$iCounter++;
 			$pdf->writeHTML($cont, true, false, false, false, '');
 			if(($contentSize) > $iCounter){
@@ -225,6 +242,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		//Close and output PDF document
 		$pdf->Output('purchaseorder_'.$id.'.pdf', 'D');
 	}
+	
 	public function findproductAction(){
 		$this->loadLayout();
        	$this->renderLayout();
@@ -261,6 +279,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 	}
 	
 	public function receiveAction(){
+		
+
 		$orderId = $this->getRequest()->getParam('id');
 		$orderObject = Mage::getModel('inventorymanager/purchaseorder')->load($orderId);
 		
@@ -268,19 +288,15 @@ class Ecommerceguys_Inventorymanager_Adminuser_PurchaseorderController extends M
 		$serials->addFieldToFilter('order_id', $orderObject->getId());
 		$serials->addFieldToFilter('is_in_stock', array('neq'=>1));
 		$receivedSerials = 0;
+		$inventorymanagerproductModel = Mage::getModel('inventorymanager/product');
+		$catalogproductModel = Mage::getModel('catalog/product');
+		$cataloginventorystockitemModel = Mage::getModel('cataloginventory/stock_item');
+
 		foreach ($serials as $serial){
-			//echo $serial->getSerial() . "<br/>";
-			$orderProduct = Mage::getModel('inventorymanager/product')->load($serial->getProductId());
+			$orderProduct = $inventorymanagerproductModel->load($serial->getProductId());
 			if($orderProduct && $orderProduct->getId()){
-				$catalogProduct = Mage::getModel('catalog/product')->load($orderProduct->getMainProductId());
-				
-				/*if($catalogProduct && $catalogProduct->getId()){
-					echo "<br/> PRODUCT FOUND " . $catalogProduct->getId();
-				}else{
-					echo "<br/> PRODUCT NOT FOUND " . $serial->getId();
-				}
-				continue;*/
-				$stocklevel = Mage::getModel('cataloginventory/stock_item')->loadByProduct($catalogProduct);
+				$catalogProduct = $catalogproductModel->load($orderProduct->getMainProductId());
+				$stocklevel = $cataloginventorystockitemModel->loadByProduct($catalogProduct);
                 $receivedSerials++;
 				$productQty = 0;
                 if($stocklevel){

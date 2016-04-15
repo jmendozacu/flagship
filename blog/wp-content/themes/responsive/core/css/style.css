@@ -2246,7 +2246,11 @@ img.attachment-medium,
 img.attachment-thumbnail {
 	display: block;
 	width: auto;
+<<<<<<< HEAD
+	margin: 15px auto; max-height:205px !important; width:auto !important
+=======
 	margin: 15px auto; max-height:205px !important; width:auto;
+>>>>>>> 4dc59263f04104dcd39abbe10cf7ff718d76d1ed
 }
 
 /* =Buttons
@@ -3177,7 +3181,11 @@ bdo[DIR="rtl"] {
     font-weight: normal;
     height: 27px;
     line-height: 13px;
+<<<<<<< HEAD
+    padding: 7px 15px;
+=======
     padding: 7px 15px; 
+>>>>>>> 4dc59263f04104dcd39abbe10cf7ff718d76d1ed
     text-align: center;
     text-transform: uppercase;
     vertical-align: middle;
@@ -3187,7 +3195,11 @@ bdo[DIR="rtl"] {
 .block-subscribe .block-content {    padding-top: 7px;}
 .block-subscribe .input-box {    float: left;    padding-top: 0;    width: 65.625%;}
  .block-subscribe .input-text {    border-radius: 0;    border-right: 0 none;    width: 100%; border:none}
+<<<<<<< HEAD
+.blogbanner{ float:left; width:100%; text-align:center; padding:75px 0; background-color:#666666; margin-bottom:15px; background: rgba(0, 0, 0, 0) url("../../core/images/kitchen-banner-bg.jpg") repeat scroll 0 0; }
+=======
 .blogbanner{ float:left; width:100%; text-align:center; padding:0px 0; background-color:#666666; margin-bottom:15px; background: rgba(0, 0, 0, 0) url("../../core/images/kitchen-banner-bg.jpg") repeat scroll 0 0; }
+>>>>>>> 4dc59263f04104dcd39abbe10cf7ff718d76d1ed
 .blogbanner h2{font-family: 'Roboto', sans-serif; font-weight:700; color:#fff;  font-size:9vw; margin:0 auto 10px auto; width:-moz-min-content; border-bottom:solid 1px #fff}
 
 .blogbanner ul{ margin:0; padding:0}
@@ -3200,8 +3212,12 @@ bdo[DIR="rtl"] {
     padding: 0  1em; line-height:25px}
 	.js .sub-header-menu{ display:block !important}
 	.devider{ padding:0 !important; font-size:12px !important;}
+<<<<<<< HEAD
+	#content-blog h2.entry-title a{ font-size: 15px !important;}
+=======
 	#content-blog .post.status-publish{ float:left; width:48%; margin:1%} 
 	#content-blog h2.entry-title { min-height:50px}
 	#content-blog h2.entry-title a{ font-size:15px !important; line-height:inherit !important }
 	#menu-menu-1 li:last-child{ background-color:#1c1c1c}
 	#menu-menu-1 li:last-child a{ color:#fff}
+>>>>>>> 4dc59263f04104dcd39abbe10cf7ff718d76d1ed
