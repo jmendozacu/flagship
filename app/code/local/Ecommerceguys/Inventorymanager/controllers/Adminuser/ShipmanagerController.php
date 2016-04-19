@@ -842,7 +842,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 
 		// set image scale factor
 		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-		$pdf->SetMargins(0,10,0);
+		$pdf->SetMargins(0,10,0,0);
 		// set some language-dependent strings (optional)
 		if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
     			require_once(dirname(__FILE__).'/lang/eng.php');
@@ -852,7 +852,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		// -------------------------------------------------------------------
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
-		$pdf->SetAutoPageBreak(TRUE,0);
+		$pdf->SetAutoPageBreak(TRUE,-10);
 		// add a page
 		$pdf->AddPage();
 
