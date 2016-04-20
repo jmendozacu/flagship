@@ -816,7 +816,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 	
 	
 	protected function _saveaspdf($img){
-		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(101.6,152.4), true, 'UTF-8', false);
+		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(114.3,165.1), true, 'UTF-8', false);
 		//$id = $this->getRequest()->getParam('id');
 		
 		
