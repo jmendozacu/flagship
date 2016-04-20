@@ -854,11 +854,16 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$pdf->setPrintFooter(false);
 		$pdf->SetAutoPageBreak(TRUE,-10);
 		// add a page
-		$pdf->AddPage();
+		$orientation='P';
+		$format='MAKE-P';
+		$pdf->AddPage($orientation, ['format' => $format, 'Rotate' => -180]);
 
 		/* Re-code */
 			$url = $img;
 			$src = imagecreatefrompng($url);
+			/*$rotate = imagerotate($src,180, 0);
+			file_put_contents($url,$rotate);
+			*/
 			$src_wide = imagesx($src);
 			$src_high = imagesy($src);
 			$clear = array('red'=>255,'green'=>255,'blue'=>255);
@@ -886,6 +891,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			imagedestroy($dst); 
 		/* Re-code  */
 
+		//file_put_contents("myNEWimage.jpg",$rotate);
 		//echo $pdffile  = str_replace(".png",".pdf",$img);exit;
 		$pdf->Image($img, '','',0,0, '', '', '', false, 300,1, false, false,false, false, false, false);
 		$pdf->Output();
