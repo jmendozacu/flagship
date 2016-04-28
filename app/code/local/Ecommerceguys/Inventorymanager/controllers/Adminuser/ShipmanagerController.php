@@ -995,7 +995,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			'MeterNumber'	=>	$fedexApi->getProperty('meter')
 		);
 
-		if($data['service_type'] != 'FEDEX_GROUND'){
+		if($data['service_type'] == 'FEDEX_FREIGHT_ECONOMY' OR $data['service_type'] == 'FEDEX_FREIGHT_PRIORITY'){
 			$request['TransactionDetail']	= array('CustomerTransactionId'	=>	'FRIGHT_RATE');
 		}else{
 			$request['TransactionDetail']	= array('CustomerTransactionId'	=>	'GROUND');
@@ -1011,7 +1011,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$shipmentRequest['DropoffType']			=	'REGULAR_PICKUP';
 		$shipmentRequest['PackagingType']		=	'YOUR_PACKAGING';
 		$shipmentRequest['PreferredCurrency']	=	'USD';
-		//$shipmentRequest['ServiceTypes']	=	'FEDEX_FREIGHT_ECONOMY';
+		$shipmentRequest['ServiceTypes']	=	$data['service_type'];
 		$shipmentRequest['Shipper']	=	array(
 			'Contact'	=>	array(
 				'CompanyName'	=>	$data['contact_name'],
@@ -1074,7 +1074,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			if(isset($data['price'][$key]) && $data['price'][$key] > 0){
 				$productPrice = $data['price'][$key];
 			} 
-			if($data['service_type'] != 'FEDEX_GROUND'){
+			if($data['service_type'] == 'FEDEX_FREIGHT_ECONOMY' OR $data['service_type'] == 'FEDEX_FREIGHT_PRIORITY'){
 			$shipmentRequest['FreightShipmentDetail'] = array(
 				'FedExFreightAccountNumber'	=>	$fedexApi->getProperty('freightaccount'),
 				'FedExFreightBillingContactAndAddress'	=>	array(
@@ -1125,7 +1125,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			}
 			$shipmentRequest['RateRequestTypes']	=	'LIST';
 			$shipmentRequest['PackageCount']	=	'1';
-			if($data['service_type'] == 'FEDEX_GROUND'){
+			if($data['service_type'] != 'FEDEX_FREIGHT_ECONOMY' AND $data['service_type'] != 'FEDEX_FREIGHT_PRIORITY'){
 				$shipmentRequest['RequestedPackageLineItems'] = array(
 							'SequenceNumber' => 1,
 							'GroupNumber' => 1,
@@ -1196,9 +1196,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    		$totalCharge += $netCharges;
 				    		
 			    			//echo "<tr><td>".$netCharges .  "</td></tr>";
-			    		}elseif($type == $data['applicable_services'] AND $data['service_type'] == 'FEDEX_GROUND'){
+			    		}/*elseif($type == $data['applicable_services'] AND $data['service_type'] == 'FEDEX_GROUND'){
 			    			$totalCharge += $netCharges;
-			    		}
+			    		}*/
 			    	}
 			    	
 			        //$fedexApi->printSuccess($client, $response);
