@@ -18,7 +18,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		print_r($data);
 		exit;
 		*/
-		if($data['service_type'] == 'FEDEX_GROUND'){
+		if($data['service_type'] != "FEDEX_FREIGHT_ECONOMY" AND $data['service_type'] != "FEDEX_FREIGHT_PRIORITY"){
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedexground');
 			$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 			$receiverstate = $this->_regioncode($data['receiver_state_id']);
@@ -73,7 +73,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				'AccountNumber' => $fedexApi->getProperty('shipaccount'), 
 				'MeterNumber' => $fedexApi->getProperty('meter')
 			);
-			$request['TransactionDetail'] = array('CustomerTransactionId' => '*** Ground Domestic Shipping Request using PHP ***');
+			$request['TransactionDetail'] = array('CustomerTransactionId' => '*** Ground Shipping Request ***');
 			$request['Version'] = array(
 				'ServiceId' => 'ship', 
 				'Major' => '17', 
