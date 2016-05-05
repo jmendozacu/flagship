@@ -20,7 +20,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		*/
 		if($data['service_type'] != "FEDEX_FREIGHT_ECONOMY" AND $data['service_type'] != "FEDEX_FREIGHT_PRIORITY"){
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedexground');
-			$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
+			//$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 			$receiverstate = $this->_regioncode($data['receiver_state_id']);
 			$senderAddress = array();
 			$senderAddress['Contact']['ContactId'] = "ground1";
@@ -218,7 +218,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 
 
 
-					$historyObject = Mage::getModel('inventorymanager/shipmanager');
+						$historyObject = Mage::getModel('inventorymanager/shipmanager');
 						$historyItem = Mage::getModel('inventorymanager/shipmanager_item');
 						$historySender = Mage::getModel('inventorymanager/shipmanager_sender');
 						$historyReceiver = Mage::getModel('inventorymanager/shipmanager_receiver');
@@ -330,9 +330,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	//	$type = $value->Type;
 				    	//	if($type == "OUTBOUND_LABEL"){
 				    	//		$bolImage =$value->Parts->Image;
-				        $shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
-						$shipmentModel->completeShipment($realOrderId,$response->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
-				    			if($response->CompletedShipmentDetail->CompletedPackageDetails->Label->Type == "OUTBOUND_LABEL")
+				        if($data["order_from"] != 2){ 
+							$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
+							$shipmentModel->completeShipment($realOrderId,$response->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
+				    	}		
+				        if($response->CompletedShipmentDetail->CompletedPackageDetails->Label->Type == "OUTBOUND_LABEL")
 				    			{
 				    				$fp = fopen($shippingLabel, 'wb');
 				    				fwrite($fp,$response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image);
@@ -367,9 +369,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			if($serialCount == 0){
 				echo Mage::helper('inventorymanager')->__("No valid serials found");
 			}
+		
 		}else{
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
-			$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
+			//$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
 		
 		
 			$senderAddress = array();
@@ -659,9 +662,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	//$this->printSuccess($client, $response);
 				        // Create PNG or PDF label
 				        // Set LabelSpecification.ImageType to 'PNG' for generating a PNG label
-						$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
-						$shipmentModel->completeShipment($realOrderId,$response->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
-				    			
+						
+				    	if($data["order_from"] !=2){ 
+							$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
+							$shipmentModel->completeShipment($realOrderId,$response->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
+				    	}		
 				    	$shippingDocuments = $response->CompletedShipmentDetail->ShipmentDocuments;
 				    	foreach($shippingDocuments as $key => $value){
 				    		$type = $value->Type;
@@ -813,8 +818,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		}
 	}
 	
-	
-	
 	protected function _saveaspdf($img){
 		$pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT,array(114.3,165.1), true, 'UTF-8', false);
 		//$id = $this->getRequest()->getParam('id');
@@ -899,6 +902,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			
 	}
 	public function findorderAction(){
+
+
 		$orderId = $this->getRequest()->getParam('order_id');
 		$from = $this->getRequest()->getParam('from');
 		
@@ -908,8 +913,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			$results 	= $conn->query('SELECT * FROM orders WHERE orders_id = ' . $orderId);
 			// 2012965
 			$row = $results->fetch();
-				//print_r($row);
-				
+			//echo "<pre>";
+			//print_r($row);
+			//	exit;	
 			$countryId = '';
 			$countryCollection = Mage::getModel('directory/country')->getCollection();
 			foreach ($countryCollection as $country) {
@@ -940,17 +946,13 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			$data['region'] = $row['delivery_state']!=""?$row['delivery_state']:"";
 			$data['region_id'] = $regionCode;
 			echo Mage::helper('core')->jsonEncode($data);
-			exit;
-			
+			exit;		
 		}
 		
 		$orderObject =  Mage::getModel('sales/order')->loadByIncrementId($orderId);
 		
 		if($orderObject && $orderObject->getId()){
 			$address = $orderObject->getShippingAddress();
-			
-			
-			
 			$data = array();
 			$data['name'] = $address->getName();
 			$data['email'] = $orderObject->getCustomerEmail();
