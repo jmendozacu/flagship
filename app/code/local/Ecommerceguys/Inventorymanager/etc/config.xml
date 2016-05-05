@@ -100,10 +100,10 @@
         	</oscomm_setup>
         	<oscomm_database>
         		<connection>
-        			<host><![CDATA[c-database1.hahj.stackablehost.com]]></host>
-					<username><![CDATA[prolinerangehood]]></username>
-					<password><![CDATA[80FxWbtK]]></password>
-					<dbname><![CDATA[prolinerangehoods]]></dbname>
+        			<host><![CDATA[45.55.188.84]]></host>
+					<username><![CDATA[root]]></username>
+					<password><![CDATA[zUqoSuySck]]></password>
+					<dbname><![CDATA[proline_zencart_live_bak]]></dbname>
 					<model>mysql4</model>
 					<type>pdo_mysql</type>
 					<active>1</active>
