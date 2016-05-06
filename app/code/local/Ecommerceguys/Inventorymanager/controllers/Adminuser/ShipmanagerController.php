@@ -300,39 +300,26 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						}
 						
 				    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
-				        
-				        /*
-				    	echo "<pre>";
-				    	print_r($response->CompletedShipmentDetail);
-				    	exit;
-						/*
-
-				        $shippingDocuments = $response->CompletedShipmentDetail->CompletedPackageDetails;
-						*/
-				        /* ROW	
-				        $fedexApi->printSuccess($client, $response);
-
-				        $fp = fopen(SHIP_CODLABEL, 'wb');   
-				        fwrite($fp, $response->CompletedShipmentDetail->CompletedPackageDetails->CodReturnDetail->Label->Parts->Image); //Create COD Return PNG or PDF file
-				        fclose($fp);
-				        echo '<a href="./'.SHIP_CODLABEL.'">'.SHIP_CODLABEL.'</a> was generated.'.Newline;
-				        
-				        // Create PNG or PDF label
-				        // Set LabelSpecification.ImageType to 'PNG' for generating a PNG label
-				    
-				        $fp = fopen(SHIP_LABEL, 'wb');   
-				        fwrite($fp, ($response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image));
-				        fclose($fp);
-				        echo '<a href="./'.SHIP_LABEL.'">'.SHIP_LABEL.'</a> was generated.'; 
-						*/
-
-				       // foreach($shippingDocuments as $key => $value){
-				    	//	$type = $value->Type;
-				    	//	if($type == "OUTBOUND_LABEL"){
-				    	//		$bolImage =$value->Parts->Image;
 				        if($data["order_from"] != 2){ 
 							$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 							$shipmentModel->completeShipment($realOrderId,$response->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
+				    		
+				    	}else{
+				    		$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
+				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
+				    		if($zencartShipmentStatus == 0){
+				    			/*echo $realOrderId;
+				    			echo "<pre>";
+				    			print_r($response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber);
+				    			exit;*/
+				    			$trackingNumber = $response->CompletedPackageDetails->TrackingIds->TrackingNumber;
+				    			$shipmentModel->zencartUpdateOrderStatus($realOrderId,$trackingNumber);
+				    		}else{
+				    			//echo Mage::helper('inventorymanager')->__("This order has been already shipped");
+				    			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("This order has been already shipped"));
+				    			$this->_redirect('*/*/');
+								return;
+				    		}
 				    	}		
 				        if($response->CompletedShipmentDetail->CompletedPackageDetails->Label->Type == "OUTBOUND_LABEL")
 				    			{
@@ -665,7 +652,23 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 						
 				    	if($data["order_from"] !=2){ 
 							$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
-							$shipmentModel->completeShipment($realOrderId,$response->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
+							$shipmentModel->completeShipment($realOrderId,$response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
+				    	}else{
+				    		$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
+				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
+				    		if($zencartShipmentStatus == 0){
+				    			/*echo $realOrderId;
+				    			echo "<pre>";
+				    			print_r($response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber);
+				    			exit;*/
+				    			$trackingNumber = $response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber;
+				    			$shipmentModel->zencartUpdateOrderStatus($realOrderId,$trackingNumber);
+				    		}else{
+				    			//echo Mage::helper('inventorymanager')->__("This order has been already shipped");
+				    			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("This order has been already shipped"));
+				    			$this->_redirect('*/*/');
+								return;
+				    		}
 				    	}		
 				    	$shippingDocuments = $response->CompletedShipmentDetail->ShipmentDocuments;
 				    	foreach($shippingDocuments as $key => $value){

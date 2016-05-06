@@ -135,4 +135,54 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
      
         return $this;
     }
+
+    /**
+     * Get Zencart Order status data
+     */
+    protected function zencartShippedOrderStatuses()
+    {
+        /*
+        $resource   = Mage::getSingleton('core/resource');
+        $conn       = $resource->getConnection('oscomm_read');
+        $results    = $conn->query("SELECT * FROM orders_status");
+        $row = $results->fetchAll();
+        return $this;*/
+        return array(111,105,109,115,114,116,118);
+    }
+    /**
+     * Get the order shipped status
+     * return 0,1
+     */
+    public function getzencartOrderShippedStatus($orderId)
+    {
+        $resource   = Mage::getSingleton('core/resource');
+        $conn       = $resource->getConnection('oscomm_read');
+        $results    = $conn->query("SELECT orders_status FROM orders where orders_id=".$orderId);
+        $row = $results->fetch();
+        if(is_array($row) && !empty($row)){
+            if(!in_array($row['orders_status'],$this->zencartShippedOrderStatuses())){
+                return 0; 
+            }else{
+                return 1;
+            }
+
+        }
+        return; 
+    }
+    public function zencartUpdateOrderStatus($orderId,$trackingNumber)
+    {
+        //echo "test";exit;
+        $resource   = Mage::getSingleton('core/resource');
+        $connread       = $resource->getConnection('oscomm_read');
+        $connwrite       = $resource->getConnection('oscomm_write');
+        $comments = "FedEx Tracking: ".$trackingNumber;
+        $customer_notified = 0;
+        $connwrite->query("Update orders SET orders_status = '115', last_modified = now() where orders_id=".$orderId);
+        $connwrite->query("insert into orders_status_history(orders_id, orders_status_id, date_added, customer_notified, comments) values ('".(int)$orderId."',115,now(),'".$customer_notified."','".$comments."')");
+        return; 
+    }
+
+
+
+
 }
