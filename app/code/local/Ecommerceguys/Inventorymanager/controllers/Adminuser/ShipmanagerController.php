@@ -302,17 +302,14 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR'){
 				        if($data["order_from"] != 2){ 
 							$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
-							$shipmentModel->completeShipment($realOrderId,$response->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
+							$shipmentModel->completeShipment($realOrderId,$response->CompletedShipmentDetail->CompletedPackageDetails->TrackingIds->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
 				    		
 				    	}else{
 				    		$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
+		
 				    		if($zencartShipmentStatus == 0){
-				    			/*echo $realOrderId;
-				    			echo "<pre>";
-				    			print_r($response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber);
-				    			exit;*/
-				    			$trackingNumber = $response->CompletedPackageDetails->TrackingIds->TrackingNumber;
+				    			$trackingNumber = $response->CompletedShipmentDetail->CompletedPackageDetails->TrackingIds->TrackingNumber;
 				    			$shipmentModel->zencartUpdateOrderStatus($realOrderId,$trackingNumber);
 				    		}else{
 				    			//echo Mage::helper('inventorymanager')->__("This order has been already shipped");
