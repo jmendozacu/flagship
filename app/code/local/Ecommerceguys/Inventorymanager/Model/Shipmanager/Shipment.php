@@ -177,9 +177,24 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
         $connwrite       = $resource->getConnection('oscomm_write');
         $comments = "FedEx Tracking: ".$trackingNumber;
         $customer_notified = 0;
+
+        $this->_zencartCustomerShipmentNotify();
+        exit;
         $connwrite->query("Update orders SET orders_status = '115', last_modified = now() where orders_id=".$orderId);
         $connwrite->query("insert into orders_status_history(orders_id, orders_status_id, date_added, customer_notified, comments) values ('".(int)$orderId."',115,now(),'".$customer_notified."','".$comments."')");
         return; 
+    }
+
+    protected function _zencartCustomerShipmentNotify(){
+
+            $emailTemplate  = Mage::getModel('core/email_template')
+                                    ->loadDefault('customer_zencart_shipment_email');                                    
+            $emailTemplateVariables = array();
+            $emailTemplateVariables['myvar1'] = 'Branko';
+            $emailTemplateVariables['myvar2'] = 'Ajzele';
+            $emailTemplateVariables['myvar3'] = 'ActiveCodeline';
+            $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
+            $emailTemplate->send('royalrp1987@gmail.com','Test email', $emailTemplateVariables);
     }
 
 

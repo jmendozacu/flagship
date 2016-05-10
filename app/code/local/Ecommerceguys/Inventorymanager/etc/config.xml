@@ -121,7 +121,7 @@
                 <connection>
                     <use>core_write</use>
                 </connection>
-            </inventorymanager_write>
+            </inventorymanager_write>   
             <inventorymanager_read>
                 <connection>
                     <use>core_read</use>
@@ -151,6 +151,11 @@
 					<file>purchaseorder_email.html</file>
 					<type>html</type>
 				</purchaseorder_email>
+                <customer_zencart_shipment_email module="inventorynamager">
+                    <label>Customer Zencart Shipment Email</label>
+                    <file>customer_zencart_shipment_email.html</file>
+                    <type>html</type>
+                </customer_zencart_shipment_email>
 			</email>
 		</template>
     </global>
