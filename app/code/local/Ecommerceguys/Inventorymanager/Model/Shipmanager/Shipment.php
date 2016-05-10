@@ -196,7 +196,17 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
             $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
             $emailTemplate->send('royalrp1987@gmail.com','Test email', $emailTemplateVariables);
     }
+public function testzencartCustomerShipmentNotify(){
 
+            $emailTemplate  = Mage::getModel('core/email_template')
+                                    ->loadDefault('customer_zencart_shipment_email');                                    
+            $emailTemplateVariables = array();
+            $emailTemplateVariables['myvar1'] = 'Branko';
+            $emailTemplateVariables['myvar2'] = 'Ajzele';
+            $emailTemplateVariables['myvar3'] = 'ActiveCodeline';
+            $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
+            $emailTemplate->send('royalrp1987@gmail.com','Test email', $emailTemplateVariables);
+    }
 
 
 
