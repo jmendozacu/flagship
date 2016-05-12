@@ -206,7 +206,7 @@ public function _zencartCustomerShipmentNotify($customername,$customeremail,$ord
         //Getting the Store General E-Mail.
         $senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
 
-        $customerEmail = "ralph@clevermage.com";
+        $customerEmail = $customeremail;
         //Variables for Confirmation Mail.
         $emailTemplateVariables = array();
         $emailTemplateVariables['customername'] = $customername;
@@ -220,7 +220,7 @@ public function _zencartCustomerShipmentNotify($customername,$customeremail,$ord
          ->setToName($senderName)
          ->setToEmail($customerEmail)
          ->setBody($processedTemplate)
-         ->setSubject('Update shipment')
+         ->setSubject('Update shipment for Order #'.$orderid)
          ->setFromEmail($senderEmail)
          ->setFromName($senderName)
          ->setType('html');

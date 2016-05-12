@@ -10,7 +10,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$this->renderLayout();
 	}
 	
-	public function testemailAction(){
+	/*public function testemailAction(){
 		
 		 try {
 			$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
@@ -23,7 +23,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		exit;
 		$this->loadLayout();
 		$this->renderLayout();
-	}
+	}*/
 	public function saveAction(){
 		 $data = $this->getRequest()->getParams();
 		 $realOrderId = $data['order_id'];
