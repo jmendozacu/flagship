@@ -169,7 +169,18 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
         }
         return; 
     }
-    public function zencartUpdateOrderStatus($orderId,$trackingNumber)
+    public function getzencartOrderData($orderId)
+    {
+        $resource   = Mage::getSingleton('core/resource');
+        $conn       = $resource->getConnection('oscomm_read');
+        $results    = $conn->query("SELECT customers_email_address,customer_name FROM orders where orders_id=".$orderId);
+        $row = $results->fetch();
+        if(is_array($row) && !empty($row)){
+            return $row;
+        }
+        return; 
+    }
+    public function zencartUpdateOrderStatus($customername,$customeremail,$orderId,$trackingNumber)
     {
         //echo "test";exit;
         $resource   = Mage::getSingleton('core/resource');
@@ -178,26 +189,16 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
         $comments = "FedEx Tracking: ".$trackingNumber;
         $customer_notified = 0;
 
-        $this->_zencartCustomerShipmentNotify();
-        exit;
+        if($this->_zencartCustomerShipmentNotify($customername,$customeremail,$orderid,$fedextracking) == true){
+            $customer_notified = 1;
+        }
+
         $connwrite->query("Update orders SET orders_status = '115', last_modified = now() where orders_id=".$orderId);
         $connwrite->query("insert into orders_status_history(orders_id, orders_status_id, date_added, customer_notified, comments) values ('".(int)$orderId."',115,now(),'".$customer_notified."','".$comments."')");
         return; 
     }
 
-    protected function _zencartCustomerShipmentNotify(){
-
-            $emailTemplate  = Mage::getModel('core/email_template')
-                                    ->loadDefault('customer_zencart_shipment_email');                                    
-            $emailTemplateVariables = array();
-            $emailTemplateVariables['myvar1'] = 'Branko';
-            $emailTemplateVariables['myvar2'] = 'Ajzele';
-            $emailTemplateVariables['myvar3'] = 'ActiveCodeline';
-            $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
-
-            $emailTemplate->send('royalrp1987@gmail.com','Test email', $emailTemplateVariables);
-    }
-public function testzencartCustomerShipmentNotify(){
+public function _zencartCustomerShipmentNotify($customername,$customeremail,$orderid,$fedextracking){
         $emailTemplate = Mage::getModel('core/email_template')->loadDefault('customer_zencart_shipment_email');
         //Getting the Store E-Mail Sender Name.
         $senderName = Mage::getStoreConfig('trans_email/ident_general/name');
@@ -208,8 +209,9 @@ public function testzencartCustomerShipmentNotify(){
         $customerEmail = "ralph@clevermage.com";
         //Variables for Confirmation Mail.
         $emailTemplateVariables = array();
-        $emailTemplateVariables['username'] = "Rahul";
-
+        $emailTemplateVariables['customername'] = $customername;
+        $emailTemplateVariables['orderid'] = $orderid;
+        $emailTemplateVariables['fedextracking'] = $fedextracking;
         //Appending the Custom Variables to Template.
         $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
 
@@ -224,7 +226,8 @@ public function testzencartCustomerShipmentNotify(){
          ->setType('html');
          try{
          //Confimation E-Mail Send
-         $mail->send();
+            $mail->send();
+            return true;
          }
          catch(Exception $error)
          {
@@ -233,6 +236,42 @@ public function testzencartCustomerShipmentNotify(){
          }
     }
 
+public function testzencartCustomerShipmentNotify($customername,$customeremail,$orderid,$fedextracking){
+        $emailTemplate = Mage::getModel('core/email_template')->loadDefault('customer_zencart_shipment_email');
+        //Getting the Store E-Mail Sender Name.
+        $senderName = Mage::getStoreConfig('trans_email/ident_general/name');
 
+        //Getting the Store General E-Mail.
+        $senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
+
+        $customerEmail = "ralph@clevermage.com";
+        //Variables for Confirmation Mail.
+        $emailTemplateVariables = array();
+        $emailTemplateVariables['customername'] = $customername;
+        $emailTemplateVariables['orderid'] = $orderid;
+        $emailTemplateVariables['fedextracking'] = $fedextracking;
+        //Appending the Custom Variables to Template.
+        $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
+
+        //Sending E-Mail to Customers.
+        $mail = Mage::getModel('core/email')
+         ->setToName($senderName)
+         ->setToEmail($customerEmail)
+         ->setBody($processedTemplate)
+         ->setSubject('Update shipment')
+         ->setFromEmail($senderEmail)
+         ->setFromName($senderName)
+         ->setType('html');
+         try{
+         //Confimation E-Mail Send
+            $mail->send();
+            return true;
+         }
+         catch(Exception $error)
+         {
+         Mage::getSingleton('core/session')->addError($error->getMessage());
+         return false;
+         }
+    }
 
 }

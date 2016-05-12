@@ -14,7 +14,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		
 		 try {
 			$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
-			$shipmentModel->testzencartCustomerShipmentNotify();
+			$shipmentModel->testzencartCustomerShipmentNotify("ralph","ralph@clevermage.com","24234234","123123123123");
 		} catch (Exception $e) {
                 print_r($e);
                 exit;
@@ -321,10 +321,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	}else{
 				    		$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
-		
+							
 				    		if($zencartShipmentStatus == 0){
+				    			$zencartOrderData = $shipmentModel->getzencartOrderData($realOrderId);
 				    			$trackingNumber = $response->CompletedShipmentDetail->CompletedPackageDetails->TrackingIds->TrackingNumber;
-				    			$shipmentModel->zencartUpdateOrderStatus($realOrderId,$trackingNumber);
+				    			$shipmentModel->zencartUpdateOrderStatus($zencartOrderData['customers_name'],$zencartOrderData['customers_email_address'],$realOrderId,$trackingNumber);
 				    		}else{
 				    			//echo Mage::helper('inventorymanager')->__("This order has been already shipped");
 				    			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("This order has been already shipped"));
@@ -672,8 +673,9 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    			echo "<pre>";
 				    			print_r($response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber);
 				    			exit;*/
+				    			$zencartOrderData = $shipmentModel->getzencartOrderData($realOrderId);
 				    			$trackingNumber = $response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber;
-				    			$shipmentModel->zencartUpdateOrderStatus($realOrderId,$trackingNumber);
+				    			$shipmentModel->zencartUpdateOrderStatus($zencartOrderData['customers_name'],$zencartOrderData['customers_email_address'],$realOrderId,$trackingNumber);
 				    		}else{
 				    			//echo Mage::helper('inventorymanager')->__("This order has been already shipped");
 				    			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("This order has been already shipped"));
