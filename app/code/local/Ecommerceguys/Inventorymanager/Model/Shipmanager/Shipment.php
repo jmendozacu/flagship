@@ -198,17 +198,39 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
             $emailTemplate->send('royalrp1987@gmail.com','Test email', $emailTemplateVariables);
     }
 public function testzencartCustomerShipmentNotify(){
+        $emailTemplate = Mage::getModel('core/email_template')->loadDefault('customer_zencart_shipment_email');
+        //Getting the Store E-Mail Sender Name.
+        $senderName = Mage::getStoreConfig('trans_email/ident_general/name');
 
-            $emailTemplate  = Mage::getModel('core/email_template')
-                                    ->loadDefault('customer_zencart_shipment_email');                                    
-            $emailTemplateVariables = array();
-            $emailTemplateVariables['username'] = 'rahul';
-            $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
+        //Getting the Store General E-Mail.
+        $senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
 
-            echo "<pre>";
-            print_r($emailTemplate);
-            exit;
-            $emailTemplate->send('ralph@clevermage.com','Test email', $emailTemplateVariables);
+        $customerEmail = "ralph@clevermage.com";
+        //Variables for Confirmation Mail.
+        $emailTemplateVariables = array();
+        $emailTemplateVariables['username'] = "Rahul";
+
+        //Appending the Custom Variables to Template.
+        $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
+
+        //Sending E-Mail to Customers.
+        $mail = Mage::getModel('core/email')
+         ->setToName($senderName)
+         ->setToEmail($customerEmail)
+         ->setBody($processedTemplate)
+         ->setSubject('Update shipment')
+         ->setFromEmail($senderEmail)
+         ->setFromName($senderName)
+         ->setType('html');
+         try{
+         //Confimation E-Mail Send
+         $mail->send();
+         }
+         catch(Exception $error)
+         {
+         Mage::getSingleton('core/session')->addError($error->getMessage());
+         return false;
+         }
     }
 
 
