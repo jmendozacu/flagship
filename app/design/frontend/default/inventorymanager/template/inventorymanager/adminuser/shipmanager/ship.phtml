@@ -386,6 +386,7 @@ if(isset($shipperAddress['Address']['StateOrProvinceCode'])){
     			var response = transport.responseText;
     			if(response != ''){
     				var obj = JSON.parse(response);
+    				console.log(obj);
     				$('receiver_company').value = obj.name;
     				$('receiver_email').value = obj.email;
     				$('receiver_contact_name').value = obj.name;
