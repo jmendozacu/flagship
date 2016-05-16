@@ -538,5 +538,4 @@
 			<block type="inventorymanager/user_vendor_productinfo" name="adminuser.vendor.productinfo" template="inventorymanager/adminuser/vendor/productinfo.phtml" ></block>
 		</reference>
 	</inventorymanager_adminuser_vendor_productinfo>
-	
 </layout>

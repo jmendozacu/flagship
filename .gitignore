@@ -12,3 +12,4 @@ sitemaps/
 .gitignore
 /blog/wp-config.php
 .DS_Store
+/images*
