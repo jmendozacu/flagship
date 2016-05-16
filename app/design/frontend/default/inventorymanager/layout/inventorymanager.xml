@@ -492,7 +492,7 @@
 			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
 		</reference>
 		<reference name="content">
-			<block type="core/template" name="adminuser.sitemanager.history" template="inventorymanager/adminuser/shipmanager/show.phtml" />
+			<block type="core/template" name="adminuser.sitemanager.show" template="inventorymanager/adminuser/shipmanager/show.phtml" />
 		</reference>
 	</inventorymanager_adminuser_shipmanager_save>
 	
