@@ -224,12 +224,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				);
 
 				try {
-
 					if($fedexApi->setEndpoint('changeEndpoint')){
 						$newLocation = $client->__setLocation($fedexApi->setEndpoint('endpoint'));
 					}
 					$response = $client->processShipment($request); // FedEx web service invocation
-
 
 
 						$historyObject = Mage::getModel('inventorymanager/shipmanager');
@@ -260,7 +258,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 							
 							
 							$historyObject->setData($historyData)->save();
-							
 							//print_r(get_class($historyObject)); exit;
 						}catch (Exception $e){
 							Mage::log($e->getMessage());
@@ -322,16 +319,16 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    		$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
 							
-				    		if($zencartShipmentStatus == 0){
+				    		//if($zencartShipmentStatus == 0){
 				    			$zencartOrderData = $shipmentModel->getzencartOrderData($realOrderId);
 				    			$trackingNumber = $response->CompletedShipmentDetail->CompletedPackageDetails->TrackingIds->TrackingNumber;
 				    			$shipmentModel->zencartUpdateOrderStatus($zencartOrderData['customers_name'],$zencartOrderData['customers_email_address'],$realOrderId,$trackingNumber);
-				    		}else{
+				    		//}else{
 				    			//echo Mage::helper('inventorymanager')->__("This order has been already shipped");
-				    			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("This order has been already shipped"));
-				    			$this->_redirect('*/*/');
-								return;
-				    		}
+				    		//	Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("This order has been already shipped"));
+				    		//	$this->_redirect('*/*/');
+						//		return;
+				    		//}
 				    	}		
 				        if($response->CompletedShipmentDetail->CompletedPackageDetails->Label->Type == "OUTBOUND_LABEL")
 				    			{
@@ -668,7 +665,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	}else{
 				    		$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
-				    		if($zencartShipmentStatus == 0){
+				    		//if($zencartShipmentStatus == 0){
 				    			/*echo $realOrderId;
 				    			echo "<pre>";
 				    			print_r($response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber);
@@ -676,12 +673,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    			$zencartOrderData = $shipmentModel->getzencartOrderData($realOrderId);
 				    			$trackingNumber = $response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber;
 				    			$shipmentModel->zencartUpdateOrderStatus($zencartOrderData['customers_name'],$zencartOrderData['customers_email_address'],$realOrderId,$trackingNumber);
-				    		}else{
+				    		//}else{
 				    			//echo Mage::helper('inventorymanager')->__("This order has been already shipped");
-				    			Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("This order has been already shipped"));
-				    			$this->_redirect('*/*/');
-								return;
-				    		}
+				    		//	Mage::getSingleton('core/session')->addError(Mage::helper('inventorymanager')->__("This order has been already shipped"));
+				    		//	$this->_redirect('*/*/');
+						//		return;
+				    		//}
 				    	}		
 				    	$shippingDocuments = $response->CompletedShipmentDetail->ShipmentDocuments;
 				    	foreach($shippingDocuments as $key => $value){
@@ -709,7 +706,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	}
 				    	
 				    }else{
-				        $fedexApi->printError($client, $response);
+					      $fedexApi->printError($client, $response);
 				    }
 					Mage::log($client,null, "fedex.log");    // Write to log file
 				} catch (SoapFault $exception) {
@@ -723,7 +720,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			}
 		}
 		$this->loadLayout();
-        $this->renderLayout();
+        	$this->renderLayout();
 	}
 		
 	public function historyAction(){

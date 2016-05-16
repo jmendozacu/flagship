@@ -1,4 +1,5 @@
 <?php
+echo __FILE__;
 echo phpinfo();die;
 $wsdl = '/var/www/html/magento.aivector.com/html/app/code/core/Mage/Usa/etc/wsdl/FedEx/RateService_v9.wsdl';
 $client = new SoapClient($wsdl, array('trace' => $trace));

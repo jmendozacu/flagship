@@ -173,7 +173,7 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
     {
         $resource   = Mage::getSingleton('core/resource');
         $conn       = $resource->getConnection('oscomm_read');
-        $results    = $conn->query("SELECT customers_email_address,customer_name FROM orders where orders_id=".$orderId);
+        $results    = $conn->query("SELECT customers_email_address, customers_name FROM orders where orders_id=".$orderId);
         $row = $results->fetch();
         if(is_array($row) && !empty($row)){
             return $row;
@@ -188,8 +188,7 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
         $connwrite       = $resource->getConnection('oscomm_write');
         $comments = "FedEx Tracking: ".$trackingNumber;
         $customer_notified = 0;
-
-        if($this->_zencartCustomerShipmentNotify($customername,$customeremail,$orderid,$fedextracking) == true){
+        if($this->_zencartCustomerShipmentNotify($customername,$customeremail,$orderId,$trackingNumber) == true){
             $customer_notified = 1;
         }
 
