@@ -244,16 +244,15 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
                         'quoted_value' => $quotedVal,
                         'shipping_date' => date('Y-m-d'),
                         'created_time' => date('Y-m-d'),
-                        'po' => $data['po'],
+                        'po' => "$data['po']",
                     );
                     
-                    print_r($historyData);die;
                     
                     try {
 
 
 
-                        $historyObject->setData($historyData)->save();
+                        $historyObject->setData($historyData)->setData('po', $data['po'])->save();
                         //print_r(get_class($historyObject)); exit;
                     }
                     catch (Exception $e) {
