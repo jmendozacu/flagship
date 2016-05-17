@@ -124,7 +124,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedexground extends Ecom
 			'PackageCount' => 1,
 			'PackageDetail' => 'INDIVIDUAL_PACKAGES',                                        
 			'RequestedPackageLineItems' => array(
-				'0' => $this->addPackageLineItem1()
+				'0' => $this->addPackageLineItem1($po='')
 			)
 		);
 		   
@@ -229,7 +229,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedexground extends Ecom
 		);
 		return $specialServices; 
 	}
-	public function addPackageLineItem1(){
+	public function addPackageLineItem1($po=''){
 		$packageLineItem = array(
 			'SequenceNumber'=>1,
 			'GroupPackageCount'=>1,
@@ -254,7 +254,7 @@ class Ecommerceguys_Inventorymanager_Model_Resource_Api_Fedexground extends Ecom
 				),
 				'2' => array(
 					'CustomerReferenceType' => 'P_O_NUMBER', 
-					'Value' => 'PO4567892'
+					'Value' => $po
 				)
 			),
 			'SpecialServicesRequested' => $this->addSpecialServices()
