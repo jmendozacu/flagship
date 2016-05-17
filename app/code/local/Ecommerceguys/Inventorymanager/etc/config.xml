@@ -146,12 +146,12 @@
         </blocks>
         <template>
 			<email>
-				<purchaseorder_email module="inventorynamager">
+				<purchaseorder_email module="inventorymanager">
 					<label>Purchase Order Email</label>
 					<file>purchaseorder_email.html</file>
 					<type>html</type>
 				</purchaseorder_email>
-                <customer_zencart_shipment_email module="inventorynamager">
+                <customer_zencart_shipment_email module="inventorymanager">
                     <label>Customer Zencart Shipment Email</label>
                     <file>customer_zencart_shipment_email.html</file>
                     <type>html</type>
