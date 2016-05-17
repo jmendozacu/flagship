@@ -470,6 +470,17 @@
 		</reference>
 	</inventorymanager_adminuser_shipmanager_waitingshipment>
 	
+	<inventorymanager_adminuser_shipmanager_store>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+		<reference name="head">
+			<action method="addCss"><stylesheet>uploader/css/style.css</stylesheet></action>
+		</reference>
+		<reference name="content">
+			<block type="core/template" name="adminuser.sitemanager.ship.store" template="inventorymanager/adminuser/shipmanager/show.phtml" />
+		</reference>
+	</inventorymanager_adminuser_shipmanager_store>
 	
 
 	<inventorymanager_adminuser_shipmanager_history>

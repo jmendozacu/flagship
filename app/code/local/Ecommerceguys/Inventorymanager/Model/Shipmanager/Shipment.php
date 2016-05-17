@@ -192,16 +192,17 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
         $comments = "FedEx Tracking: ".$trackingNumber;
         $customer_notified = 0;
 
-        if($this->_zencartCustomerShipmentNotify($customername,$customeremail,$orderid,$fedextracking) == true){
+        if($this->zencartCustomerShipmentNotify($customername,$customeremail,$orderId,$trackingNumber) == true){
             $customer_notified = 1;
         }
-
+        return;
         $connwrite->query("Update orders SET orders_status = '115', last_modified = now() where orders_id=".$orderId);
         $connwrite->query("insert into orders_status_history(orders_id, orders_status_id, date_added, customer_notified, comments) values ('".(int)$orderId."',115,now(),'".$customer_notified."','".$comments."')");
         return; 
     }
 
-public function _zencartCustomerShipmentNotify($customername,$customeremail,$orderid,$fedextracking){
+public function zencartCustomerShipmentNotify($customername,$customeremail,$orderId,$trackingNumber){
+
         $emailTemplate = Mage::getModel('core/email_template')->loadDefault('customer_zencart_shipment_email');
         //Getting the Store E-Mail Sender Name.
         $senderName = Mage::getStoreConfig('trans_email/ident_general/name');
@@ -209,21 +210,22 @@ public function _zencartCustomerShipmentNotify($customername,$customeremail,$ord
         //Getting the Store General E-Mail.
         $senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
 
-        $customerEmail = $customeremail;
+        $customeremail = "ralph@clevermage.com";
         //Variables for Confirmation Mail.
         $emailTemplateVariables = array();
         $emailTemplateVariables['customername'] = $customername;
-        $emailTemplateVariables['orderid'] = $orderid;
-        $emailTemplateVariables['fedextracking'] = $fedextracking;
+        $emailTemplateVariables['orderid'] = $orderId;
+        $emailTemplateVariables['fedextracking'] = $trackingNumber;
         //Appending the Custom Variables to Template.
-        $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
-
+        
+        //$processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
+        $html = "<h3>Hello ".$customername.",</h3><br><div><p>Your Order has been shipped.<p><br><p>Order Id: ".$orderId."</p><br><p>FedEX Tracking Number: ".$trackingNumber."</p></div>";
         //Sending E-Mail to Customers.
         $mail = Mage::getModel('core/email')
          ->setToName($senderName)
-         ->setToEmail($customerEmail)
-         ->setBody($processedTemplate)
-         ->setSubject('Update shipment for Order #'.$orderid)
+         ->setToEmail($customeremail)
+         ->setBody($html)
+         ->setSubject('Update shipment for Order #'.$orderId)
          ->setFromEmail($senderEmail)
          ->setFromName($senderName)
          ->setType('html');
@@ -237,44 +239,7 @@ public function _zencartCustomerShipmentNotify($customername,$customeremail,$ord
          Mage::getSingleton('core/session')->addError($error->getMessage());
          return false;
          }
-    }
-
-public function testzencartCustomerShipmentNotify($customername,$customeremail,$orderid,$fedextracking){
-        $emailTemplate = Mage::getModel('core/email_template')->loadDefault('customer_zencart_shipment_email');
-        //Getting the Store E-Mail Sender Name.
-        $senderName = Mage::getStoreConfig('trans_email/ident_general/name');
-
-        //Getting the Store General E-Mail.
-        $senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
-
-        $customerEmail = "ralph@clevermage.com";
-        //Variables for Confirmation Mail.
-        $emailTemplateVariables = array();
-        $emailTemplateVariables['customername'] = $customername;
-        $emailTemplateVariables['orderid'] = $orderid;
-        $emailTemplateVariables['fedextracking'] = $fedextracking;
-        //Appending the Custom Variables to Template.
-        $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
-
-        //Sending E-Mail to Customers.
-        $mail = Mage::getModel('core/email')
-         ->setToName($senderName)
-         ->setToEmail($customerEmail)
-         ->setBody($processedTemplate)
-         ->setSubject('Update shipment')
-         ->setFromEmail($senderEmail)
-         ->setFromName($senderName)
-         ->setType('html');
-         try{
-         //Confimation E-Mail Send
-            $mail->send();
-            return true;
-         }
-         catch(Exception $error)
-         {
-         Mage::getSingleton('core/session')->addError($error->getMessage());
-         return false;
-         }
+         return;
     }
 
 }

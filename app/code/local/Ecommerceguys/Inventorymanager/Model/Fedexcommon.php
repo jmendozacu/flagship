@@ -197,9 +197,10 @@ class Ecommerceguys_Inventorymanager_Model_Fedexcommon
 	}
 
 	public function printError($client, $response){
-	    print_r($client);
+	    /*print_r($client);
 	    echo Newline;
 	    print_r($response);
+	    */
 	    echo '<h2>Error returned in processing transaction</h2>';
 	    echo "\n";
 	    $this->printNotifications($response -> Notifications);

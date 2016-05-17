@@ -322,7 +322,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	}else{
 				    		$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
-							//$zencartShipmentStatus = 0;
+							$zencartShipmentStatus = 0;
 				    		if($zencartShipmentStatus == 0){
 				    			$zencartOrderData = $shipmentModel->getzencartOrderData($realOrderId);
 				    			$trackingNumber = $response->CompletedShipmentDetail->CompletedPackageDetails->TrackingIds->TrackingNumber;
@@ -372,9 +372,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		
 		}else{
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
-			//$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
-		
-		
 			$senderAddress = array();
 			$senderAddress['Contact']['ContactId'] = "fright1";
 			$senderAddress['Contact']['PersonName'] = $data['contact_name'];
@@ -402,16 +399,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			$receiverAddress['Address']['PostalCode'] = $data['receiver']['postalcode'];
 			$receiverAddress['Address']['CountryCode'] = $data['receiver']['country_id'];
 			
-			/*
-			echo "<pre>";
-			print_r($fedexApi->getProperty('freightbilling'));
-			print_r($senderAddress);
-			exit;
-			*/
-			
 			$client = new SoapClient($fedexApi->path_to_wsdl, array('trace' => 1));
-			
-			
 			$request['WebAuthenticationDetail'] = array(
 					'UserCredential' => array(
 					'Key' => $fedexApi->getProperty('key'), 
@@ -432,13 +420,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				'Intermediate' => '0', 
 				'Minor' => '0'
 			);
-			
-			/*$zip = new ZipArchive();
-		    $zip_name = "zipfile.zip";
-		    if($zip->open($zip_name, ZIPARCHIVE::CREATE)!==TRUE){
-		        $error .= "* Sorry ZIP creation failed at this time";
-		    }*/
-			
 			$totalWeight = 0;
 			$serialCount = 0;
 			foreach ($data['serial_key'] as $key => $serialKey){
@@ -662,16 +643,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	//$this->printSuccess($client, $response);
 				        // Create PNG or PDF label
 				        // Set LabelSpecification.ImageType to 'PNG' for generating a PNG label
-						
+						$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 				    	if($data["order_from"] !=2){ 
-
-							$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 							$shipmentModel->completeShipment($realOrderId,$response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
 				    	}else{
-			
-				    		$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
-				    		//$zencartShipmentStatus = 0;
+				    		$zencartShipmentStatus = 0;
 				    		if($zencartShipmentStatus == 0){
 				    			/*echo $realOrderId;
 				    			echo "<pre>";
@@ -696,28 +673,18 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    			$fp = fopen($bol, 'wb');
 				    			fwrite($fp, $bolImage);
 				        		fclose($fp);
-				        		
-				        	//	$zip->addFromString(basename($serialId.'-BillOfLading.pdf'),$bolImage);
-				        		
-				        		//echo '<a href="'.$this->bol.'">BILL OF LANDING</a> was generated.<br/>';
 				    		}else if($type == "FREIGHT_ADDRESS_LABEL"){
 				    			$addressLabel = $value->Parts->Image;
-		
 				    			$fp1 = fopen($shippingLabel, 'wb');   
 				        		fwrite($fp1, $addressLabel);
 				        		fclose($fp1);
-				        		
-				        		//$zip->addFromString(basename($serialId.'-ShippingLabel.pdf'),$addressLabel);
-				        		//echo '<a href="'.$this->shippingLabel.'">Label</a> was generated.<br/>'; 
 				    		}
-				    	}
-				    	
+				    	} 	
 				    }else{
 				        $fedexApi->printError($client, $response);
 				    }
 					Mage::log($client,null, "fedex.log");    // Write to log file
-				} catch (SoapFault $exception) {
-					
+				} catch (SoapFault $exception) {					
 				    $fedexApi->printFault($exception, $client);
 				   echo Mage::helper('inventorymanager')->__("Something went wrong. Please try again with right information");
 				}
@@ -726,6 +693,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				echo Mage::helper('inventorymanager')->__("No valid serials found");
 			}
 		}
+		//echo "comes";exit;
 		$this->loadLayout();
         $this->renderLayout();
 	}
