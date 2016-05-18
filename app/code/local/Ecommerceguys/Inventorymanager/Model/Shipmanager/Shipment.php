@@ -67,6 +67,8 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
      
                 // Finally, Save the Order
                 $this->_saveOrder($order);
+
+		$shipment->save();
             } catch (Exception $e) {
                 throw $e;
             }
@@ -111,7 +113,7 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
                                ->save();
      
        
-       $emailSentStatus = $shipment->getData('email_sent');
+       //$emailSentStatus = $shipment->getData('email_sent');
        // if (!is_null($customerEmail) && !$emailSentStatus) {
             $shipment->sendEmail(true, $customerEmailComments);
             $shipment->setEmailSent(true);

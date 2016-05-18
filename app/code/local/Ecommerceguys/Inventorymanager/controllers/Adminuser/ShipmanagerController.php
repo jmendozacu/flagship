@@ -1,7 +1,7 @@
 <?php
 require_once(Mage::getBaseDir().'/tcpdf/tcpdf.php');
-require_once('FPDI/fpdf.php');
-require_once('FPDI/fpdi.php');
+//require_once('FPDI/fpdf.php');
+//require_once('FPDI/fpdi.php');
 class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mage_Core_Controller_Front_Action
 {
 	public function indexAction(){
@@ -25,6 +25,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$this->renderLayout();
 	}*/
 	public function saveAction(){
+
+		$boxLength = $boxWidth = $boxHeight = '';
 		 $data = $this->getRequest()->getParams();
 
 		 $realOrderId = $data['order_id'];
