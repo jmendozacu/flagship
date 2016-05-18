@@ -9,7 +9,9 @@
 .modman/
 /sitemaps
 sitemaps/
-.gitignore
+#.gitignore
 /blog/wp-config.php
 .DS_Store
 /images*
+/.sucuriquarantine
+/bl_1.4
