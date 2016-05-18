@@ -110,13 +110,13 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
                                ->addObject($order)
                                ->save();
      
-       /* 
+       
        $emailSentStatus = $shipment->getData('email_sent');
         if (!is_null($customerEmail) && !$emailSentStatus) {
             $shipment->sendEmail(true, $customerEmailComments);
             $shipment->setEmailSent(true);
         }
-     */
+     
         return $this;
     }
      
@@ -195,7 +195,6 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
         if($this->zencartCustomerShipmentNotify($customername,$customeremail,$orderId,$trackingNumber) == true){
             $customer_notified = 1;
         }
-        return;
         $connwrite->query("Update orders SET orders_status = '115', last_modified = now() where orders_id=".$orderId);
         $connwrite->query("insert into orders_status_history(orders_id, orders_status_id, date_added, customer_notified, comments) values ('".(int)$orderId."',115,now(),'".$customer_notified."','".$comments."')");
         return; 

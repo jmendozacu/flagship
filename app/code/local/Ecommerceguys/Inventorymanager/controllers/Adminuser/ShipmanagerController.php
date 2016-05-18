@@ -1157,24 +1157,12 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				}
 				
 				$response = $client->getRates($request);
-			   /*
-			   echo "<pre>";
-			print_r($response);
-			exit;
-				*/
-				//echo "<tr><td>". $this->__("Serial") ."</td><td>" . $serialKey . "</td></tr>";
-				
-				if ($response -> HighestSeverity != 'FAILURE' && $response -> HighestSeverity != 'ERROR'){  	
+			  	if ($response -> HighestSeverity != 'FAILURE' && $response -> HighestSeverity != 'ERROR'){  	
 			    	$rateReply = $response -> RateReplyDetails;
 			    	
 			    	
 			    	foreach ($rateReply as $rate){
 			    		$type = $rate->ServiceType;
-			    	
-			    	/*echo "<pre>";
-					print_r($rateReply);
-					exit;
-			    	*/
 			    		$shipmentDetails = $rate->RatedShipmentDetails;
 			    		$netAmount = 0;
 			    		foreach ($shipmentDetails as $detail){
@@ -1182,18 +1170,10 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			    			$netCharges = $rateDetail->TotalNetCharge->Amount;
 			    		}
 			    		if($type == $data['service_type'] OR $type == 'FIRST_OVERNIGHT'){
-				    		
-				    		$totalCharge += $netCharges;
-				    		
-			    			//echo "<tr><td>".$netCharges .  "</td></tr>";
-			    		}/*elseif($type == $data['applicable_services'] AND $data['service_type'] == 'FEDEX_GROUND'){
-			    			$totalCharge += $netCharges;
-			    		}*/
+				    		$totalCharge += $netCharges;			    		
+			    		}
 			    	}
-			    	
-			        //$fedexApi->printSuccess($client, $response);
 			    }else{
-			        //$fedexApi->printError($client, $response);
 			        echo $this->__("Something went wrong. Please try again.");
 			    } 
 			   // $fedexApi->writeToLog($client);    // Write to log file   
