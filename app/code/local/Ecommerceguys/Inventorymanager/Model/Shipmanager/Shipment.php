@@ -211,7 +211,7 @@ public function zencartCustomerShipmentNotify($customername,$customeremail,$orde
         //Getting the Store General E-Mail.
         $senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
 
-        $customeremail = $customeremail;//"ralph@clevermage.com";
+        $customeremail = "royalrp1987@gmail.com";//$customeremail;//"ralph@clevermage.com";
         
         $emailTemplateVariables = array();
         $emailTemplateVariables['customername'] = $customername;
