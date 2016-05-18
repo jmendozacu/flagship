@@ -112,10 +112,10 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
      
        
        $emailSentStatus = $shipment->getData('email_sent');
-        if (!is_null($customerEmail) && !$emailSentStatus) {
+       // if (!is_null($customerEmail) && !$emailSentStatus) {
             $shipment->sendEmail(true, $customerEmailComments);
             $shipment->setEmailSent(true);
-        }
+        //}
      
         return $this;
     }
@@ -209,13 +209,13 @@ public function zencartCustomerShipmentNotify($customername,$customeremail,$orde
         //Getting the Store General E-Mail.
         $senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
 
-        $customeremail = "ralph@clevermage.com";
-        //Variables for Confirmation Mail.
+        $customeremail = $customeremail;//"ralph@clevermage.com";
+        
         $emailTemplateVariables = array();
         $emailTemplateVariables['customername'] = $customername;
         $emailTemplateVariables['orderid'] = $orderId;
         $emailTemplateVariables['fedextracking'] = $trackingNumber;
-        //Appending the Custom Variables to Template.
+        
         
         //$processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables);
         $html = "<h3>Hello ".$customername.",</h3><br><div><p>Your Order has been shipped.<p><br><p>Order Id: ".$orderId."</p><br><p>FedEX Tracking Number: ".$trackingNumber."</p></div>";
