@@ -17,39 +17,47 @@
 								<td><?php echo $this->__("Purchased From (Store)"); ?></td>
 								<td><?php echo $this->__("Purchased On"); ?></td>
 								<td><?php echo $this->__("Bill to name"); ?></td>
-								<td><?php echo $this->__("Bill to Company"); ?></td>
+								<?php /* <td><?php echo $this->__("Bill to Company"); ?></td>
 								<td><?php echo $this->__("Products"); ?></td>
 								<td><?php echo $this->__("Ship to Name"); ?></td>
 								<td><?php echo $this->__("G.T.(Base)"); ?></td>
 								<td><?php echo $this->__("G.T.(Purchased)"); ?></td>
+								*/?>
+								<td><?php echo $this->__("Source"); ?></td>
 							</tr>
 						</thead>
-						<?php $historyCollection = $this->getOrders(); ?>
-						<?php if($historyCollection && $historyCollection->count()){ ?>
-							<tbody>
+						<tbody>
+						<?php $historyCollection = $this->getOrders();?>
+						<?php if($historyCollection && count($historyCollection)>0){ ?>
 							<?php foreach ($historyCollection as $historyObject){ ?>
-							<?php
-								$historyItem = Mage::getModel('inventorymanager/shipmanager_item')->load($historyObject->getId(), "history_id");
-								$serial = $historyItem->getSerial();
-								$serialObject = Mage::getModel('inventorymanager/label')->load($serial, 'serial');
-								$serialId = $serialObject->getId();
-								$shippingLabel = Mage::getBaseDir().'\\media\\fedex\\shippinglabels\\'.$serialId.'-ShippingLabel.pdf';
-								$bol = Mage::getBaseDir().'\\media\\fedex\\billoflanding\\'.$serialId.'-BillOfLading.pdf';
-							?>
 								<tr>
-									<td><?php echo $historyObject->getId() 	?></td>
-									<td><?php echo $historyObject->getTransactionDetail() ?></td>
-									<td><?php echo $historyObject->getCareercode() ?></td>
-									<td><?php echo $historyObject->getServiceType() ?></td>
-									<td><?php echo $historyObject->getWeight() ?></td>
+									<td><?php echo $historyObject->getIncrementId() 	?></td>
+									<td><?php echo $this->getStorename($historyObject->getStoreId()) ?></td>
+									<td><?php echo $historyObject->getCreatedAt() ?></td>
+									<td><?php echo $historyObject->getCustomerName() ?></td>
+									<?php /*<td><?php echo $historyObject->getCustomerCompany() ?></td>
 									<td><?php echo $historyObject->getQuotedValue() ?></td>
 									<td><?php echo $historyObject->getShippingDate() ?></td>
 									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-BillOfLading.pdf', 'area'=>'bol')) ?>"> <?php echo $serialId.'-BillOfLading.pdf'; ?> </td>
 									<td><a href="<?php echo $this->getUrl('inventorymanager/adminuser_shipmanager/download', array('filename'=>$serialId.'-ShippingLabel.pdf', 'area'=>'label')) ?>"> <?php echo $serialId.'-ShippingLabel.pdf'; ?> </td>
+									*/?>
+									<td><?php echo $this->__("Magento");?></td>
+								</tr>
+							<?php }	 ?>
+						<?php }	 ?>
+						<?php $historyOscommerceCollection = $this->getOscommerceOrders(); ?>
+						<?php if(!empty($historyOscommerceCollection)){?>
+							<?php foreach ($historyOscommerceCollection as $historyObject){ ?>
+								<tr>
+									<td><?php echo $historyObject['orders_id'] ?></td>
+									<td><?php echo "-"; ?></td>
+									<td><?php echo $historyObject['date_purchased'] ?></td>
+									<td><?php echo $historyObject['customers_name'] ?></td>
+									<td><?php echo $this->__("Zencart");?></td>
 								</tr>
 							<?php } ?>
-							</tbody>
 						<?php } ?>
+						</tbody>
 					</table>
 				</div>
 			</div>

@@ -9,32 +9,11 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 		$this->loadLayout();
 		$this->renderLayout();
 	}
-	
-	/*public function testemailAction(){
-		
-		 try {
-			$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
-			$shipmentModel->testzencartCustomerShipmentNotify("ralph","ralph@clevermage.com","24234234","123123123123");
-		} catch (Exception $e) {
-                print_r($e);
-                exit;
-            }
-		echo "test email";exit;
-		exit;
-		$this->loadLayout();
-		$this->renderLayout();
-	}*/
+
 	public function saveAction(){
-
 		$boxLength = $boxWidth = $boxHeight = '';
-		 $data = $this->getRequest()->getParams();
-
-		 $realOrderId = $data['order_id'];
-		/*
-		echo "<pre>";
-		print_r($data);
-		exit;
-		*/
+		$data = $this->getRequest()->getParams();
+		$realOrderId = $data['order_id'];
 		if($data['service_type'] != "FEDEX_FREIGHT_ECONOMY" AND $data['service_type'] != "FEDEX_FREIGHT_PRIORITY"){
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedexground');
 			//$orderObject = Mage::getModel('sales/order')->load($realOrderId, "increment_id");
@@ -98,8 +77,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				'Minor' => '0'
 			);
 			
-
-			
 			$totalWeight = 0;
 			$serialCount = 0;
 			foreach ($data['serial_key'] as $key => $serialKey){
@@ -108,9 +85,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				$serialObject = Mage::getModel('inventorymanager/label')->load($serialKey, "serial");
 				
 				$serialCount++;
-				
-				//$response = $fedexApi->getResponse($serialObject->getId(), $orderObject->getId());
-				//echo $serialCount;exit;
 				
 			
 				$shippingLabel = Mage::getBaseDir().'/media/fedex/shippinglabels/'.$serialKey.'-ShippingLabel.png';
@@ -324,7 +298,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    	}else{
 				    		$shipmentModel = Mage::getModel("inventorymanager/shipmanager_shipment");
 				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
-							$zencartShipmentStatus = 0;
+							//$zencartShipmentStatus = 0;
 				    		if($zencartShipmentStatus == 0){
 				    			$zencartOrderData = $shipmentModel->getzencartOrderData($realOrderId);
 				    			$trackingNumber = $response->CompletedShipmentDetail->CompletedPackageDetails->TrackingIds->TrackingNumber;
@@ -342,21 +316,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				    				fwrite($fp,$response->CompletedShipmentDetail->CompletedPackageDetails->Label->Parts->Image);
 				        			fclose($fp);
 				        		}
-				        	//	$zip->addFromString(basename($serialId.'-BillOfLading.pdf'),$bolImage);
-				        		
-				        		//echo '<a href="'.$this->bol.'">BILL OF LANDING</a> was generated.<br/>';
-				    		//}else if($type == "FREIGHT_ADDRESS_LABEL"){
-				    	//		$addressLabel = $value->Parts->Image;
-							/*
-				    			$fp1 = fopen($shippingLabel, 'wb');   
-				        		fwrite($fp1,$response->CompletedShipmentDetail->CompletedPackageDetails->CodReturnDetail->Label->Parts->Image);
-				        		fclose($fp1);
-				        		*/
-				        		//$zip->addFromString(basename($serialId.'-ShippingLabel.pdf'),$addressLabel);
-				        		//echo '<a href="'.$this->shippingLabel.'">Label</a> was generated.<br/>'; 
-				    		//}
-				    	//}
-
+				        	
 				    }else{
 					        $fedexApi->printError($client, $response);
 					    }
@@ -371,8 +331,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			if($serialCount == 0){
 				echo Mage::helper('inventorymanager')->__("No valid serials found");
 			}
-		
 		}else{
+
 			$fedexApi = Mage::getResourceModel('inventorymanager/api_fedex');
 			$senderAddress = array();
 			$senderAddress['Contact']['ContactId'] = "fright1";
@@ -650,7 +610,7 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 							$shipmentModel->completeShipment($realOrderId,$response->CompletedShipmentDetail->MasterTrackingId->TrackingNumber,$response->CompletedShipmentDetail->CarrierCode,$shipmentCarrierTitle='');
 				    	}else{
 				    		$zencartShipmentStatus = $shipmentModel->getzencartOrderShippedStatus($realOrderId);
-				    		$zencartShipmentStatus = 0;
+				    		//$zencartShipmentStatus = 0;
 				    		if($zencartShipmentStatus == 0){
 				    			/*echo $realOrderId;
 				    			echo "<pre>";
@@ -695,7 +655,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 				echo Mage::helper('inventorymanager')->__("No valid serials found");
 			}
 		}
-		//echo "comes";exit;
 		$this->loadLayout();
         $this->renderLayout();
 	}
@@ -750,36 +709,8 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 					//$fileurl = "http://dev.prolinestores.com/media/fedex/shippinglabels/11231-ShippingLabel.png";
 					$this->_saveaspdf($file);
 
-			}
-			
-			/*
-			$area = $this->getRequest()->getParam('area');
-			$fileName1 = $fileName = $this->getRequest()->getParam('filename');
-			$fileN = $fileName;
-			if($area == "bol"){
-				$fileName = 'billoflanding/'. $fileName;
-				//header("Content-Type: application/octet-stream");
-				header("Content-Disposition: attachment; filename=" . urlencode($fileN));   
-				header("Content-Type: application/octet-stream");
-				header("Content-Type: application/download");
-				header("Content-Description: File Transfer");            
-				header("Content-Length: " . filesize($file));
-				flush(); // this doesn't really matter.
-				$fp = fopen($file, "r");
-				while (!feof($fp))
-				{
-			    echo fread($fp, 65536);
-			    flush(); // this is essential for large downloads
-				} 
-				fclose($fp);			
-			}else{
-					$fileName = 'shippinglabels/'. $fileName;
-					$file = Mage::getBaseDir().'/media/fedex/shippinglabels/11231-ShippingLabel.png';
-					$fileurl = "http://dev.prolinestores.com/media/fedex/shippinglabels/11231-ShippingLabel.png";
-					$this->_saveaspdf($file,$fileurl);
-				}
-				*/		
-			}
+			}	
+	}
 	
 	public function settingAction(){
 		$this->loadLayout();
@@ -1148,11 +1079,6 @@ class Ecommerceguys_Inventorymanager_Adminuser_ShipmanagerController extends Mag
 			$path_to_wsdl = Mage::helper('inventorymanager')->wsdlPath() . "RateService_v18.wsdl";
 			$client = new SoapClient($path_to_wsdl, array('trace' => 1));
 			
-			/*
-			echo "<pre>";
-			print_r($request);
-			//exit;
-			*/
 			try {
 				if($fedexApi->setEndpoint('changeEndpoint')){
 					$newLocation = $client->__setLocation(setEndpoint('endpoint'));

@@ -137,24 +137,10 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
      
         return $this;
     }
-
-    /**
-     * Get Zencart Order status data
-     */
     protected function zencartShippedOrderStatuses()
-    {
-        /*
-        $resource   = Mage::getSingleton('core/resource');
-        $conn       = $resource->getConnection('oscomm_read');
-        $results    = $conn->query("SELECT * FROM orders_status");
-        $row = $results->fetchAll();
-        return $this;*/
+    { 
         return array(111,105,109,115,114,116,118);
     }
-    /**
-     * Get the order shipped status
-     * return 0,1
-     */
     public function getzencartOrderShippedStatus($orderId)
     {
         $resource   = Mage::getSingleton('core/resource');
@@ -167,7 +153,6 @@ class Ecommerceguys_Inventorymanager_Model_Shipmanager_Shipment extends Mage_Cor
             }else{
                 return 1;
             }
-
         }
         return; 
     }
@@ -211,7 +196,7 @@ public function zencartCustomerShipmentNotify($customername,$customeremail,$orde
         //Getting the Store General E-Mail.
         $senderEmail = Mage::getStoreConfig('trans_email/ident_general/email');
 
-        $customeremail = "royalrp1987@gmail.com";//$customeremail;//"ralph@clevermage.com";
+        $customeremail = $customeremail;//"ralph@clevermage.com";
         
         $emailTemplateVariables = array();
         $emailTemplateVariables['customername'] = $customername;
